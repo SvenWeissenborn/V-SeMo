@@ -2,3 +2,5 @@ syntax: glob
 
 *.xml
 *.iml
+home.svg
+index_visemo.html
