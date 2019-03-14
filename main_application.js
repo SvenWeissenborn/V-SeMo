@@ -936,6 +936,7 @@ function initialize() //keine Argumente
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
+
         if(selectedTool !== 'paint' && selectedTool !== 'grab') return;
         let color;
             color = line_colors[geodesics.length % line_colors.length];
@@ -992,8 +993,6 @@ function initialize() //keine Argumente
     this.trapez.on('mouseup', function (o) {
         if(selectedTool !== 'paint' && lineContinueAt == -1 ) {
             return;
-
-            //Hier muss irgendwie der Zwischenspeicher geleert werden oder so
         }
 
         let immediatehistory =[];
@@ -1013,6 +1012,7 @@ function initialize() //keine Argumente
         }else {
             color = line_colors[geodesics.length % line_colors.length];
         }
+
         if(isLineStarted) {
             isLineStarted= false;
             line.setCoords(); //Alle Änderungen der Member sollen übernommen werden
@@ -1024,6 +1024,7 @@ function initialize() //keine Argumente
 
             if(distance(new fabric.Point(xg1,yg1),new fabric.Point(xg2,yg2)) <= abortlength){
                 canvas.remove(line);
+                lineContinueAt = -1;
                 return;
             }
 
