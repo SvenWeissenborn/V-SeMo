@@ -1640,82 +1640,82 @@ function snapping(trapez) {
                 dist_2b = snap_radius_sectors +1;
             }
 
-                let translation;
-                let alpha;
-                let angle3;
-                let displacement;
+            let translation;
+            let alpha;
+            let angle3;
+            let displacement;
 
-                if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
-                    //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                    if (dist_1a <= dist_2b) {
-                        // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
-                        translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
-                        alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
-                        if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
-                            alpha = -alpha;
-                        }
-
-                        let angle2 = Math.atan2(point_1_local.y, point_1_local.x);
-                        angle3 = (2 * angle2 - alpha - Math.PI) / 2.0;
-                        let pdist_sq = Math.pow(point_1_local.x, 2) + Math.pow(point_1_local.y, 2);
-                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(-alpha)));
-
-
-                    } else if (dist_1a > dist_2b) {
-                        // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
-                        translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
-                        alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
-                        if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
-                            alpha = -alpha;
-                        }
-
-                        let angle2 = Math.atan2(point_2_local.y, point_2_local.x);
-                        angle3 = (2 * angle2 + alpha - Math.PI) / 2.0;
-                        let pdist_sq = Math.pow(point_2_local.x, 2) + Math.pow(point_2_local.y, 2);
-                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(alpha)));
-
+            if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
+                //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
+                if (dist_1a <= dist_2b) {
+                    // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
+                    translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
+                    let kathete = distance(point_a, point_b);
+                    let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
+                    alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                    if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
+                        alpha = -alpha;
                     }
 
-                    trapez.left += displacement * Math.sin(angle3) + translation.x;
-                    trapez.top += displacement * Math.cos(angle3) + translation.y;
-                    trapez.rotate(trapez.angle + alpha / Math.PI * 180);
+                    let angle2 = Math.atan2(point_1_local.y, point_1_local.x);
+                    angle3 = (2 * angle2 - alpha - Math.PI) / 2.0;
+                    let pdist_sq = Math.pow(point_1_local.x, 2) + Math.pow(point_1_local.y, 2);
+                    displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(-alpha)));
 
 
-                    for (let jj = 0; jj < 4; jj++) {
-                        if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
-                            sectors[sec_idx].snapStatus[jj] = 1;
-                        }
+                } else if (dist_1a > dist_2b) {
+                    // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
+                    translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
+                    let kathete = distance(point_a, point_b);
+                    let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
+                    alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                    if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
+                        alpha = -alpha;
                     }
-                    trapez.parent.snapStatus[ii] = 1;
-                    sectors[sec_idx].trapez.stroke = 'green';
-                    trapez.stroke = 'green';
+
+                    let angle2 = Math.atan2(point_2_local.y, point_2_local.x);
+                    angle3 = (2 * angle2 + alpha - Math.PI) / 2.0;
+                    let pdist_sq = Math.pow(point_2_local.x, 2) + Math.pow(point_2_local.y, 2);
+                    displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(alpha)));
+
+                }
+
+                trapez.left += displacement * Math.sin(angle3) + translation.x;
+                trapez.top += displacement * Math.cos(angle3) + translation.y;
+                trapez.rotate(trapez.angle + alpha / Math.PI * 180);
 
 
-                } else {
-                    for (let jj = 0; jj < 4; jj++) {
-                        if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
-
-                            sectors[sec_idx].snapStatus[jj] = 0;
-
-                        }
-                    }
-                    trapez.parent.snapStatus[ii] = 0;
-
-                    if (sectors[sec_idx].snapStatus.every(function (element) {
-                        return element === 0;
-                    })) {
-                        sectors[sec_idx].trapez.stroke = '#666';
-                    }
-                    if (trapez.parent.snapStatus.every(function (element) {
-                        return element === 0;
-                    })) {
-                        trapez.stroke = '#666';
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
+                        sectors[sec_idx].snapStatus[jj] = 1;
                     }
                 }
+                trapez.parent.snapStatus[ii] = 1;
+                sectors[sec_idx].trapez.stroke = 'green';
+                trapez.stroke = 'green';
+
+
+            } else {
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
+
+                        sectors[sec_idx].snapStatus[jj] = 0;
+
+                    }
+                }
+                trapez.parent.snapStatus[ii] = 0;
+
+                if (sectors[sec_idx].snapStatus.every(function (element) {
+                    return element === 0;
+                })) {
+                    sectors[sec_idx].trapez.stroke = '#666';
+                }
+                if (trapez.parent.snapStatus.every(function (element) {
+                    return element === 0;
+                })) {
+                    trapez.stroke = '#666';
+                }
+            }
 
 
 
