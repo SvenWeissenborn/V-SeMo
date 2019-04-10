@@ -1640,6 +1640,7 @@ function snapping(trapez) {
                 dist_2b = snap_radius_sectors +1;
             }
 
+
             let translation;
             let alpha;
             let angle3;
