@@ -178,12 +178,50 @@ canvas.on('mouse:move', function (o)
     }
 });
 
+//Zoomoptionen
+
+canvas.on('mouse:wheel', function(opt) {
+    var delta = -opt.e.deltaY;
+    var pointer = canvas.getPointer(opt.e);
+    var zoom = canvas.getZoom();
+    zoom = zoom + delta/20;
+    if (zoom > 20) zoom = 20;
+    if (zoom < 0.01) zoom = 0.01;
+    canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+    opt.e.preventDefault();
+    opt.e.stopPropagation();
+});
+
+
+canvas.on('mouse:down', function(opt) {
+    var evt = opt.e;
+    if (evt.shiftKey === true) {
+        this.isDragging = true;
+        this.selection = false;
+        this.lastPosX = evt.clientX;
+        this.lastPosY = evt.clientY;
+    }
+});
+canvas.on('mouse:move', function(opt) {
+    if (this.isDragging) {
+        var e = opt.e;
+        this.viewportTransform[4] += e.clientX - this.lastPosX;
+        this.viewportTransform[5] += e.clientY - this.lastPosY;
+        this.requestRenderAll();
+        this.lastPosX = e.clientX;
+        this.lastPosY = e.clientY;
+    }
+});
+canvas.on('mouse:up', function(opt) {
+    this.isDragging = false;
+    this.selection = true;
+});
+
 
 //Abbrechen einer Linie
 window.addEventListener('keydown',function(event){
     if(event.key === 'Escape' || event.key === 'Backspace' || event.key === 'Delete'){
         if(typeof(line) !== 'undefined'){
-            console.log('Abort drawing of line',line);
             canvas.remove(line);
             isLineStarted = false;
             lineContinueAt = -1;
@@ -805,6 +843,33 @@ function distance(punkt1, punkt2) {
 }
 
 
+function fitResponsiveCanvas() {
+
+
+
+    // canvas dimensions
+    let canvasSize = {
+        width: 1920,
+        height: 1080,
+    };
+    // canvas container dimensions
+    let containerSize = {
+        width: document.getElementById('canvas-container').offsetWidth,
+        height: document.getElementById('canvas-container').offsetHeight
+    };
+    let scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
+    canvas.setWidth(containerSize.width);
+    canvas.setHeight(containerSize.height);
+    canvas_buttons.setWidth(containerSize.width);
+    canvas_buttons.setHeight(90);
+    //set canvas zoom aspect
+    canvas.setZoom(scaleRatio);
+    canvas_buttons.setZoom(scaleRatio);
+    console.log(scaleRatio);
+    console.log(containerSize)
+}
+
+
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
 function initialize() //keine Argumente
@@ -990,7 +1055,6 @@ function initialize() //keine Argumente
         if(selectedTool !== 'paint' && lineContinueAt == -1 ) {
             return;
 
-            //Hier muss irgendwie der Zwischenspeicher geleert werden oder so
         }
 
         let immediatehistory =[];
@@ -1021,7 +1085,7 @@ function initialize() //keine Argumente
 
             if(distance(new fabric.Point(xg1,yg1),new fabric.Point(xg2,yg2)) <= abortlength){
                 canvas.remove(line);
-                lineContinueAt = -1
+                lineContinueAt = -1;
                 return;
             }
 
@@ -1183,7 +1247,7 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
 
 
             if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda)
+                lambdas.push(lambda);
             }
         }
     }
@@ -1264,7 +1328,7 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 
 
             if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda)
+                lambdas.push(lambda);
             }
         }
     }
@@ -1284,10 +1348,6 @@ function getMittelpunktsabstand(trapez) {
         if (sec_idx > -1) {
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
-            console.log(ii);
-            console.log("midpointm:"+midpointSectorMoved);
-            console.log("midpoints:"+midpointSectorStatic);
-            console.log("distance:"+distanceMidPoints);
         }
     }
 }
@@ -1320,10 +1380,11 @@ function overlapControll(trapez) {
 
         for (let jj = 0; jj < sectors.length; jj++) {
 
-            if (jj == trapez.parent.ID) {
+            if(jj == trapez.parent.ID) {
                 continue
-            } else {
-                if (paddingContainsPoint(sectors[jj].trapez, kantenMittelpunkt)) {
+            }
+            else {
+                if(paddingContainsPoint(sectors[jj].trapez, kantenMittelpunkt)) {
                     paddingOverlap = true;
                 }
             }
@@ -1423,7 +1484,7 @@ function Sector() {
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
     let isPointInsideSectors = false;
     //
-    if (trapez.containsPoint(segmentMittelpunkt)) {
+    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
         //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
@@ -1480,7 +1541,7 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
 function paddingContainsPoint(trapez,segmentMittelpunkt) {
     let isPointInsideSectors = false;
     //
-    if (trapez.containsPoint(segmentMittelpunkt)) {
+    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
         //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
@@ -1634,82 +1695,82 @@ function snapping(trapez) {
                 dist_2b = snap_radius_sectors +1;
             }
 
-                let translation;
-                let alpha;
-                let angle3;
-                let displacement;
+            let translation;
+            let alpha;
+            let angle3;
+            let displacement;
 
-                if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
-                    //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                    if (dist_1a <= dist_2b) {
-                        // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
-                        translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
-                        alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
-                        if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
-                            alpha = -alpha;
-                        }
-
-                        let angle2 = Math.atan2(point_1_local.y, point_1_local.x);
-                        angle3 = (2 * angle2 - alpha - Math.PI) / 2.0;
-                        let pdist_sq = Math.pow(point_1_local.x, 2) + Math.pow(point_1_local.y, 2);
-                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(-alpha)));
-
-
-                    } else if (dist_1a > dist_2b) {
-                        // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
-                        translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
-                        alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
-                        if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
-                            alpha = -alpha;
-                        }
-
-                        let angle2 = Math.atan2(point_2_local.y, point_2_local.x);
-                        angle3 = (2 * angle2 + alpha - Math.PI) / 2.0;
-                        let pdist_sq = Math.pow(point_2_local.x, 2) + Math.pow(point_2_local.y, 2);
-                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(alpha)));
-
+            if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
+                //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
+                if (dist_1a <= dist_2b) {
+                    // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
+                    translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
+                    let kathete = distance(point_a, point_b);
+                    let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
+                    alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                    if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
+                        alpha = -alpha;
                     }
 
-                    trapez.left += displacement * Math.sin(angle3) + translation.x;
-                    trapez.top += displacement * Math.cos(angle3) + translation.y;
-                    trapez.rotate(trapez.angle + alpha / Math.PI * 180);
+                    let angle2 = Math.atan2(point_1_local.y, point_1_local.x);
+                    angle3 = (2 * angle2 - alpha - Math.PI) / 2.0;
+                    let pdist_sq = Math.pow(point_1_local.x, 2) + Math.pow(point_1_local.y, 2);
+                    displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(-alpha)));
 
 
-                    for (let jj = 0; jj < 4; jj++) {
-                        if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
-                            sectors[sec_idx].snapStatus[jj] = 1;
-                        }
+                } else if (dist_1a > dist_2b) {
+                    // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
+                    translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
+                    let kathete = distance(point_a, point_b);
+                    let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
+                    alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                    if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
+                        alpha = -alpha;
                     }
-                    trapez.parent.snapStatus[ii] = 1;
-                    sectors[sec_idx].trapez.stroke = 'green';
-                    trapez.stroke = 'green';
+
+                    let angle2 = Math.atan2(point_2_local.y, point_2_local.x);
+                    angle3 = (2 * angle2 + alpha - Math.PI) / 2.0;
+                    let pdist_sq = Math.pow(point_2_local.x, 2) + Math.pow(point_2_local.y, 2);
+                    displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(alpha)));
+
+                }
+
+                trapez.left += displacement * Math.sin(angle3) + translation.x;
+                trapez.top += displacement * Math.cos(angle3) + translation.y;
+                trapez.rotate(trapez.angle + alpha / Math.PI * 180);
 
 
-                } else {
-                    for (let jj = 0; jj < 4; jj++) {
-                        if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
-
-                            sectors[sec_idx].snapStatus[jj] = 0;
-
-                        }
-                    }
-                    trapez.parent.snapStatus[ii] = 0;
-
-                    if (sectors[sec_idx].snapStatus.every(function (element) {
-                        return element === 0;
-                    })) {
-                        sectors[sec_idx].trapez.stroke = '#666';
-                    }
-                    if (trapez.parent.snapStatus.every(function (element) {
-                        return element === 0;
-                    })) {
-                        trapez.stroke = '#666';
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
+                        sectors[sec_idx].snapStatus[jj] = 1;
                     }
                 }
+                trapez.parent.snapStatus[ii] = 1;
+                sectors[sec_idx].trapez.stroke = 'green';
+                trapez.stroke = 'green';
+
+
+            } else {
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
+
+                        sectors[sec_idx].snapStatus[jj] = 0;
+
+                    }
+                }
+                trapez.parent.snapStatus[ii] = 0;
+
+                if (sectors[sec_idx].snapStatus.every(function (element) {
+                    return element === 0;
+                })) {
+                    sectors[sec_idx].trapez.stroke = '#666';
+                }
+                if (trapez.parent.snapStatus.every(function (element) {
+                    return element === 0;
+                })) {
+                    trapez.stroke = '#666';
+                }
+            }
 
 
 
@@ -1952,7 +2013,7 @@ function updateMinions(boss) {
 }
 
 
-/*Test für die Geodätendurchläufe*/
+
 
 
 
@@ -1960,22 +2021,6 @@ function updateMinions(boss) {
 
 //***************************Sektoren entsprechend der Metrik anlegen********************************
 // Für Programmierung sec.name = ii, ansonsten sec.name = sec_name[ii]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//sectors[4].trapez.set('fill', new fabric.Pattern({source: panel}));
-
 
 
 
@@ -2033,13 +2078,13 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 }
 
 
+fitResponsiveCanvas();
+
 positionSectors();
 
 startGeodesics();
 
 toolChange(selectedTool);
-
-
 
 canvas.renderAll();
 

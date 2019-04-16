@@ -11,126 +11,17 @@
 
 <body>
 
-<canvas id='canvas_buttons' style = 'left: 0px; top: 0px;' >
-</canvas>
+<body onresize="fitResponsiveCanvas()">
 
-<canvas id='canvas' style = ' left: 0px; top: 80px;' >
-</canvas>
-
-
-<canvas id='canvas_nav_foot' style = ' left: 0px; top: 1840px;' >
-</canvas>
+<div id="canvas-container">
+    <canvas id='canvas_buttons' >
+    </canvas>
+    <canvas id="canvas"></canvas>
+</div>
 
 
 
-<script>
-    (function() {
-        let
-            // Obtain a reference to the canvas element
-            // using its id.
-            canvas_buttons = document.getElementById('canvas_buttons'),
 
-            // Obtain a graphics context on the
-            // canvas element for drawing.
-            context = canvas_buttons.getContext('2d');
-
-        // Start listening to resize events and
-        // draw canvas.
-        initialize();
-
-        function initialize() {
-            // Register an event listener to
-            // call the resizeCanvas() function each time
-            // the window is resized.
-            window.addEventListener('resize', resizeCanvas, false);
-
-            // Draw canvas border for the first time.
-            resizeCanvas();
-        }
-
-        // Runs each time the DOM window resize event fires.
-        // Resets the canvas dimensions to match window,
-        // then draws the new borders accordingly.
-        function resizeCanvas() {
-            canvas_buttons.width = window.innerWidth;
-            canvas_buttons.height = window.innerHeight * 0.08;
-        }
-
-    })();
-</script>
-
-<script>
-    (function() {
-        let
-            // Obtain a reference to the canvas element
-            // using its id.
-            canvas = document.getElementById('canvas'),
-
-            // Obtain a graphics context on the
-            // canvas element for drawing.
-            context = canvas.getContext('2d');
-
-        // Start listening to resize events and
-        // draw canvas.
-        initialize();
-
-        function initialize() {
-            // Register an event listener to
-            // call the resizeCanvas() function each time
-            // the window is resized.
-            window.addEventListener('resize', resizeCanvas, false);
-
-            // Draw canvas border for the first time.
-            resizeCanvas();
-                    }
-
-        // Runs each time the DOM window resize event fires.
-        // Resets the canvas dimensions to match window,
-        // then draws the new borders accordingly.
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight *0.92;
-        }
-
-    })();
-</script>
-
-
-<!--<script>
-    (function() {
-        let
-            // Obtain a reference to the canvas element
-            // using its id.
-            canvas_nav_foot = document.getElementById('canvas_nav_foot'),
-
-            // Obtain a graphics context on the
-            // canvas element for drawing.
-            context = canvas_nav_foot.getContext('2d');
-
-        // Start listening to resize events and
-        // draw canvas.
-        initialize();
-
-        function initialize() {
-            // Register an event listener to
-            // call the resizeCanvas() function each time
-            // the window is resized.
-            window.addEventListener('resize', resizeCanvas, false);
-
-            // Draw canvas border for the first time.
-            resizeCanvas();
-        }
-
-        // Runs each time the DOM window resize event fires.
-        // Resets the canvas dimensions to match window,
-        // then draws the new borders accordingly.
-        function resizeCanvas() {
-            canvas_nav_foot.width = window.innerWidth;
-            canvas_nav_foot.height = 150;
-        }
-
-    })();
-</script>-->
 
 
 

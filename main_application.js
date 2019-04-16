@@ -10,7 +10,6 @@ canvas.rotationCursor = 'col-resize';
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snapping-Funktion für Gruppen
 canvas.selection = false;
 
-
 //updateMinions auf Gruppen erweitert (in dieser Version ausgeschaltet)
 canvas.on('selection:created', function(obj){
     if(obj.target.type === 'polygon') return;
@@ -68,6 +67,7 @@ canvas.on('mouse:move', function (o)
                 if (distance(pointer, geodesic_end_point) <= snap_radius_line) {
                     let idx = geodesics[ii][geodesics[ii].length - 1].parentSector;
                     sectors[idx[0]].trapez.hoverCursor = 'crosshair';
+
 
                     color = line_colors[ii % line_colors.length];
                     if (arrowheadline < 0) {
@@ -177,12 +177,50 @@ canvas.on('mouse:move', function (o)
     }
 });
 
+//Zoomoptionen
+
+canvas.on('mouse:wheel', function(opt) {
+    var delta = -opt.e.deltaY;
+    var pointer = canvas.getPointer(opt.e);
+    var zoom = canvas.getZoom();
+    zoom = zoom + delta/20;
+    if (zoom > 20) zoom = 20;
+    if (zoom < 0.01) zoom = 0.01;
+    canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+    opt.e.preventDefault();
+    opt.e.stopPropagation();
+});
+
+
+canvas.on('mouse:down', function(opt) {
+    var evt = opt.e;
+    if (evt.shiftKey === true) {
+        this.isDragging = true;
+        this.selection = false;
+        this.lastPosX = evt.clientX;
+        this.lastPosY = evt.clientY;
+    }
+});
+canvas.on('mouse:move', function(opt) {
+    if (this.isDragging) {
+        var e = opt.e;
+        this.viewportTransform[4] += e.clientX - this.lastPosX;
+        this.viewportTransform[5] += e.clientY - this.lastPosY;
+        this.requestRenderAll();
+        this.lastPosX = e.clientX;
+        this.lastPosY = e.clientY;
+    }
+});
+canvas.on('mouse:up', function(opt) {
+    this.isDragging = false;
+    this.selection = true;
+});
+
 
 //Abbrechen einer Linie
 window.addEventListener('keydown',function(event){
     if(event.key === 'Escape' || event.key === 'Backspace' || event.key === 'Delete'){
         if(typeof(line) !== 'undefined'){
-            console.log('Abort drawing of line',line);
             canvas.remove(line);
             isLineStarted = false;
             lineContinueAt = -1;
@@ -230,11 +268,6 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-window.addEventListener('keydown',function(event){
-    if(event.key === 's'){
-        setSectors();
-    }
-});
 
 //Button-Funktionen
 window.resetLines = removeLines;
@@ -807,6 +840,32 @@ function distance(punkt1, punkt2) {
     return Math.sqrt(Math.pow((punkt2.x - punkt1.x), 2) + Math.pow((punkt2.y - punkt1.y), 2));
 }
 
+function fitResponsiveCanvas() {
+
+
+
+    // canvas dimensions
+    let canvasSize = {
+        width: 1920,
+        height: 1080,
+    };
+    // canvas container dimensions
+    let containerSize = {
+        width: document.getElementById('canvas-container').offsetWidth,
+        height: document.getElementById('canvas-container').offsetHeight
+    };
+    let scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
+    canvas.setWidth(containerSize.width);
+    canvas.setHeight(containerSize.height);
+    canvas_buttons.setWidth(containerSize.width);
+    canvas_buttons.setHeight(90);
+    //set canvas zoom aspect
+    canvas.setZoom(scaleRatio);
+    canvas_buttons.setZoom(scaleRatio);
+    console.log(scaleRatio);
+    console.log(containerSize)
+}
+
 
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
@@ -1186,7 +1245,8 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
 
 
             if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda)
+                lambdas.push(lambda);
+
             }
         }
     }
@@ -1267,12 +1327,13 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 
 
             if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda)
+                lambdas.push(lambda);
             }
         }
     }
     if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
     return lambdas;
+
 }
 
 
@@ -1287,10 +1348,7 @@ function getMittelpunktsabstand(trapez) {
         if (sec_idx > -1) {
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
-            console.log(ii);
-            console.log("midpointm:"+midpointSectorMoved);
-            console.log("midpoints:"+midpointSectorStatic);
-            console.log("distance:"+distanceMidPoints);
+
         }
     }
 }
@@ -1312,7 +1370,7 @@ function overlapControll(trapez) {
         yg1 = transformedPoints[ii].y;
         yg2 = transformedPoints[(ii + 1) % 4].y;
 
-        let kantenMittelpunkt = new fabric.Point(xg1+(xg2 - xg1)/2,yg1+ (yg2 - yg1)/2);
+        let kantenMittelpunkt = new fabric.Point(xg1 + (xg2 - xg1) / 2, yg1 + (yg2 - yg1) / 2);
 
         overlapParameter = getSchnittpunktsparameterPadding(sectors, [xg1, yg1, xg2, yg2]);
 
@@ -1329,11 +1387,11 @@ function overlapControll(trapez) {
             else {
                 if(paddingContainsPoint(sectors[jj].trapez, kantenMittelpunkt)){
                     paddingOverlap = true;
-                    }
                 }
             }
-
         }
+
+    }
 
     if (overlap == true || paddingOverlap == true) {
         trapez.fill = 'red';
@@ -1425,11 +1483,10 @@ function Sector() {
 }
 
 
-
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
     let isPointInsideSectors = false;
     //
-    if (trapez.containsPoint(segmentMittelpunkt)) {
+    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
         //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
@@ -1472,7 +1529,6 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
                 let gamma = (xp - xt1 + ((yt1 - yp) * dyw) / dxw) / (dxt12 - (dyt12 * dyw) / dxw);
                 beta = ((yt1 - yp) / dxw) + (dyt12 / dxw) * gamma;
             }
-
             if (beta < 0.0){
                 isPointInsideSectors = false;
             }
@@ -1486,7 +1542,7 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
 function paddingContainsPoint(trapez,segmentMittelpunkt) {
     let isPointInsideSectors = false;
     //
-    if (trapez.containsPoint(segmentMittelpunkt)) {
+    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
         //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
@@ -1959,7 +2015,11 @@ function updateMinions(boss) {
 }
 
 
-/*Test für die Geodätendurchläufe*/
+
+
+
+
+
 
 
 
@@ -1989,7 +2049,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
 
 
-
+fitResponsiveCanvas();
 
 positionSectors();
 
