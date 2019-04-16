@@ -215,6 +215,8 @@ canvas.on('mouse:move', function(opt) {
 canvas.on('mouse:up', function(opt) {
     this.isDragging = false;
     this.selection = true;
+    var zoom = canvas.getZoom();
+    canvas.setZoom(zoom)
 });
 
 
