@@ -194,14 +194,19 @@ canvas.on('mouse:wheel', function(opt) {
 
 
 canvas.on('mouse:down', function(opt) {
+
+    let onSector = true;
+    if(opt.target == null){ onSector=false}
+
     var evt = opt.e;
-    if (evt.shiftKey === true) {
+    if (evt.shiftKey === true || onSector == false) {
         this.isDragging = true;
         this.selection = false;
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
     }
 });
+
 canvas.on('mouse:move', function(opt) {
     if (this.isDragging) {
         var e = opt.e;
@@ -214,7 +219,7 @@ canvas.on('mouse:move', function(opt) {
 });
 canvas.on('mouse:up', function(opt) {
     this.isDragging = false;
-    this.selection = true;
+    this.selection = false;
     var zoom = canvas.getZoom();
     canvas.setZoom(zoom)
 });
@@ -867,8 +872,6 @@ function fitResponsiveCanvas() {
     //set canvas zoom aspect
     canvas.setZoom(scaleRatio);
     canvas_buttons.setZoom(scaleRatio);
-    console.log(scaleRatio);
-    console.log(containerSize)
 }
 
 
