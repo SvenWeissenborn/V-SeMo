@@ -996,7 +996,7 @@ function initialize() //keine Argumente
 
     this.trapez.on('moving',function(){snapping(this); updateMinions(this)});
     this.trapez.on('rotating',function(){updateMinions(this)});
-    this.trapez.on('modified',function(){snapping(this);snapping(this);updateMinions(this); overlapControll(this)});
+    this.trapez.on('modified',function(){snapping(this);snapping(this);updateMinions(this); for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
