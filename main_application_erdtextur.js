@@ -68,6 +68,8 @@ canvas.on('mouse:move', function (o)
                 let alpha = Math.atan2(geodesic_end_point.y - geodesic_start_point.y, geodesic_end_point.x - geodesic_start_point.x);
                 if (distance(pointer, geodesic_end_point) <= snap_radius_line) {
                     let idx = geodesics[ii][geodesics[ii].length - 1].parentSector;
+                    //es kann nur auf nicht überlappenden Sektoren gezeichnet werden
+                    if(sectors[idx[0]].trapez.opacity !== 1 ) return;
                     sectors[idx[0]].trapez.hoverCursor = 'crosshair';
 
                     color = line_colors[ii % line_colors.length];
