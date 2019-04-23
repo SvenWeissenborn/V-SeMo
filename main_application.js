@@ -1001,7 +1001,7 @@ function initialize() //keine Argumente
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
-        if(selectedTool !== 'paint' && selectedTool !== 'grab') return;
+        if(selectedTool !== 'paint' && selectedTool !== 'grab' || this.opacity !== 1) return;
         let color;
             color = line_colors[geodesics.length % line_colors.length];
             if (!isLineStarted) {
