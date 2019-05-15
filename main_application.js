@@ -314,6 +314,10 @@ let paddingFactor = 0.01;
 let multiply = fabric.util.multiplyTransformMatrices;
 let invert = fabric.util.invertTransform;
 
+let canvasSize = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+};
 
 let sectors = [];
 
@@ -851,13 +855,6 @@ function distance(punkt1, punkt2) {
 
 function fitResponsiveCanvas() {
 
-
-
-    // canvas dimensions
-    let canvasSize = {
-        width: 1920,
-        height: 1080,
-    };
     // canvas container dimensions
     let containerSize = {
         width: document.getElementById('canvas-container').offsetWidth,
@@ -867,7 +864,7 @@ function fitResponsiveCanvas() {
     canvas.setWidth(containerSize.width);
     canvas.setHeight(containerSize.height);
     canvas_buttons.setWidth(containerSize.width);
-    canvas_buttons.setHeight(90);
+    canvas_buttons.setHeight(containerSize.height * 0.1);
     //set canvas zoom aspect
     canvas.setZoom(scaleRatio);
     canvas_buttons.setZoom(scaleRatio);
@@ -2063,6 +2060,8 @@ positionSectors();
 startGeodesics();
 
 toolChange(selectedTool);
+
+
 
 canvas.renderAll();
 
