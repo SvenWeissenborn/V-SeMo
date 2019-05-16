@@ -316,7 +316,7 @@ fabric.Image.fromURL('visemo_logo.png', function(img) {
         hoverCursor: "pointer"});
 
     logo.on('mousedown', function (o) {
-        window.location = 'index.html';
+        window.location = 'english.html';
     });
     canvas_buttons.add(logo);
 });
@@ -339,7 +339,7 @@ fabric.Image.fromURL('home.png', function(img) {
         hoverCursor: "pointer"});
 
     home.on('mousedown', function (o) {
-        window.location = 'index.html';
+        window.location = 'english.html';
     });
     canvas_buttons.add(home);
 });
