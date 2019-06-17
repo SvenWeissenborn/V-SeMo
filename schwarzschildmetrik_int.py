@@ -3,7 +3,7 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 3
+nSektorzeilenVonRing = 5
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 60
@@ -18,11 +18,11 @@ dradius = 1.25 * schwarzschildradius
 versatz_x = 0.4
 versatz_y = 0.0
 versatz_x_var = 0.0
-versatz_y_var = 0.4
+versatz_y_var = 0.0
 
-startGeodesicsAngle = [40, 40]
+startGeodesicsAngle = [75,123]
 
-startGeodesicsSector = 29
+startGeodesicsSector = 49
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_parallel.js",'w')
+    file = io.open("schwarzschildmetrik_zwei_signale.js",'w')
 
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
@@ -58,9 +58,9 @@ def main():
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 15
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist
             else:
-                sector_y_dist = dradius + sector_height/2 + 15
+                sector_y_dist = dradius + sector_height/2
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)

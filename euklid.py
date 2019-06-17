@@ -3,26 +3,26 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 3
+nSektorzeilenVonRing = 5
 nSektorspaltenVonRing = 12
 
-schwarzschildradius = 100
+schwarzschildradius = 0
 dradius = 1.25 * schwarzschildradius
-
+dradius = 100
 
 
 # startGeodesicsAngle ist das entscheidende Array für den Startwinkel und die Anzahl der Startgeodäten
 # versatz_x versetzt die Geodäten in der x-Richtung vom Mittelpunkt des Sektors weg
 # versatz_y liegt zwischen -1 und 1 und sorgt bei gleichen Winkel für parallele Geodäten
 
-versatz_x = 0.4
+versatz_x = 0.0
 versatz_y = 0.0
 versatz_x_var = 0.0
-versatz_y_var = 0.4
+versatz_y_var = 0.0
 
-startGeodesicsAngle = [40, 40]
+startGeodesicsAngle = [75,123]
 
-startGeodesicsSector = 29
+startGeodesicsSector = 49
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_parallel.js",'w')
+    file = io.open("euklid.js",'w')
 
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
@@ -50,22 +50,23 @@ def main():
 
     for ringspalte in range(0, nSektorspaltenVonRing):
         for ringzeile in range(0, nSektorzeilenVonRing):
-            offset = dradius * dphi * 0.5
+            offset = dradius * math.sin(dphi * 0.5)
             rad1 = (ringzeile + 1) * dradius
             rad2 = (ringzeile + 2) * dradius
-            radial = rad2 - rad1
+            radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+
             sector_height = math.sqrt(math.pow(radial, 2) - math.pow(offset, 2))
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 15
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist
             else:
-                sector_y_dist = dradius + sector_height/2 + 15
+                sector_y_dist = dradius + sector_height/2
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 2)) * dphi
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile + 1)) * dphi
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = 2*(dradius * (ringzeile + 2)) * math.sin(dphi*0.5)
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = 2*(dradius * (ringzeile + 1)) * math.sin(dphi*0.5)
 
 
 
