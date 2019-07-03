@@ -1,3 +1,7 @@
+//ACHTUNG!!! SNAPPING UND SETSECTORS MÜSSEN ÜBERARBEITET WERDEN; SIE MÜSSEN DERZEIT JEWEILS ZWEIMAL AUSGEFÜHRT WERDEN UM DIE RICHTIGEN ERGEBNISSE ZU ERHALTEN
+
+
+
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
 let canvas = new fabric.Canvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9'});
 
@@ -280,9 +284,10 @@ window.addEventListener('keydown',function(event){
 //Sektoren passend zusammensetzen
 window.addEventListener('keydown',function(event){
     if(event.key === 's'){
-        setSectors();
+        setSectors(); setSectors();
     }
 });
+
 
 
 //Button-Funktionen
@@ -1453,7 +1458,7 @@ function resetSectors() {
         sectors[rr].trapez.top = sec_posy[rr] * scaleFacotor + (window.innerHeight - window.innerHeight*0.08)/2;
         sectors[rr].trapez.setCoords();
         sectors[rr].trapez.angle = sec_angle[rr];
-        overlapControll(sectors[rr].trapez)
+        overlapControll(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
 
@@ -1552,6 +1557,9 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
 }
 
 function setSectors() {
+
+    //resetSectors();
+
     //Idee: Cursor über Geodätenende bewegen: Ähnlich zur automatischen Vervollständigung soll die Geodäte von Sektor zu Sektor verlaufen
     //dabei sollen die entsprechenden Kanten ermittelt werden. An diesen Kanten sollen die Sektoren anschließend zusammenschnappen
 
@@ -1576,6 +1584,9 @@ function setSectors() {
 
     let nextGeodesic_x;
     let nextGeodesic_y;
+
+    let point_1_local;
+    let point_2_local;
 
 
     kantenindex = -1;
@@ -1607,6 +1618,8 @@ function setSectors() {
                 transformedPoints[jj].y = sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.height / 2;
                 transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
             }
+
+
 
 
             for (let kk = 0; kk < 4; kk++) {
@@ -1681,7 +1694,13 @@ function setSectors() {
                         transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
                     }
 
-                    console.log(sectors[neighbourSector].ID, transformedPoints);
+                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2,
+                        sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2);
+
+                    point_2_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
+                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
+
+                    //console.log(sectors[neighbourSector].ID, transformedPoints);
 
                     //Übergangspunkte übernehmen
                     xt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
@@ -1700,8 +1719,11 @@ function setSectors() {
                     dxg = nextGeodesic_x = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
                     dyg = nextGeodesic_y = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
 
-                    //Noch: Eingefügte Kreise und Linien helfen die notwendigen Wege und entfernungen zu finden
 
+
+
+                    //Noch: Eingefügte Kreise und Linien helfen die notwendigen Wege und entfernungen zu finden
+                    /*
                     canvas.add(new fabric.Line([xt1, yt1, xt1_uebergang, yt1_uebergang], { stroke: 'black'}));
                     canvas.add(new fabric.Line([xt2, yt2, xt2_uebergang, yt2_uebergang], { stroke: 'black'}));
 
@@ -1710,25 +1732,98 @@ function setSectors() {
 
                     canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: yt1, left: xt1 , originY: 'center', originX: 'center'}));
                     canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: yt2, left: xt2 , originY: 'center', originX: 'center'}));
+                    */
 
-                    console.log('nachbar:', neighbourSector);
+                    //point_1/2 gehören zum zu setzenden Trapez ()
+                    //point_a/b gehören zum unbewegten Trapez
+
+                    point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
+                    point_2 = new fabric.Point(xt2_uebergang, yt2_uebergang);
+                    point_a = new fabric.Point(xt1, yt1);
+                    point_b = new fabric.Point(xt2, yt2);
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_1.y, left: point_1.x , originY: 'center', originX: 'center'}));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_2.y, left: point_2.x , originY: 'center', originX: 'center'}));
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_a.y, left: point_a.x , originY: 'center', originX: 'center'}));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_b.y, left: point_b.x , originY: 'center', originX: 'center'}));
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_1.y, left: point_1.x , originY: 'center', originX: 'center'}));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_2.y, left: point_2.x , originY: 'center', originX: 'center'}));
+
+
+                    dist_1a = distance(point_1, point_a);
+                    dist_2b = distance(point_2, point_b);
+
+
+
+
+                    //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
+                    if (dist_1a <= dist_2b) {
+                        // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
+                        translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
+                        let kathete = distance(point_a, point_b);
+                        let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
+                        alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                        if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
+                            alpha = -alpha;
+                        }
+
+                        let angle2 = Math.atan2(point_1_local.y, point_1_local.x);
+                        angle3 = (2 * angle2 - alpha - Math.PI) / 2.0;
+                        let pdist_sq = Math.pow(point_1_local.x, 2) + Math.pow(point_1_local.y, 2);
+                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(-alpha)));
+
+
+                    } else if (dist_1a > dist_2b) {
+                        // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
+                        translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
+                        let kathete = distance(point_a, point_b);
+                        let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
+                        alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                        if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
+                            alpha = -alpha;
+                        }
+
+                        let angle2 = Math.atan2(point_2_local.y, point_2_local.x);
+                        angle3 = (2 * angle2 + alpha - Math.PI) / 2.0;
+                        let pdist_sq = Math.pow(point_2_local.x, 2) + Math.pow(point_2_local.y, 2);
+                        displacement = Math.sqrt(2 * pdist_sq * (1 - Math.cos(alpha)));
+
+                    }
+
+                    sectors[neighbourSector].trapez.left += displacement * Math.sin(angle3) + translation.x;
+                    sectors[neighbourSector].trapez.top += displacement * Math.cos(angle3) + translation.y;
+                    sectors[neighbourSector].trapez.rotate(sectors[neighbourSector].trapez.angle + alpha / Math.PI * 180);
+
+
+
+                    //console.log('nachbar:', neighbourSector);
+
+                    /*
 
                     let dist_xt1_und_xt1_uebergang = xt1 - xt1_uebergang;
                     let dist_yt1_und_yt1_uebergang = yt1 - yt1_uebergang;
                     let dist_xt2_und_xt2_uebergang = xt2 - xt2_uebergang;
                     let dist_yt2_und_yt2_uebergang = yt2 - yt2_uebergang;
 
+
+
+
                     let dist_x_max;
                     let dist_y_max;
 
                     if (Math.abs(dist_xt1_und_xt1_uebergang) > Math.abs(dist_xt2_und_xt2_uebergang)) {
                         dist_x_max = dist_xt1_und_xt1_uebergang;
+                        dist_y_max = dist_yt1_und_yt1_uebergang;
                         //console.log('xt1', dist_x_max)
                     }else {
                         dist_x_max = dist_xt2_und_xt2_uebergang;
+                        dist_y_max = dist_yt2_und_yt2_uebergang;
                         //console.log('xt2', dist_x_max)
 
                     }
+
 
                     if (Math.abs(dist_yt1_und_yt1_uebergang) > Math.abs(dist_yt2_und_yt2_uebergang)) {
                         dist_y_max = dist_yt1_und_yt1_uebergang;
@@ -1738,27 +1833,29 @@ function setSectors() {
                         //console.log('yt2', dist_y_max)
                     }
 
-                    console.log('left Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.left);
-                    console.log('top Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.top);
+
+                    //console.log('left Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.left);
+                    //console.log('top Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.top);
 
                     sectors[neighbourSector].trapez.left += dist_x_max;
                     sectors[neighbourSector].trapez.top += dist_y_max;
 
+                    */
+
+
+
                     updateMinions(sectors[neighbourSector].trapez);
 
+
+                   //snapping(sectors[neighbourSector].trapez);
+
+
                     sectors[neighbourSector].trapez.setCoords();
-
-                    console.log('left Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.left);
-                    console.log('top Sektor:', neighbourSector + 1, sectors[neighbourSector].trapez.top);
-
-                    //console.log('distanz zu Nachbar', neighbourSector, 'in x-Richtung (1) :', dist_xt1_und_xt1_uebergang);
-                    //console.log('distanz zu Nachbar', neighbourSector, 'in y-Richtung (1) :', dist_yt1_und_yt1_uebergang);
-                    //console.log('distanz zu Nachbar', neighbourSector, 'in x-Richtung (2) :', dist_xt2_und_xt2_uebergang);
-                    //console.log('distanz zu Nachbar', neighbourSector, 'in y-Richtung (2) :', dist_yt2_und_yt2_uebergang);
 
 
 
                     //Schnittpunkte mit den neuen Sektorkanten ermitteln
+
 
                     for (let kk = 0; kk < 4; kk++) {
 
@@ -1790,13 +1887,42 @@ function setSectors() {
                         }
                     }
 
+
+
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'green', top: yt1, left: xt1 , originY: 'center', originX: 'center'}));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'green', top: yt2, left: xt2 , originY: 'center', originX: 'center'}));
+
+
+
+
+
+
+                    console.log("nächste Iteration",lauf+1);
+                    transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
+                    transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+                    for (let jj = 0; jj < 4; jj++) {
+                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2;
+                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2;
+                        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
+                    }
+
+                    xt1 = transformedPoints[kantenIndex].x;
+                    xt2 = transformedPoints[(kantenIndex + 1) % 4].x;
+                    yt1 = transformedPoints[kantenIndex].y;
+                    yt2 = transformedPoints[(kantenIndex + 1) % 4].y;
+
+
 
 
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
 
                     alpha = alpha_2;
+
+
+
 
 
                 }
