@@ -1466,6 +1466,7 @@ function resetSectors() {
     }
     for (let rr = 0; rr < sectors.length; rr++){
         snapping(sectors[rr].trapez);
+        overlapControll(sectors[rr].trapez);
 
     }
     canvas.renderAll();
