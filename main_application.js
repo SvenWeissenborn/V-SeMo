@@ -288,6 +288,14 @@ window.addEventListener('keydown',function(event){
     }
 });
 
+//reset Zoom and Pan
+window.addEventListener('keydown',function(event){
+    if(event.key === 'l'){
+        resetZoomPan();
+    }
+
+});
+
 
 
 //Button-Funktionen
@@ -330,6 +338,8 @@ let canvasSize = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
+
+let scaleRatio;
 
 let sectors = [];
 
@@ -872,7 +882,7 @@ function fitResponsiveCanvas() {
         width: document.getElementById('canvas-container').offsetWidth,
         height: document.getElementById('canvas-container').offsetHeight
     };
-    let scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
+    scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
     canvas.setWidth(containerSize.width);
     canvas.setHeight(containerSize.height);
     canvas_buttons.setWidth(containerSize.width);
@@ -1470,6 +1480,12 @@ function resetSectors() {
 
     }
     canvas.renderAll();
+}
+
+function resetZoomPan(){
+    canvas.setZoom( scaleRatio);
+    canvas.viewportTransform[4]= 0;
+    canvas.viewportTransform[5]= 0;
 }
 
 
