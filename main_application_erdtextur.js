@@ -886,9 +886,9 @@ function fitResponsiveCanvas() {
     };
     scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
     canvas.setWidth(containerSize.width);
-    canvas.setHeight(containerSize.height);
+    canvas.setHeight(containerSize.height * 0.92);
     canvas_buttons.setWidth(containerSize.width);
-    canvas_buttons.setHeight(containerSize.height * 0.1);
+    canvas_buttons.setHeight(containerSize.height * 0.08);
     //set canvas zoom aspect
     canvas.setZoom(scaleRatio);
     canvas_buttons.setZoom(scaleRatio);

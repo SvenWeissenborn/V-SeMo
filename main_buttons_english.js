@@ -14,11 +14,17 @@ let textSize = win_width * 0.01;
 
 
 canvas_buttons.on('mouse:over', function(e) {
+    if (e.target == null){
+        return
+    }
     e.target.set('fill', '#1e90ff');
     canvas_buttons.renderAll();
 });
 
 canvas_buttons.on('mouse:out', function(e) {
+    if (e.target == null){
+        return
+    }
     e.target.set('fill', '#e5e5e0');
     canvas_buttons.renderAll();
 });

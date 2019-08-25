@@ -3,7 +3,7 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 5
+nSektorzeilenVonRing = 11
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 60
