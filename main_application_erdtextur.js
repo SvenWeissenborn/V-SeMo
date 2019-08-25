@@ -1613,24 +1613,24 @@ function setSectors() {
         if ( geodesics[arrowheadline].length > 0) {
 
 
-            let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
-            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
+            let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][0].calcLinePoints().x2, geodesics[arrowheadline][0].calcLinePoints().y2);
+            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][0].calcTransformMatrix());
 
             let xg2 = geodesic_end_point.x;
             let yg2 = geodesic_end_point.y;
 
-            let geodesic_start_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x1, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
+            let geodesic_start_point = new fabric.Point(geodesics[arrowheadline][0].calcLinePoints().x1, geodesics[arrowheadline][0].calcLinePoints().y1);
+            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[arrowheadline][0].calcTransformMatrix());
 
             let xg1 = geodesic_start_point.x;
             let yg1 = geodesic_start_point.y;
 
             //Umrechnung der lokalen in globale Koordinaten
-            let transformMatrix = sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
+            let transformMatrix = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.calcTransformMatrix('True');
             let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
             for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.width / 2;
-                transformedPoints[jj].y = sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].trapez.height / 2;
+                transformedPoints[jj].x = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.width / 2;
+                transformedPoints[jj].y = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.height / 2;
                 transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
             }
 
@@ -1676,7 +1676,7 @@ function setSectors() {
 
 
 
-            let neighbourSector = sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].neighbourhood[kantenIndex];
+            let neighbourSector = sectors[geodesics[arrowheadline][0].parentSector[0]].neighbourhood[kantenIndex];
 
 
             if (kantenIndex >= 0) {
