@@ -299,8 +299,6 @@ window.addEventListener('keydown',function(event){
 
 
 //Button-Funktionen
-window.resetLines = removeLines;
-
 window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;

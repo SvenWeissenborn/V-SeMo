@@ -75,7 +75,7 @@ canvas_buttons.add(button_1, text_1);
 
 button_1.on('mousedown', function(e) {
     // e.target should be the circle
-    resetLines();
+    removeLines();
 });
 
 let button_2 = new fabric.Rect({
