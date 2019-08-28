@@ -48,7 +48,6 @@ let arrowhead;
 canvas.on('mouse:down',function(){
     if(typeof arrowhead != 'undefined') {
         canvas.remove(arrowhead);
-        arrowheadline = -1;
     }
 });
 canvas.on('mouse:move', function (o)
@@ -68,7 +67,7 @@ canvas.on('mouse:move', function (o)
                 let geodesic_start_point = new fabric.Point(geodesics[ii][geodesics[ii].length - 1].calcLinePoints().x1, geodesics[ii][geodesics[ii].length - 1].calcLinePoints().y1);
                 geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[ii][geodesics[ii].length - 1].calcTransformMatrix());
                 let alpha = Math.atan2(geodesic_end_point.y - geodesic_start_point.y, geodesic_end_point.x - geodesic_start_point.x);
-                if (distance(pointer, geodesic_end_point) <= snap_radius_line) {
+                if (distance(pointer, geodesic_end_point) <= snap_radius_line * 1/canvas.getZoom()) {
                     let idx = geodesics[ii][geodesics[ii].length - 1].parentSector;
                     //es kann nur auf nicht überlappenden Sektoren gezeichnet werden
                     if(sectors[idx[0]].trapez.opacity !== 1 ) return;
@@ -89,6 +88,7 @@ canvas.on('mouse:move', function (o)
                         });
                         arrowhead.rotate(alpha * 180 / Math.PI + 90);
                         arrowheadline = ii;
+                        console.log(arrowheadline)
                         canvas.add(arrowhead);
                     }
 
@@ -189,7 +189,7 @@ canvas.on('mouse:wheel', function(opt) {
     var delta = -opt.e.deltaY;
     var pointer = canvas.getPointer(opt.e);
     var zoom = canvas.getZoom();
-    zoom = zoom + delta/20;
+    zoom = zoom + (1/delta/5);
     if (zoom > 20) zoom = 20;
     if (zoom < 0.01) zoom = 0.01;
     canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
@@ -926,7 +926,7 @@ function initialize() //keine Argumente
             left: this.pos_x, //Koordinaten der linken oberen Ecke der Boundingbox
             top: this.pos_y,
             angle: this.sector_angle,
-            fill: 'white',
+            fill: this.fill,
             strokeWidth: 2 * scaleFacotor,
             stroke: '#666',
             perPixelTargetFind: true,
@@ -1024,19 +1024,16 @@ function initialize() //keine Argumente
         let color;
             color = line_colors[geodesics.length % line_colors.length];
             if (!isLineStarted) {
-            {
                 let pointer = canvas.getPointer(o.e);
                 let points = [pointer.x, pointer.y, pointer.x, pointer.y];
-                for (let ii = 0; ii < geodesics.length; ii++) {
-                    if (geodesics[ii].length>0) {
-                        let geodesic_end_point = new fabric.Point(geodesics[ii][geodesics[ii].length - 1].calcLinePoints().x2, geodesics[ii][geodesics[ii].length - 1].calcLinePoints().y2);
-                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[ii][geodesics[ii].length - 1].calcTransformMatrix());
+                if (arrowheadline !==-1){
+                    if (geodesics[arrowheadline].length>0) {
+                        let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
+                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
                         let distance_mouse_point = distance(pointer, geodesic_end_point);
-                        if (distance_mouse_point <= snap_radius_line) {
-                            points = [geodesic_end_point.x, geodesic_end_point.y, pointer.x, pointer.y];
-                            lineContinueAt = ii;
-                            color = geodesics[lineContinueAt][0].fill;
-                        }
+                        points = [geodesic_end_point.x, geodesic_end_point.y, pointer.x, pointer.y];
+                        lineContinueAt = arrowheadline;
+                        color = geodesics[lineContinueAt][0].fill;
                     }
                 }
                 if (selectedTool == 'grab' && lineContinueAt !== -1){
@@ -1067,13 +1064,16 @@ function initialize() //keine Argumente
 
                     canvas.renderAll();
                 }
-            }
+
         }
     });
 
 
     //Beenden von Linien; nur auf Trapezen möglich
     this.trapez.on('mouseup', function (o) {
+        if (arrowheadline !== -1) {
+            arrowheadline = -1;
+        }
         if(selectedTool !== 'paint' && lineContinueAt == -1 ) {
             return;
         }
@@ -1357,7 +1357,6 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
     }
     if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
     return lambdas;
-
 }
 
 
@@ -1372,7 +1371,6 @@ function getMittelpunktsabstand(trapez) {
         if (sec_idx > -1) {
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
-
         }
     }
 }
@@ -1399,13 +1397,13 @@ function overlapControll(trapez) {
         overlapParameter = getSchnittpunktsparameterPadding(sectors, [xg1, yg1, xg2, yg2]);
 
         for (let jj = 0; jj < overlapParameter.length; jj++)
-            if (overlapParameter[jj] > epsilon && overlapParameter[jj] < 0.999999) {
+            if (overlapParameter[jj] > 0.1 && overlapParameter[jj] < 0.979999999999999999999) {
                 overlap = true;
             }
 
-        for (let jj = 0 ; jj < sectors.length; jj++){
+        for (let jj = 0; jj < sectors.length; jj++) {
 
-            if(jj == trapez.parent.ID){
+            if(jj == trapez.parent.ID) {
                 continue
             }
             else {
@@ -1418,14 +1416,13 @@ function overlapControll(trapez) {
     }
 
     if (overlap == true || paddingOverlap == true) {
-        trapez.fill = 'red';
+        //trapez.fill = 'red';
         trapez.opacity = 0.5;
     }
     if (overlap == false && paddingOverlap == false) {
-        trapez.fill = 'white';
+        //trapez.fill = 'white';
         trapez.opacity = 1.0;
     }
-
 
 }
 
@@ -1501,6 +1498,7 @@ function Sector() {
     this.sector_angle;
     this.name;
     this.ID;
+    this.fill;
 
     this.init = initialize; // das Objekt Sektor bekommt die Methode 'initialize' mitgegeben, keine Klammern
 
@@ -2107,7 +2105,6 @@ function snapping(trapez) {
                 dist_2b = snap_radius_sectors +1;
             }
 
-
             let translation;
             let alpha;
             let angle3;
@@ -2441,8 +2438,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    //sec.name = ii;
-    sec.name = sec_name[ii];
+    sec.name = ii;
+    //sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
     sec.pos_x = sec_posx[ii] * scaleFacotor + window.innerWidth/2;
     sec.pos_y = sec_posy[ii] * scaleFacotor + (window.innerHeight - window.innerHeight*0.08)/2;
@@ -2453,6 +2450,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
     sec.offset_x = sec_offset[ii] * scaleFacotor;
     sec.sector_width = sec_width[ii] *scaleFacotor;
     sec.neighbourhood = [sec_neighbour_top[ii],sec_neighbour_right[ii],sec_neighbour_bottom[ii],sec_neighbour_left[ii]];
+    sec.fill = sec_fill[ii];
     sec.init();
     sectors.push(sec);
 }

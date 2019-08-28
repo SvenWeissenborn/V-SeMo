@@ -3,11 +3,11 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 11
+nSektorzeilenVonRing = 9
 nSektorspaltenVonRing = 12
 
-schwarzschildradius = 60
-dradius = 1.25 * schwarzschildradius
+schwarzschildradius = 120
+dradius = (2/3.0) * schwarzschildradius
 
 
 
@@ -20,9 +20,9 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = [75,123]
+startGeodesicsAngle = [75,120]
 
-startGeodesicsSector = 49
+startGeodesicsSector = 89
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
     dphi = (2*math.pi/nSektorspaltenVonRing)
 
 
-    sector_y_dist = 0.0
+
 
 
 
@@ -40,7 +40,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
 
-    variablenamesSectors = ["sec_name", "sec_ID", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
+    variablenamesSectors = ["sec_name", "sec_ID", "sec_fill", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = nSektorzeilenVonRing * nSektorspaltenVonRing
 
@@ -51,9 +51,19 @@ def main():
     for ringspalte in range(0, nSektorspaltenVonRing):
         for ringzeile in range(0, nSektorzeilenVonRing):
             offset = dradius * dphi * 0.5
-            rad1 = (ringzeile + 1) * dradius
-            rad2 = (ringzeile + 2) * dradius
-            radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+            rad1 = (ringzeile ) * dradius
+            rad2 = (ringzeile + 1) * dradius
+            radmid = (rad2 + rad1)/2
+            print('rad1', rad1, 'rad2', rad2, 'radmid', radmid )
+            if(ringzeile < 3):
+                radial = math.sqrt(1 / (1 - 0.125 * math.pow((radmid / schwarzschildradius),2))) * (rad2 - rad1)
+                sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'#e2e2e2'"
+            else:
+                radial = math.sqrt(math.pow((1 - (schwarzschildradius/radmid)), (-1))) * (rad2 - rad1)
+                sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
+
+
+            # "Die integrale Form von Schwarzschild" radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
             sector_height = math.sqrt(math.pow(radial, 2) - math.pow(offset, 2))
 
 
@@ -64,8 +74,8 @@ def main():
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 2)) * dphi
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile + 1)) * dphi
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 1)) * dphi
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile )) * dphi
 
 
 

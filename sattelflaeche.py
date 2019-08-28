@@ -31,7 +31,7 @@ def main():
     file.write("let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue'];")
     file.write("\n")
 
-    variablenamesSectors = ["sec_name", "sec_ID", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
+    variablenamesSectors = ["sec_name", "sec_ID", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle", "sec_fill"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = zeilenanzahl * spaltenanzahl
     maxsectorwidth = radius * math.cosh(math.pi/6) * math.pi/9
@@ -46,6 +46,8 @@ def main():
     for id in range(0, anzahlDerSektoren):
         sectorValues[sectorDict["sec_name"]][id] = id + 1
         sectorValues[sectorDict["sec_ID"]][id] = id
+        sectorValues[sectorDict["sec_fill"]][id] = "'white'"
+
 
     jj = 0
 
