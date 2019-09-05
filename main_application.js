@@ -1223,7 +1223,21 @@ function initializeSectors() //keine Argumente
             for(let ii = 1; ii<lambdas.length; ii++) {
                 let lineend_x = xg1 + lambdas[ii] * (xg2 - xg1);
                 let lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
+
+                let lineLastPoint = new fabric.Point(xg1 + lambdas[ii] * (xg2 - xg1), yg1 + lambdas[ii] * (yg2 - yg1));
+
                 if(Math.abs(lineend_x-linestart_x)>epsilon || Math.abs(lineend_y-linestart_y)>epsilon) {
+
+                    let lineEndIsOverCanvas = false;
+                    for (let jj = sectors.length - 1; jj >= 0; jj--) {
+
+                        if (sectorContainsPoint(sectors[jj].trapez, lineLastPoint)) {
+                            lineEndIsOverCanvas = true;
+                            break
+                        }
+                    }
+
+
                     let lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
                         strokeWidth: 2 * scaleFacotor,
                         fill: color,
@@ -1253,6 +1267,11 @@ function initializeSectors() //keine Argumente
                                 lineSegment.parentSector = [jj, sectors[jj].lineSegments.length];
                             }
                         }
+                    }
+
+                    if (lineEndIsOverCanvas === false) {
+                        lineContinueAt = -1;
+                        return
                     }
 
 
