@@ -39,6 +39,7 @@ canvas.on('selection:created', function(obj){
 
 //Visuelles Signal bei Geodäten verlängern
 let arrowheadline = -1;
+let startAtMarkPoint = -1;
 let arrowhead;
 
 /* Prüfen:  - ob Geodätenende in der Nähe, falls ja -> visuelles Signal
@@ -50,6 +51,7 @@ canvas.on('mouse:down',function(){
         canvas.remove(arrowhead);
     }
 });
+
 canvas.on('mouse:move', function (o)
 {
 
@@ -88,7 +90,7 @@ canvas.on('mouse:move', function (o)
                         });
                         arrowhead.rotate(alpha * 180 / Math.PI + 90);
                         arrowheadline = ii;
-                        console.log(arrowheadline)
+                        //console.log(arrowheadline);
                         canvas.add(arrowhead);
                     }
 
@@ -105,7 +107,32 @@ canvas.on('mouse:move', function (o)
             }
         }
 
-        return
+
+
+        for (let ii = 0; ii < markPoints.length; ii++) {
+            let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
+            if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
+
+                let idx = markPoints[ii].parentSector;
+
+                if(sectors[idx].trapez.opacity !== 1 ) return;
+                if (arrowheadline < 0 && startAtMarkPoint < 0) {
+                    startAtMarkPoint = ii;
+                    toolChange('paint')
+
+                }
+
+            }else {
+                if (startAtMarkPoint === ii) {
+                    let idx = markPoints[ii].parentSector;
+                    sectors[idx].trapez.hoverCursor = 'grabbing';
+                    startAtMarkPoint = -1;
+                    toolChange('grab')
+                }
+            }
+        }
+
+        return;
     }
 
     if( lineContinueAt !== -1){
@@ -143,7 +170,7 @@ canvas.on('mouse:move', function (o)
             }
         }
     }else {
-        if(selectedTool == 'paint') {
+        if(selectedTool == 'paint' || startAtMarkPoint !== -1) {
             line.set({x2: pointer.x, y2: pointer.y});
         }
     }
@@ -232,7 +259,7 @@ canvas.on('mouse:up', function(opt) {
 
 //Abbrechen einer Linie
 window.addEventListener('keydown',function(event){
-    if(event.key === 'Escape' || event.key === 'Backspace' || event.key === 'Delete'){
+    if(event.key === 'Escape' || event.key === 'Backspace' ){
         if(typeof(line) !== 'undefined'){
             canvas.remove(line);
             isLineStarted = false;
@@ -251,10 +278,24 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-//Werkzeugwechsel "Zeichnen"
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'Delete'){
+        toolChange('delete_whole');
+    }
+});
+
+//Werkzeugwechsel "Greifen"
 window.addEventListener('keydown',function(event){
     if(event.key === 'g'){
         toolChange('grab');
+    }
+});
+
+//Werkzeugwechsel "Zeichnen"
+window.addEventListener('keydown',function(event){
+    if(event.key === 'd'){
+        toolChange('mark');
     }
 });
 
@@ -318,8 +359,9 @@ if (window.innerWidth < 1000 || window.innerHeight < 1000){
 }
 
 let epsilon = 0.0000001;
-let snap_radius_sectors = 10 * scaleFacotor;
+let snap_radius_sectors = 5 * scaleFacotor;
 let snap_radius_line = 15 * scaleFacotor;
+let snap_radius_markPoint = 30 * scaleFacotor;
 
 let abortlength = 14 * scaleFacotor;
 
@@ -340,6 +382,8 @@ let canvasSize = {
 let scaleRatio;
 
 let sectors = [];
+
+let markPoints = [];
 
 
 let geodesics = [];
@@ -466,6 +510,7 @@ function continueAllGeodesics() {
                 lineSegment.ID = [ii, geodesics[ii].length];
                 lineSegment.parentSector = [geodesics[ii][geodesics[ii].length - 1].parentSector[0], sectors[geodesics[ii][geodesics[ii].length - 1].parentSector[0]].lineSegments.length];
 
+                console.log(lineSegment.parentSector);
                 let trapezTransform = sectors[geodesics[ii][geodesics[ii].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
                 let invertedtrapezTransform = invert(trapezTransform);
                 let desiredTransform = multiply(
@@ -492,7 +537,7 @@ function continueAllGeodesics() {
 
 
                 for (lauf = 0; lauf < 100; lauf++) {
-                    if (neighbourSector === -1){
+                    if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2'){
 
                         break
                     }
@@ -571,7 +616,7 @@ function continueAllGeodesics() {
                     });
 
                     lineSegmentContinue.ID = [ii, geodesics[ii].length];
-                    lineSegmentContinue.parentSector = [neighbourSector, sectors[geodesics[ii][geodesics[ii].length - 1].parentSector[0]].lineSegments.length];
+                    lineSegmentContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
                     trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix('True');
                     invertedtrapezTransform = invert(trapezTransform);
                     desiredTransform = multiply(invertedtrapezTransform, lineSegmentContinue.calcTransformMatrix());
@@ -737,7 +782,7 @@ function continueGeodesic() {
 
                 sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
-                sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
+
                 let stackIdx = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
                 canvas.insertAt(lineSegment,stackIdx);
                 geodesics[arrowheadline].push(lineSegment);
@@ -751,7 +796,7 @@ function continueGeodesic() {
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
-                    if (neighbourSector === -1) {
+                    if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
 
                         break
                     }
@@ -830,8 +875,7 @@ function continueGeodesic() {
                     });
 
                     lineSegmentContinue.ID = [arrowheadline, geodesics[arrowheadline].length];
-                    lineSegmentContinue.parentSector = [neighbourSector, sectors[geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0]].lineSegments.length];
-
+                    lineSegmentContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
                     trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix('True');
                     invertedtrapezTransform = invert(trapezTransform);
                     desiredTransform = multiply(invertedtrapezTransform, lineSegmentContinue.calcTransformMatrix());
@@ -893,7 +937,7 @@ function fitResponsiveCanvas() {
 
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
-function initialize() //keine Argumente
+function initializeSectors() //keine Argumente
 {
     if (typeof this.trapez !== 'undefined') {
         canvas.remove(this.trapez); //sollte ein Sektor zwei Trapeze erzeugen, wird der erste gelöscht
@@ -927,7 +971,7 @@ function initialize() //keine Argumente
             top: this.pos_y,
             angle: this.sector_angle,
             fill: this.fill,
-            strokeWidth: 2 * scaleFacotor,
+            strokeWidth: 1 * scaleFacotor,
             stroke: '#666',
             perPixelTargetFind: true,
             hasControls: true,
@@ -940,6 +984,7 @@ function initialize() //keine Argumente
             cornerSize: 30,
 
         });
+
     this.trapez.setControlsVisibility({
         //    mtr: false,
         tl: false,
@@ -987,7 +1032,7 @@ function initialize() //keine Argumente
     this.trapez.aussenkreisradius = Math.sqrt( Math.pow(this.sector_width/2, 2) + Math.pow(this.sector_height/2, 2));
 
     this.ID_text = new fabric.Text("" + (this.name), {
-        fontSize: 20 * scaleFacotor,
+        fontSize: 5 * scaleFacotor,
         originX: 'center',
         originY: 'center',
         lockMovementX: true,
@@ -1020,21 +1065,24 @@ function initialize() //keine Argumente
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
-        if(selectedTool !== 'paint' && selectedTool !== 'grab' || this.opacity !== 1) return;
+        if(selectedTool !== 'paint' && selectedTool !== 'grab' && selectedTool !== 'mark' || this.opacity !== 1) return;
         let color;
             color = line_colors[geodesics.length % line_colors.length];
             if (!isLineStarted) {
                 let pointer = canvas.getPointer(o.e);
                 let points = [pointer.x, pointer.y, pointer.x, pointer.y];
-                if (arrowheadline !==-1){
+                if (arrowheadline !== -1){
                     if (geodesics[arrowheadline].length>0) {
                         let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
                         geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
-                        let distance_mouse_point = distance(pointer, geodesic_end_point);
                         points = [geodesic_end_point.x, geodesic_end_point.y, pointer.x, pointer.y];
                         lineContinueAt = arrowheadline;
                         color = geodesics[lineContinueAt][0].fill;
                     }
+                }
+
+                if (startAtMarkPoint !== -1){
+                    points = [markPoints[startAtMarkPoint].left, markPoints[startAtMarkPoint].top, pointer.x, pointer.y]
                 }
                 if (selectedTool == 'grab' && lineContinueAt !== -1){
                     this.lockMovementX = true;
@@ -1042,7 +1090,7 @@ function initialize() //keine Argumente
                     this.hasControls = false;
                     //this.evented = false;
                 }
-                if (selectedTool == 'paint' || lineContinueAt !== -1) {
+                if (selectedTool == 'paint' || lineContinueAt !== -1 ) {
                     isLineStarted = true;
                     line = new fabric.Line(points, {
                         strokeWidth: 2 * scaleFacotor,
@@ -1057,12 +1105,64 @@ function initialize() //keine Argumente
                         evented: false
                     });
 
-
                     canvas.add(line);
 
                     line.bringToFront();
 
                     canvas.renderAll();
+                }
+
+                if (selectedTool == 'mark') {
+                    mark = new fabric.Circle({
+                        originX: 'center',
+                        originY: 'center',
+                        left: pointer.x,
+                        top: pointer.y,
+                        radius: 3,
+                        stroke: 'black',
+                        strokeWidth: 0,
+                        fill: 'black',
+                        perPixelTargetFind: true,
+                        hasBorders: false,
+                        objectCaching: false,
+                        selectable: false,
+                        lockMovementX: true,
+                        lockMovementY: true,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        evented: false,
+                        hoverCursor: 'crosshair',
+                    });
+
+                    let stackIdx = 0;
+                    for (ii = 0; ii < sectors.length; ii++){
+                        if(sectorContainsPoint(sectors[ii].trapez, pointer)){
+                            console.log(sectors[ii].ID);
+                            if(canvas.getObjects().indexOf(sectors[ii].ID_text) > stackIdx) {
+                                stackIdx =canvas.getObjects().indexOf(sectors[ii].ID_text);
+                                mark.parentSector = sectors[ii].ID;
+                            }
+                        }
+                    }
+
+                    let trapezTransform = sectors[mark.parentSector].trapez.calcTransformMatrix();
+                    let invertedtrapezTransform = invert(trapezTransform);
+                    let desiredTransform = multiply(
+                        invertedtrapezTransform,
+                        mark.calcTransformMatrix());
+
+
+                    mark.relationship = desiredTransform;
+
+                    sectors[mark.parentSector].markCircles.push(mark);
+
+                    canvas.insertAt(mark,stackIdx);
+
+                    markPoints.push(mark);
+
+                    canvas.renderAll();
+
+                    toolChange('grab')
                 }
 
         }
@@ -1074,7 +1174,7 @@ function initialize() //keine Argumente
         if (arrowheadline !== -1) {
             arrowheadline = -1;
         }
-        if(selectedTool !== 'paint' && lineContinueAt == -1 ) {
+        if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
             return;
         }
 
@@ -1139,9 +1239,9 @@ function initialize() //keine Argumente
                     });
 
                     if (lineContinueAt !== -1) {
-                        lineSegment.ID = [lineContinueAt,geodesics[lineContinueAt].length]
+                        lineSegment.ID = [lineContinueAt, geodesics[lineContinueAt].length]
                     }else{
-                        lineSegment.ID = [geodesics.length,geodesic.length];
+                        lineSegment.ID = [geodesics.length, geodesic.length];
                     }
                     let stackIdx = 0;
                     for (let jj = sectors.length-1 ; jj >= 0 ; jj--){
@@ -1500,10 +1600,11 @@ function Sector() {
     this.ID;
     this.fill;
 
-    this.init = initialize; // das Objekt Sektor bekommt die Methode 'initialize' mitgegeben, keine Klammern
+    this.init = initializeSectors; // das Objekt Sektor bekommt die Methode 'initializeSectors' mitgegeben, keine Klammern
 
 
     this.lineSegments = [];
+    this.markCircles = [];
 
     this.ID_text;
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
@@ -1511,6 +1612,8 @@ function Sector() {
     this.snapStatus = [0,0,0,0];
     this.overlapStatus = [0,0,0,0];
 }
+
+
 
 
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
@@ -2271,29 +2374,77 @@ function toolChange(argument) {
 
     selectedTool = argument;
     if (selectedTool !== 'delete') {
-        for (let ii = 0; ii< geodesics.length; ii++) {
+        for (let ii = 0; ii < geodesics.length; ii++) {
 
             for (let jj = 0; jj< geodesics[ii].length; jj++){
                 geodesics[ii][jj].evented = false;
                 geodesics[ii][jj].strokeWidth = 2 * scaleFacotor;
             }
         }
-    for (let ii = 0; ii < sectors.length; ii++) {
-        if (selectedTool === 'paint') {
-            cursor = 'crosshair';
-            sectors[ii].trapez.evented = true;
-            sectors[ii].trapez.hasControls = false;
-            sectors[ii].trapez.lockMovementX = true;
-            sectors[ii].trapez.lockMovementY = true;
 
-        } else {
-            cursor = 'grabbing';
-            sectors[ii].trapez.evented = true;
-            sectors[ii].trapez.hasControls = true;
-            sectors[ii].trapez.lockMovementX = false;
-            sectors[ii].trapez.lockMovementY = false;
-        }
-        sectors[ii].trapez.hoverCursor = cursor;
+        for (let ii = 0; ii < sectors.length; ii++) {
+            if (selectedTool === 'paint' || selectedTool === 'mark') {
+                cursor = 'crosshair';
+                sectors[ii].trapez.evented = true;
+                sectors[ii].trapez.hasControls = false;
+                sectors[ii].trapez.lockMovementX = true;
+                sectors[ii].trapez.lockMovementY = true;
+
+            } else {
+                cursor = 'grabbing';
+                sectors[ii].trapez.evented = true;
+                sectors[ii].trapez.hasControls = true;
+                sectors[ii].trapez.lockMovementX = false;
+                sectors[ii].trapez.lockMovementY = false;
+            }
+            sectors[ii].trapez.hoverCursor = cursor;
+            }
+
+        if (selectedTool === 'delete_whole') {
+            cursor = 'not-allowed';
+
+            for (let ii = 0; ii < sectors.length; ii++) {
+                sectors[ii].trapez.evented = false;
+            }
+
+            for (let ii = 0; ii < geodesics.length; ii++) {
+
+                for (let jj = 0; jj < geodesics[ii].length; jj++) {
+                    geodesics[ii][jj].evented = true;
+                    geodesics[ii][jj].hoverCursor = 'pointer';
+                    geodesics[ii][jj].strokeWidth = 5 * scaleFacotor;
+
+                    if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
+                        geodesics[ii][jj].on('mousedown', function () {
+                            if (this.ID[0] >= 0) {
+
+                                let geodesicToDeleteGlobalID = this.ID[0];
+
+
+                                //kk laeuft durch alle Teilstuecke der Geodaete hindurch
+                                for (let kk = geodesics[geodesicToDeleteGlobalID].length -1; kk >= 0; kk--) {
+
+                                    let entryToSplice_tmp = sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments[geodesics[geodesicToDeleteGlobalID][kk].parentSector[1]].parentSector[1]
+                                    sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments.splice(sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments[geodesics[geodesicToDeleteGlobalID][kk].parentSector[1]].parentSector[1], 1)
+
+                                    for (let ll = 0; ll < sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments.length; ll++){
+
+
+                                        if (entryToSplice_tmp < sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1]){
+                                            sectors[geodesics[geodesicToDeleteGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1] -=1
+                                        }
+                                    }
+                                    let lineSegment = geodesics[geodesicToDeleteGlobalID][kk];
+                                    canvas.remove(lineSegment)
+                                }
+                                geodesics[geodesicToDeleteGlobalID] = [];
+
+                            }
+
+                        })
+                    }
+                }
+            }
         }
     }else {
         cursor = 'not-allowed';
@@ -2304,7 +2455,7 @@ function toolChange(argument) {
 
         for (let ii = 0; ii< geodesics.length; ii++) {
 
-            for (let jj = 0; jj< geodesics[ii].length; jj++){
+            for (let jj = 0; jj < geodesics[ii].length; jj++){
                 geodesics[ii][jj].evented = true;
                 geodesics[ii][jj].hoverCursor = cursor;
                 geodesics[ii][jj].strokeWidth = 2 * scaleFacotor;
@@ -2315,7 +2466,6 @@ function toolChange(argument) {
                 geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5 * scaleFacotor;
                 if (typeof(geodesics[ii][geodesics[ii].length - 1].__eventListeners)=== 'undefined') {
                     geodesics[ii][geodesics[ii].length - 1].on('mousedown', function () {
-
                         if (this.ID[0] >= 0) {
                             geodesics[this.ID[0]].splice(this.ID[1], 1);
                             if (this.ID[1] === 0) {
@@ -2418,6 +2568,31 @@ function updateMinions(boss) {
             );
             segment.set(options);
             segment.setCoords();
+        }
+    }
+
+    for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
+        let markPoint = boss.parent.markCircles[ii];
+        if (markPoint.relationship) {
+            markPoint.bringToFront();
+            let relationship = markPoint.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            markPoint.set({
+                flipX: false,
+                flipY: false,
+            });
+            markPoint.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            markPoint.set(options);
+            markPoint.setCoords();
         }
     }
 }

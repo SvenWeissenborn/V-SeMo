@@ -3,11 +3,11 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 9
+nSektorzeilenVonRing = 11
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 120
-dradius = (2/3.0) * schwarzschildradius
+dradius = (0.4) * schwarzschildradius
 
 
 
@@ -20,9 +20,9 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = [75,120]
+startGeodesicsAngle = []
 
-startGeodesicsSector = 89
+startGeodesicsSector = 0
 
 
 def main():
@@ -68,9 +68,9 @@ def main():
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist +10
             else:
-                sector_y_dist = dradius + sector_height/2
+                sector_y_dist = 10  + sector_height/2
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
