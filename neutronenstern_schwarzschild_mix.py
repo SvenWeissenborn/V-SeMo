@@ -20,9 +20,9 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = []
+startGeodesicsAngle = [60, 90, 120]
 
-startGeodesicsSector = 0
+startGeodesicsSector = 109
 
 
 def main():
@@ -146,8 +146,8 @@ def main():
         geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
         geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
 
-        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSector) + "," + str(0) + "]"
-        geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(- 1) + "," + str(- 1) + "]"
+        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSector) + "," + str(startGeodesic) + "]"
+        geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(startGeodesic) + "," + str(1) + "]"
         geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = 2
 
         geodesicValues[geodesicDict["startFill"]][startGeodesic] = "line_colors[" + str(startGeodesic) + "]"
