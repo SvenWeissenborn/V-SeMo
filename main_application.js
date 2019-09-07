@@ -278,7 +278,7 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft'){
-        changeDirection('clockwise');
+        changeDirection('counterclockwise');
         continueGeodesic(geodesicToChangeDirection);
     }
 });
@@ -292,7 +292,7 @@ window.addEventListener('keyup',function(event){
 */
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowRight'){
-        changeDirection('counterclockwise');
+        changeDirection('clockwise');
         continueGeodesic(geodesicToChangeDirection);
     }
 });
@@ -1124,7 +1124,7 @@ function initializeSectors() //keine Argumente
     this.trapez.aussenkreisradius = Math.sqrt( Math.pow(this.sector_width/2, 2) + Math.pow(this.sector_height/2, 2));
 
     this.ID_text = new fabric.Text("" + (this.name), {
-        fontSize: 20 * scaleFacotor,
+        fontSize: this.fontSize * scaleFacotor,
         originX: 'center',
         originY: 'center',
         lockMovementX: true,
@@ -2741,6 +2741,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
     sec.name = ii;
     //sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
+    sec.fontSize = sec_fontSize[ii];
     sec.pos_x = sec_posx[ii] * scaleFacotor + window.innerWidth/2;
     sec.pos_y = sec_posy[ii] * scaleFacotor + (window.innerHeight - window.innerHeight*0.08)/2;
     sec.sector_height = sec_height[ii] * scaleFacotor;

@@ -278,7 +278,7 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft'){
-        changeDirection('clockwise');
+        changeDirection('counterclockwise');
         continueGeodesic(geodesicToChangeDirection);
     }
 });
@@ -292,7 +292,7 @@ window.addEventListener('keyup',function(event){
 */
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowRight'){
-        changeDirection('counterclockwise');
+        changeDirection('clockwise');
         continueGeodesic(geodesicToChangeDirection);
     }
 });
