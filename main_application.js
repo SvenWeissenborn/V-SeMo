@@ -277,9 +277,10 @@ window.addEventListener('keydown',function(event){
 
 
 window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowLeft'){
+    if(event.key === 'ArrowLeft' && selectedTool === 'chooseToChangeDirection'){
         changeDirection('counterclockwise');
         continueGeodesic(geodesicToChangeDirection);
+        toolChange('chooseToChangeDirection')
     }
 });
 
@@ -291,9 +292,10 @@ window.addEventListener('keyup',function(event){
 });
 */
 window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowRight'){
+    if(event.key === 'ArrowRight' && selectedTool === 'chooseToChangeDirection'){
         changeDirection('clockwise');
         continueGeodesic(geodesicToChangeDirection);
+        toolChange('chooseToChangeDirection')
     }
 });
 /*
@@ -466,7 +468,7 @@ function changeDirection(rotationdirection) {
     }
 
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
-    canvas.renderAll();
+    //canvas.renderAll();
 
     let trapezTransform = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
     let invertedtrapezTransform = invert(trapezTransform);
@@ -767,11 +769,16 @@ function continueGeodesic(geodesicToContinue) {
     let nextGeodesic_y;
 
     let lineStrokeDependingOnTool;
+    let lineEventedDependingOnTool;
+    let lineCursorDependingOnTool;
 
     if (selectedTool === 'chooseToChangeDirection'){
         lineStrokeDependingOnTool = 5;
+        lineEventedDependingOnTool = true;
+        lineCursorDependingOnTool = 'pointer'
     }else {
-        lineStrokeDependingOnTool = 2
+        lineStrokeDependingOnTool = 2;
+        lineEventedDependingOnTool = false
     }
 
 
@@ -857,8 +864,9 @@ function continueGeodesic(geodesicToContinue) {
                     objectCaching: false,
                     hasBorders: false,
                     hasControls: false,
-                    evented: false,
+                    evented: lineEventedDependingOnTool,
                     selectable: false,
+                    hoverCursor: lineCursorDependingOnTool
                 });
 
                 lineSegment.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
@@ -962,8 +970,9 @@ function continueGeodesic(geodesicToContinue) {
                         objectCaching: false,
                         hasBorders: false,
                         hasControls: false,
-                        evented: false,
+                        evented: lineEventedDependingOnTool,
                         selectable: false,
+                        hoverCursor: lineCursorDependingOnTool
                     });
 
                     lineSegmentContinue.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
@@ -2589,6 +2598,7 @@ function toolChange(argument) {
                         }
                         if (selectedTool === 'chooseToChangeDirection') {
                             geodesicToChangeDirection = chosenGeodesicGlobalID;
+                            console.log(geodesics[geodesicToChangeDirection])
                         }
 
                         if (selectedTool == 'delete') {
