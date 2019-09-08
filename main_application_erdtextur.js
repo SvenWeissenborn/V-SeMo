@@ -466,7 +466,7 @@ function changeDirection(rotationdirection) {
     }
 
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
-    canvas.renderAll();
+    //canvas.renderAll();
 
     let trapezTransform = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
     let invertedtrapezTransform = invert(trapezTransform);

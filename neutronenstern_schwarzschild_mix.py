@@ -23,7 +23,7 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = [60, 90, 120]
+startGeodesicsAngle = []
 
 startGeodesicsSector = 109
 

@@ -738,7 +738,7 @@ function continueAllGeodesics() {
         }
 
     }
-    canvas.renderAll();
+    //canvas.renderAll();
 }
 
 function continueGeodesic(geodesicToContinue) {
@@ -2738,8 +2738,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    sec.name = ii;
-    //sec.name = sec_name[ii];
+    //sec.name = ii;
+    sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
     sec.fontSize = sec_fontSize[ii];
     sec.pos_x = sec_posx[ii] * scaleFacotor + window.innerWidth/2;
