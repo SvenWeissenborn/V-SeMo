@@ -1293,8 +1293,8 @@ function initializeSectors() //keine Argumente
             xg2 = line.x2;
             yg1 = line.y1;
             yg2 = line.y2;
-
-            if(distance(new fabric.Point(xg1,yg1),new fabric.Point(xg2,yg2)) <= abortlength){
+            let zoom = canvas.getZoom();
+            if(distance(new fabric.Point(xg1,yg1),new fabric.Point(xg2,yg2)) <= abortlength* 1/zoom){
                 canvas.remove(line);
                 lineContinueAt = -1;
                 return;
