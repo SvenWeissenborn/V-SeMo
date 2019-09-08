@@ -772,16 +772,6 @@ function continueGeodesic(geodesicToContinue) {
     let lineEventedDependingOnTool;
     let lineCursorDependingOnTool;
 
-    if (selectedTool === 'chooseToChangeDirection'){
-        lineStrokeDependingOnTool = 5;
-        lineEventedDependingOnTool = true;
-        lineCursorDependingOnTool = 'pointer'
-    }else {
-        lineStrokeDependingOnTool = 2;
-        lineEventedDependingOnTool = false
-    }
-
-
     kantenindex = -1;
     if (typeof geodesicToContinue === 'undefined' || geodesicToContinue == -1) {
         return;
@@ -855,7 +845,7 @@ function continueGeodesic(geodesicToContinue) {
 
             if (kantenIndex >= 0) {
                 let lineSegment = new fabric.Line([xg2, yg2, xt1 + alpha * dxt12, yt1 + alpha * dyt12], {
-                    strokeWidth: lineStrokeDependingOnTool * scaleFacotor,
+                    strokeWidth: 2 * scaleFacotor,
                     fill: geodesics[geodesicToContinue][0].fill,
                     stroke: geodesics[geodesicToContinue][0].stroke,
                     originX: 'center',
@@ -864,9 +854,8 @@ function continueGeodesic(geodesicToContinue) {
                     objectCaching: false,
                     hasBorders: false,
                     hasControls: false,
-                    evented: lineEventedDependingOnTool,
+                    evented: false,
                     selectable: false,
-                    hoverCursor: lineCursorDependingOnTool
                 });
 
                 lineSegment.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
@@ -961,7 +950,7 @@ function continueGeodesic(geodesicToContinue) {
                     }
 
                     let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-                        strokeWidth: lineStrokeDependingOnTool * scaleFacotor,
+                        strokeWidth: 2 * scaleFacotor,
                         fill: geodesics[geodesicToContinue][0].fill,
                         stroke: geodesics[geodesicToContinue][0].stroke,
                         originX: 'center',
@@ -970,9 +959,8 @@ function continueGeodesic(geodesicToContinue) {
                         objectCaching: false,
                         hasBorders: false,
                         hasControls: false,
-                        evented: lineEventedDependingOnTool,
+                        evented: false,
                         selectable: false,
-                        hoverCursor: lineCursorDependingOnTool
                     });
 
                     lineSegmentContinue.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
