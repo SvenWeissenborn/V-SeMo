@@ -458,14 +458,69 @@ function changeDirection(rotationdirection) {
     let geodesic_start_point = new fabric.Point(geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcLinePoints().x1, geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcLinePoints().y1);
     geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcTransformMatrix());
 
+    let xg1 = geodesic_start_point.x;
+    let yg1 = geodesic_start_point.y;
+    let xg2 = segment_end_point.x;
+    let yg2 = segment_end_point.y;
+
+    let dxg;
+    let dyg;
+    let dxt12;
+    let dyt12;
+    let dxg_tmp = xg2 - xg1;
+    let dyg_tmp = yg2 - yg1;
 
     if (rotationdirection == 'clockwise') {
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: (segment_end_point.x - geodesic_start_point.x) * Math.cos(Math.PI/180) - (segment_end_point.y - geodesic_start_point.y) * Math.sin(Math.PI/180) + geodesic_start_point.x, y2: (segment_end_point.x - geodesic_start_point.x) * Math.sin(Math.PI/180) + (segment_end_point.y - geodesic_start_point.y) * Math.cos(Math.PI/180) + geodesic_start_point.y});
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+        dxg = dxg_tmp * Math.cos(Math.PI/180) - dyg_tmp * Math.sin(Math.PI/180);
+        dyg = dxg_tmp * Math.sin(Math.PI/180) + dyg_tmp * Math.cos(Math.PI/180);
     } else {
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: (segment_end_point.x - geodesic_start_point.x) * Math.cos(-Math.PI/180) - (segment_end_point.y - geodesic_start_point.y) * Math.sin(-Math.PI/180) + geodesic_start_point.x, y2: (segment_end_point.x - geodesic_start_point.x) * Math.sin(-Math.PI/180) + (segment_end_point.y - geodesic_start_point.y) * Math.cos(-Math.PI/180) + geodesic_start_point.y});
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+        dxg = dxg_tmp * Math.cos(- Math.PI/180) - dyg_tmp * Math.sin(- Math.PI/180);
+        dyg = dxg_tmp * Math.sin(- Math.PI/180) + dyg_tmp * Math.cos(- Math.PI/180);
     }
+
+    let transformMatrix = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
+    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+    for (let jj = 0; jj < 4; jj++) {
+        transformedPoints[jj].x = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.width / 2;
+        transformedPoints[jj].y = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.height / 2;
+        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
+    }
+
+
+    for (let kk = 0; kk < 4; kk++) {
+
+        xt1 = transformedPoints[kk].x;
+        xt2 = transformedPoints[(kk + 1) % 4].x;
+        yt1 = transformedPoints[kk].y;
+        yt2 = transformedPoints[(kk + 1) % 4].y;
+
+        dxt12 = xt2 - xt1;
+        dyt12 = yt2 - yt1;
+
+        if (dxg > epsilon) {
+            alpha = (yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg));
+            lambda = (xt1 + ((yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg2) / dxg;
+        }
+
+        else {
+            alpha = (xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg));
+            lambda = (yt1 + ((xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg2) / dyg;
+        }
+
+
+        if (lambda > epsilon) {
+            if (alpha >= 0.0 && alpha <= 1.0) {
+                break;
+            }
+        }
+
+
+    }
+
+
+        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+
 
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
     //canvas.renderAll();
@@ -1539,6 +1594,17 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 
             let dxg = xg2 - xg1;
             let dyg = yg2 - yg1;
+
+            if (selectedTool === 'chooseToChangeDirection') {
+                if (rotationdirection == 'clockwise') {
+                    dxg = dxg_tmp * Math.cos(Math.PI / 180) - dyg_tmp * Math.sin(Math.PI / 180);
+                    dyg = dxg_tmp * Math.sin(Math.PI / 180) + dyg_tmp * Math.cos(Math.PI / 180);
+                } else {
+                    dxg = dxg_tmp * Math.cos(-Math.PI / 180) - dyg_tmp * Math.sin(-Math.PI / 180);
+                    dyg = dxg_tmp * Math.sin(-Math.PI / 180) + dyg_tmp * Math.cos(-Math.PI / 180);
+                }
+            }
+
             let dxt12 = xt2 - xt1;
             let dyt12 = yt2 - yt1;
 
