@@ -278,8 +278,7 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft' && selectedTool === 'chooseToChangeDirection'){
-        changeDirection('counterclockwise');
-        continueGeodesic(geodesicToChangeDirection);
+        changeDirectionAndContinue('counterclockwise');
         toolChange('chooseToChangeDirection')
     }
 });
@@ -293,8 +292,7 @@ window.addEventListener('keyup',function(event){
 */
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowRight' && selectedTool === 'chooseToChangeDirection'){
-        changeDirection('clockwise');
-        continueGeodesic(geodesicToChangeDirection);
+        changeDirectionAndContinue('clockwise');
         toolChange('chooseToChangeDirection')
     }
 });
@@ -423,7 +421,7 @@ let geodesicToChangeDirection = -1;
 
 let history = [];
 
-function changeDirection(rotationdirection) {
+function changeDirectionAndContinue(rotationdirection) {
     if (geodesicToChangeDirection == -1) {
         return
     }
@@ -460,8 +458,8 @@ function changeDirection(rotationdirection) {
 
     let xg1 = geodesic_start_point.x;
     let yg1 = geodesic_start_point.y;
-    let xg2 = segment_end_point.x;
-    let yg2 = segment_end_point.y;
+    let xg2_tmp = segment_end_point.x;
+    let yg2_tmp = segment_end_point.y;
 
     let dxg;
     let dyg;
@@ -473,9 +471,13 @@ function changeDirection(rotationdirection) {
     if (rotationdirection == 'clockwise') {
         dxg = dxg_tmp * Math.cos(Math.PI/180) - dyg_tmp * Math.sin(Math.PI/180);
         dyg = dxg_tmp * Math.sin(Math.PI/180) + dyg_tmp * Math.cos(Math.PI/180);
+        xg2 = (xg2_tmp - xg1) * Math.cos(Math.PI/180) - (yg2_tmp - yg1) * Math.sin(Math.PI/180) + xg1;
+        yg2 = (xg2_tmp - xg1) * Math.sin(Math.PI/180) + (yg2_tmp - yg1) * Math.cos(Math.PI/180) + yg1;
     } else {
         dxg = dxg_tmp * Math.cos(- Math.PI/180) - dyg_tmp * Math.sin(- Math.PI/180);
         dyg = dxg_tmp * Math.sin(- Math.PI/180) + dyg_tmp * Math.cos(- Math.PI/180);
+        xg2 = (xg2_tmp - xg1) * Math.cos(- Math.PI/180) - (yg2_tmp - yg1) * Math.sin(- Math.PI/180) + xg1;
+        yg2 = (xg2_tmp - xg1) * Math.sin(- Math.PI/180) + (yg2_tmp - yg1) * Math.cos(- Math.PI/180) + yg1;
     }
 
     let transformMatrix = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
@@ -498,18 +500,21 @@ function changeDirection(rotationdirection) {
         dyt12 = yt2 - yt1;
 
         if (dxg > epsilon) {
-            alpha = (yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg));
-            lambda = (xt1 + ((yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg2) / dxg;
+            alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+            lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
         }
 
         else {
-            alpha = (xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg));
-            lambda = (yt1 + ((xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg2) / dyg;
+            alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+            lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
         }
 
 
         if (lambda > epsilon) {
             if (alpha >= 0.0 && alpha <= 1.0) {
+                kantenIndex = kk;
+                console.log(lambda);
+                console.log(alpha);
                 break;
             }
         }
@@ -517,9 +522,10 @@ function changeDirection(rotationdirection) {
 
     }
 
+    let neighbourSector = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
 
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
@@ -533,6 +539,126 @@ function changeDirection(rotationdirection) {
 
 
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].relationship = desiredTransform;
+
+    //Fortsetzung im nächsten Sektor
+
+
+    slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+
+
+    for (lauf = 0; lauf < 100; lauf++) {
+
+        if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
+
+            break
+        }
+
+        //Punkte des Nachbarsektors ermitteln
+        let transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
+        let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+        for (let jj = 0; jj < 4; jj++) {
+            transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2;
+            transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2;
+            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
+        }
+
+        //Übergangspunkte übernehmen
+        xt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
+        xt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
+        yt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
+        yt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
+
+        dxt12_uebergang = xt2_uebergang - xt1_uebergang;
+        dyt12_uebergang = yt2_uebergang - yt1_uebergang;
+
+        x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
+        y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
+
+        //Übergangsrichtung ermitteln
+
+        dxg = nextGeodesic_x = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
+        dyg = nextGeodesic_y = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
+
+        //Schnittpunkte mit den neuen Sektorkanten ermitteln
+
+        for (let kk = 0; kk < 4; kk++) {
+
+            xt1 = transformedPoints[kk].x;
+            xt2 = transformedPoints[(kk + 1) % 4].x;
+            yt1 = transformedPoints[kk].y;
+            yt2 = transformedPoints[(kk + 1) % 4].y;
+
+            dxt12 = xt2 - xt1;
+            dyt12 = yt2 - yt1;
+
+
+            if (dxg > epsilon) {
+                alpha_2 = (y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                lambda_2 = (xt1 + ((y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - x_kante_uebergang) / dxg;
+            }
+
+            else {
+                alpha_2 = (x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                lambda_2 = (yt1 + ((x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - y_kante_uebergang) / dyg;
+            }
+
+
+            if (lambda_2 > epsilon) {
+                if (alpha_2 >= 0.0 && alpha_2 <= 1.0) {
+                    kantenIndex = kk;
+                    break;
+                }
+            }
+        }
+
+        let geodesicToChangeDirectionContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
+            strokeWidth: 2 * scaleFacotor,
+            fill: geodesics[geodesicToChangeDirection][0].fill,
+            stroke: geodesics[geodesicToChangeDirection][0].stroke,
+            originX: 'center',
+            originY: 'center',
+            perPixelTargetFind: true,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            evented: false,
+            selectable: false,
+        });
+
+        geodesicToChangeDirectionContinue.ID = [geodesicToChangeDirection, geodesics[geodesicToChangeDirection].length];
+        geodesicToChangeDirectionContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
+        trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix('True');
+        invertedtrapezTransform = invert(trapezTransform);
+        desiredTransform = multiply(invertedtrapezTransform, geodesicToChangeDirectionContinue.calcTransformMatrix());
+
+        geodesicToChangeDirectionContinue.relationship = desiredTransform;
+
+        sectors[geodesicToChangeDirectionContinue.parentSector[0]].lineSegments.push(geodesicToChangeDirectionContinue);
+
+
+        let stackIdx = 0;
+
+        if(canvas.getObjects().indexOf(sectors[neighbourSector].ID_text) > stackIdx) {
+            stackIdx = canvas.getObjects().indexOf(sectors[neighbourSector].ID_text)
+        }
+
+        canvas.insertAt(geodesicToChangeDirectionContinue,stackIdx);
+        geodesics[geodesicToChangeDirection].push(geodesicToChangeDirectionContinue);
+
+
+        slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+
+
+        neighbourSector = sectors[geodesicToChangeDirectionContinue.parentSector[0]].neighbourhood[kantenIndex];
+
+
+        alpha = alpha_2
+    }
+
+
+
+
+
 }
 
 
@@ -1594,17 +1720,6 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 
             let dxg = xg2 - xg1;
             let dyg = yg2 - yg1;
-
-            if (selectedTool === 'chooseToChangeDirection') {
-                if (rotationdirection == 'clockwise') {
-                    dxg = dxg_tmp * Math.cos(Math.PI / 180) - dyg_tmp * Math.sin(Math.PI / 180);
-                    dyg = dxg_tmp * Math.sin(Math.PI / 180) + dyg_tmp * Math.cos(Math.PI / 180);
-                } else {
-                    dxg = dxg_tmp * Math.cos(-Math.PI / 180) - dyg_tmp * Math.sin(-Math.PI / 180);
-                    dyg = dxg_tmp * Math.sin(-Math.PI / 180) + dyg_tmp * Math.cos(-Math.PI / 180);
-                }
-            }
-
             let dxt12 = xt2 - xt1;
             let dyt12 = yt2 - yt1;
 
