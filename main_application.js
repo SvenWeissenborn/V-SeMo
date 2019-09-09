@@ -458,8 +458,8 @@ function changeDirectionAndContinue(rotationdirection) {
 
     let xg1 = geodesic_start_point.x;
     let yg1 = geodesic_start_point.y;
-    let xg2_tmp = segment_end_point.x;
-    let yg2_tmp = segment_end_point.y;
+    let xg2 = segment_end_point.x;
+    let yg2 = segment_end_point.y;
 
     let dxg;
     let dyg;
@@ -471,13 +471,9 @@ function changeDirectionAndContinue(rotationdirection) {
     if (rotationdirection == 'clockwise') {
         dxg = dxg_tmp * Math.cos(Math.PI/180) - dyg_tmp * Math.sin(Math.PI/180);
         dyg = dxg_tmp * Math.sin(Math.PI/180) + dyg_tmp * Math.cos(Math.PI/180);
-        xg2 = (xg2_tmp - xg1) * Math.cos(Math.PI/180) - (yg2_tmp - yg1) * Math.sin(Math.PI/180) + xg1;
-        yg2 = (xg2_tmp - xg1) * Math.sin(Math.PI/180) + (yg2_tmp - yg1) * Math.cos(Math.PI/180) + yg1;
     } else {
         dxg = dxg_tmp * Math.cos(- Math.PI/180) - dyg_tmp * Math.sin(- Math.PI/180);
         dyg = dxg_tmp * Math.sin(- Math.PI/180) + dyg_tmp * Math.cos(- Math.PI/180);
-        xg2 = (xg2_tmp - xg1) * Math.cos(- Math.PI/180) - (yg2_tmp - yg1) * Math.sin(- Math.PI/180) + xg1;
-        yg2 = (xg2_tmp - xg1) * Math.sin(- Math.PI/180) + (yg2_tmp - yg1) * Math.cos(- Math.PI/180) + yg1;
     }
 
     let transformMatrix = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
