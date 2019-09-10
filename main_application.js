@@ -615,7 +615,7 @@ function changeDirectionAndContinue(rotationdirection) {
         }
 
         let geodesicToChangeDirectionContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-            strokeWidth: 2 * scaleFacotor,
+            strokeWidth: geodesics[geodesicToChangeDirection][0].strokeWidth,
             fill: geodesics[geodesicToChangeDirection][0].fill,
             stroke: geodesics[geodesicToChangeDirection][0].stroke,
             originX: 'center',
@@ -2796,13 +2796,23 @@ function toolChange(argument) {
                 if (selectedTool == 'delete_whole' || selectedTool === 'chooseToChangeDirection') {
                     geodesics[ii][jj].evented = true;
                     geodesics[ii][jj].hoverCursor = 'pointer';
-                    geodesics[ii][jj].strokeWidth = 5 * scaleFacotor;
+                    //geodesics[ii][jj].strokeWidth = 5 * scaleFacotor;
                 }
 
                 if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
                     geodesics[ii][jj].on('mousedown', function () {
 
+                        for (let kk = 0; kk < geodesics.length; kk++){
+                            for (let ll = 0; ll < geodesics[kk].length; ll++)
+                                geodesics[kk][ll].strokeWidth = 2 * scaleFacotor;
+                        }
+
+
                         let chosenGeodesicGlobalID = this.ID[0];
+
+                        for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
+                            geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5 * scaleFacotor;
+                        }
 
                         if (selectedTool === 'delete_whole') {
                             if (this.ID[0] >= 0 && selectedTool == 'delete_whole') {
@@ -2810,6 +2820,7 @@ function toolChange(argument) {
                                 //console.log(geodesics)
                                 //kk laeuft durch alle Teilstuecke der Geodaete hindurch
                                 for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
+
 
                                     //console.log('kk:', kk)
                                     //console.log('ParentSector der zu löschenden:', geodesics[chosenGeodesicGlobalID][kk].parentSector)
