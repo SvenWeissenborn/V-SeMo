@@ -60,7 +60,7 @@ def main():
             print('rad1', rad1, 'rad2', rad2, 'radmid', radmid )
             if(ringzeile < 3):
                 radial = math.sqrt(1 / (1 - 0.125 * math.pow((radmid / schwarzschildradius),2))) * (rad2 - rad1)
-                offset = radial * math.sin(dphi * 0.5)
+                offset = (rad2 - rad1) * math.sin(dphi * 0.5)
                 sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'#e2e2e2'"
                 sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSizeStern
             else:
