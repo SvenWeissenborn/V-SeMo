@@ -468,6 +468,9 @@ function changeDirectionAndContinue(rotationdirection) {
     let dxg_tmp = xg2 - xg1;
     let dyg_tmp = yg2 - yg1;
 
+    // Die Richtungsaenderung bewirkt automatisch eine Veraenderung in der Laenge des Richtungsvektors.
+    // Obwohl das urspruengliche Endstueck der Geodaete auf der Kante lag, muss deshalb der Richtungsvektor nicht verkürzt werden.
+
     if (rotationdirection == 'clockwise') {
         dxg = dxg_tmp * Math.cos(Math.PI/180) - dyg_tmp * Math.sin(Math.PI/180);
         dyg = dxg_tmp * Math.sin(Math.PI/180) + dyg_tmp * Math.cos(Math.PI/180);
@@ -494,6 +497,8 @@ function changeDirectionAndContinue(rotationdirection) {
 
         dxt12 = xt2 - xt1;
         dyt12 = yt2 - yt1;
+
+        // Beachte, dass nun in der veraenderten Form vom Startpunkt der Geodaete ausgegangen wird -> deshalb ueberall xg1 und yg1
 
         if (dxg > epsilon) {
             alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
@@ -527,8 +532,10 @@ function changeDirectionAndContinue(rotationdirection) {
     geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
     //canvas.renderAll();
 
-    let trapezTransform = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
-    let invertedtrapezTransform = invert(trapezTransform);
+
+
+    //let trapezTransform = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
+    let invertedtrapezTransform = invert(transformMatrix);
     let desiredTransform = multiply(
         invertedtrapezTransform,
         geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcTransformMatrix());
@@ -721,8 +728,14 @@ function continueAllGeodesics() {
                 yt1 =  transformedPoints[kk].y;
                 yt2 =  transformedPoints[(kk + 1) % 4].y;
 
-                dxg = xg2 - xg1;
-                dyg = yg2 - yg1;
+                dxg_tmp = xg2 - xg1;
+                dyg_tmp = yg2 - yg1;
+
+                // Verkuerzung des Richtungsvektors, falls das Ende des Geodaetenstuecks genau auf der Sektorkante liegt
+
+                dxg = dxg_tmp * 0.1;
+                dyg = dyg_tmp * 0.1;
+
                 dxt12 = xt2 - xt1;
                 dyt12 = yt2 - yt1;
 
@@ -732,13 +745,13 @@ function continueAllGeodesics() {
 
                 if( dxg > epsilon)
                 {
-                    alpha = (yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg2) / dxg;
+                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
                 }
 
                 else{
-                    alpha = (xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg2) / dyg;
+                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
 
 
@@ -756,7 +769,14 @@ function continueAllGeodesics() {
 
             let neighbourSector = sectors[geodesics[ii][geodesics[ii].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
+            geodesics[ii][geodesics[ii].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+            geodesics[ii][geodesics[ii].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
+
+            geodesics[ii][geodesics[ii].length - 1].setCoords();
+
+
+            /*
             if (kantenIndex >= 0) {
                 let lineSegment = new fabric.Line([xg2, yg2, xt1 + alpha * dxt12, yt1 + alpha * dyt12], {
                     strokeWidth: 2 * scaleFacotor,
@@ -789,7 +809,15 @@ function continueAllGeodesics() {
                 canvas.insertAt(lineSegment,stackIdx);
                 geodesics[ii].push(lineSegment);
 
+                */
 
+            let invertedtrapezTransform = invert(transformMatrix);
+            let desiredTransform = multiply(
+                invertedtrapezTransform,
+                geodesics[ii][geodesics[ii].length - 1].calcTransformMatrix());
+
+
+            geodesics[ii][geodesics[ii].length - 1].relationship = desiredTransform;
 
                 //Fortsetzung im nächsten Sektor
 
@@ -916,7 +944,7 @@ function continueAllGeodesics() {
 
         }
 
-    }
+    //}
     //canvas.renderAll();
 }
 
@@ -986,32 +1014,42 @@ function continueGeodesic(geodesicToContinue) {
                 yt1 = transformedPoints[kk].y;
                 yt2 = transformedPoints[(kk + 1) % 4].y;
 
-                dxg = xg2 - xg1;
-                dyg = yg2 - yg1;
+                let dxg_tmp = xg2 - xg1;
+                let dyg_tmp = yg2 - yg1;
+
+                //Nur die Richtung ist wichtig. Deshalb kann der Richtungsvektor verkürzt werden. So umgeht man Probleme beim Ausrechnen der Sektorkante
+
+                dxg = dxg_tmp * 0.1;
+                dyg = dyg_tmp * 0.1;
+
                 dxt12 = xt2 - xt1;
                 dyt12 = yt2 - yt1;
 
                 slopeGeodesic = dyg / dxg;
                 slopeTrapez = dyt12 / dxt12;
 
+                // Beachte, dass nun in der veraenderten Form vom Startpunkt der Geodaete ausgegangen wird -> deshalb ueberall xg1 und yg1
 
                 if (dxg > epsilon) {
-                    alpha = (yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg2) / dxg;
+                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
                 }
 
                 else {
-                    alpha = (xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg2) / dyg;
+                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
+                console.log('dxg_tmp:', dxg_tmp)
+                console.log('dxg:', dxg)
 
                 //Kommentar
                 if (lambda >=epsilon) {
                     if (alpha >= 0.0 && alpha <= 1.0) {
                         kantenIndex = kk;
+                        console.log("Huhu", lambda)
                         break;
                     }
-                }else{console.log("Huhu")}
+                }else{}
 
 
             }
@@ -1019,7 +1057,13 @@ function continueGeodesic(geodesicToContinue) {
 
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
+
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].setCoords();
+
+            /*
             if (kantenIndex >= 0 ) {
                 let lineSegment = new fabric.Line([xg2, yg2, xt1 + alpha * dxt12, yt1 + alpha * dyt12], {
                     strokeWidth: 2 * scaleFacotor,
@@ -1054,6 +1098,16 @@ function continueGeodesic(geodesicToContinue) {
                 canvas.insertAt(lineSegment,stackIdx);
                 geodesics[geodesicToContinue].push(lineSegment);
 
+                */
+
+
+                let invertedtrapezTransform = invert(transformMatrix);
+                let desiredTransform = multiply(
+                    invertedtrapezTransform,
+                    geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
+
+
+                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].relationship = desiredTransform;
 
                 //Fortsetzung im nächsten Sektor
 
@@ -1170,7 +1224,7 @@ function continueGeodesic(geodesicToContinue) {
                     alpha = alpha_2
                 }
 
-            }
+            //}
 
 
         }
@@ -2054,8 +2108,12 @@ function setSectors() {
                 yt1 = transformedPoints[kk].y;
                 yt2 = transformedPoints[(kk + 1) % 4].y;
 
-                dxg = xg2 - xg1;
-                dyg = yg2 - yg1;
+                let dxg_tmp = xg2 - xg1;
+                let dyg_tmp = yg2 - yg1;
+
+                dxg = dxg_tmp * 0.1;
+                dyg = dyg_tmp * 0.1
+
                 dxt12 = xt2 - xt1;
                 dyt12 = yt2 - yt1;
 
@@ -2064,13 +2122,13 @@ function setSectors() {
 
 
                 if (dxg > epsilon) {
-                    alpha = (yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg2 - yt1 + (dyg / dxg) * (xt1 - xg2)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg2) / dxg;
+                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
                 }
 
                 else {
-                    alpha = (xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg2 - xt1 + (dxg / dyg) * (yt1 - yg2)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg2) / dyg;
+                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
 
 
@@ -2103,7 +2161,7 @@ function setSectors() {
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
-                    if (neighbourSector === -1) {
+                    if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
 
                         break
                     }
