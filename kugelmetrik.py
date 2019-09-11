@@ -14,6 +14,9 @@ fontSize = 15
 
 anzahlStartGeodesics = 2
 
+startMarksSectors = []
+startMarkRadius = [3]
+
 def main():
 
 
@@ -42,7 +45,11 @@ def main():
 
     file = io.open("kugelmetrik.js",'w')
 
-    file.write("let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue'];")
+    file.write(
+        "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+    file.write("\n")
+    file.write(
+        "let mark_colors = ['grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_ID", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
@@ -133,6 +140,29 @@ def main():
         file.write(variablenamesGeodesics[ii]+"= [ ")
         for jj in range(0,anzahlStartGeodesics):
             file.write(str( geodesicValues[ii][jj])+', ')
+        file.write("];\n")
+
+    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill",
+                          "markStartStroke", "markStartParentSector", "markStartID"]
+    markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
+
+    markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
+
+    for startMark in range(0, len(startMarksSectors)):
+        markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
+        markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]] / 2
+
+        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(startMark) + "]"
+        markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
+        markValues[markDict["markStartStrokeWidth"]][startMark] = 2
+        markValues[markDict["markStartRadius"]][startMark] = startMarkRadius[startMark]
+        markValues[markDict["markStartFill"]][startMark] = "mark_colors[" + str(startMark) + "]"
+        markValues[markDict["markStartStroke"]][startMark] = "mark_colors[" + str(startMark) + "]"
+
+    for ii in range(0, len(variablenamesMarks)):
+        file.write(variablenamesMarks[ii] + "= [ ")
+        for jj in range(0, len(startMarksSectors)):
+            file.write(str(markValues[ii][jj]) + ', ')
         file.write("];\n")
 
     file.write("startSector ="+str(zeilenanzahl-1)+";")
