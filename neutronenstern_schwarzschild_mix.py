@@ -27,6 +27,8 @@ startGeodesicsAngle = []
 
 startGeodesicsSector = 109
 
+startMarksSectors = [3]
+
 
 def main():
 
@@ -164,6 +166,35 @@ def main():
         file.write(variablenamesGeodesics[ii] + "= [ ")
         for jj in range(0, len(startGeodesicsAngle)):
             file.write(str(geodesicValues[ii][jj]) + ', ')
+        file.write("];\n")
+
+
+
+
+
+
+
+
+    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill", "markStartStroke", "markStartParentSector", "markStartID"]
+    markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
+
+    markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
+
+    for startMark in range(0, len(startMarksSectors)):
+        markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
+        markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]]
+
+        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(startMark) + "]"
+        markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
+        markValues[markDict["markStartStrokeWidth"]][startMark] = 2
+        markValues[markDict["markStartRadius"]][startMark] = 2
+        markValues[markDict["markStartFill"]][startMark] = "line_colors[" + str(startMark) + "]"
+        markValues[markDict["markStartStroke"]][startMark] = "line_colors[" + str(startMark) + "]"
+
+    for ii in range(0, len(variablenamesMarks)):
+        file.write(variablenamesMarks[ii] + "= [ ")
+        for jj in range(0, len(startMarksSectors)):
+            file.write(str(markValues[ii][jj]) + ', ')
         file.write("];\n")
 
     file.write("startSector =" + str(startGeodesicsSector)+";")

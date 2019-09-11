@@ -110,7 +110,7 @@ canvas.on('mouse:move', function (o)
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
             if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
 
-                let idx = markPoints[ii].parentSector;
+                let idx = markPoints[ii].parentSector[0];
 
                 if(sectors[idx].trapez.opacity !== 1 ) return;
                 if (arrowheadline < 0 && startAtMarkPoint < 0) {
@@ -121,7 +121,7 @@ canvas.on('mouse:move', function (o)
 
             }else {
                 if (startAtMarkPoint === ii) {
-                    let idx = markPoints[ii].parentSector;
+                    let idx = markPoints[ii].parentSector[0];
                     sectors[idx].trapez.hoverCursor = 'grabbing';
                     startAtMarkPoint = -1;
                     toolChange('grab')
@@ -1485,12 +1485,12 @@ function initializeSectors() //keine Argumente
                         if(sectorContainsPoint(sectors[ii].trapez, pointer)){
                             if(canvas.getObjects().indexOf(sectors[ii].ID_text) > stackIdx) {
                                 stackIdx =canvas.getObjects().indexOf(sectors[ii].ID_text);
-                                mark.parentSector = sectors[ii].ID;
+                                mark.parentSector = [sectors[ii].ID, -1];
                             }
                         }
                     }
 
-                    let trapezTransform = sectors[mark.parentSector].trapez.calcTransformMatrix();
+                    let trapezTransform = sectors[mark.parentSector[0]].trapez.calcTransformMatrix();
                     let invertedtrapezTransform = invert(trapezTransform);
                     let desiredTransform = multiply(
                         invertedtrapezTransform,
@@ -1499,7 +1499,9 @@ function initializeSectors() //keine Argumente
 
                     mark.relationship = desiredTransform;
 
-                    sectors[mark.parentSector].markCircles.push(mark);
+                    mark.parentSector[1] = sectors[mark.parentSector[0]].markCircles.length
+
+                    sectors[mark.parentSector[0]].markCircles.push(mark);
 
                     canvas.insertAt(mark,stackIdx);
 
@@ -2698,6 +2700,58 @@ function startGeodesics(){
 
     }
 }
+function startMarks() {
+
+    for (let ii = 0; ii < markStartParentSector.length; ii++) {
+        console.log(markStartParentSector[ii][0])
+        let sec = sectors[markStartParentSector[ii][0]];
+
+        let mark = new fabric.Circle({
+            originX: 'center',
+            originY: 'center',
+            left: markStart_x[ii] * scaleFacotor + window.innerWidth/2,
+            top: markStart_y[ii] * scaleFacotor + (window.innerHeight - window.innerHeight*0.08)/2,
+            radius: 3,
+            stroke: markStartStroke[ii],
+            strokeWidth: markStartStrokeWidth[ii],
+            fill: markStartFill[ii],
+            perPixelTargetFind: true,
+            hasBorders: false,
+            objectCaching: false,
+            selectable: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            evented: false,
+            hoverCursor: 'crosshair',
+        });
+
+
+
+
+        mark.parentSector = markStartParentSector[ii];
+
+        console.log(canvas.getObjects().indexOf(sectors[mark.parentSector[0]].ID_text))
+
+        let trapezTransform = sec.trapez.calcTransformMatrix();
+        let invertedtrapezTransform = invert(trapezTransform);
+        let desiredTransform = multiply(
+            invertedtrapezTransform,
+            mark.calcTransformMatrix());
+
+
+        mark.relationship = desiredTransform;
+        mark.ID = markStartID[ii];
+        sec.markCircles.push(mark);
+        let stackIdx = canvas.getObjects().indexOf(sectors[mark.parentSector[0]].ID_text);
+        canvas.insertAt(mark,stackIdx);
+
+        markPoints.push(mark);
+
+        canvas.renderAll();
+    }
+}
 
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
@@ -2986,6 +3040,8 @@ fitResponsiveCanvas();
 positionSectors();
 
 startGeodesics();
+
+startMarks();
 
 toolChange(selectedTool);
 
