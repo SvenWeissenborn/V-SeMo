@@ -18,17 +18,17 @@ fontSizeAussenraum = 15
 # versatz_x versetzt die Geodäten in der x-Richtung vom Mittelpunkt des Sektors weg
 # versatz_y liegt zwischen -1 und 1 und sorgt bei gleichen Winkel für parallele Geodäten
 
-versatz_x = 0.4
+versatz_x = 0.0
 versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = []
+startGeodesicsAngle = [0]
 
-startGeodesicsSector = 109
+startGeodesicsSector = 3
 
 startMarksSectors = [3]
-
+startMarkRadius = [3]
 
 def main():
 
@@ -43,6 +43,9 @@ def main():
 
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+    file.write("\n")
+    file.write(
+        "let mark_colors = ['grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_ID", "sec_fill", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
@@ -141,8 +144,8 @@ def main():
 
     lengthStartGeodesics = 0.45 * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]
 
-    deltaXStart = - versatz_x_var * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
-    deltaYStart = - versatz_y_var * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
+    #deltaXStart = - versatz_x_var * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
+    #deltaYStart = - versatz_y_var * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
 
     variablenamesGeodesics = ["x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
@@ -150,10 +153,10 @@ def main():
     geodesicValues = [[[] for ii in range(len(startGeodesicsAngle))] for jj in range(len(variablenamesGeodesics))]
 
     for startGeodesic in range(0, len(startGeodesicsAngle)):
-        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + deltaXStart * startGeodesic - versatz_x * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
-        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + deltaYStart * startGeodesic - versatz_y * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
-        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] #+ deltaXStart * startGeodesic - versatz_x * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
+        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2#+ deltaYStart * startGeodesic - versatz_y * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + lengthStartGeodesics * math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) #+ deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + lengthStartGeodesics * math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) #+ deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
 
         geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSector) + "," + str(startGeodesic) + "]"
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(startGeodesic) + "," + str(1) + "]"
@@ -182,14 +185,14 @@ def main():
 
     for startMark in range(0, len(startMarksSectors)):
         markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
-        markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]]
+        markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]/2
 
         markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(startMark) + "]"
         markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
         markValues[markDict["markStartStrokeWidth"]][startMark] = 2
-        markValues[markDict["markStartRadius"]][startMark] = 2
-        markValues[markDict["markStartFill"]][startMark] = "line_colors[" + str(startMark) + "]"
-        markValues[markDict["markStartStroke"]][startMark] = "line_colors[" + str(startMark) + "]"
+        markValues[markDict["markStartRadius"]][startMark] = startMarkRadius[startMark]
+        markValues[markDict["markStartFill"]][startMark] = "mark_colors[" + str(startMark) + "]"
+        markValues[markDict["markStartStroke"]][startMark] = "mark_colors[" + str(startMark) + "]"
 
     for ii in range(0, len(variablenamesMarks)):
         file.write(variablenamesMarks[ii] + "= [ ")
