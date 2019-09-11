@@ -275,46 +275,6 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowLeft' && selectedTool === 'chooseToChangeDirection'){
-        changeDirectionAndContinue('counterclockwise');
-        toolChange('chooseToChangeDirection')
-    }
-});
-
-/*
-window.addEventListener('keyup',function(event){
-    if(event.key === 'ArrowLeft'){
-        continueGeodesic(geodesicToChangeDirection);
-    }
-});
-*/
-window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowRight' && selectedTool === 'chooseToChangeDirection'){
-        changeDirectionAndContinue('clockwise');
-        toolChange('chooseToChangeDirection')
-    }
-});
-/*
-window.addEventListener('keyup',function(event){
-    if(event.key === 'ArrowRight'){
-        continueGeodesic(geodesicToChangeDirection);
-    }
-});
-*/
-window.addEventListener('keydown',function(event){
-    if(event.key === 'Delete'){
-        toolChange('delete_whole');
-    }
-});
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'd'){
-        toolChange('chooseToChangeDirection');
-    }
-});
-
 //Werkzeugwechsel "Greifen"
 window.addEventListener('keydown',function(event){
     if(event.key === 'g'){
@@ -326,6 +286,41 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'b'){
         toolChange('mark');
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'd'){
+        toolChange('chooseGeodesicForAction');
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'Delete'){
+        deleteWholeGeodesic(chosenGeodesicGlobalID);
+        toolChange('chooseGeodesicForAction')
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'c'){
+        continueGeodesic(chosenGeodesicGlobalID);
+        toolChange('chooseGeodesicForAction')
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowLeft' && selectedTool === 'chooseGeodesicForAction'){
+        changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);
+        toolChange('chooseGeodesicForAction')
+    }
+});
+
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowRight' && selectedTool === 'chooseGeodesicForAction'){
+        changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
+        toolChange('chooseGeodesicForAction')
     }
 });
 
@@ -343,12 +338,6 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'a'){
         continueAllGeodesics();
-    }
-});
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'c'){
-        continueGeodesic(arrowheadline);
     }
 });
 
@@ -417,44 +406,45 @@ let markPoints = [];
 
 let geodesics = [];
 
-let geodesicToChangeDirection = -1;
+let chosenGeodesicGlobalID = -1;
 
 let history = [];
 
-function changeDirectionAndContinue(rotationdirection) {
-    if (geodesicToChangeDirection == -1) {
+
+function changeDirectionAndContinue(rotationdirection, chosenGeodesicTochangeDirection) {
+    if (chosenGeodesicGlobalID == -1) {
         return
     }
 
-    for (let ii = geodesics[geodesicToChangeDirection].length -1; ii > 0; ii--) {
+    for (let ii = geodesics[chosenGeodesicTochangeDirection].length -1; ii > 0; ii--) {
 
         //console.log('ii:', ii)
-        //console.log('ParentSector der zu löschenden:', geodesics[geodesicToChangeDirection][ii].parentSector)
+        //console.log('ParentSector der zu löschenden:', geodesics[chosenGeodesicGlobalID][ii].parentSector)
 
-        let entryToSplice_tmp = sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[geodesics[geodesicToChangeDirection][ii].parentSector[1]].parentSector[1]
-        //console.log('Sektor:', sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].ID, 'entryToSplice_tmp:', entryToSplice_tmp)
-        sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[geodesics[geodesicToChangeDirection][ii].parentSector[1]].parentSector[1], 1)
+        let entryToSplice_tmp = sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[1]].parentSector[1]
+        //console.log('Sektor:', sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].ID, 'entryToSplice_tmp:', entryToSplice_tmp)
+        sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[1]].parentSector[1], 1)
 
-        for (let jj = 0; jj < (sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments.length ); jj++){
+        for (let jj = 0; jj < (sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments.length ); jj++){
 
 
-            if (entryToSplice_tmp < sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1]){
-                sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1] -=1
+            if (entryToSplice_tmp < sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1]){
+                sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1] -=1
             }
-            //console.log('hier:', sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].ID, sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1])
-            //console.log(sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[jj].fill, sectors[geodesics[geodesicToChangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1])
+            //console.log('hier:', sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].ID, sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].parentSector[1])
+            //console.log(sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].fill, sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].parentSector[1])
         }
-        let lineSegment = geodesics[geodesicToChangeDirection][ii];
+        let lineSegment = geodesics[chosenGeodesicTochangeDirection][ii];
         canvas.remove(lineSegment);
-        geodesics[geodesicToChangeDirection].splice(geodesics[geodesicToChangeDirection].length -1, 1)
+        geodesics[chosenGeodesicTochangeDirection].splice(geodesics[chosenGeodesicTochangeDirection].length -1, 1)
 
     }
 
-    let segment_end_point = new fabric.Point(geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length-1].calcLinePoints().x2,geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length-1].calcLinePoints().y2);
-    segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length-1].calcTransformMatrix() );
+    let segment_end_point = new fabric.Point(geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length-1].calcLinePoints().x2,geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length-1].calcLinePoints().y2);
+    segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length-1].calcTransformMatrix() );
 
-    let geodesic_start_point = new fabric.Point(geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcLinePoints().x1, geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcLinePoints().y1);
-    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcTransformMatrix());
+    let geodesic_start_point = new fabric.Point(geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].calcLinePoints().x1, geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].calcLinePoints().y1);
+    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].calcTransformMatrix());
 
     let xg1 = geodesic_start_point.x;
     let yg1 = geodesic_start_point.y;
@@ -471,19 +461,27 @@ function changeDirectionAndContinue(rotationdirection) {
     // Die Richtungsaenderung bewirkt automatisch eine Veraenderung in der Laenge des Richtungsvektors.
     // Obwohl das urspruengliche Endstueck der Geodaete auf der Kante lag, muss deshalb der Richtungsvektor nicht verkürzt werden.
 
-    if (rotationdirection == 'clockwise') {
-        dxg = dxg_tmp * Math.cos(Math.PI/180) - dyg_tmp * Math.sin(Math.PI/180);
-        dyg = dxg_tmp * Math.sin(Math.PI/180) + dyg_tmp * Math.cos(Math.PI/180);
-    } else {
-        dxg = dxg_tmp * Math.cos(- Math.PI/180) - dyg_tmp * Math.sin(- Math.PI/180);
-        dyg = dxg_tmp * Math.sin(- Math.PI/180) + dyg_tmp * Math.cos(- Math.PI/180);
+    let rotationAngle;
+
+    if (event.shiftKey === true) {
+        rotationAngle = (Math.PI/180)/10
+    } else{
+        rotationAngle = Math.PI/180
     }
 
-    let transformMatrix = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
+    if (rotationdirection == 'clockwise') {
+        dxg = dxg_tmp * Math.cos(rotationAngle) - dyg_tmp * Math.sin(rotationAngle);
+        dyg = dxg_tmp * Math.sin(rotationAngle) + dyg_tmp * Math.cos(rotationAngle);
+    } else {
+        dxg = dxg_tmp * Math.cos(- rotationAngle) - dyg_tmp * Math.sin(- rotationAngle);
+        dyg = dxg_tmp * Math.sin(- rotationAngle) + dyg_tmp * Math.cos(- rotationAngle);
+    }
+
+    let transformMatrix = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
     let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
     for (let jj = 0; jj < 4; jj++) {
-        transformedPoints[jj].x = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.width / 2;
-        transformedPoints[jj].y = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.height / 2;
+        transformedPoints[jj].x = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.width / 2;
+        transformedPoints[jj].y = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.height / 2;
         transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
     }
 
@@ -514,8 +512,6 @@ function changeDirectionAndContinue(rotationdirection) {
         if (lambda > epsilon) {
             if (alpha >= 0.0 && alpha <= 1.0) {
                 kantenIndex = kk;
-                console.log(lambda);
-                console.log(alpha);
                 break;
             }
         }
@@ -523,25 +519,25 @@ function changeDirectionAndContinue(rotationdirection) {
 
     }
 
-    let neighbourSector = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].neighbourhood[kantenIndex];
+    let neighbourSector = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
-    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
-    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
 
-    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].setCoords();
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].setCoords();
     //canvas.renderAll();
 
 
 
-    //let trapezTransform = sectors[geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
+    //let trapezTransform = sectors[geodesics[chosenGeodesicGlobalID][geodesics[chosenGeodesicGlobalID].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
     let invertedtrapezTransform = invert(transformMatrix);
     let desiredTransform = multiply(
         invertedtrapezTransform,
-        geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].calcTransformMatrix());
+        geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].calcTransformMatrix());
 
 
-    geodesics[geodesicToChangeDirection][geodesics[geodesicToChangeDirection].length - 1].relationship = desiredTransform;
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].relationship = desiredTransform;
 
     //Fortsetzung im nächsten Sektor
 
@@ -614,10 +610,10 @@ function changeDirectionAndContinue(rotationdirection) {
             }
         }
 
-        let geodesicToChangeDirectionContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-            strokeWidth: geodesics[geodesicToChangeDirection][0].strokeWidth,
-            fill: geodesics[geodesicToChangeDirection][0].fill,
-            stroke: geodesics[geodesicToChangeDirection][0].stroke,
+        let chosenGeodesicTochangeDirectionContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
+            strokeWidth: geodesics[chosenGeodesicTochangeDirection][0].strokeWidth,
+            fill: geodesics[chosenGeodesicTochangeDirection][0].fill,
+            stroke: geodesics[chosenGeodesicTochangeDirection][0].stroke,
             originX: 'center',
             originY: 'center',
             perPixelTargetFind: true,
@@ -628,15 +624,15 @@ function changeDirectionAndContinue(rotationdirection) {
             selectable: false,
         });
 
-        geodesicToChangeDirectionContinue.ID = [geodesicToChangeDirection, geodesics[geodesicToChangeDirection].length];
-        geodesicToChangeDirectionContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
+        chosenGeodesicTochangeDirectionContinue.ID = [chosenGeodesicTochangeDirection, geodesics[chosenGeodesicTochangeDirection].length];
+        chosenGeodesicTochangeDirectionContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
         trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix('True');
         invertedtrapezTransform = invert(trapezTransform);
-        desiredTransform = multiply(invertedtrapezTransform, geodesicToChangeDirectionContinue.calcTransformMatrix());
+        desiredTransform = multiply(invertedtrapezTransform, chosenGeodesicTochangeDirectionContinue.calcTransformMatrix());
 
-        geodesicToChangeDirectionContinue.relationship = desiredTransform;
+        chosenGeodesicTochangeDirectionContinue.relationship = desiredTransform;
 
-        sectors[geodesicToChangeDirectionContinue.parentSector[0]].lineSegments.push(geodesicToChangeDirectionContinue);
+        sectors[chosenGeodesicTochangeDirectionContinue.parentSector[0]].lineSegments.push(chosenGeodesicTochangeDirectionContinue);
 
 
         let stackIdx = 0;
@@ -645,14 +641,14 @@ function changeDirectionAndContinue(rotationdirection) {
             stackIdx = canvas.getObjects().indexOf(sectors[neighbourSector].ID_text)
         }
 
-        canvas.insertAt(geodesicToChangeDirectionContinue,stackIdx);
-        geodesics[geodesicToChangeDirection].push(geodesicToChangeDirectionContinue);
+        canvas.insertAt(chosenGeodesicTochangeDirectionContinue,stackIdx);
+        geodesics[chosenGeodesicTochangeDirection].push(chosenGeodesicTochangeDirectionContinue);
 
 
         slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
 
-        neighbourSector = sectors[geodesicToChangeDirectionContinue.parentSector[0]].neighbourhood[kantenIndex];
+        neighbourSector = sectors[chosenGeodesicTochangeDirectionContinue.parentSector[0]].neighbourhood[kantenIndex];
 
 
         alpha = alpha_2
@@ -1039,14 +1035,12 @@ function continueGeodesic(geodesicToContinue) {
                     alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
                     lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
-                console.log('dxg_tmp:', dxg_tmp)
-                console.log('dxg:', dxg)
+
 
                 //Kommentar
                 if (lambda >=epsilon) {
                     if (alpha >= 0.0 && alpha <= 1.0) {
                         kantenIndex = kk;
-                        console.log("Huhu", lambda)
                         break;
                     }
                 }else{}
@@ -1181,7 +1175,7 @@ function continueGeodesic(geodesicToContinue) {
                     }
 
                     let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-                        strokeWidth: 2 * scaleFacotor,
+                        strokeWidth: geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].strokeWidth * scaleFacotor,
                         fill: geodesics[geodesicToContinue][0].fill,
                         stroke: geodesics[geodesicToContinue][0].stroke,
                         originX: 'center',
@@ -1232,6 +1226,38 @@ function continueGeodesic(geodesicToContinue) {
     }
 }
 
+function deleteWholeGeodesic(geodesicToDelete) {
+    for (let ii = geodesics[geodesicToDelete].length - 1; ii >= 0; ii--) {
+
+
+        //console.log('kk:', kk)
+        //console.log('ParentSector der zu löschenden:', geodesics[chosenGeodesicGlobalID][kk].parentSector)
+
+
+
+        let entryToSplice_tmp = sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1]
+
+        //console.log(entryToSplice_tmp)
+
+        sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1], 1)
+
+        for (let jj = 0; jj < sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments.length; jj++) {
+
+
+            if (entryToSplice_tmp < sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1]) {
+                //console.log('doit')
+                sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1] -= 1
+
+            }
+            //console.log(sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].fill, sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1])
+        }
+
+        let lineSegment = geodesics[geodesicToDelete][ii];
+        canvas.remove(lineSegment)
+    }
+    geodesics[geodesicToDelete] = [];
+    //toolChange('delete_whole');
+}
 
 function distance(punkt1, punkt2) {
     return Math.sqrt(Math.pow((punkt2.x - punkt1.x), 2) + Math.pow((punkt2.y - punkt1.y), 2));
@@ -1457,7 +1483,6 @@ function initializeSectors() //keine Argumente
                     let stackIdx = 0;
                     for (ii = 0; ii < sectors.length; ii++){
                         if(sectorContainsPoint(sectors[ii].trapez, pointer)){
-                            console.log(sectors[ii].ID);
                             if(canvas.getObjects().indexOf(sectors[ii].ID_text) > stackIdx) {
                                 stackIdx =canvas.getObjects().indexOf(sectors[ii].ID_text);
                                 mark.parentSector = sectors[ii].ID;
@@ -1491,7 +1516,6 @@ function initializeSectors() //keine Argumente
 
     //Beenden von Linien; nur auf Trapezen möglich
     this.trapez.on('mouseup', function (o) {
-        console.log("what the fuck");
         if (arrowheadline !== -1) {
             arrowheadline = -1;
         }
@@ -1526,10 +1550,8 @@ function initializeSectors() //keine Argumente
             yg1 = line.y1;
             yg2 = line.y2;
             let zoom = canvas.getZoom();
-            console.log(1/zoom)
 
             if(distance(new fabric.Point(xg1,yg1),new fabric.Point(xg2,yg2)) < abortlength* 1/zoom){
-                console.log('abort')
                 canvas.remove(line);
                 lineContinueAt = -1;
                 return;
@@ -1551,26 +1573,8 @@ function initializeSectors() //keine Argumente
 
                 //let lineLastPoint = new fabric.Point(//xg1 + lambdas[ii] * (xg2 - xg1), yg1 + lambdas[ii] * (yg2 - yg1));
 
-                console.log('1:', Math.abs(lineend_x-linestart_x))
-                console.log('2:' ,Math.abs(lineend_y-linestart_y))
 
                 if(Math.abs(lineend_x-linestart_x) > epsilon || Math.abs(lineend_y-linestart_y) > epsilon) {
-
-
-                    console.log('abort 2')
-                    //let lineEndIsOverCanvas = false;
-                    /*
-                    for (let jj = sectors.length - 1; jj >= 0; jj--) {
-
-                        if (sectorContainsPoint(sectors[jj].trapez, lineLastPoint)) {
-                            lineEndIsOverCanvas = true;
-                            console.log('abort 3')
-                            break
-                        }
-                        else {console.log('test')}
-                    }
-*/
-
 
                     let stackIdx = 0;
                     for (let jj = sectors.length-1 ; jj >= 0 ; jj--){
@@ -2378,11 +2382,6 @@ function setSectors() {
                     //canvas.add(new fabric.Circle({ radius: 5, fill: 'green', top: yt2, left: xt2 , originY: 'center', originX: 'center'}));
 
 
-
-
-
-
-                    console.log("nächste Iteration",lauf+1);
                     transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
                     transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
                     for (let jj = 0; jj < 4; jj++) {
@@ -2735,17 +2734,16 @@ function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
 
 //Werkzeugsänderung über die Button der Internetseite
 function toolChange(argument) {
-    //selectedTool = document.getElementById("tool").value;
     canvas.discardActiveObject();
     canvas.renderAll();
 
     selectedTool = argument;
 
-    if (selectedTool !=='chooseToChangeDirection') {
-        geodesicToChangeDirection = -1
+    if (selectedTool !=='chooseGeodesicForAction') {
+        chosenGeodesicGlobalID = -1
     }
 
-    if (selectedTool !== 'delete' && selectedTool !== 'delete_whole' && selectedTool !== 'chooseToChangeDirection') {
+    if (selectedTool !== 'delete' && selectedTool !== 'delete_whole' && selectedTool !== 'chooseGeodesicForAction') {
 
         for (let ii = 0; ii < geodesics.length; ii++) {
 
@@ -2775,7 +2773,7 @@ function toolChange(argument) {
     }
 
 
-    if (selectedTool === 'delete_whole' || selectedTool === 'chooseToChangeDirection' || selectedTool === 'delete') {
+    if (selectedTool === 'chooseGeodesicForAction' || selectedTool === 'delete') {
 
         for (let ii = 0; ii < sectors.length; ii++) {
             sectors[ii].trapez.evented = false;
@@ -2785,6 +2783,11 @@ function toolChange(argument) {
 
             for (let jj = 0; jj < geodesics[ii].length; jj++) {
 
+                if (selectedTool === 'chooseGeodesicForAction') {
+                    geodesics[ii][jj].evented = true;
+                    geodesics[ii][jj].hoverCursor = 'pointer';
+                }
+
                 if (selectedTool == 'delete') {
                     geodesics[ii][jj].evented = false;
                     geodesics[ii][jj].strokeWidth = 2 * scaleFacotor;
@@ -2792,11 +2795,6 @@ function toolChange(argument) {
                     geodesics[ii][geodesics[ii].length - 1].evented = true;
                     geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5 * scaleFacotor;
 
-                }
-                if (selectedTool == 'delete_whole' || selectedTool === 'chooseToChangeDirection') {
-                    geodesics[ii][jj].evented = true;
-                    geodesics[ii][jj].hoverCursor = 'pointer';
-                    //geodesics[ii][jj].strokeWidth = 5 * scaleFacotor;
                 }
 
                 if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
@@ -2808,53 +2806,12 @@ function toolChange(argument) {
                         }
 
 
-                        let chosenGeodesicGlobalID = this.ID[0];
+                        chosenGeodesicGlobalID = this.ID[0];
 
                         for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
                             geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5 * scaleFacotor;
                         }
 
-                        if (selectedTool === 'delete_whole') {
-                            if (this.ID[0] >= 0 && selectedTool == 'delete_whole') {
-                                //console.log(this.ID[1])
-                                //console.log(geodesics)
-                                //kk laeuft durch alle Teilstuecke der Geodaete hindurch
-                                for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
-
-
-                                    //console.log('kk:', kk)
-                                    //console.log('ParentSector der zu löschenden:', geodesics[chosenGeodesicGlobalID][kk].parentSector)
-
-
-
-                                    let entryToSplice_tmp = sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[geodesics[chosenGeodesicGlobalID][kk].parentSector[1]].parentSector[1]
-
-                                    //console.log(entryToSplice_tmp)
-
-                                    sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments.splice(sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[geodesics[chosenGeodesicGlobalID][kk].parentSector[1]].parentSector[1], 1)
-
-                                    for (let ll = 0; ll < sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments.length; ll++) {
-
-
-                                        if (entryToSplice_tmp < sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1]) {
-                                            //console.log('doit')
-                                            sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1] -= 1
-
-                                        }
-                                        //console.log(sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].fill, sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1])
-                                    }
-
-                                    let lineSegment = geodesics[chosenGeodesicGlobalID][kk];
-                                    canvas.remove(lineSegment)
-                                }
-                                geodesics[chosenGeodesicGlobalID] = [];
-
-                            }
-                        }
-                        if (selectedTool === 'chooseToChangeDirection') {
-                            geodesicToChangeDirection = chosenGeodesicGlobalID;
-                            console.log(geodesics[geodesicToChangeDirection])
-                        }
 
                         if (selectedTool == 'delete') {
                             cursor = 'not-allowed';
