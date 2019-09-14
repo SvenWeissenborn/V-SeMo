@@ -312,6 +312,14 @@ window.addEventListener('keydown',function(event){
     }
 });
 
+//Sektoren passend zusammensetzen
+window.addEventListener('keydown',function(event){
+    if(event.key === 's'){
+        setSectors(chosenGeodesicGlobalID); setSectors(chosenGeodesicGlobalID);
+        toolChange('chooseGeodesicForAction')
+    }
+});
+
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft' && selectedTool === 'chooseGeodesicForAction'){
         changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);
@@ -344,12 +352,6 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-//Sektoren passend zusammensetzen
-window.addEventListener('keydown',function(event){
-    if(event.key === 's'){
-        setSectors(); setSectors();
-    }
-});
 
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
@@ -383,7 +385,7 @@ if (window.innerWidth < 1000 || window.innerHeight < 1000){
 let epsilon = 0.0000001;
 let snap_radius_sectors = 5;
 let snap_radius_line = 15;
-let snap_radius_markPoint = 30;
+let snap_radius_markPoint = 15;
 
 let abortlength = 14;
 
@@ -406,6 +408,8 @@ let scaleRatio;
 let sectors = [];
 
 let markPoints = [];
+
+let texts = [];
 
 let geodesics = [];
 
@@ -1465,7 +1469,7 @@ function initializeSectors() //keine Argumente
                         radius: 3,
                         stroke: 'black',
                         strokeWidth: 0,
-                        fill: 'black',
+                        fill: 'grey',
                         perPixelTargetFind: true,
                         hasBorders: false,
                         objectCaching: false,
@@ -1497,7 +1501,7 @@ function initializeSectors() //keine Argumente
 
                     mark.relationship = desiredTransform;
 
-                    mark.parentSector[1] = sectors[mark.parentSector[0]].markCircles.length
+                    mark.parentSector[1] = sectors[mark.parentSector[0]].markCircles.length;
 
                     sectors[mark.parentSector[0]].markCircles.push(mark);
 
@@ -1968,6 +1972,7 @@ function Sector() {
 
     this.lineSegments = [];
     this.markCircles = [];
+    this.texts = [];
 
     this.ID_text;
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
@@ -2035,9 +2040,9 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
     return isPointInsideSectors;
 }
 
-function setSectors() {
+function setSectors(chosenGeodesicToSetSectors) {
 
-    if (arrowheadline == -1){
+    if (chosenGeodesicToSetSectors == -1){
         return
     }
 
@@ -2074,31 +2079,31 @@ function setSectors() {
 
     kantenindex = -1;
 
-    if (typeof arrowheadline === 'undefined') {
+    if (typeof chosenGeodesicToSetSectors === 'undefined') {
         return;
     }else {
 
-        if ( geodesics[arrowheadline].length > 0) {
+        if ( geodesics[chosenGeodesicToSetSectors].length > 0) {
 
 
-            let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][0].calcLinePoints().x2, geodesics[arrowheadline][0].calcLinePoints().y2);
-            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][0].calcTransformMatrix());
+            let geodesic_end_point = new fabric.Point(geodesics[chosenGeodesicToSetSectors][0].calcLinePoints().x2, geodesics[chosenGeodesicToSetSectors][0].calcLinePoints().y2);
+            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[chosenGeodesicToSetSectors][0].calcTransformMatrix());
 
             let xg2 = geodesic_end_point.x;
             let yg2 = geodesic_end_point.y;
 
-            let geodesic_start_point = new fabric.Point(geodesics[arrowheadline][0].calcLinePoints().x1, geodesics[arrowheadline][0].calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[arrowheadline][0].calcTransformMatrix());
+            let geodesic_start_point = new fabric.Point(geodesics[chosenGeodesicToSetSectors][0].calcLinePoints().x1, geodesics[chosenGeodesicToSetSectors][0].calcLinePoints().y1);
+            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[chosenGeodesicToSetSectors][0].calcTransformMatrix());
 
             let xg1 = geodesic_start_point.x;
             let yg1 = geodesic_start_point.y;
 
             //Umrechnung der lokalen in globale Koordinaten
-            let transformMatrix = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.calcTransformMatrix('True');
+            let transformMatrix = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.calcTransformMatrix('True');
             let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
             for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.width / 2;
-                transformedPoints[jj].y = sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[arrowheadline][0].parentSector[0]].trapez.height / 2;
+                transformedPoints[jj].x = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.width / 2;
+                transformedPoints[jj].y = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.height / 2;
                 transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
             }
 
@@ -2148,7 +2153,7 @@ function setSectors() {
 
 
 
-            let neighbourSector = sectors[geodesics[arrowheadline][0].parentSector[0]].neighbourhood[kantenIndex];
+            let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
 
 
             if (kantenIndex >= 0) {
@@ -2698,10 +2703,11 @@ function startGeodesics(){
 
     }
 }
+
 function startMarks() {
 
     for (let ii = 0; ii < markStartParentSector.length; ii++) {
-        console.log(markStartParentSector[ii][0])
+        console.log(markStartParentSector[ii][0]);
         let sec = sectors[markStartParentSector[ii][0]];
 
         let mark = new fabric.Circle({
@@ -2750,6 +2756,50 @@ function startMarks() {
         canvas.renderAll();
     }
 }
+
+function startTexts() {
+
+    for (let ii = 0; ii < textStartParentSector.length; ii++) {
+        let sec = sectors[textStartParentSector[ii][0]];
+
+        let text = new fabric.Text("" + (textStartContent[ii]), {
+            fontSize : textStartFontSize[ii],
+            originX: 'center',
+            originY: 'center',
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            selectable: false,
+            evented: false,
+            left: textStart_x[ii]  + window.innerWidth/2,
+            top: textStart_y[ii]  + (window.innerHeight - window.innerHeight*0.08)/2,
+            angle: textStartAngle[ii],
+        });
+        console.log(textStartContent[ii]);
+
+
+
+        text.parentSector = textStartParentSector[ii];
+
+        let trapezTransform = sec.trapez.calcTransformMatrix();
+        let invertedtrapezTransform = invert(trapezTransform);
+        let desiredTransform = multiply(
+            invertedtrapezTransform,
+            text.calcTransformMatrix());
+
+
+        text.relationship = desiredTransform;
+        text.ID = textStartID[ii];
+        sec.texts.push(text);
+        let stackIdx = canvas.getObjects().indexOf(sectors[text.parentSector[0]].ID_text);
+        canvas.insertAt(text, stackIdx);
+        texts.push(text);
+        canvas.renderAll();
+    }
+    console.log(texts)
+}
+
 
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
@@ -2998,9 +3048,32 @@ function updateMinions(boss) {
             markPoint.setCoords();
         }
     }
+
+    for (let ii = 0; ii < boss.parent.texts.length; ii++) {
+        let text = boss.parent.texts[ii];
+        if (text.relationship) {
+            text.bringToFront();
+            let relationship = text.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            text.set({
+                flipX: false,
+                flipY: false,
+            });
+            text.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            text.set(options);
+            text.setCoords();
+        }
+    }
 }
-
-
 
 
 
@@ -3040,6 +3113,8 @@ positionSectors();
 startGeodesics();
 
 startMarks();
+
+startTexts();
 
 toolChange(selectedTool);
 
