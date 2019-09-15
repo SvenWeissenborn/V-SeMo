@@ -2149,7 +2149,9 @@ function setSectors(chosenGeodesicToSetSectors) {
                 }
 
 
+
             }
+            //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'red', top: yt1 + dyt12 * alpha , left: xt1 + dxt12 * alpha, stroke: 'red', strokeWidth: 3, originX: 'center', originY: 'center'}));
 
 
 
@@ -2187,26 +2189,26 @@ function setSectors(chosenGeodesicToSetSectors) {
                         sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
 */
                     //Übergangspunkte übernehmen
-                    xt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
-                    xt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
-                    yt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
-                    yt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
+                    xt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
+                    xt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
+                    yt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
+                    yt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
 
                     dxt12_uebergang = xt2_uebergang - xt1_uebergang;
                     dyt12_uebergang = yt2_uebergang - yt1_uebergang;
 
-                    x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
-                    y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
+                    x_kante_uebergang = xt2_uebergang - alpha * dxt12_uebergang;
+                    y_kante_uebergang = yt2_uebergang - alpha * dyt12_uebergang;
 
                     //Übergangsrichtung ermitteln
 
-                    dxg = nextGeodesic_x = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
-                    dyg = nextGeodesic_y = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
+                    dxg = nextGeodesic_x = -dxt12_uebergang * Math.cos(-slopeAngle) + dyt12_uebergang * Math.sin(-slopeAngle);
+                    dyg = nextGeodesic_y = -dxt12_uebergang * Math.sin(-slopeAngle) - dyt12_uebergang * Math.cos(-slopeAngle);
 
                     point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
                     point_2 = new fabric.Point(xt2_uebergang, yt2_uebergang);
-                    point_a = new fabric.Point(xt1, yt1);
-                    point_b = new fabric.Point(xt2, yt2);
+                    point_a = new fabric.Point(xt2, yt2);
+                    point_b = new fabric.Point(xt1, yt1);
 
                     dist_1a = distance(point_1, point_a);
                     dist_2b = distance(point_2, point_b);
@@ -2215,7 +2217,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
                     //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                    if (dist_1a - epsilon <= dist_2b) {
+                    if (dist_1a <= dist_2b) {
                         // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
                         translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
                         let kathete = distance(point_a, point_b);
@@ -2223,7 +2225,10 @@ function setSectors(chosenGeodesicToSetSectors) {
                         alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
 
                         if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
+                        //if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) < Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
+
                             alpha = -alpha;
+                            console.log('ALPHA1',)
                         }
 
                         console.log('hmpf1')
@@ -2231,7 +2236,11 @@ function setSectors(chosenGeodesicToSetSectors) {
                         console.log('alpha', alpha)
                         console.log('1:', Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x))
                         console.log('2:', Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x))
-                    } else if (dist_1a + epsilon > dist_2b) {
+                        console.log('3:', Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x))
+                        console.log('4:', Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x))
+
+
+                    } else if (dist_1a > dist_2b) {
                         // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
                         translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
                         let kathete = distance(point_a, point_b);
@@ -2240,6 +2249,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                         if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
                             alpha = -alpha;
+                            console.log('ALPHA2')
                         }
                         console.log('hmpf2')
                         console.log(sectors[neighbourSector].name)
@@ -2254,8 +2264,8 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
 
-                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2 -0.5,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2 -0.5);
+                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2 -0.5,
+                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2 -0.5);
                     point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
                     sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
@@ -2300,8 +2310,9 @@ function setSectors(chosenGeodesicToSetSectors) {
                             }
                         }
                     }
-
-
+                    //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'yellow', top: y_kante_uebergang , left: x_kante_uebergang, stroke: 'yellow', strokeWidth: 3, originX: 'center', originY: 'center'}));
+                    //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'blue', top: yt1 + alpha_2 * dyt12 , left: xt1 + alpha_2 * dxt12, stroke: 'blue', strokeWidth: 3, originX: 'center', originY: 'center'}));
+                    //console.log('dxg:', dxg, 'dyg:', dyg)
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
