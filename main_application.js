@@ -2102,8 +2102,8 @@ function setSectors(chosenGeodesicToSetSectors) {
             let transformMatrix = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.calcTransformMatrix('True');
             let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
             for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.width / 2;
-                transformedPoints[jj].y = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.height / 2;
+                transformedPoints[jj].x = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.width / 2 -0.5;
+                transformedPoints[jj].y = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.height / 2 -0.5;
                 transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
             }
 
@@ -2174,17 +2174,18 @@ function setSectors(chosenGeodesicToSetSectors) {
                     let transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
                     let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
                     for (let jj = 0; jj < 4; jj++) {
-                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2;
-                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2;
+                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2 -0.5;
+                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2 -0.5;
                         transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
                     }
 
+                    /*
                     point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2,
                         sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2);
 
                     point_2_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
                         sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
-
+*/
                     //Übergangspunkte übernehmen
                     xt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
                     xt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
@@ -2214,7 +2215,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
                     //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                    if (dist_1a <= dist_2b) {
+                    if (dist_1a - epsilon <= dist_2b) {
                         // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
                         translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
                         let kathete = distance(point_a, point_b);
@@ -2225,7 +2226,12 @@ function setSectors(chosenGeodesicToSetSectors) {
                             alpha = -alpha;
                         }
 
-                    } else if (dist_1a > dist_2b) {
+                        console.log('hmpf1')
+                        console.log(sectors[neighbourSector].name)
+                        console.log('alpha', alpha)
+                        console.log('1:', Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x))
+                        console.log('2:', Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x))
+                    } else if (dist_1a + epsilon > dist_2b) {
                         // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
                         translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
                         let kathete = distance(point_a, point_b);
@@ -2235,6 +2241,11 @@ function setSectors(chosenGeodesicToSetSectors) {
                         if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
                             alpha = -alpha;
                         }
+                        console.log('hmpf2')
+                        console.log(sectors[neighbourSector].name)
+                        console.log('alpha', alpha)
+                        console.log('1:', Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x))
+                        console.log('2:', Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x))
 
                     }
 
@@ -2243,8 +2254,8 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
 
-                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2);
+                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2 -0.5,
+                        sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2 -0.5);
                     point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
                     sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
@@ -2297,8 +2308,8 @@ function setSectors(chosenGeodesicToSetSectors) {
                     transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
                     transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
                     for (let jj = 0; jj < 4; jj++) {
-                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2;
-                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2;
+                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2 -0.5;
+                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2 -0.5;
                         transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
                     }
 
