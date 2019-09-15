@@ -1893,6 +1893,104 @@ function overlapControll(trapez) {
 
 }
 
+function paddingContainsPoint(trapez,segmentMittelpunkt) {
+    let isPointInsideSectors = false;
+    //
+    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
+        //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
+        //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
+        //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
+        isPointInsideSectors = true;
+        let transformMatrix = trapez.calcTransformMatrix('True');
+        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
+        for(let ll=0;ll<4;ll++){
+            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
+            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
+            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
+        }
+
+        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
+        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+
+
+
+        for (let kk = 0; kk < 4; kk++) {
+
+            let xt1 =  transformedPoints[kk].x;
+            let xt2 =  transformedPoints[(kk + 1) % 4].x;
+            let yt1 =  transformedPoints[kk].y;
+            let yt2 =  transformedPoints[(kk + 1) % 4].y;
+
+            /*let object = new fabric.Circle({
+                radius: 5,
+                fill: 'blue',
+                left: xt1,
+                top: yt1,
+                originX: 'center',
+                originY: 'center'
+            });
+            canvas.add(object);
+
+            let object2 = new fabric.Circle({
+                radius: 5,
+                fill: 'red',
+                left: xt2,
+                top: yt2,
+                originX: 'center',
+                originY: 'center'
+            });
+            canvas.add(object2); */
+
+
+
+            let dxt12 = xt2 - xt1;
+            let dyt12 = yt2 - yt1;
+
+
+            let dxw = xt1 - xt2;
+            let dyw = yt2 - yt1;
+            let xp = segmentMittelpunkt.x;
+            let yp = segmentMittelpunkt.y;
+
+
+            let beta;
+            if (Math.abs(dyw) > epsilon) {
+
+                let gamma = (yp - yt1 + ((xt1 - xp) * dxw) / dyw) / (dyt12 - (dxt12 * dxw) / dyw);
+                beta = ((xt1 - xp) / dyw) + (dxt12 / dyw) * gamma;
+            }
+
+            else {
+                let gamma = (xp - xt1 + ((yt1 - yp) * dyw) / dxw) / (dxt12 - (dyt12 * dyw) / dxw);
+                beta = ((yt1 - yp) / dxw) + (dyt12 / dxw) * gamma;
+            }
+
+            if (beta < 0.0){
+                isPointInsideSectors = false;
+            }
+
+            xt1 =  transformedPoints[kk].x;
+            xt2 =  transformedPoints[(kk + 1) % 4].x;
+            yt1 =  transformedPoints[kk].y;
+            yt2 =  transformedPoints[(kk + 1) % 4].y;
+
+        }
+
+    }
+    return isPointInsideSectors;
+}
+
 function positionSectors() {
     for (let ii = 0; ii < sectors.length; ii++){
         sectors[ii].trapez.top = sectors[ii].pos_y;
@@ -2149,12 +2247,10 @@ function setSectors(chosenGeodesicToSetSectors) {
                 }
 
 
-
             }
-            //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'red', top: yt1 + dyt12 * alpha , left: xt1 + dxt12 * alpha, stroke: 'red', strokeWidth: 3, originX: 'center', originY: 'center'}));
 
 
-
+            let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
 
 
@@ -2181,13 +2277,6 @@ function setSectors(chosenGeodesicToSetSectors) {
                         transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
                     }
 
-                    /*
-                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x - sectors[neighbourSector].trapez.width / 2,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y - sectors[neighbourSector].trapez.height / 2);
-
-                    point_2_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
-*/
                     //Übergangspunkte übernehmen
                     xt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
                     xt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
@@ -2216,50 +2305,21 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
 
-                    //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                    if (dist_1a <= dist_2b) {
-                        // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
-                        translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
-                        alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
 
-                        if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
-                        //if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) < Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
-
-                            alpha = -alpha;
-                            console.log('ALPHA1',)
-                        }
-
-                        console.log('hmpf1')
-                        console.log(sectors[neighbourSector].name)
-                        console.log('alpha', alpha)
-                        console.log('1:', Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x))
-                        console.log('2:', Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x))
-                        console.log('3:', Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x))
-                        console.log('4:', Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x))
+                    // Steigung der Kante des ruhenden/ausgehenden Sektors im lokalen Koordinatensysten
+                    dxs_tmp = sectors[staticSector].trapez.points[kantenIndex].x-sectors[staticSector].trapez.points[(kantenIndex+1)%4].x
+                    dys_tmp = sectors[staticSector].trapez.points[kantenIndex].y-sectors[staticSector].trapez.points[(kantenIndex+1)%4].y
+                    if (Math.abs(dys_tmp)>epsilon) {
+                        gamma_static = Math.atan(dxs_tmp / dys_tmp);
+                    }else{gamma_static=0.0}
+                    dxs_tmp = sectors[neighbourSector].trapez.points[(kantenIndex+2)%4].x - sectors[neighbourSector].trapez.points[(kantenIndex+3)%4].x
+                    dys_tmp = sectors[neighbourSector].trapez.points[(kantenIndex+2)%4].y - sectors[neighbourSector].trapez.points[(kantenIndex+3)%4].y
+                    if (Math.abs(dys_tmp)>epsilon) {
+                        gamma_neighbour =Math.atan(dxs_tmp/dys_tmp );
+                    }else{gamma_neighbour=0.0}
 
 
-                    } else if (dist_1a > dist_2b) {
-                        // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
-                        translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
-                        let kathete = distance(point_a, point_b);
-                        let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
-                        alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
-
-                        if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
-                            alpha = -alpha;
-                            console.log('ALPHA2')
-                        }
-                        console.log('hmpf2')
-                        console.log(sectors[neighbourSector].name)
-                        console.log('alpha', alpha)
-                        console.log('1:', Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x))
-                        console.log('2:', Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x))
-
-                    }
-
-                    sectors[neighbourSector].trapez.rotate(sectors[neighbourSector].trapez.angle + alpha / Math.PI * 180);
+                    sectors[neighbourSector].trapez.angle = sectors[staticSector].trapez.angle - gamma_static/ Math.PI * 180 + gamma_neighbour/ Math.PI * 180;
                     sectors[neighbourSector].trapez.setCoords();
 
                     transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
@@ -2310,9 +2370,6 @@ function setSectors(chosenGeodesicToSetSectors) {
                             }
                         }
                     }
-                    //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'yellow', top: y_kante_uebergang , left: x_kante_uebergang, stroke: 'yellow', strokeWidth: 3, originX: 'center', originY: 'center'}));
-                    //canvas.add(circle= new fabric.Circle({radius: 5, fill: 'blue', top: yt1 + alpha_2 * dyt12 , left: xt1 + alpha_2 * dxt12, stroke: 'blue', strokeWidth: 3, originX: 'center', originY: 'center'}));
-                    //console.log('dxg:', dxg, 'dyg:', dyg)
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
@@ -2331,7 +2388,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
 
-
+                    staticSector = neighbourSector;
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
 
@@ -2351,103 +2408,6 @@ function setSectors(chosenGeodesicToSetSectors) {
     }
 }
 
-function paddingContainsPoint(trapez,segmentMittelpunkt) {
-    let isPointInsideSectors = false;
-    //
-    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
-        //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
-        //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
-        //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
-        isPointInsideSectors = true;
-        let transformMatrix = trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let ll=0;ll<4;ll++){
-            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
-            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
-            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
-        }
-
-        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
-        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
-
-        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
-
-
-
-
-        for (let kk = 0; kk < 4; kk++) {
-
-            let xt1 =  transformedPoints[kk].x;
-            let xt2 =  transformedPoints[(kk + 1) % 4].x;
-            let yt1 =  transformedPoints[kk].y;
-            let yt2 =  transformedPoints[(kk + 1) % 4].y;
-
-            /*let object = new fabric.Circle({
-                radius: 5,
-                fill: 'blue',
-                left: xt1,
-                top: yt1,
-                originX: 'center',
-                originY: 'center'
-            });
-            canvas.add(object);
-
-            let object2 = new fabric.Circle({
-                radius: 5,
-                fill: 'red',
-                left: xt2,
-                top: yt2,
-                originX: 'center',
-                originY: 'center'
-            });
-            canvas.add(object2); */
-
-
-
-            let dxt12 = xt2 - xt1;
-            let dyt12 = yt2 - yt1;
-
-
-            let dxw = xt1 - xt2;
-            let dyw = yt2 - yt1;
-            let xp = segmentMittelpunkt.x;
-            let yp = segmentMittelpunkt.y;
-
-
-            let beta;
-            if (Math.abs(dyw) > epsilon) {
-
-                let gamma = (yp - yt1 + ((xt1 - xp) * dxw) / dyw) / (dyt12 - (dxt12 * dxw) / dyw);
-                beta = ((xt1 - xp) / dyw) + (dxt12 / dyw) * gamma;
-            }
-
-            else {
-                let gamma = (xp - xt1 + ((yt1 - yp) * dyw) / dxw) / (dxt12 - (dyt12 * dyw) / dxw);
-                beta = ((yt1 - yp) / dxw) + (dyt12 / dxw) * gamma;
-            }
-
-            if (beta < 0.0){
-                isPointInsideSectors = false;
-            }
-
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
-
-        }
-
-    }
-    return isPointInsideSectors;
-}
 
 
 
@@ -2515,33 +2475,22 @@ function snapping(trapez) {
 
             if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
                 //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
-                if (dist_1a <= dist_2b) {
-                    // Rotation und Translation zu Punkt a des ruhenden Sektors, d.h. Startpunkt der Snap-Kante
-                    translation = new fabric.Point(point_a.x - point_1.x, point_a.y - point_1.y);
-                    let kathete = distance(point_a, point_b);
-                    let gegenkath = distance(new fabric.Point(point_2.x + translation.x, point_2.y + translation.y), point_b);
-                    alpha = -Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
 
-                    if (Math.atan2(point_2.y - point_1.y, point_2.x - point_1.x) < Math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)) {
-                        alpha = -alpha;
-                    }
-
-                } else if (dist_1a > dist_2b) {
-                    // Rotation und Translation zu Punkt b des ruhenden Sektors, d.h. Endpunkt der Snap-Kante
-                    translation = new fabric.Point(point_b.x - point_2.x, point_b.y - point_2.y);
-                    let kathete = distance(point_a, point_b);
-                    let gegenkath = distance(new fabric.Point(point_1.x + translation.x, point_1.y + translation.y), point_a);
-                    alpha = Math.acos((2 * Math.pow(kathete, 2) - Math.pow(gegenkath, 2)) / (2 * Math.pow(kathete, 2)));
+                dxs_tmp = sectors[sec_idx].trapez.points[ii].x-sectors[sec_idx].trapez.points[(ii+1)%4].x;
+                dys_tmp = sectors[sec_idx].trapez.points[ii].y-sectors[sec_idx].trapez.points[(ii+1)%4].y;
+                if (Math.abs(dys_tmp)>epsilon) {
+                    gamma_static = Math.atan(dxs_tmp / dys_tmp);
+                }else{gamma_static=0.0}
+                dxs_tmp = trapez.points[(ii+2)%4].x - trapez.points[(ii+3)%4].x;
+                dys_tmp = trapez.points[(ii+2)%4].y - trapez.points[(ii+3)%4].y;
+                if (Math.abs(dys_tmp)>epsilon) {
+                    gamma_neighbour =Math.atan(dxs_tmp/dys_tmp );
+                }else{gamma_neighbour=0.0}
 
 
-                    if (Math.atan2(point_1.y - point_2.y, point_1.x - point_2.x) > Math.atan2(point_a.y - point_b.y, point_a.x - point_b.x)) {
-                        alpha = -alpha;
-                    }
-
-                }
+                trapez.angle = sectors[sec_idx].trapez.angle + gamma_static/ Math.PI * 180 - gamma_neighbour/ Math.PI * 180;
 
 
-                trapez.rotate(trapez.angle + alpha / Math.PI * 180);
 
                 trapez.setCoords();
 
@@ -2732,7 +2681,6 @@ function startTexts() {
     }
     console.log(texts)
 }
-
 
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
