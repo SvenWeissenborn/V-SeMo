@@ -315,7 +315,7 @@ window.addEventListener('keydown',function(event){
 //Sektoren passend zusammensetzen
 window.addEventListener('keydown',function(event){
     if(event.key === 's'){
-        setSectors(chosenGeodesicGlobalID); setSectors(chosenGeodesicGlobalID);
+        setSectors(chosenGeodesicGlobalID);
         toolChange('chooseGeodesicForAction')
     }
 });
