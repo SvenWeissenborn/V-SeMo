@@ -71,13 +71,13 @@ def main():
             rad2 = (ringzeile + 1) * dradius
             radmid = (rad2 + rad1)/2
             if(ringzeile < 3):
-                radial = math.sqrt(1 / (1 - 0.125 * math.pow((radmid / schwarzschildradius),2))) * (rad2 - rad1)
-                offset = (rad2 - rad1) * math.sin(dphi * 0.5)
+                radial = math.sqrt(1 / (1 - 0.125 * math.pow((radmid / schwarzschildradius),2))) * dradius
+                offset = dradius * math.sin(dphi * 0.5)
                 sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'#e2e2e2'"
                 sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSizeStern
             else:
-                radial = math.sqrt(math.pow((1 - (schwarzschildradius/radmid)), (-1))) * (rad2 - rad1)
-                offset = dradius * dphi * 0.5
+                radial = math.sqrt(math.pow((1 - (schwarzschildradius/radmid)), (-1))) * dradius
+                offset = dradius * math.sin(dphi * 0.5)
                 sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
                 sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSizeAussenraum
 
@@ -93,8 +93,8 @@ def main():
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 1)) * dphi
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile )) * dphi
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 1)) * 2 * math.sin(dphi * 0.5)
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile )) * 2 * math.sin(dphi * 0.5)
 
 
 
