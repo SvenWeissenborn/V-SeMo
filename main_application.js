@@ -282,6 +282,7 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'g'){
         toolChange('grab');
+        arrowheadline = -1
     }
 });
 
@@ -289,26 +290,30 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'b'){
         toolChange('mark');
+        arrowheadline = -1
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'd'){
         toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'Delete'){
         deleteWholeGeodesic(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'c'){
         continueGeodesic(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
@@ -316,14 +321,23 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 's'){
         setSectors(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        if (chosenGeodesicGlobalID !== -1) {
+            for (let ii = 0; ii < sectors.length; ii++) {
+                overlapControll(sectors[ii].trapez);
+            }
+        }
+        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1;
+
+
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft' && selectedTool === 'chooseGeodesicForAction'){
         changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
@@ -331,7 +345,8 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowRight' && selectedTool === 'chooseGeodesicForAction'){
         changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
@@ -349,6 +364,7 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'a'){
         continueAllGeodesics();
+        arrowheadline = -1
     }
 });
 
