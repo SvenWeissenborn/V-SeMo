@@ -41,6 +41,7 @@ canvas.on('selection:created', function(obj){
 let arrowheadline = -1;
 let startAtMarkPoint = -1;
 let arrowhead;
+let pointer;
 
 /* Prüfen:  - ob Geodätenende in der Nähe, falls ja -> visuelles Signal
             - der Richtung einer verlängerten Geodäte;
@@ -52,13 +53,12 @@ canvas.on('mouse:down',function(){
     }
 });
 
-canvas.on('mouse:move', function (o)
-{
+canvas.on('mouse:move', function (o) {
 
     if(selectedTool !== 'paint' && selectedTool !== 'grab') return;
 
     let color;
-    let pointer = canvas.getPointer(o.e);
+    pointer = canvas.getPointer(o.e);
 
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
     if (!isLineStarted) {
@@ -282,6 +282,7 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'g'){
         toolChange('grab');
+        arrowheadline = -1
     }
 });
 
@@ -289,26 +290,22 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'b'){
         toolChange('mark');
-    }
-});
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'd'){
-        toolChange('chooseGeodesicForAction');
+        arrowheadline = -1
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'Delete'){
         deleteWholeGeodesic(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        arrowheadline = -1
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'c'){
         continueGeodesic(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('grab');
+        arrowheadline = -1
     }
 });
 
@@ -316,22 +313,30 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 's'){
         setSectors(chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        if (chosenGeodesicGlobalID !== -1) {
+            for (let ii = 0; ii < sectors.length; ii++) {
+                overlapControll(sectors[ii].trapez);
+            }
+        }
+        toolChange('grab');
+        arrowheadline = -1;
     }
 });
 
 window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowLeft' && selectedTool === 'chooseGeodesicForAction'){
+    if(event.key === 'ArrowLeft' ){
         changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('grab');
+        arrowheadline = -1
     }
 });
 
 
 window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowRight' && selectedTool === 'chooseGeodesicForAction'){
+    if(event.key === 'ArrowRight'){
         changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
-        toolChange('chooseGeodesicForAction')
+        toolChange('grab');
+        arrowheadline = -1
     }
 });
 
@@ -349,6 +354,8 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'a'){
         continueAllGeodesics();
+        toolChange('grab');
+        arrowheadline = -1
     }
 });
 
@@ -1413,6 +1420,14 @@ function initializeSectors() //keine Argumente
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
+        for (let kk = 0; kk < geodesics.length; kk++){
+            for (let ll = 0; ll < geodesics[kk].length; ll++)
+                geodesics[kk][ll].strokeWidth = 2 ;
+        }
+
+
+        chosenGeodesicGlobalID = -1;
+
         if(selectedTool !== 'paint' && selectedTool !== 'grab' && selectedTool !== 'mark' || this.opacity !== 1) return;
         let color;
             color = line_colors[geodesics.length % line_colors.length];
@@ -1450,7 +1465,7 @@ function initializeSectors() //keine Argumente
                         objectCaching: false,
                         hasBorders: false,
                         hasControls: false,
-                        evented: false
+                        evented: true
                     });
 
                     canvas.add(line);
@@ -1596,7 +1611,7 @@ function initializeSectors() //keine Argumente
                                 objectCaching: false,
                                 hasBorders: false,
                                 hasControls: false,
-                                evented: false,
+                                evented: true,
                                 selectable: false,
                             });
 
@@ -2012,6 +2027,7 @@ function removeLines() {
     }
     resetSectors();
     startGeodesics();
+    toolChange('grab');
     canvas.renderAll()
 }
 
@@ -2560,7 +2576,7 @@ function startGeodesics(){
             objectCaching: false,
             hasBorders: false,
             hasControls: false,
-            evented: false,
+            evented: true,
             selectable: false,
         });
         line.parentSector = startParentSector[ii];
@@ -2714,24 +2730,99 @@ function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
 
 //Werkzeugsänderung über die Button der Internetseite
 function toolChange(argument) {
+
     canvas.discardActiveObject();
     canvas.renderAll();
 
     selectedTool = argument;
 
-    if (selectedTool !=='chooseGeodesicForAction') {
-        chosenGeodesicGlobalID = -1
-    }
 
-    if (selectedTool !== 'delete' && selectedTool !== 'delete_whole' && selectedTool !== 'chooseGeodesicForAction') {
 
-        for (let ii = 0; ii < geodesics.length; ii++) {
 
-            for (let jj = 0; jj < geodesics[ii].length; jj++){
+    for (let ii = 0; ii < geodesics.length; ii++) {
+
+        for (let jj = 0; jj < geodesics[ii].length; jj++) {
+
+            geodesics[ii][jj].evented = true;
+            geodesics[ii][jj].hoverCursor = 'pointer';
+
+            if (selectedTool == 'delete') {
                 geodesics[ii][jj].evented = false;
                 geodesics[ii][jj].strokeWidth = 2;
+                geodesics[ii][geodesics[ii].length - 1].hoverCursor = 'pointer';
+                geodesics[ii][geodesics[ii].length - 1].evented = true;
+                geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5;
+
+            }
+
+            if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
+                geodesics[ii][jj].on('mousedown', function () {
+                    for (let kk = 0; kk < geodesics.length; kk++){
+                        for (let ll = 0; ll < geodesics[kk].length; ll++)
+                            geodesics[kk][ll].strokeWidth = 2 ;
+                    }
+
+                    if (arrowheadline != -1){
+                        if (geodesics[arrowheadline].length>0) {
+                            let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
+                            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
+                            points = [geodesic_end_point.x, geodesic_end_point.y, pointer.x, pointer.y];
+                            lineContinueAt = arrowheadline;
+                            color = geodesics[lineContinueAt][0].fill;
+                        }
+
+                        if (lineContinueAt !== -1) {
+                            isLineStarted = true;
+                            line = new fabric.Line(points, {
+                                strokeWidth: 2,
+                                stroke: color,
+                                fill: color,
+                                originX: 'center',
+                                originY: 'center',
+                                perPixelTargetFind: true,
+                                objectCaching: false,
+                                hasBorders: false,
+                                hasControls: false,
+                                evented: true
+                            });
+
+                            canvas.add(line);
+
+                            line.bringToFront();
+
+                            canvas.renderAll();
+                        }
+
+                        return
+                    }
+
+                    chosenGeodesicGlobalID = this.ID[0];
+
+                    for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
+                        geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5 ;
+                    }
+
+
+                    if (selectedTool == 'delete') {
+                        cursor = 'not-allowed';
+                        geodesics[this.ID[0]].splice(this.ID[1], 1);
+                        if (this.ID[1] === 0) {
+                            geodesics[this.ID[0]] = [];
+                        }
+                        if (this.parentSector[0] >= 0) {
+                            sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
+                        }
+                        canvas.remove(this);
+                        toolChange(selectedTool);
+                    }
+
+
+                })
             }
         }
+    }
+
+    if (selectedTool !== 'delete' && selectedTool !== 'delete_whole') {
 
         for (let ii = 0; ii < sectors.length; ii++) {
             if (selectedTool === 'paint' || selectedTool === 'mark') {
@@ -2753,7 +2844,7 @@ function toolChange(argument) {
     }
 
 
-    if (selectedTool === 'chooseGeodesicForAction' || selectedTool === 'delete') {
+    if (selectedTool === 'delete') {
 
         for (let ii = 0; ii < sectors.length; ii++) {
             sectors[ii].trapez.evented = false;
@@ -2763,10 +2854,7 @@ function toolChange(argument) {
 
             for (let jj = 0; jj < geodesics[ii].length; jj++) {
 
-                if (selectedTool === 'chooseGeodesicForAction') {
-                    geodesics[ii][jj].evented = true;
-                    geodesics[ii][jj].hoverCursor = 'pointer';
-                }
+
 
                 if (selectedTool == 'delete') {
                     geodesics[ii][jj].evented = false;
@@ -2775,39 +2863,6 @@ function toolChange(argument) {
                     geodesics[ii][geodesics[ii].length - 1].evented = true;
                     geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5;
 
-                }
-
-                if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
-                    geodesics[ii][jj].on('mousedown', function () {
-
-                    for (let kk = 0; kk < geodesics.length; kk++){
-                            for (let ll = 0; ll < geodesics[kk].length; ll++)
-                                geodesics[kk][ll].strokeWidth = 2 ;
-                        }
-
-
-                        chosenGeodesicGlobalID = this.ID[0];
-
-                        for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
-                            geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5 ;
-                        }
-
-
-                        if (selectedTool == 'delete') {
-                            cursor = 'not-allowed';
-                            geodesics[this.ID[0]].splice(this.ID[1], 1);
-                            if (this.ID[1] === 0) {
-                                geodesics[this.ID[0]] = [];
-                            }
-                            if (this.parentSector[0] >= 0) {
-                                sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
-                            }
-                            canvas.remove(this);
-                            toolChange(selectedTool);
-                        }
-
-
-                    })
                 }
             }
         }
