@@ -14,7 +14,7 @@ canvas_side_bar_temp.on('mouse:out', function(e) {
     if (e.target == null){
         return
     }
-    if (e.target.isPressed == false) e.target.set('fill', '#ffef17');
+    if (e.target.isPressed == false) e.target.set('fill', '#e5e5e0');
     canvas_side_bar_temp.renderAll();
 });
 
@@ -49,7 +49,7 @@ fabric.Image.fromURL('button_autocomplete.png', function(img) {
 let button_1 = new fabric.Rect({
     left: 40 * screenFactor,
     top: 140 * screenFactor,
-    fill: '#e5e5e0',
+    fill: '#ffef17',
     width: 45 * screenFactor,
     height: 30 * screenFactor,
     rx: 4 * screenFactor,
@@ -69,7 +69,7 @@ button_1.isPressed = true;
 let text_1 = new fabric.Text("1°", {
     fontSize: textSize,
     fontFamily: 'Helvetica',
-    fill: '#7f8082',
+    fill: '#000000',
     left: 40 * screenFactor,
     top: 140 * screenFactor,
     perPixelTargetFind: false,
@@ -94,11 +94,11 @@ button_1.on('mousedown', function(e) {
     button_1.set('evented', false);
     button_2.set('evented', true);
 
-    button_1.set('fill', '#e5e5e0');
-    button_2.set('fill', '#ffef17');
+    button_1.set('fill', '#ffef17');
+    button_2.set('fill', '#e5e5e0');
 
-    text_1.set('fill', '#7f8082');
-    text_2.set('fill', '#000000');
+    text_1.set('fill', '#000000');
+    text_2.set('fill', '#7f8082');
 
     button_1.isPressed = true;
     button_2.isPressed = false;
@@ -109,7 +109,7 @@ button_1.on('mousedown', function(e) {
 let button_2 = new fabric.Rect({
     left: 90 * screenFactor,
     top: 140 * screenFactor,
-    fill: '#ffef17',
+    fill: '#e5e5e0',
     width: 45 * screenFactor,
     height: 30 * screenFactor,
     rx: 4 * screenFactor,
@@ -131,7 +131,7 @@ let text_2 = new fabric.Text("0.1°", {
     fontSize: textSize,
     fontFamily: 'Helvetica',
     left: 90 * screenFactor,
-    fill: '#000000',
+    fill: '#7f8082',
     top: 140 * screenFactor,
     perPixelTargetFind: false,
     objectCaching: false,
@@ -155,11 +155,11 @@ button_2.on('mousedown', function(e) {
     button_1.set('evented', true);
     button_2.set('evented', false);
 
-    button_1.set('fill', '#ffef17');
-    button_2.set('fill', '#e5e5e0');
+    button_1.set('fill', '#e5e5e0');
+    button_2.set('fill', '#ffef17');
 
-    text_1.set('fill', '#000000');
-    text_2.set('fill', '#7f8082');
+    text_1.set('fill', '#7f8082');
+    text_2.set('fill', '#000000');
 
     button_1.isPressed = false;
     button_2.isPressed = true;
