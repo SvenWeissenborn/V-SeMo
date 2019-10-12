@@ -14,19 +14,54 @@
 
 <body onresize="fitResponsiveCanvas()">
 
-<div id="canvas-container">
-    <canvas id='canvas_buttons' >
-    </canvas>
-    <canvas id="canvas"></canvas>
+<div id="canvas-overAll">
+
+    <!--<canvas id="canvas_buttons" class = "part"></canvas>-->
+
+    <div title="Allgemeine Funktionen:
+    - Sektoren greifen
+    - neue Geodäte hinzufügen
+    - Sektoren zurücksetzen
+    - letztes Element einer Geodäten löschen"
+         id="container_side_bar_perm" class = "part">
+        <canvas id="canvas_side_bar_perm" class = "part"></canvas>
+    </div>
+
+    <div title="alles zurücksetzen"
+         id="container_side_bar_perm_right_bottom" class = "part">
+        <canvas id="canvas_side_bar_perm_right_bottom" class = "part"></canvas>
+    </div>
+
+    <div title="zurück zur Auswahl"
+         id="container_side_bar_perm_right_top" class = "part">
+        <canvas id="canvas_side_bar_perm_right_top" class = "part"></canvas>
+    </div>
+
+    <div title="Manipulation der Geodäte:
+    - automatische Vervollständigung
+    - Richtung ändern (mit und gegen den Uhrzeigersinn)
+    - Geodäte löschen"
+         id="container_side_bar_temp"
+         class = "part">
+        <canvas id="canvas_side_bar_temp" class = "part"></canvas>
+    </div>
+
+    <div id="container_canvas" class = "part">
+        <canvas id="canvas" ></canvas>
+    </div>
+
 </div>
 
 
 
-    <script src="fabric.js"></script>
-    <script src="schwarzschildmetrik_parallel.js"></script>
-    <script src="main_buttons_german.js"></script>
-    <script src="main_application.js"></script>
-    <!--<script src="main_nav_foot.js"></script>-->
+<script src="fabric.js"></script>
+<script src="schwarzschildmetrik_parallel.js"></script>
+<!--<script src="main_buttons_german.js"></script>-->
+<script src="main_button_german_side_bar_perm.js"></script>
+<script src="main_buttons_german_side_bar_temp.js"></script>
+<script src="main_application.js"></script>
+<!--<script src="main_nav_foot.js"></script>-->
+
 
 
 

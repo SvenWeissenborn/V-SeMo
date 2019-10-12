@@ -42,6 +42,7 @@ let arrowheadline = -1;
 let startAtMarkPoint = -1;
 let arrowhead;
 let pointer;
+let rotationAngle = Math.PI/180;
 
 /* Prüfen:  - ob Geodätenende in der Nähe, falls ja -> visuelles Signal
             - der Richtung einer verlängerten Geodäte;
@@ -471,13 +472,19 @@ function changeDirectionAndContinue(rotationdirection, chosenGeodesicTochangeDir
     // Die Richtungsaenderung bewirkt automatisch eine Veraenderung in der Laenge des Richtungsvektors.
     // Obwohl das urspruengliche Endstueck der Geodaete auf der Kante lag, muss deshalb der Richtungsvektor nicht verkürzt werden.
 
-    let rotationAngle;
 
+
+
+    //Bisher nur in Verbindung mit Events der Tastatur möglich
+    /*
     if (event.shiftKey === true) {
         rotationAngle = (Math.PI/180)/10
     } else{
         rotationAngle = Math.PI/180
     }
+    */
+
+
 
     if (rotationdirection == 'clockwise') {
         dxg = dxg_tmp * Math.cos(rotationAngle) - dyg_tmp * Math.sin(rotationAngle);
@@ -670,6 +677,10 @@ function changeDirectionAndContinue(rotationdirection, chosenGeodesicTochangeDir
 
 }
 
+function changeZIndexOf_canvas_side_bar_temp(newIndex) {
+    let side_bar_for_change_temp = document.getElementById("container_side_bar_temp");
+    side_bar_for_change_temp.style.zIndex = newIndex;
+}
 
 function continueAllGeodesics() {
 
@@ -1274,19 +1285,58 @@ function distance(punkt1, punkt2) {
 
 function fitResponsiveCanvas() {
 
+    let canvas_change_side_bar_temp = document.getElementById("container_side_bar_temp");
+
+    let canvas_change_side_bar_perm_right_bottom = document.getElementById("container_side_bar_perm_right_bottom");
+
+    let canvas_change_side_bar_perm_right_top = document.getElementById("container_side_bar_perm_right_top");
+
     // canvas container dimensions
     let containerSize = {
-        width: document.getElementById('canvas-container').offsetWidth,
-        height: document.getElementById('canvas-container').offsetHeight
+        width: document.getElementById('canvas-overAll').offsetWidth,
+        height: document.getElementById('canvas-overAll').offsetHeight
     };
+
     scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
-    canvas.setWidth(containerSize.width);
-    canvas.setHeight(containerSize.height * 0.92);
-    canvas_buttons.setWidth(containerSize.width);
-    canvas_buttons.setHeight(containerSize.height * 0.08);
+
+    //canvas_buttons.setWidth(containerSize.width);
+    //canvas_buttons.setHeight(containerSize.height * 0.08);
+
+    canvas_side_bar_perm.setWidth(containerSize.width * 0.07);
+    canvas_side_bar_perm.setHeight(containerSize.height*0.5);
+
+    canvas_side_bar_perm_right_top.setWidth(150* screenFactor);
+    canvas_side_bar_perm_right_top.setHeight(100* screenFactor);
+
+    console.log({screenFactor})
+
+    canvas_side_bar_perm_right_bottom.setWidth(100* screenFactor);
+    canvas_side_bar_perm_right_bottom.setHeight(100* screenFactor);
+
+    canvas_side_bar_temp.setWidth(containerSize.width * 0.07);
+    canvas_side_bar_temp.setHeight(containerSize.height*0.5);
+
+    canvas.setWidth(containerSize.width * 1);
+    canvas.setHeight(containerSize.height * 1);
+
+    canvas_change_side_bar_temp.style.left = 0;
+    canvas_change_side_bar_temp.style.top = 50+"vh";
+
+    canvas_change_side_bar_perm_right_top.style.left = (containerSize.width - 150* screenFactor)+"px";
+    canvas_change_side_bar_perm_right_top.style.top = 0;
+
+    canvas_change_side_bar_perm_right_bottom.style.left = (containerSize.width - 100* screenFactor)+"px";
+    canvas_change_side_bar_perm_right_bottom.style.top = (containerSize.height - 100* screenFactor)+"px";
+
+    //Position der temporaeren Canvas: 0.08 + 0.46 = 0.54
+
     //set canvas zoom aspect
     canvas.setZoom(scaleRatio);
-    canvas_buttons.setZoom(scaleRatio);
+    //canvas_buttons.setZoom(scaleRatio);
+    canvas_side_bar_perm.setZoom(scaleRatio);
+    canvas_side_bar_temp.setZoom(scaleRatio);
+    canvas_side_bar_perm_right_top.setZoom(scaleRatio);
+    canvas_side_bar_perm_right_bottom.setZoom(scaleRatio);
 }
 
 
@@ -1419,6 +1469,8 @@ function initializeSectors() //keine Argumente
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
+
+        changeZIndexOf_canvas_side_bar_temp(0);
 
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -2750,6 +2802,9 @@ function toolChange(argument) {
                 geodesics[ii][jj].hoverCursor = 'pointer';
 
             if (selectedTool == 'delete') {
+
+                changeZIndexOf_canvas_side_bar_temp(0);
+
                 geodesics[ii][jj].evented = false;
                 geodesics[ii][jj].strokeWidth = 2;
                 geodesics[ii][geodesics[ii].length - 1].hoverCursor = 'pointer';
@@ -2760,6 +2815,7 @@ function toolChange(argument) {
 
             if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
                 geodesics[ii][jj].on('mousedown', function () {
+
                     for (let kk = 0; kk < geodesics.length; kk++){
                         for (let ll = 0; ll < geodesics[kk].length; ll++)
                             geodesics[kk][ll].strokeWidth = 2 ;
@@ -2797,6 +2853,10 @@ function toolChange(argument) {
                         }
 
                         return
+                    }
+
+                    if (selectedTool !== 'delete') {
+                        changeZIndexOf_canvas_side_bar_temp(1);
                     }
 
                     chosenGeodesicGlobalID = this.ID[0];
