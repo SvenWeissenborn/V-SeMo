@@ -1,3 +1,22 @@
+/*
+------Parameter-------
+nSektorzeilenVonKugel: 9
+nSektorspaltenVonKugel: 18
+zeilenanzahl: 3
+spaltenanzahl: 3
+radius_sphere: 500
+sectorabstand_x: 100
+sectorabstand_y: 30
+fontSize: 15
+startGeodesicsSectors: [2, 2]
+startMarksSectors: []
+startMarkRadius: [3]
+startTextsSectors: []
+startTextContent: ['P1', 'P2']
+text_dist_from_mid_y: [0.5, -0.9]
+----------------------
+*/
+
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey'];
 sec_name= [ 1, 2, 3, 4, 5, 6, 7, 8, 9, ];
@@ -15,6 +34,7 @@ sec_neighbour_left= [ -1, -1, -1, 0, 1, 2, 3, 4, 5, ];
 sec_posx= [ -271.8813778923013, -271.8813778923013, -271.8813778923013, 0.0, 0.0, 0.0, 271.8813778923013, 271.8813778923013, 271.8813778923013, ];
 sec_posy= [ -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
+startSectors= [ 2, 2, ];
 x_Start= [ -341.8813778923013, -290.3169645246109, ];
 y_Start= [ 196.3372559067418, 283.44967454232244, ];
 x_End= [ -291.8813778923013, -240.3169645246109, ];
@@ -88,4 +108,3 @@ textStartFontSize= [ ];
 textStartParentSector= [ ];
 textStartID= [ ];
 textStartAngle= [ ];
-startSector =2;

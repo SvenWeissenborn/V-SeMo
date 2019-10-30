@@ -14,6 +14,8 @@ fontSize = 15
 
 anzahlStartGeodesics = 2
 
+startGeodesicsSectors = [2, 2]
+
 startMarksSectors = []
 startMarkRadius = [3]
 
@@ -49,6 +51,29 @@ def main():
 
     file = io.open("kugelmetrik.js",'w')
 
+    file.write( "/*" +"\n"
+                "------Parameter-------" +"\n"
+                "nSektorzeilenVonKugel: " + str(nSektorzeilenVonKugel) +"\n"
+                "nSektorspaltenVonKugel: " + str(nSektorspaltenVonKugel) +"\n"
+                "zeilenanzahl: " + str(zeilenanzahl) +"\n"
+                "spaltenanzahl: " + str(spaltenanzahl) + "\n"
+                "radius_sphere: " + str(radius_sphere) + "\n"                                                        
+                "sectorabstand_x: " + str(sectorabstand_x) +"\n"
+                "sectorabstand_y: " + str(sectorabstand_y) + "\n"
+                "fontSize: " + str(fontSize) + "\n"
+                "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"                               
+                "startMarksSectors: " + str(startMarksSectors) + "\n"
+                "startMarkRadius: " + str(startMarkRadius) + "\n"
+                "startTextsSectors: " + str(startTextsSectors) + "\n"
+                "startTextContent: " + str(startTextContent) + "\n"
+                "text_dist_from_mid_y: " + str(text_dist_from_mid_y) + "\n"
+                "----------------------"
+                + "\n"
+                  "*/"
+                )
+
+    file.write("\n")
+    file.write("\n")
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
@@ -122,18 +147,19 @@ def main():
 
 
 
-    variablenamesGeodesics = ["x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
+    variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
 
-    geodesicValues = [[[] for ii in range(anzahlStartGeodesics)] for jj in range(len(variablenamesGeodesics))]
+    geodesicValues = [[[] for ii in range(len(startGeodesicsSectors))] for jj in range(len(variablenamesGeodesics))]
 
-    for startGeodesic in range(0, anzahlStartGeodesics):
-        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][zeilenanzahl - 1] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][zeilenanzahl - 1] - 70
-        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][zeilenanzahl - 1] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][zeilenanzahl - 1] -10
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][zeilenanzahl - 1] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][zeilenanzahl - 1]   -  20
-        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][zeilenanzahl - 1] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][zeilenanzahl - 1] -  50
+    for startGeodesic in range(0, len(startGeodesicsSectors)):
+        geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
+        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]] - 70
+        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]] -10
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]   -  20
+        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]] -  50
 
-        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "["+str(zeilenanzahl - 1)+","+str(startGeodesic)+"]"
+        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "["+str(startGeodesicsSectors[startGeodesic])+","+str(startGeodesic)+"]"
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "["+str(startGeodesic)+","+str(1)+"]"
         geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = 2
 
@@ -142,7 +168,7 @@ def main():
 
     for ii in range(0,len(variablenamesGeodesics)):
         file.write(variablenamesGeodesics[ii]+"= [ ")
-        for jj in range(0,anzahlStartGeodesics):
+        for jj in range(0,len(startGeodesicsSectors)):
             file.write(str( geodesicValues[ii][jj])+', ')
         file.write("];\n")
 
@@ -202,7 +228,7 @@ def main():
                 file.write(str(textValues[ii][jj]) + ', ')
             file.write("];\n")
 
-    file.write("startSector ="+str(zeilenanzahl-1)+";")
+
 
     file.close()
 

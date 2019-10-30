@@ -2,49 +2,9 @@ let canvas_side_bar_temp = new fabric.Canvas('canvas_side_bar_temp',{preserveObj
 
 canvas_side_bar_temp.selection = false;
 
-canvas_side_bar_temp.on('mouse:over', function(e) {
-    if (e.target == null){
-        return
-    }
-    e.target.set('fill', '#FFFC1C');
-    canvas_side_bar_temp.renderAll();
-});
-
-canvas_side_bar_temp.on('mouse:out', function(e) {
-    if (e.target == null){
-        return
-    }
-    if (e.target.isPressed == false) e.target.set('fill', '#e5e5e0');
-    canvas_side_bar_temp.renderAll();
-});
 
 
-
-fabric.Image.fromURL('button_autocomplete.png', function(img) {
-    let autocomplete = img.set({
-        left: 0.01 * win_width,
-        top: 15* screenFactor,
-        opacity: 1,
-        originX: "left",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: 0.4 * screenFactor,
-        scaleY: 0.4 * screenFactor,
-        hoverCursor: "pointer"});
-
-    autocomplete.on('mousedown', function (o) {
-        continueGeodesic(chosenGeodesicGlobalID);
-        toolChange('grab');
-    });
-    canvas_side_bar_temp.add(autocomplete);
-});
-
-
+/*
 
 let button_1 = new fabric.Rect({
     left: 40 * screenFactor,
@@ -168,7 +128,7 @@ button_2.on('mousedown', function(e) {
 
 });
 
-let timeout;
+
 
 fabric.Image.fromURL('button_change_direction_clockwise.png', function(img) {
     let change_direction_clockwise = img.set({
@@ -190,72 +150,23 @@ fabric.Image.fromURL('button_change_direction_clockwise.png', function(img) {
     change_direction_clockwise.on('mousedown', function (event) {
         changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
         timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);}, 150);
-        //changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
         toolChange('grab');
         return false;
     });
 
+    change_direction_clockwise.on('mouseout', function () {
+        clearInterval(timeout);
+        toolChange('grab')
+    });
+
     change_direction_clockwise.on('mouseup', function () {
         clearInterval(timeout);
+        toolChange('grab');
     });
 
     canvas_side_bar_temp.add(change_direction_clockwise);
 });
 
+*/
 
 
-fabric.Image.fromURL('button_change_direction_counterclock.png', function(img) {
-    let change_direction_counterclock = img.set({
-        left: 0.01 * win_width,
-        top: 285* screenFactor,
-        opacity: 1,
-        originX: "left",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: 0.4 * screenFactor,
-        scaleY: 0.4 * screenFactor,
-        hoverCursor: "pointer"});
-
-    change_direction_counterclock.on('mousedown', function (event) {
-        changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', chosenGeodesicGlobalID);}, 150);
-        //changeDirectionAndContinue('clockwise', chosenGeodesicGlobalID);
-        toolChange('grab');
-        return false;
-    });
-
-    change_direction_counterclock.on('mouseup', function () {
-        clearInterval(timeout);
-    });
-
-    canvas_side_bar_temp.add(change_direction_counterclock);
-});
-
-fabric.Image.fromURL('button_delete.png', function(img) {
-    let delete_whole = img.set({
-        left: 0.01 * win_width,
-        top: 405* screenFactor,
-        opacity: 1,
-        originX: "left",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: 0.4 * screenFactor,
-        scaleY: 0.4 * screenFactor,
-        hoverCursor: "pointer"});
-
-    delete_whole.on('mousedown', function (o) {
-        deleteWholeGeodesic(chosenGeodesicGlobalID);
-        toolChange('grab');
-    });
-    canvas_side_bar_temp.add(delete_whole);
-});
