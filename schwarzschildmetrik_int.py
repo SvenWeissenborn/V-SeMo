@@ -3,7 +3,7 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 3
+nSektorzeilenVonRing = 32
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 60
@@ -24,7 +24,7 @@ versatz_y_var = 0.8
 
 startGeodesicsAngle = [60]
 
-startGeodesicsSectors = [29]
+startGeodesicsSectors = [179]
 
 startMarksSectors = []
 startMarkRadius = [3]
@@ -43,7 +43,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_eine.js",'w')
+    file = io.open("schwarzschildmetrik_big_model.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" +"\n"

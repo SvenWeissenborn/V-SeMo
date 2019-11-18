@@ -5,31 +5,94 @@
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
 let canvas = new fabric.Canvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9'});
 
+
+
 //Hintergrundbild einfügen
 //canvas.setBackgroundImage('background_image.png', canvas.renderAll.bind(canvas));
 
 canvas.rotationCursor = 'col-resize';
 
+
+
 //Ausschalten der Gruppenfunktion per "Lasso"
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snapping-Funktion für Gruppen
 canvas.selection = false;
 
+let shiftPressed = false;
+
 //updateMinions auf Gruppen erweitert (in dieser Version ausgeschaltet)
-canvas.on('selection:created', function(obj){
-    if(obj.target.type === 'polygon') return;
+canvas.on('selection:updated', function(obj){
+
+    obj.target.setControlsVisibility({
+        //    mtr: false,
+        tl: false,
+        mt: false,
+        tr: false,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
     obj.target.lockScalingX = true;
     obj.target.lockScalingY = true;
     obj.target.on('moving', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon') updateMinions(elem)
         });
     });
     obj.target.on('rotating', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon')updateMinions(elem)
         });
     });
     obj.target.on('modified', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            if(elem.type === 'polygon')updateMinions(elem)
+        });
+    });
+});
+
+
+
+canvas.on('selection:created', function(obj){
+
+    obj.target.setControlsVisibility({
+        //    mtr: false,
+        tl: false,
+        mt: false,
+        tr: false,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
+
+    obj.target.lockScalingX = true;
+    obj.target.lockScalingY = true;
+    obj.target.on('moving', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            console.log(this._objects);
+            if(elem.type === 'polygon') updateMinions(elem)
+        });
+    });
+    obj.target.on('rotating', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            if(elem.type === 'polygon')updateMinions(elem)
+        });
+    });
+    obj.target.on('modified', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon')updateMinions(elem)
         });
@@ -79,13 +142,18 @@ canvas.on('mouse:move', function (o) {
                     color = line_colors[ii % line_colors.length];
                     if (arrowheadline < 0) {
 
+                        //WICHTIG dies deaktiviert die Rotation um das Zentrum und setzt den origin als Rotationspunkt
+                        fabric.Triangle.prototype.centeredRotation = false;
+
                         arrowhead = new fabric.Triangle({
                             width: 10,
                             height: 20,
-                            left: geodesic_end_point.x - 5,
-                            top: geodesic_end_point.y - 10,
+                            left: geodesic_end_point.x ,
+                            top: geodesic_end_point.y ,
                             fill: color,
                             evented: false,
+                            originX: 'center',
+                            originY: 'bottom'
 
                         });
                         arrowhead.rotate(alpha * 180 / Math.PI + 90);
@@ -219,28 +287,30 @@ canvas.on('mouse:wheel', function(opt) {
         zoom = zoom / 0.95;
     }
     if (zoom > 20) zoom = 20;
-    if (zoom < 0.5) zoom = 0.5;
+    if (zoom < 0.25) zoom = 0.25;
     canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
     opt.e.preventDefault();
     opt.e.stopPropagation();
 });
 
 
-canvas.on('mouse:down', function(opt) {
 
+canvas.on('mouse:down', function(opt) {
+    if (shiftPressed === true) return;
     let onSector = true;
     if(opt.target == null){ onSector=false}
 
     var evt = opt.e;
-    if (evt.shiftKey === true || onSector === false) {
+    if ( onSector === false) {
         this.isDragging = true;
-        this.selection = false;
+        //this.selection = false;
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
     }
 });
 
 canvas.on('mouse:move', function(opt) {
+    if (shiftPressed === true) return;
     if (this.isDragging) {
         var e = opt.e;
         this.viewportTransform[4] += e.clientX - this.lastPosX;
@@ -251,8 +321,9 @@ canvas.on('mouse:move', function(opt) {
     }
 });
 canvas.on('mouse:up', function(opt) {
+    if (shiftPressed === true) return;
     this.isDragging = false;
-    this.selection = false;
+    //this.selection = false;
     var zoom = canvas.getZoom();
     canvas.setZoom(zoom)
 });
@@ -273,6 +344,23 @@ window.addEventListener('keydown',function(event){
 });
 
 //Test für Vollbildmodus
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'Shift'){
+
+        canvas.selection = true;
+        shiftPressed = true;
+        console.log(canvas.selection)
+    }
+});
+
+window.addEventListener('keyup',function(event){
+    if(event.key === 'Shift'){
+        canvas.selection = false;
+        shiftPressed = false;
+        console.log(canvas.selection)
+    }
+});
 
 window.addEventListener('keydown',function(event){
     if(event.key === 't'){
@@ -484,14 +572,6 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
 
 
-    //Bisher nur in Verbindung mit Events der Tastatur möglich
-    /*
-    if (event.shiftKey === true) {
-        rotationAngle = (Math.PI/180)/10
-    } else{
-        rotationAngle = Math.PI/180
-    }
-    */
 
 
 
@@ -921,7 +1001,7 @@ function continueAllGeodesics() {
 
 
                     let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-                        strokeWidth: 2,
+                        strokeWidth: 5,
                         fill: geodesics[ii][0].fill,
                         stroke: geodesics[ii][0].stroke,
                         originX: 'center',
@@ -1393,7 +1473,7 @@ function initializeSectors() //keine Argumente
             top: this.pos_y,
             angle: this.sector_angle,
             fill: this.fill,
-            strokeWidth: 2,
+            strokeWidth: 1,
             stroke: '#666',
             perPixelTargetFind: true,
             hasControls: true,
@@ -1404,8 +1484,15 @@ function initializeSectors() //keine Argumente
             lockScalingX: true,
             lockScalingY: true,
             cornerSize: 30,
+            opacity: 1,
 
         });
+
+    this.trapez.setShadow({  color: 'rgba(0,0,0,0.2)',
+    blur: 20,
+    offsetX: 0,
+    offsetY: 0
+});
 
     this.trapez.setControlsVisibility({
         //    mtr: false,
@@ -1420,6 +1507,7 @@ function initializeSectors() //keine Argumente
         mb: false,
         br: false,
     });
+
 
     //Rotationskontrolle: Icon und Position werden verändert
     fabric.Polygon.prototype._drawControl  = function(control, ctx, methodName, left, top) {
@@ -1445,6 +1533,7 @@ function initializeSectors() //keine Argumente
             }
         }
     };
+
     this.trapez.rotatingPointOffset = 15;
 
 
@@ -1482,12 +1571,26 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('moving',function(){snapping(this); updateMinions(this)});
     this.trapez.on('rotating',function(){updateMinions(this)});
-    this.trapez.on('modified',function(){snapping(this);snapping(this);updateMinions(this); for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
+    this.trapez.on('modified',function(){snapping(this);snapping(this);updateMinions(this); /*for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}*/});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
         showGeodesicButtons(false);
+
+
+        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
+        if (arrowheadline !== -1){
+            let idx = geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0];
+            let stack_idx_of_line_parent_ID_Text = canvas.getObjects().indexOf(sectors[idx].ID_text);
+            let stack_idx_of_clicked_sector_ID_Text = canvas.getObjects().indexOf(this.parent.ID_text);
+            if (stack_idx_of_line_parent_ID_Text !== stack_idx_of_clicked_sector_ID_Text) {
+                console.log({stack_idx_of_line_parent_ID_Text});
+                console.log({stack_idx_of_clicked_sector_ID_Text});
+                return
+            }
+        }
+
 
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -1606,6 +1709,16 @@ function initializeSectors() //keine Argumente
     this.trapez.on('mouseup', function (o) {
         if (arrowheadline !== -1) {
             arrowheadline = -1;
+        }
+
+        //Test!!!
+        for (let ii = 0; ii < 4; ii++) {
+
+            if (this.parent.snapStatus[ii] !== 0) {
+
+                this.moveTo(canvas.getObjects().indexOf(sectors[this.parent.neighbourhood[ii]].trapez));
+
+            }
         }
         if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
             return;
@@ -2142,11 +2255,32 @@ function resetSectors() {
 }
 
 function resetZoomPan(){
-    canvas.setZoom( scaleRatio);
-    canvas.viewportTransform[4]= 0;
-    canvas.viewportTransform[5]= 0;
+    canvas.setZoom( 1.1);
+    canvas.viewportTransform[4]= -350;
+    canvas.viewportTransform[5]= -30;
 }
 
+//reset Zoom and Pan
+window.addEventListener('keydown',function(event){
+    if(event.key === 'u'){
+        setSectorsToCenter();
+    }
+
+});
+
+function setSectorsToCenter(){
+    for (let ii =0; ii < sectors.length; ii++){
+
+        if ((ii + 1) % 32 > 0 || ii == 0) {
+            sectors[ii].trapez.set('top', 5000);
+            sectors[ii].trapez.set('left', 5000);
+            sectors[ii].trapez.setCoords();
+            updateMinions(sectors[ii].trapez);
+
+        }
+    }
+    canvas.renderAll();
+}
 
 //Anlegen der Sector-Klasse
 function Sector() {
@@ -2176,6 +2310,7 @@ function Sector() {
     this.neighbourhood = [-1,-1,-1,-1];
     this.snapStatus = [0,0,0,0];
     this.overlapStatus = [0,0,0,0];
+    this.snapEdges = [[0],[0],[0],[0]];
 }
 
 
@@ -2570,7 +2705,7 @@ function snapping(trapez) {
 
 
             if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
-                //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
+                //Bestimmung des kleineren Abstands -> legt die Translation und Rotation fest
 
                 dxs_tmp = sectors[sec_idx].trapez.points[ii].x-sectors[sec_idx].trapez.points[(ii+1)%4].x;
                 dys_tmp = sectors[sec_idx].trapez.points[ii].y-sectors[sec_idx].trapez.points[(ii+1)%4].y;
@@ -2602,17 +2737,81 @@ function snapping(trapez) {
                 trapez.left += point_a.x - point_1.x;
                 trapez.top += point_a.y - point_1.y;
 
+                trapez.setCoords();
+
                 for (let jj = 0; jj < 4; jj++) {
                     if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
                         sectors[sec_idx].snapStatus[jj] = 1;
                     }
                 }
-                trapez.parent.snapStatus[ii] = 1;
-                sectors[sec_idx].trapez.stroke = 'green';
-                trapez.stroke = 'green';
 
+                if (trapez.parent.snapEdges[ii] !== 0){
+                    let edgeToRemove = trapez.parent.snapEdges[ii];
+                    canvas.remove(edgeToRemove);
+                    trapez.parent.snapEdges[ii] = [0];
+                }
+
+                if (sectors[sec_idx].snapEdges[(ii+2)%4] !== 0){
+                    let edgeToRemove = sectors[sec_idx].snapEdges[(ii+2)%4];
+                    canvas.remove(edgeToRemove);
+                    sectors[sec_idx].snapEdges[(ii+2)%4] = [0];
+                }
+
+
+
+
+                transformMatrix = trapez.calcTransformMatrix();
+                point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+
+                point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+
+                dist_1a = distance(point_1, point_a);
+                dist_2b = distance(point_2, point_b);
+                console.log({dist_1a})
+                console.log({dist_2b})
+
+                if (dist_1a < epsilon & dist_2b < epsilon){
+
+                    console.log(ii)
+
+                    let stack_idx_of_clicked_sector_ID_Text = canvas.getObjects().indexOf(trapez.parent.ID_text);
+
+                let edge = new fabric.Line([point_1.x , point_1.y, point_2.x, point_2.y,], {
+                    strokeWidth: 4,
+                    fill: 'blue',
+                    stroke: 'blue',
+                    originX: 'center',
+                    originY: 'center',
+                    perPixelTargetFind: true,
+                    objectCaching: false,
+                    hasBorders: false,
+                    hasControls: false,
+                    evented: false,
+                    selectable: false,
+                });
+
+                edge.ID = ii;
+
+                canvas.insertAt(edge, stack_idx_of_clicked_sector_ID_Text);
+                //canvas.add(edge)
+                edge.bringToFront();
+                trapez.parent.snapEdges[ii] = edge;
+
+
+
+                trapez.parent.snapStatus[ii] = 1;
+               // sectors[sec_idx].trapez.stroke = 'green';
+               // trapez.stroke = 'green';
+
+
+
+                trapez.moveTo(canvas.getObjects().indexOf(sectors[sec_idx].ID_text))
+
+
+                }
 
             } else {
+                console.log('else')
                 for (let jj = 0; jj < 4; jj++) {
                     if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
 
@@ -2621,6 +2820,18 @@ function snapping(trapez) {
                     }
                 }
                 trapez.parent.snapStatus[ii] = 0;
+
+
+
+
+                    let edgeToRemove = trapez.parent.snapEdges[ii];
+
+                    canvas.remove(edgeToRemove);
+                     trapez.parent.snapEdges[ii] = [0];
+
+                    //console.log(trapez.parent.snapEdges)
+
+
 
                 if (sectors[sec_idx].snapStatus.every(function (element) {
                     return element === 0;
@@ -2632,6 +2843,9 @@ function snapping(trapez) {
                 })) {
                     trapez.stroke = '#666';
                 }
+
+                //console.log(trapez.parent.snapStatus)
+
             }
 
 
@@ -3098,6 +3312,7 @@ function updateMinions(boss) {
             text.setCoords();
         }
     }
+    //canvas.requestRenderAll()
 }
 
 
@@ -3110,8 +3325,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    //sec.name = ii;
-    sec.name = sec_name[ii];
+    sec.name = ii;
+    //sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
     sec.fontSize = sec_fontSize[ii];
     sec.pos_x = sec_posx[ii] + window.innerWidth/2;
