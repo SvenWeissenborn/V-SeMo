@@ -3105,15 +3105,16 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
 
     //----------------Nur wichtig, wenn Textur. Beachte, dass .fill in Overlap angepasst werden muss-------
-    let panels = ['panel-5.3_gray_2.jpg',
-        'panel-5.4_gray_2.jpg',
-        'panel-5.5_gray_2.jpg',
-        'panel-6.3_gray_2.jpg',
-        'panel-6.4_gray_2.jpg',
-        'panel-6.5_gray_2.jpg',
-        'panel-7.3_gray_2.jpg',
-        'panel-7.4_gray_2.jpg',
-        'panel-7.5_gray_2.jpg'
+    let panels = [
+        'panel-5.3.png',
+        'panel-5.4.png',
+        'panel-5.5.png',
+        'panel-6.3.png',
+        'panel-6.4.png',
+        'panel-6.5.png',
+        'panel-7.3.png',
+        'panel-7.4.png',
+        'panel-7.5.png'
     ];
     fabric.Image.fromURL(panels[ii], function (img) {
 
