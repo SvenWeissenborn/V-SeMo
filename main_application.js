@@ -5,14 +5,10 @@
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
 let canvas = new fabric.Canvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9'});
 
-
-
 //Hintergrundbild einfügen
 //canvas.setBackgroundImage('background_image.png', canvas.renderAll.bind(canvas));
 
 canvas.rotationCursor = 'col-resize';
-
-
 
 //Ausschalten der Gruppenfunktion per "Lasso"
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snapping-Funktion für Gruppen
@@ -159,7 +155,6 @@ canvas.on('mouse:move', function (o) {
                         arrowhead.rotate(alpha * 180 / Math.PI + 90);
                         arrowheadline = ii;
                         canvas.add(arrowhead);
-
                     }
 
                 } else {
@@ -279,6 +274,29 @@ canvas.on('mouse:move', function (o) {
 
 //Zoomoptionen
 
+let pausePanning = false;
+
+canvas.on({
+    'touch:gesture': function(e) {
+        if (pausePanning == false && e.e.touches && e.e.touches.length == 2) {
+            //pausePanning = true;
+            var point = new fabric.Point(e.self.x, e.self.y);
+            if (e.self.state == "start") {
+                zoomStartScale = canvas.getZoom();
+            }
+            var delta = zoomStartScale * e.self.scale;
+            canvas.zoomToPoint(point, delta);
+            pausePanning = false;
+        }
+    },
+    'object:selected': function() {
+        pausePanning = true;
+    },
+    'selection:cleared': function() {
+        pausePanning = false;
+    },
+});
+
 canvas.on('mouse:wheel', function(opt) {
     var delta = -opt.e.deltaY;
     var zoom = canvas.getZoom();
@@ -294,19 +312,31 @@ canvas.on('mouse:wheel', function(opt) {
     opt.e.stopPropagation();
 });
 
-
-
 canvas.on('mouse:down', function(opt) {
     if (shiftPressed === true) return;
     let onSector = true;
     if(opt.target == null){ onSector=false}
 
     var evt = opt.e;
+    let e =opt.e;
+    let XCoord;
+    let YCoord;
+    let touch = e.touches;
     if ( onSector === false) {
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
         this.isDragging = true;
         //this.selection = false;
-        this.lastPosX = evt.clientX;
-        this.lastPosY = evt.clientY;
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
+
     }
 });
 
@@ -314,13 +344,29 @@ canvas.on('mouse:move', function(opt) {
     if (shiftPressed === true) return;
     if (this.isDragging) {
         var e = opt.e;
-        this.viewportTransform[4] += e.clientX - this.lastPosX;
-        this.viewportTransform[5] += e.clientY - this.lastPosY;
+        let XCoord;
+        let YCoord;
+        let touch = e.touches;
+
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
+
+        this.viewportTransform[4] += XCoord - this.lastPosX;
+        this.viewportTransform[5] += YCoord - this.lastPosY;
+
         this.requestRenderAll();
-        this.lastPosX = e.clientX;
-        this.lastPosY = e.clientY;
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
     }
 });
+
 canvas.on('mouse:up', function(opt) {
     if (shiftPressed === true) return;
     this.isDragging = false;

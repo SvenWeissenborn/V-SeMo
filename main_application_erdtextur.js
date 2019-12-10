@@ -14,22 +14,81 @@ canvas.rotationCursor = 'col-resize';
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snapping-Funktion für Gruppen
 canvas.selection = false;
 
+let shiftPressed = false;
+
 //updateMinions auf Gruppen erweitert (in dieser Version ausgeschaltet)
-canvas.on('selection:created', function(obj){
-    if(obj.target.type === 'polygon') return;
+canvas.on('selection:updated', function(obj){
+
+    obj.target.setControlsVisibility({
+        //    mtr: false,
+        tl: false,
+        mt: false,
+        tr: false,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
     obj.target.lockScalingX = true;
     obj.target.lockScalingY = true;
     obj.target.on('moving', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon') updateMinions(elem)
         });
     });
     obj.target.on('rotating', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon')updateMinions(elem)
         });
     });
     obj.target.on('modified', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            if(elem.type === 'polygon')updateMinions(elem)
+        });
+    });
+});
+
+
+
+canvas.on('selection:created', function(obj){
+
+    obj.target.setControlsVisibility({
+        //    mtr: false,
+        tl: false,
+        mt: false,
+        tr: false,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
+
+    obj.target.lockScalingX = true;
+    obj.target.lockScalingY = true;
+    obj.target.on('moving', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            console.log(this._objects);
+            if(elem.type === 'polygon') updateMinions(elem)
+        });
+    });
+    obj.target.on('rotating', function(){
+        if ( this._objects == undefined){return}
+        this._objects.forEach(function(elem){
+            if(elem.type === 'polygon')updateMinions(elem)
+        });
+    });
+    obj.target.on('modified', function(){
+        if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
             if(elem.type === 'polygon')updateMinions(elem)
         });
@@ -79,13 +138,18 @@ canvas.on('mouse:move', function (o) {
                     color = line_colors[ii % line_colors.length];
                     if (arrowheadline < 0) {
 
+                        //WICHTIG dies deaktiviert die Rotation um das Zentrum und setzt den origin als Rotationspunkt
+                        fabric.Triangle.prototype.centeredRotation = false;
+
                         arrowhead = new fabric.Triangle({
                             width: 10,
                             height: 20,
-                            left: geodesic_end_point.x - 5,
-                            top: geodesic_end_point.y - 10,
+                            left: geodesic_end_point.x ,
+                            top: geodesic_end_point.y ,
                             fill: color,
                             evented: false,
+                            originX: 'center',
+                            originY: 'bottom'
 
                         });
                         arrowhead.rotate(alpha * 180 / Math.PI + 90);
@@ -210,6 +274,29 @@ canvas.on('mouse:move', function (o) {
 
 //Zoomoptionen
 
+let pausePanning = false;
+
+canvas.on({
+    'touch:gesture': function(e) {
+        if (pausePanning == false && e.e.touches && e.e.touches.length == 2) {
+            //pausePanning = true;
+            var point = new fabric.Point(e.self.x, e.self.y);
+            if (e.self.state == "start") {
+                zoomStartScale = canvas.getZoom();
+            }
+            var delta = zoomStartScale * e.self.scale;
+            canvas.zoomToPoint(point, delta);
+            pausePanning = false;
+        }
+    },
+    'object:selected': function() {
+        pausePanning = true;
+    },
+    'selection:cleared': function() {
+        pausePanning = false;
+    },
+});
+
 canvas.on('mouse:wheel', function(opt) {
     var delta = -opt.e.deltaY;
     var zoom = canvas.getZoom();
@@ -219,40 +306,71 @@ canvas.on('mouse:wheel', function(opt) {
         zoom = zoom / 0.95;
     }
     if (zoom > 20) zoom = 20;
-    if (zoom < 0.5) zoom = 0.5;
+    if (zoom < 0.25) zoom = 0.25;
     canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
     opt.e.preventDefault();
     opt.e.stopPropagation();
 });
 
-
 canvas.on('mouse:down', function(opt) {
-
+    if (shiftPressed === true) return;
     let onSector = true;
     if(opt.target == null){ onSector=false}
 
     var evt = opt.e;
-    if (evt.shiftKey === true || onSector === false) {
+    let e =opt.e;
+    let XCoord;
+    let YCoord;
+    let touch = e.touches;
+    if ( onSector === false) {
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
         this.isDragging = true;
-        this.selection = false;
-        this.lastPosX = evt.clientX;
-        this.lastPosY = evt.clientY;
+        //this.selection = false;
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
+
     }
 });
 
 canvas.on('mouse:move', function(opt) {
+    if (shiftPressed === true) return;
     if (this.isDragging) {
         var e = opt.e;
-        this.viewportTransform[4] += e.clientX - this.lastPosX;
-        this.viewportTransform[5] += e.clientY - this.lastPosY;
+        let XCoord;
+        let YCoord;
+        let touch = e.touches;
+
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
+
+        this.viewportTransform[4] += XCoord - this.lastPosX;
+        this.viewportTransform[5] += YCoord - this.lastPosY;
+
         this.requestRenderAll();
-        this.lastPosX = e.clientX;
-        this.lastPosY = e.clientY;
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
     }
 });
+
 canvas.on('mouse:up', function(opt) {
+    if (shiftPressed === true) return;
     this.isDragging = false;
-    this.selection = false;
+    //this.selection = false;
     var zoom = canvas.getZoom();
     canvas.setZoom(zoom)
 });
@@ -273,6 +391,23 @@ window.addEventListener('keydown',function(event){
 });
 
 //Test für Vollbildmodus
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'Shift'){
+
+        canvas.selection = true;
+        shiftPressed = true;
+        console.log(canvas.selection)
+    }
+});
+
+window.addEventListener('keyup',function(event){
+    if(event.key === 'Shift'){
+        canvas.selection = false;
+        shiftPressed = false;
+        console.log(canvas.selection)
+    }
+});
 
 window.addEventListener('keydown',function(event){
     if(event.key === 't'){
@@ -409,7 +544,7 @@ let abortlength = 14;
 let cursor;
 
 
-let paddingFactor = 0.01;
+let paddingFactor = 0.00001;
 
 
 let multiply = fabric.util.multiplyTransformMatrices;
@@ -688,7 +823,6 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 function changeZIndexOf_canvas_side_bar_temp(newIndex) {
     let side_bar_for_change_temp = document.getElementById("container_side_bar_temp");
     side_bar_for_change_temp.style.zIndex = newIndex;
-    //moveDirectionButtons(false);
 }
 
 function continueAllGeodesics() {
@@ -999,7 +1133,6 @@ function continueGeodesic(geodesicToContinue) {
     let nextGeodesic_y;
 
     let immediatehistory =[];
-
 
     let lineStrokeDependingOnTool;
     let lineEventedDependingOnTool;
@@ -1474,6 +1607,21 @@ function initializeSectors() //keine Argumente
     this.trapez.on('mousedown', function (o) {
 
         showGeodesicButtons(false);
+
+
+        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
+        if (arrowheadline !== -1){
+            let idx = geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0];
+            let stack_idx_of_line_parent_ID_Text = canvas.getObjects().indexOf(sectors[idx].ID_text);
+            let stack_idx_of_clicked_sector_ID_Text = canvas.getObjects().indexOf(this.parent.ID_text);
+            if (stack_idx_of_line_parent_ID_Text !== stack_idx_of_clicked_sector_ID_Text) {
+                console.log({stack_idx_of_line_parent_ID_Text});
+                console.log({stack_idx_of_clicked_sector_ID_Text});
+                return
+            }
+        }
+
+
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
                 geodesics[kk][ll].strokeWidth = 2 ;
