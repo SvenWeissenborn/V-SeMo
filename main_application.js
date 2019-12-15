@@ -1767,9 +1767,9 @@ function initializeSectors() //keine Argumente
             snappingOnMouseUp(this, sectorToSnap);
             for (let ii = 0; ii < 4; ii++) {
 
-                if (this.parent.snapStatus[ii] !== 0) {
-                    this.parent.snapEdges[ii].bringToFront()
-                }
+//                if (this.parent.snapStatus[ii] !== 0) {
+//                    this.parent.snapEdges[ii].bringToFront()
+//                }
             }
         }
         //Test!!!
@@ -3173,11 +3173,11 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             dist_1a = distance(point_1, point_a);
             dist_2b = distance(point_2, point_b);
 
-            if (dist_1a < epsilon & dist_2b < epsilon){
+            if (dist_1a < epsilon & dist_2b < epsilon & trapez.parent.snapEdges[ii]==0){
 
 
 
-                let stack_idx_of_clicked_sector_ID_Text = canvas.getObjects().indexOf(trapez.parent.ID_text);
+                let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(trapez);
 
                 let edge = new fabric.Line([point_1.x , point_1.y, point_2.x, point_2.y,], {
                     strokeWidth: 1.5,
@@ -3195,9 +3195,9 @@ function snappingOnMouseUp(trapez, sectorToSnap){
 
                 edge.ID = ii;
 
-                canvas.insertAt(edge, stack_idx_of_clicked_sector_ID_Text);
+                canvas.insertAt(edge, stack_idx_of_clicked_sector+1);
 
-                edge.bringToFront();
+                //edge.bringToFront();
                 trapez.parent.snapEdges[ii] = edge;
 
 
@@ -3581,6 +3581,11 @@ function undoLastLine(){
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
 function updateMinions(boss) {
     boss.bringToFront();
+    for(let ii=0;ii<4;ii++) {
+        if (boss.parent.snapStatus[ii] !== 0) {
+            boss.parent.snapEdges[ii].bringToFront();
+        }
+    }
     if (boss.parent.ID_text.relationship) {
         boss.parent.ID_text.bringToFront();
 
