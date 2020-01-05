@@ -1839,10 +1839,8 @@ function initializeSectors() //keine Argumente
                         let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
                         pointIsInSector = pointIsInSector || sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment);
 
-                        console.log('sector:',jj);
-                        console.log('contains',sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment));
-
                         if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)){
+
                             if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
 
                                  lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
@@ -3484,6 +3482,14 @@ function toolChange(argument) {
                     chosenGeodesicGlobalID = this.ID[0];
 
                     for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
+                      /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
+                        geodesics[chosenGeodesicGlobalID][kk].setShadow({  color: 'rgba(0,0,0,0.2)',
+                            blur: 10,
+                            offsetX: 50,
+                            offsetY: 0
+                        })
+                        canvas.renderAll()
+                        */
                         geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5 ;
                     }
 
