@@ -107,11 +107,7 @@ let pointer;
             - der Richtung einer verlängerten Geodäte;
             - ob Linien auf dem Hintergrund statt einem Sektor verlaufen -> visuelles Signal (rote Linie)
   */
-canvas.on('mouse:down',function(){
-    if(typeof arrowhead != 'undefined') {
-        canvas.remove(arrowhead);
-    }
-});
+
 
 canvas.on('mouse:move', function (o) {
 
@@ -121,7 +117,8 @@ canvas.on('mouse:move', function (o) {
     pointer = canvas.getPointer(o.e);
 
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
-    if (!isLineStarted) {
+    if (!isLineStarted){
+/*
         for (let ii = 0; ii < geodesics.length; ii++) {
             if (geodesics[ii].length > 0) {
                 let geodesic_end_point = new fabric.Point(geodesics[ii][geodesics[ii].length - 1].calcLinePoints().x2, geodesics[ii][geodesics[ii].length - 1].calcLinePoints().y2);
@@ -170,7 +167,7 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
-
+*/
         for (let ii = 0; ii < markPoints.length; ii++) {
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
             if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
@@ -178,7 +175,7 @@ canvas.on('mouse:move', function (o) {
                 let idx = markPoints[ii].parentSector[0];
 
                 if(sectors[idx].trapez.opacity !== 1 ) return;
-                if (arrowheadline < 0 && startAtMarkPoint < 0) {
+                if (startAtMarkPoint < 0) {
                     startAtMarkPoint = ii;
                     toolChange('paint')
 
@@ -427,7 +424,7 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'g'){
         toolChange('grab');
-        arrowheadline = -1
+
     }
 });
 
@@ -435,14 +432,14 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'b'){
         toolChange('mark');
-        arrowheadline = -1
+
     }
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'Delete'){
         deleteWholeGeodesic(chosenGeodesicGlobalID);
-        arrowheadline = -1
+
     }
 });
 
@@ -450,7 +447,7 @@ window.addEventListener('keydown',function(event){
     if(event.key === 'c'){
         continueGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
-        arrowheadline = -1
+
     }
 });
 
@@ -464,7 +461,7 @@ window.addEventListener('keydown',function(event){
             }
         }
         toolChange('grab');
-        arrowheadline = -1;
+
     }
 });
 
@@ -472,7 +469,7 @@ window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowLeft' ){
         changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);
         toolChange('grab');
-        arrowheadline = -1
+
     }
 });
 
@@ -481,7 +478,7 @@ window.addEventListener('keydown',function(event){
     if(event.key === 'ArrowRight'){
         changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);
         toolChange('grab');
-        arrowheadline = -1
+
     }
 });
 
@@ -489,10 +486,7 @@ window.addEventListener('keydown',function(event){
 window.addEventListener('keydown',function(event){
     if(event.key === 'r'){
         undoLastLine();
-        if(typeof arrowhead != 'undefined') {
-            canvas.remove(arrowhead);
-            arrowheadline = -1;
-        }
+
     }
 });
 
@@ -500,7 +494,7 @@ window.addEventListener('keydown',function(event){
     if(event.key === 'a'){
         continueAllGeodesics();
         toolChange('grab');
-        arrowheadline = -1
+
     }
 });
 
@@ -1629,7 +1623,7 @@ function initializeSectors() //keine Argumente
         showGeodesicButtons(false);
 
 
-        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
+/*        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
         if (arrowheadline !== -1){
             let idx = geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0];
             let stack_idx_of_line_parent_ID_Text = canvas.getObjects().indexOf(sectors[idx].ID_text);
@@ -1640,7 +1634,7 @@ function initializeSectors() //keine Argumente
                 return
             }
         }
-
+*/
 
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -1656,7 +1650,7 @@ function initializeSectors() //keine Argumente
             if (!isLineStarted) {
                 let pointer = canvas.getPointer(o.e);
                 let points = [pointer.x, pointer.y, pointer.x, pointer.y];
-                if (arrowheadline !== -1){
+/*                if (arrowheadline !== -1){
                     if (geodesics[arrowheadline].length>0) {
                         let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
                         geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
@@ -1665,6 +1659,7 @@ function initializeSectors() //keine Argumente
                         color = geodesics[lineContinueAt][0].fill;
                     }
                 }
+*/
 
                 if (startAtMarkPoint !== -1){
                     points = [markPoints[startAtMarkPoint].left, markPoints[startAtMarkPoint].top, pointer.x, pointer.y]
@@ -1755,13 +1750,9 @@ function initializeSectors() //keine Argumente
     });
 
 
+
     //Beenden von Linien; nur auf Trapezen möglich
     this.trapez.on('mouseup', function (o) {
-
-        if (arrowheadline !== -1) {
-            arrowheadline = -1;
-            canvas.remove(arrowhead);
-        }
 
         if (sectorToSnap > -1) {
             snappingOnMouseUp(this, sectorToSnap);
@@ -1784,6 +1775,7 @@ function initializeSectors() //keine Argumente
         if( lineContinueAt !== -1){
             color = geodesics[lineContinueAt][0].fill;
 
+
             //startsector beweglich machen
             let idx = geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].parentSector;
             sectors[idx[0]].trapez.lockMovementX = false;
@@ -1798,6 +1790,7 @@ function initializeSectors() //keine Argumente
         }
 
         if(isLineStarted) {
+
             isLineStarted= false;
             line.setCoords(); //Alle Änderungen der Member sollen übernommen werden
             canvas.renderAll();
@@ -1812,14 +1805,20 @@ function initializeSectors() //keine Argumente
                 lineContinueAt = -1;
                 return;
             }
-
-
+            if(lineContinueAt!==-1){
+                canvas.remove(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint);
+                delete geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint;
+            }
             //Splitting der Linie in Liniensegmente an den Sektorkanten
             let lambdas = getSchnittpunktsparameter(sectors, [xg1, yg1, xg2, yg2]);
 
             canvas.remove(line);
             let linestart_x = line.x1;
             let linestart_y = line.y1;
+
+            let lineend_x;
+            let lineend_y;
+
             let pointIsInSector = false;
 
             let geodesic = [];
@@ -1829,8 +1828,8 @@ function initializeSectors() //keine Argumente
 
             for(let ii = 1; ii < lambdas.length; ii++) {
 
-                let lineend_x = xg1 + lambdas[ii] * (xg2 - xg1);
-                let lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
+                lineend_x = xg1 + lambdas[ii] * (xg2 - xg1);
+                lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
 
                 if(Math.abs(lineend_x - linestart_x) > epsilon || Math.abs(lineend_y - linestart_y) > epsilon) {
 
@@ -1842,6 +1841,7 @@ function initializeSectors() //keine Argumente
                         if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)){
 
                             if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
+                                console.log('creating lineSegments:',ii);
 
                                  lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
                                     strokeWidth: 2 ,
@@ -1870,30 +1870,32 @@ function initializeSectors() //keine Argumente
                             }
 
                         }
+                     }
+                    if (pointIsInSector === true) {
+                        let trapezTransform = sectors[lineSegment.parentSector[0]].trapez.calcTransformMatrix();
+                        let invertedtrapezTransform = invert(trapezTransform);
+                        let desiredTransform = multiply(
+                            invertedtrapezTransform,
+                            lineSegment.calcTransformMatrix());
 
-                    }
 
-                    let trapezTransform = sectors[lineSegment.parentSector[0]].trapez.calcTransformMatrix();
-                    let invertedtrapezTransform = invert(trapezTransform);
-                    let desiredTransform = multiply(
-                        invertedtrapezTransform,
-                        lineSegment.calcTransformMatrix());
+                        lineSegment.relationship = desiredTransform;
 
-
-                    lineSegment.relationship = desiredTransform;
-
-                    sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
+                        sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
 //                        let stackIndex = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
 
-                    canvas.insertAt(lineSegment,stackIdx);
-                    if (lineContinueAt !== -1){
-                        geodesics[lineContinueAt].push(lineSegment)
-                    } else {geodesic.push(lineSegment);}
+                        canvas.insertAt(lineSegment, stackIdx);
+                        if (lineContinueAt !== -1) {
+                            geodesics[lineContinueAt].push(lineSegment)
+                        } else {
+                            geodesic.push(lineSegment);
+                        }
 
-                    immediatehistory.push(lineSegment.ID);
+                        immediatehistory.push(lineSegment.ID);
 
-                    if (pointIsInSector !== true){
+                    }else{
+
                         break
                     }
 
@@ -1929,299 +1931,370 @@ function initializeSectors() //keine Argumente
                 linestart_x = lineend_x;
                 linestart_y = lineend_y;
             }
-
-            if (lineContinueAt === -1){
-                geodesics.push(geodesic)}
-
-            lineContinueAt = -1;
-
-
-            history.push(immediatehistory);
-
-            canvas.renderAll();
-            toolChange('grab')
-        }
-
-    });
-
-    canvas.add(this.trapez);
-    canvas.add(this.ID_text);
-}
-
-
-
-function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
-
-    let lambda;
-    let alpha;
-
-    let xt1;
-    let xt2;
-    let yt1;
-    let yt2;
-
-    // Geradengleichung der Linie und die der Sektorkante gleichsetzen
-    //Orientierung der Sektorkante durch Reihenfolge der Eckpunkte: left-top -> right-top -> right-bottom -> left-bottom
-
-
-    let lambdas = [0.0];
-    for(let ii = 0; ii < sectors.length; ii++) {
-
-
-        //Umrechnung der lokalen in globale Koordinaten
-        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let jj = 0; jj < 4; jj++){
-            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
-            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
-            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
-        }
-
-        for (let kk = 0; kk < 4; kk++) {
-
-
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
-
-
-            let dxg = xg2 - xg1;
-            let dyg = yg2 - yg1;
-            let dxt12 = xt2 - xt1;
-            let dyt12 = yt2 - yt1;
-
-
-            if( dxg > epsilon)
-            {
-                alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-
-            }
-
-            else{
-                alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
-
-            }
-
-
-            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda);
-
-            }
-        }
-    }
-    if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
-    return lambdas;
-}
-
-
-function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
-
-    let lambda;
-    let alpha;
-
-    let xt1;
-    let xt2;
-    let yt1;
-    let yt2;
-
-    // Geradengleichung der Linie und die der Sektorkante gleichsetzen
-    //Orientierung der Sektorkante durch Reihenfolge der Eckpunkte: left-top -> right-top -> right-bottom -> left-bottom
-
-
-    let lambdas = [0.0];
-    for(let ii = 0; ii < sectors.length; ii++) {
-        let object = sectors[ii].trapez;
-
-        //Umrechnung der lokalen in globale Koordinaten
-        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let jj = 0; jj < 4; jj++){
-            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
-            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
-            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
-        }
-
-        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
-        //Verhindert das fälsche overlapping
-        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
-
-        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
-
-
-        for (let kk = 0; kk < 4; kk++) {
-
-
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
-
-
-            let dxg = xg2 - xg1;
-            let dyg = yg2 - yg1;
-            let dxt12 = xt2 - xt1;
-            let dyt12 = yt2 - yt1;
-
-
-            if( dxg > epsilon)
-            {
-                alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-
-            }
-
-            else{
-                alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
-
-            }
-
-
-            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda);
-            }
-        }
-    }
-    if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
-    return lambdas;
-}
-
-
-function getMittelpunktsabstand(trapez) {
-    let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
-    let midpointSectorStatic;
-    let distanceMidPoints;
-    for (let ii = 0; ii < 4; ii++) {
-        let sec_idx = trapez.parent.neighbourhood[ii];
-
-
-        if (sec_idx > -1) {
-            midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
-            distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
-        }
-    }
-}
-
-function overlapControll(trapez) {
-    let transformMatrix = trapez.calcTransformMatrix('True');
-    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-    let overlap = false;
-    let paddingOverlap = false;
-    for (let ii = 0; ii < 4; ii++) {
-        transformedPoints[ii].x = trapez.points[ii].x - trapez.width / 2;
-        transformedPoints[ii].y = trapez.points[ii].y - trapez.height / 2;
-        transformedPoints[ii] = fabric.util.transformPoint(transformedPoints[ii], transformMatrix);
-    }
-
-    for (let ii = 0; ii < 4; ii++) {
-        xg1 = transformedPoints[ii].x;
-        xg2 = transformedPoints[(ii + 1) % 4].x;
-        yg1 = transformedPoints[ii].y;
-        yg2 = transformedPoints[(ii + 1) % 4].y;
-
-        let kantenMittelpunkt = new fabric.Point(xg1 + (xg2 - xg1) / 2, yg1 + (yg2 - yg1) / 2);
-
-        overlapParameter = getSchnittpunktsparameterPadding(sectors, [xg1, yg1, xg2, yg2]);
-
-        for (let jj = 0; jj < overlapParameter.length; jj++)
-            if (overlapParameter[jj] > 0.1 && overlapParameter[jj] < 0.979999999999999999999) {
-                overlap = true;
-            }
-
-        for (let jj = 0; jj < sectors.length; jj++) {
-
-            if(jj == trapez.parent.ID) {
-                continue
-            }
-            else {
-                if(paddingContainsPoint(sectors[jj].trapez, kantenMittelpunkt)){
-                    paddingOverlap = true;
+            lineSegment.dragPoint = new fabric.Circle({
+                originX: 'center',
+                originY: 'center',
+                left: lineSegment.x2,
+                top: lineSegment.y2,
+                radius: 10,
+                stroke: 'black',
+                strokeWidth: 2,
+                fill: color,
+                perPixelTargetFind: true,
+                hasBorders: false,
+                objectCaching: false,
+                selectable: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                evented: true,
+                hoverCursor: 'crosshair',
+            });
+
+            lineSegment.dragPoint.on('mousedown',function(o){
+
+                chosenGeodesicGlobalID = lineSegment.ID[0];
+                showGeodesicButtons(true);
+                for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
+                    geodesics[chosenGeodesicGlobalID][kk].strokeWidth = 5
                 }
-            }
-        }
 
-    }
+                let pointer = canvas.getPointer(o.e);
+                let points = [pointer.x, pointer.y, pointer.x, pointer.y];
+                if (geodesics[lineSegment.ID[0]].length>0) {
+                    points = [this.left, this.top, pointer.x, pointer.y];
+                    lineContinueAt = lineSegment.ID[0];
+                    color = geodesics[lineContinueAt][0].fill;
+                }
+                isLineStarted = true;
+                line = new fabric.Line(points, {
+                        strokeWidth: 2,
+                        stroke: color,
+                        fill: color,
+                        originX: 'center',
+                        originY: 'center',
+                        perPixelTargetFind: true,
+                        objectCaching: false,
+                        hasBorders: false,
+                        hasControls: false,
+                        evented: true
+                });
 
-    if (overlap == true || paddingOverlap == true) {
-        //trapez.fill = 'red';
-        trapez.opacity = 0.5;
-    }
-    if (overlap == false && paddingOverlap == false) {
-        //trapez.fill = 'white';
-        trapez.opacity = 1.0;
-    }
+                canvas.add(line);
 
+                line.bringToFront();
+
+                canvas.renderAll();
+
+
+
+            });
+
+                            let trapezTransform = sectors[lineSegment.parentSector[0]].trapez.calcTransformMatrix();
+                            let invertedtrapezTransform = invert(trapezTransform);
+                            let desiredTransform = multiply(
+                                invertedtrapezTransform,
+                                lineSegment.dragPoint.calcTransformMatrix());
+
+
+                            lineSegment.dragPoint.relationship = desiredTransform;
+
+                            canvas.add(lineSegment.dragPoint);
+                            if (lineContinueAt === -1){
+                                geodesics.push(geodesic)
+                            }else {
+                               // canvas.remove(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint);
+                            }
+
+                            lineContinueAt = -1;
+
+
+                            history.push(immediatehistory);
+
+                            canvas.renderAll();
+                            toolChange('grab')
+                        }
+                    });
+
+                    canvas.add(this.trapez);
+                    canvas.add(this.ID_text);
 }
 
-function paddingContainsPoint(trapez,segmentMittelpunkt) {
-    let isPointInsideSectors = false;
-    //
-    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
-        //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
-        //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
-        //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
-        isPointInsideSectors = true;
-        let transformMatrix = trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let ll=0;ll<4;ll++){
-            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
-            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
-            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
-        }
-
-        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
-        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
-
-        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
-
-        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
 
 
+                function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
+
+                    let lambda;
+                    let alpha;
+
+                    let xt1;
+                    let xt2;
+                    let yt1;
+                    let yt2;
+
+                    // Geradengleichung der Linie und die der Sektorkante gleichsetzen
+                    //Orientierung der Sektorkante durch Reihenfolge der Eckpunkte: left-top -> right-top -> right-bottom -> left-bottom
 
 
-        for (let kk = 0; kk < 4; kk++) {
+                    let lambdas = [0.0];
+                    for(let ii = 0; ii < sectors.length; ii++) {
 
-            let xt1 =  transformedPoints[kk].x;
-            let xt2 =  transformedPoints[(kk + 1) % 4].x;
-            let yt1 =  transformedPoints[kk].y;
-            let yt2 =  transformedPoints[(kk + 1) % 4].y;
 
-            /*let object = new fabric.Circle({
-                radius: 5,
-                fill: 'blue',
-                left: xt1,
-                top: yt1,
-                originX: 'center',
-                originY: 'center'
-            });
-            canvas.add(object);
+                        //Umrechnung der lokalen in globale Koordinaten
+                        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
+                        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
+                        for(let jj = 0; jj < 4; jj++){
+                            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
+                            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
+                            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
+                        }
 
-            let object2 = new fabric.Circle({
-                radius: 5,
-                fill: 'red',
-                left: xt2,
-                top: yt2,
-                originX: 'center',
-                originY: 'center'
-            });
-            canvas.add(object2); */
+                        for (let kk = 0; kk < 4; kk++) {
+
+
+                            xt1 =  transformedPoints[kk].x;
+                            xt2 =  transformedPoints[(kk + 1) % 4].x;
+                            yt1 =  transformedPoints[kk].y;
+                            yt2 =  transformedPoints[(kk + 1) % 4].y;
+
+
+                            let dxg = xg2 - xg1;
+                            let dyg = yg2 - yg1;
+                            let dxt12 = xt2 - xt1;
+                            let dyt12 = yt2 - yt1;
+
+
+                            if( dxg > epsilon)
+                            {
+                                alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                                lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
+
+                            }
+
+                            else{
+                                alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                                lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
+
+                            }
+
+
+                            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
+                                lambdas.push(lambda);
+
+                            }
+                        }
+                    }
+                    if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
+                    return lambdas;
+                }
+
+
+                function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
+
+                    let lambda;
+                    let alpha;
+
+                    let xt1;
+                    let xt2;
+                    let yt1;
+                    let yt2;
+
+                    // Geradengleichung der Linie und die der Sektorkante gleichsetzen
+                    //Orientierung der Sektorkante durch Reihenfolge der Eckpunkte: left-top -> right-top -> right-bottom -> left-bottom
+
+
+                    let lambdas = [0.0];
+                    for(let ii = 0; ii < sectors.length; ii++) {
+                        let object = sectors[ii].trapez;
+
+                        //Umrechnung der lokalen in globale Koordinaten
+                        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
+                        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
+                        for(let jj = 0; jj < 4; jj++){
+                            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
+                            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
+                            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
+                        }
+
+                        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
+                        //Verhindert das fälsche overlapping
+                        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+                        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+                        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+                        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+                        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+                        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+                        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+                        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+
+                        for (let kk = 0; kk < 4; kk++) {
+
+
+                            xt1 =  transformedPoints[kk].x;
+                            xt2 =  transformedPoints[(kk + 1) % 4].x;
+                            yt1 =  transformedPoints[kk].y;
+                            yt2 =  transformedPoints[(kk + 1) % 4].y;
+
+
+                            let dxg = xg2 - xg1;
+                            let dyg = yg2 - yg1;
+                            let dxt12 = xt2 - xt1;
+                            let dyt12 = yt2 - yt1;
+
+
+                            if( dxg > epsilon)
+                            {
+                                alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                                lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
+
+                            }
+
+                            else{
+                                alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                                lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
+
+                            }
+
+
+                            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
+                                lambdas.push(lambda);
+                            }
+                        }
+                    }
+                    if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
+                    return lambdas;
+                }
+
+
+                function getMittelpunktsabstand(trapez) {
+                    let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
+                    let midpointSectorStatic;
+                    let distanceMidPoints;
+                    for (let ii = 0; ii < 4; ii++) {
+                        let sec_idx = trapez.parent.neighbourhood[ii];
+
+
+                        if (sec_idx > -1) {
+                            midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
+                            distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
+                        }
+                    }
+                }
+
+                function overlapControll(trapez) {
+                    let transformMatrix = trapez.calcTransformMatrix('True');
+                    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+                    let overlap = false;
+                    let paddingOverlap = false;
+                    for (let ii = 0; ii < 4; ii++) {
+                        transformedPoints[ii].x = trapez.points[ii].x - trapez.width / 2;
+                        transformedPoints[ii].y = trapez.points[ii].y - trapez.height / 2;
+                        transformedPoints[ii] = fabric.util.transformPoint(transformedPoints[ii], transformMatrix);
+                    }
+
+                    for (let ii = 0; ii < 4; ii++) {
+                        xg1 = transformedPoints[ii].x;
+                        xg2 = transformedPoints[(ii + 1) % 4].x;
+                        yg1 = transformedPoints[ii].y;
+                        yg2 = transformedPoints[(ii + 1) % 4].y;
+
+                        let kantenMittelpunkt = new fabric.Point(xg1 + (xg2 - xg1) / 2, yg1 + (yg2 - yg1) / 2);
+
+                        overlapParameter = getSchnittpunktsparameterPadding(sectors, [xg1, yg1, xg2, yg2]);
+
+                        for (let jj = 0; jj < overlapParameter.length; jj++)
+                            if (overlapParameter[jj] > 0.1 && overlapParameter[jj] < 0.979999999999999999999) {
+                                overlap = true;
+                            }
+
+                        for (let jj = 0; jj < sectors.length; jj++) {
+
+                            if(jj == trapez.parent.ID) {
+                                continue
+                            }
+                            else {
+                                if(paddingContainsPoint(sectors[jj].trapez, kantenMittelpunkt)){
+                                    paddingOverlap = true;
+                                }
+                            }
+                        }
+
+                    }
+
+                    if (overlap == true || paddingOverlap == true) {
+                        //trapez.fill = 'red';
+                        trapez.opacity = 0.5;
+                    }
+                    if (overlap == false && paddingOverlap == false) {
+                        //trapez.fill = 'white';
+                        trapez.opacity = 1.0;
+                    }
+
+                }
+
+                function paddingContainsPoint(trapez,segmentMittelpunkt) {
+                    let isPointInsideSectors = false;
+                    //
+                    if (trapez.containsPoint(segmentMittelpunkt, undefined, 'absolute: false' )) {
+                        //Nach Überprüfen der bounding box prüfen ob tatsächlich innerhalb des Polygons
+                        //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
+                        //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
+                        isPointInsideSectors = true;
+                        let transformMatrix = trapez.calcTransformMatrix('True');
+                        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
+                        for(let ll=0;ll<4;ll++){
+                            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
+                            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
+                            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
+                        }
+
+                        //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
+                        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+                        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+                        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
+                        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+
+                        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+                        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+                        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
+                        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+
+
+
+
+                        for (let kk = 0; kk < 4; kk++) {
+
+                            let xt1 =  transformedPoints[kk].x;
+                            let xt2 =  transformedPoints[(kk + 1) % 4].x;
+                            let yt1 =  transformedPoints[kk].y;
+                            let yt2 =  transformedPoints[(kk + 1) % 4].y;
+
+                            /*let object = new fabric.Circle({
+                                radius: 5,
+                                fill: 'blue',
+                                left: xt1,
+                                top: yt1,
+                                originX: 'center',
+                                originY: 'center'
+                            });
+                            canvas.add(object);
+
+                            let object2 = new fabric.Circle({
+                                radius: 5,
+                                fill: 'red',
+                                left: xt2,
+                                top: yt2,
+                                originX: 'center',
+                                originY: 'center'
+                            });
+                            canvas.add(object2); */
 
 
 
@@ -3592,6 +3665,7 @@ function undoLastLine(){
 }
 
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
+//TODO: Vereinfachen durch function
 function updateMinions(boss) {
     boss.bringToFront();
     for(let ii=0;ii<4;ii++) {
@@ -3651,7 +3725,33 @@ function updateMinions(boss) {
             segment.set(options);
             segment.setCoords();
         }
+        if(segment.dragPoint !== undefined){
+            let object = segment.dragPoint;
+            if (object.relationship) {
+                object.bringToFront();
+                let relationship = object.relationship;
+                let newTransform = multiply(
+                    boss.calcTransformMatrix(),
+                    relationship
+                );
+                let options;
+                options = fabric.util.qrDecompose(newTransform);
+                object.set({
+                    flipX: false,
+                    flipY: false,
+                });
+                object.setPositionByOrigin(
+                    {x: options.translateX, y: options.translateY},
+                    'center',
+                    'center'
+                );
+                object.set(options);
+                object.setCoords();
+            }
+
+        }
     }
+
 
     for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
         let markPoint = boss.parent.markCircles[ii];
