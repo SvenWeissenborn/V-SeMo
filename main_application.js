@@ -2302,7 +2302,8 @@ function resetSectors() {
         sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2;
         sectors[rr].trapez.setCoords();
         sectors[rr].trapez.angle = sec_angle[rr];
-        overlapControll(sectors[rr].trapez);
+        sectors[rr].snapStatus = [0, 0, 0, 0]
+        //overlapControll(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
 
@@ -2310,7 +2311,7 @@ function resetSectors() {
     }
     for (let rr = 0; rr < sectors.length; rr++){
         timeToSnap(sectors[rr].trapez);
-        overlapControll(sectors[rr].trapez);
+        //overlapControll(sectors[rr].trapez);
 
     }
     canvas.renderAll();
