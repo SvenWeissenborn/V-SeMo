@@ -345,11 +345,13 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
 
     change_direction_counterclock_high.on('mouseout', function () {
         clearInterval(timeout);
-        toolChange('grab')
+        drawDragPoint(chosenGeodesicGlobalID);
+        toolChange('grab');
     });
 
     change_direction_counterclock_high.on('mouseup', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
     });
 
@@ -384,11 +386,13 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
 
     change_direction_clockwise_high.on('mouseout', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_high.on('mouseup', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID)
         toolChange('grab');
     });
 
@@ -422,11 +426,13 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
 
     change_direction_counterclock_low.on('mouseout', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID)
         toolChange('grab')
     });
 
     change_direction_counterclock_low.on('mouseup', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID)
         toolChange('grab');
     });
 
@@ -461,11 +467,13 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
 
     change_direction_clockwise_low.on('mouseout', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID)
         toolChange('grab')
     });
 
     change_direction_clockwise_low.on('mouseup', function () {
         clearInterval(timeout);
+        drawDragPoint(chosenGeodesicGlobalID)
         toolChange('grab');
     });
 
