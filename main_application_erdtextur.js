@@ -3268,7 +3268,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
         img.scaleToWidth(sec_width[ii] +2);
 
-        let patternSourceCanvas = new fabric.StaticCanvas();
+        let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
         patternSourceCanvas.add(img);
         patternSourceCanvas.renderAll();
         let pattern = new fabric.Pattern({

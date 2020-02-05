@@ -22,6 +22,77 @@ function changeGeodesicWidth(targetWidth){
     }
 }
 
+canvas_side_bar_perm.on('mouse:down', function(opt) {
+    let onSector = true;
+    if(opt.target == null){ onSector=false}
+
+    var evt = opt.e;
+    let e =opt.e;
+    let XCoord;
+    let YCoord;
+    let touch = e.touches;
+    if ( onSector === false) {
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
+        this.isDragging = true;
+        //this.selection = false;
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
+        console.log(this.viewportTransform[5])
+    }
+});
+
+canvas_side_bar_perm.on('mouse:move', function(opt) {
+    if (shiftPressed === true) return;
+    if (this.isDragging) {
+        if (this.viewportTransform[5] < -100){
+            this.viewportTransform[5] = -100
+        }
+        if (this.viewportTransform[5] > 100){
+            this.viewportTransform[5] = 100
+        }else{
+        var e = opt.e;
+        let XCoord;
+        let YCoord;
+        let touch = e.touches;
+
+
+        if (typeof touch !== 'undefined' ) {
+            XCoord = touch[0].clientX;
+            YCoord = touch[0].clientY;
+        }else {
+            XCoord = e.clientX;
+            YCoord = e.clientY;
+        }
+
+
+        //this.viewportTransform[4] += XCoord - this.lastPosX;
+        this.viewportTransform[5] += YCoord - this.lastPosY;
+
+        this.requestRenderAll();
+        this.lastPosX = XCoord;
+        this.lastPosY = YCoord;
+
+        }
+    }
+
+});
+
+canvas_side_bar_perm.on('mouse:up', function(opt) {
+
+    if (shiftPressed === true) return;
+    this.isDragging = false;
+    //this.selection = false;
+    canvas_side_bar_perm.renderAll();
+});
+
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
         left: 50,

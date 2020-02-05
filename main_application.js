@@ -285,6 +285,14 @@ canvas.on({
             canvas.zoomToPoint(point, delta);
             pausePanning = false;
         }
+        let zoom = canvas.getZoom();
+        for (let ii = geodesics.length - 1; ii >= 0; ii--) {
+            geodesics[ii][geodesics[ii].length-1].dragPoint.padding = dragPointPadding * 1/zoom;
+
+            //IDEE: Größe des dragPoint in Abhängigkeit des Zooms setzen
+            //geodesics[ii][geodesics[ii].length-1].dragPoint.radius = 10 * 1/zoom;
+
+        }
     },
     'object:selected': function() {
         pausePanning = true;
@@ -307,6 +315,11 @@ canvas.on('mouse:wheel', function(opt) {
     canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
     opt.e.preventDefault();
     opt.e.stopPropagation();
+
+    for (let ii = geodesics.length - 1; ii >= 0; ii--) {
+        geodesics[ii][geodesics[ii].length-1].dragPoint.padding = dragPointPadding * 1/zoom;
+
+    }
 });
 
 canvas.on('mouse:down', function(opt) {
@@ -551,8 +564,9 @@ canvas.on('mouse:up', function(opt) {
             stroke: 'black',
             strokeWidth: 2,
             fill: color,
-            perPixelTargetFind: true,
+            perPixelTargetFind: false,
             hasBorders: false,
+            padding: dragPointPadding,
             objectCaching: false,
             selectable: false,
             lockMovementX: true,
@@ -574,6 +588,7 @@ canvas.on('mouse:up', function(opt) {
             }
             for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
                 geodesics[chosenGeodesicGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
+
             }
 
             let pointer = canvas.getPointer(o.e);
@@ -791,14 +806,16 @@ if (window.innerWidth < 1000 || window.innerHeight < 1000){
 }
 
 let epsilon = 0.0000001;
-let snap_radius_sectors = 15;
+let snap_radius_sectors = 8;
 let snap_radius_line = 15;
 let snap_radius_markPoint = 15;
 
-let abortlength = 14;
+let abortlength = 20;
 
-let dragPointRadius = 7.5;
-let lineStrokeWidthWhenSelected = 3.5;
+let dragPointRadius = 5;
+let dragPointPadding = 15;
+
+let lineStrokeWidthWhenSelected = 5;
 
 let cursor;
 
@@ -1382,8 +1399,9 @@ function drawDragPoint(geodesicToGivePoint) {
         stroke: 'black',
         strokeWidth: 2,
         fill: lineSegment.fill,
-        perPixelTargetFind: true,
+        perPixelTargetFind: false,
         hasBorders: false,
+        padding: 10,
         objectCaching: false,
         selectable: false,
         lockMovementX: true,
@@ -1943,9 +1961,9 @@ function initializeSectors() //keine Argumente
 
     this.ID_text.relationship = desiredTransform;
 
-    this.trapez.on('moving',function(){timeToSnap(this); updateMinions(this)});
+    this.trapez.on('moving',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this)});
     this.trapez.on('rotating',function(){updateMinions(this)});
-    this.trapez.on('modified',function(){timeToSnap(this);timeToSnap(this);updateMinions(this); /*for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}*/});
+    this.trapez.on('modified',function(){timeToSnap(this, snap_radius_sectors);timeToSnap(this, snap_radius_sectors);updateMinions(this); /*for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}*/});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
@@ -2356,7 +2374,7 @@ function initializeSectors() //keine Argumente
 
 
 
-                function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
+function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
 
                     let lambda;
                     let alpha;
@@ -2711,7 +2729,7 @@ function resetSectors() {
         sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2;
         sectors[rr].trapez.setCoords();
         sectors[rr].trapez.angle = sec_angle[rr];
-        sectors[rr].snapStatus = [0, 0, 0, 0]
+        sectors[rr].snapStatus = [0, 0, 0, 0];
         //overlapControll(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
@@ -2719,7 +2737,7 @@ function resetSectors() {
 
     }
     for (let rr = 0; rr < sectors.length; rr++){
-        timeToSnap(sectors[rr].trapez);
+        timeToSnap(sectors[rr].trapez, 0);
         //overlapControll(sectors[rr].trapez);
 
     }
@@ -3123,7 +3141,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 let sectorToSnap = -1;
 let snappingDistance = 1;
 
-function timeToSnap(trapez) {
+function timeToSnap(trapez, snap_radius_sectors) {
 
     for (let ii = 0; ii < 4; ii++) {
 
@@ -3174,7 +3192,9 @@ function timeToSnap(trapez) {
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
 
-            /*
+
+            //-------------------------------------------------------------------------------------------
+
             transformMatrix = trapez.calcTransformMatrix();
             //point_1/2 gehören zum bewegten Trapez
             point_1_local = new fabric.Point(trapez.points[ii].x - trapez.width / 2,
@@ -3205,10 +3225,13 @@ function timeToSnap(trapez) {
 
             point_a_b_mid = new fabric.Point(point_a.x + (point_a.x - point_b.x) * 0.5, point_a.y + (point_a.y - point_b.y) * 0.5);
 
-            if (distance(point_1_2_mid, point_a_b_mid) <= 10 ) {
-            */
+            if (distance(point_1_2_mid, point_a_b_mid) <= snap_radius_sectors || distanceMidPoints <= snappingDistance * trapez.aussenkreisradius ) {
 
-            if (distanceMidPoints <= snappingDistance * trapez.aussenkreisradius ) {
+            //-------------------------------------------------------------------------------------------
+
+
+            /* Diese Zeile auskommentieren*/
+            //if (distanceMidPoints <= snappingDistance * trapez.aussenkreisradius ) {
 
                 for (let jj = 0; jj < 4; jj++) {
                     if (trapez.parent.neighbourhood[jj] > -1) {
@@ -3650,6 +3673,9 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             sectors[trapez.parent.neighbourhood[ii]].trapez.fill = 'white'
         }
     }
+
+    //Zurücksetzen des Sektors an den gesnappt werden soll
+    sectorToSnap = -1;
 }
 
 //Achtung! Die Liniensegmente der Startgeodäten können nicht gelöscht werden, weil sie keine gültige ID tragen
@@ -3698,8 +3724,9 @@ function startGeodesics(){
             stroke: 'black',
             strokeWidth: 2,
             fill: startFill[ii],
-            perPixelTargetFind: true,
+            perPixelTargetFind: false,
             hasBorders: false,
+            padding: dragPointPadding,
             objectCaching: false,
             selectable: false,
             lockMovementX: true,
@@ -3722,6 +3749,7 @@ function startGeodesics(){
             for (let kk = geodesics[chosenGeodesicGlobalID].length - 1; kk >= 0; kk--) {
                 geodesics[chosenGeodesicGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
             }
+
 
             let pointer = canvas.getPointer(o.e);
             let points = [pointer.x, pointer.y, pointer.x, pointer.y];
@@ -3929,7 +3957,7 @@ function toolChange(argument) {
 
             if (typeof(geodesics[ii][jj].__eventListeners)=== 'undefined') {
                 geodesics[ii][jj].on('mousedown', function () {
-
+                    chosenGeodesicGlobalID = this.ID[0]
                     for (let kk = 0; kk < geodesics.length; kk++){
                         for (let ll = 0; ll < geodesics[kk].length; ll++)
                             geodesics[kk][ll].strokeWidth = 2 ;
@@ -4100,8 +4128,9 @@ function undoLastLine(){
             stroke: 'black',
             strokeWidth: 2,
             fill: color,
-            perPixelTargetFind: true,
+            perPixelTargetFind: false,
             hasBorders: false,
+            padding: dragPointPadding,
             objectCaching: false,
             selectable: false,
             lockMovementX: true,
