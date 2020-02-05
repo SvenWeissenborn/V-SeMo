@@ -22,6 +22,8 @@ function changeGeodesicWidth(targetWidth){
     }
 }
 
+/*
+
 canvas_side_bar_perm.on('mouse:down', function(opt) {
     let onSector = true;
     if(opt.target == null){ onSector=false}
@@ -92,6 +94,8 @@ canvas_side_bar_perm.on('mouse:up', function(opt) {
     //this.selection = false;
     canvas_side_bar_perm.renderAll();
 });
+
+*/
 
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({

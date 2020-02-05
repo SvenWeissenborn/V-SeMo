@@ -1480,7 +1480,6 @@ function continueGeodesic(geodesicToContinue) {
                 delete geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].dragPoint;
             }
 
-
             let geodesic_end_point = new fabric.Point(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().x2, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().y2);
             geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
 
@@ -1709,7 +1708,7 @@ function continueGeodesic(geodesicToContinue) {
 
                     canvas.insertAt(lineSegmentContinue,stackIdx);
                     geodesics[geodesicToContinue].push(lineSegmentContinue);
-                    immediatehistory.push(lineSegmentContinue.ID)
+                    immediatehistory.push(lineSegmentContinue.ID);
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
@@ -1771,11 +1770,6 @@ function distance(punkt1, punkt2) {
 
 function fitResponsiveCanvas() {
 
-    //let canvas_change_side_bar_temp = document.getElementById("container_side_bar_temp");
-
-    //let canvas_change_side_bar_perm_right_bottom = document.getElementById("container_side_bar_perm_right_bottom");
-
-    //let canvas_change_side_bar_perm_right_top = document.getElementById("container_side_bar_perm_right_top");
 
     // canvas container dimensions
     let containerSize = {
@@ -1785,44 +1779,19 @@ function fitResponsiveCanvas() {
 
     scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
 
-    //canvas_buttons.setWidth(containerSize.width);
-    //canvas_buttons.setHeight(containerSize.height * 0.08);
-
     canvas_side_bar_perm.setWidth(100);
     canvas_side_bar_perm.setHeight(containerSize.height);
-
-    //canvas_side_bar_perm_right_top.setWidth(150* screenFactor);
-    //canvas_side_bar_perm_right_top.setHeight(100* screenFactor);
-
-    //console.log({screenFactor})
-
-    //canvas_side_bar_perm_right_bottom.setWidth(100* screenFactor);
-    //canvas_side_bar_perm_right_bottom.setHeight(100* screenFactor);
-
-    //canvas_side_bar_temp.setWidth(containerSize.width * 0.07);
-    //canvas_side_bar_temp.setHeight(containerSize.height*0.5);
 
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
 
-    //canvas_change_side_bar_temp.style.left = 0;
-    //canvas_change_side_bar_temp.style.top = 50+"vh";
-
-    //canvas_change_side_bar_perm_right_top.style.left = (containerSize.width - 150* screenFactor)+"px";
-    //canvas_change_side_bar_perm_right_top.style.top = 0;
-
-    //canvas_change_side_bar_perm_right_bottom.style.left = (containerSize.width - 100* screenFactor)+"px";
-    //canvas_change_side_bar_perm_right_bottom.style.top = (containerSize.height - 100* screenFactor)+"px";
-
-    //Position der temporaeren Canvas: 0.08 + 0.46 = 0.54
 
     //set canvas zoom aspect
     canvas.setZoom(scaleRatio);
     //canvas_buttons.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
     //canvas_side_bar_temp.setZoom(scaleRatio);
-    //canvas_side_bar_perm_right_top.setZoom(scaleRatio);
-    //canvas_side_bar_perm_right_bottom.setZoom(scaleRatio);
+
 }
 
 
@@ -1998,16 +1967,7 @@ function initializeSectors() //keine Argumente
             if (!isLineStarted) {
                 let pointer = canvas.getPointer(o.e);
                 let points = [pointer.x, pointer.y, pointer.x, pointer.y];
-/*                if (arrowheadline !== -1){
-                    if (geodesics[arrowheadline].length>0) {
-                        let geodesic_end_point = new fabric.Point(geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().x2, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcLinePoints().y2);
-                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[arrowheadline][geodesics[arrowheadline].length - 1].calcTransformMatrix());
-                        points = [geodesic_end_point.x, geodesic_end_point.y, pointer.x, pointer.y];
-                        lineContinueAt = arrowheadline;
-                        color = geodesics[lineContinueAt][0].fill;
-                    }
-                }
-*/
+
 
                 if (startAtMarkPoint !== -1){
                     points = [markPoints[startAtMarkPoint].left, markPoints[startAtMarkPoint].top, pointer.x, pointer.y]
@@ -2096,7 +2056,6 @@ function initializeSectors() //keine Argumente
 
         }
     });
-
 
 
     //Beenden von Linien; nur auf Trapezen möglich
@@ -4289,7 +4248,6 @@ function updateMinions(boss) {
 
         }
     }
-
 
     for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
         let markPoint = boss.parent.markCircles[ii];
