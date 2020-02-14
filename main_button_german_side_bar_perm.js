@@ -120,10 +120,74 @@ fabric.Image.fromURL('back.png', function(img) {
     canvas_side_bar_perm.add(back);
 });
 
+let fullscreen;
+fabric.Image.fromURL('fullscreen.png', function(img) {
+    fullscreen = img.set({
+        left: 50,
+        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 1,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    fullscreen.on('mousedown', function (o) {
+        let elem = document.getElementById("canvas-overAll");
+        exitFullscreen.opacity = 1;
+        fullscreen.opacity = 0;
+
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen()
+        } else {
+            document.exitFullscreen();
+        }
+    });
+    canvas_side_bar_perm.add(fullscreen);
+});
+
+let exitFullscreen;
+fabric.Image.fromURL('exit_fullscreen.png', function(img) {
+    exitFullscreen = img.set({
+        left: 50,
+        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 0,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    exitFullscreen.on('mousedown', function (o) {
+        let elem = document.getElementById("canvas-overAll");
+        exitFullscreen.opacity = 0;
+        fullscreen.opacity = 1;
+
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen()
+        } else {
+            document.exitFullscreen();
+        }
+    });
+    canvas_side_bar_perm.add(exitFullscreen);
+});
+
 fabric.Image.fromURL('restart.png', function(img) {
     let reset = img.set({
         left: 50 ,
-        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -147,7 +211,7 @@ fabric.Image.fromURL('restart.png', function(img) {
 fabric.Image.fromURL('reset.png', function(img) {
     let reset = img.set({
         left: 50,
-        top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -204,7 +268,7 @@ let undo;
 fabric.Image.fromURL('undo.png', function(img) {
     undo = img.set({
         left: 50,
-        top: dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -232,10 +296,11 @@ fabric.Image.fromURL('undo.png', function(img) {
     canvas_side_bar_perm.add(undo);
 });
 
+let add
 fabric.Image.fromURL('add.png', function(img) {
-    let add = img.set({
+     add = img.set({
         left: 50,
-        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -305,10 +370,10 @@ function moveDirectionButtons(visibleToSet){
 
     if (visibleToSet == true) {
         visible = true;
-        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         set_sectors.setCoords();
 
-        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.set('top', dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist));
         delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 1);
@@ -318,9 +383,9 @@ function moveDirectionButtons(visibleToSet){
 
     } else {
         visible = false;
-        set_sectors.set('top', dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
         set_sectors.setCoords();
-        delete_whole.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 0);
@@ -334,7 +399,7 @@ let autocomplete;
 fabric.Image.fromURL('autocomplete.png', function(img) {
     autocomplete = img.set({
         left: 50,
-        top: dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -364,7 +429,7 @@ let visible = false;
 fabric.Image.fromURL('direction.png', function(img) {
     direction = img.set({
         left: 50,
-        top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -396,7 +461,7 @@ let change_direction_counterclock_high;
 fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(img) {
     change_direction_counterclock_high = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -437,7 +502,7 @@ let change_direction_clockwise_high;
 fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img) {
     change_direction_clockwise_high = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -477,7 +542,7 @@ let change_direction_counterclock_low;
 fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(img) {
     change_direction_counterclock_low = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -518,7 +583,7 @@ let change_direction_clockwise_low;
 fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) {
     change_direction_clockwise_low = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -559,7 +624,7 @@ let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
     set_sectors = img.set({
         left: 50,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -586,7 +651,7 @@ let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
     delete_whole = img.set({
         left: 50,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -608,6 +673,8 @@ fabric.Image.fromURL('delete.png', function(img) {
     });
     canvas_side_bar_perm.add(delete_whole);
 });
+
+
 
 
 /*
