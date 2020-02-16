@@ -117,6 +117,8 @@ canvas.on('mouse:move', function (o) {
     pointer = canvas.getPointer(o.e);
 
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
+
+
     if (!isLineStarted){
 /*
         for (let ii = 0; ii < geodesics.length; ii++) {
@@ -167,7 +169,7 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
-*/
+
         for (let ii = 0; ii < markPoints.length; ii++) {
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
             if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
@@ -190,7 +192,7 @@ canvas.on('mouse:move', function (o) {
                 }
             }
         }
-
+*/
         return;
     }
 
@@ -287,7 +289,7 @@ canvas.on({
         }
         let zoom = canvas.getZoom();
         for (let ii = geodesics.length - 1; ii >= 0; ii--) {
-            geodesics[ii][geodesics[ii].length - 1].dragPoint.padding = dragPointPadding * 1 / zoom;
+            geodesics[ii][geodesics[ii].length -1 ].dragPoint.padding = dragPointPadding * 1 / zoom;
 
             //IDEE: Größe des dragPoint in Abhängigkeit des Zooms setzen
             //geodesics[ii][geodesics[ii].length-1].dragPoint.radius = 10 * 1/zoom;
@@ -880,6 +882,9 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
+    //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
+    //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({angle: 0});
 
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].setCoords();
     //canvas.renderAll();
@@ -1420,7 +1425,12 @@ function continueGeodesic(geodesicToContinue) {
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+
+            //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
+            //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({angle: 0});
 
 
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].setCoords();
@@ -1720,11 +1730,20 @@ function fitResponsiveCanvas() {
     canvas.setHeight(containerSize.height * 1);
 
 
-    //set canvas zoom aspect
+
     canvas.setZoom(scaleRatio);
-    //canvas_buttons.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
-    //canvas_side_bar_temp.setZoom(scaleRatio);
+
+    if (!document.fullscreenElement) {
+        if (fullscreen == undefined || exitFullscreen == undefined){
+            return
+        }
+        exitFullscreen.opacity = 0;
+        fullscreen.opacity = 1;
+    }else {
+        exitFullscreen.opacity = 1;
+        fullscreen.opacity = 0;
+    }
 
 }
 

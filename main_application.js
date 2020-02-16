@@ -884,9 +884,12 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
 
+    //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
+    //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({angle: 0});
 
     geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].setCoords();
-    canvas.renderAll();
+    //canvas.renderAll();
 
 
 
@@ -1423,8 +1426,14 @@ function continueGeodesic(geodesicToContinue) {
 
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x, y1: geodesic_start_point.y})
+
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
-            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+
+            //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
+            //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({angle: 0});
+
 
 
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].setCoords();
@@ -1444,6 +1453,7 @@ function continueGeodesic(geodesicToContinue) {
 
 
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+
 
 
                 for (lauf = 0; lauf < 100; lauf++) {
@@ -1720,7 +1730,6 @@ function fitResponsiveCanvas() {
     canvas_side_bar_perm.setWidth(100);
     canvas_side_bar_perm.setHeight(containerSize.height);
 
-
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
 
@@ -1739,8 +1748,6 @@ function fitResponsiveCanvas() {
         exitFullscreen.opacity = 1;
         fullscreen.opacity = 0;
     }
-
-
 
 }
 
