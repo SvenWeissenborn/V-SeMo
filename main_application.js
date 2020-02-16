@@ -1729,6 +1729,18 @@ function fitResponsiveCanvas() {
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
 
+    if (!document.fullscreenElement) {
+        if (fullscreen == undefined || exitFullscreen == undefined){
+            return
+        }
+        exitFullscreen.opacity = 0;
+        fullscreen.opacity = 1;
+    }else {
+        exitFullscreen.opacity = 1;
+        fullscreen.opacity = 0;
+    }
+
+
 
 }
 

@@ -22,9 +22,14 @@ function changeGeodesicWidth(targetWidth){
     }
 }
 
-/*
+
 
 canvas_side_bar_perm.on('mouse:down', function(opt) {
+
+    if (dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight) {
+        return
+    }
+
     let onSector = true;
     if(opt.target == null){ onSector=false}
 
@@ -54,11 +59,11 @@ canvas_side_bar_perm.on('mouse:down', function(opt) {
 canvas_side_bar_perm.on('mouse:move', function(opt) {
     if (shiftPressed === true) return;
     if (this.isDragging) {
-        if (this.viewportTransform[5] < -100){
-            this.viewportTransform[5] = -100
+        if (this.viewportTransform[5] < -300){
+            this.viewportTransform[5] = -300
         }
-        if (this.viewportTransform[5] > 100){
-            this.viewportTransform[5] = 100
+        if (this.viewportTransform[5] > 0){
+            this.viewportTransform[5] = 0
         }else{
         var e = opt.e;
         let XCoord;
@@ -92,10 +97,13 @@ canvas_side_bar_perm.on('mouse:up', function(opt) {
     if (shiftPressed === true) return;
     this.isDragging = false;
     //this.selection = false;
+    canvas_side_bar_perm.forEachObject(function(o) {
+        o.setCoords();
+    });
     canvas_side_bar_perm.renderAll();
 });
 
-*/
+
 
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
@@ -140,15 +148,22 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
 
     fullscreen.on('mousedown', function (o) {
         let elem = document.getElementById("canvas-overAll");
-        exitFullscreen.opacity = 1;
-        fullscreen.opacity = 0;
 
         if (!document.fullscreenElement) {
-            elem.requestFullscreen()
+            document.documentElement.requestFullscreen();
+            fullscreen.opacity = 0;
+            exitFullscreen.opacity = 1;
+
         } else {
-            document.exitFullscreen();
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                exitFullscreen.opacity = 0;
+                fullscreen.opacity = 1;
+
+            }
         }
     });
+
     canvas_side_bar_perm.add(fullscreen);
 });
 
@@ -172,17 +187,29 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
 
     exitFullscreen.on('mousedown', function (o) {
         let elem = document.getElementById("canvas-overAll");
-        exitFullscreen.opacity = 0;
-        fullscreen.opacity = 1;
+
+
+
 
         if (!document.fullscreenElement) {
-            elem.requestFullscreen()
+            document.documentElement.requestFullscreen();
+            fullscreen.opacity = 0;
+            exitFullscreen.opacity = 1;
+
         } else {
-            document.exitFullscreen();
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                exitFullscreen.opacity = 0;
+                fullscreen.opacity = 1;
+
+            }
         }
+
     });
+
     canvas_side_bar_perm.add(exitFullscreen);
 });
+
 
 fabric.Image.fromURL('restart.png', function(img) {
     let reset = img.set({
@@ -675,8 +702,8 @@ fabric.Image.fromURL('delete.png', function(img) {
 });
 
 
-
-
+console.log(dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist))
+console.log(window.innerHeight)
 /*
 fabric.Image.fromURL('delete_last.png', function(img) {
     let delete_last_part = img.set({
