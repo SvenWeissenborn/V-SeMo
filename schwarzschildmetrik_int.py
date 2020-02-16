@@ -22,9 +22,11 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.8
 
-startGeodesicsAngle = [60]
+# WICHTIG: startGeodesicsAngle benötigt genauso viele Einträge wie startGeodesicsSectors
 
-startGeodesicsSectors = [179]
+startGeodesicsAngle = [60,130]
+
+startGeodesicsSectors = [179,130]
 
 startMarksSectors = []
 startMarkRadius = [3]

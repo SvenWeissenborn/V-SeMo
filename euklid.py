@@ -3,11 +3,10 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 5
+nSektorzeilenVonRing = 3
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 0
-dradius = 1.25 * schwarzschildradius
 dradius = 100
 
 fontSize = 15
@@ -22,11 +21,13 @@ versatz_y = 0.0
 versatz_x_var = 0.0
 versatz_y_var = 0.0
 
-startGeodesicsAngle = [75,123]
+#WICHTIG: startGeodesicsAngle benötigt genauso viele Einträge wie startGeodesicsSectors
 
-startGeodesicsSector = 49
+startGeodesicsAngle = [60,120]
 
-startMarksSectors = [3]
+startGeodesicsSectors = [29, 29]
+
+startMarksSectors = []
 startMarkRadius = [3]
 
 startTextsSectors = []
@@ -45,6 +46,31 @@ def main():
 
     file = io.open("euklid.js",'w')
 
+    file.write( "/*" +"\n"
+                "------Parameter-------" +"\n"
+                "nSektorzeilenVonRing: " + str(nSektorzeilenVonRing) +"\n"
+                "nSektorspaltenVonRing: " + str(nSektorspaltenVonRing) +"\n"
+                "schwarzschildradius: " + str(schwarzschildradius) +"\n"
+                "dradius: " + str(dradius) + "\n"
+                "fontSize: " + str(fontSize) + "\n"                                                        
+                "versatz_x: " + str(versatz_x) +"\n"
+                "versatz_y: " + str(versatz_y) + "\n"
+                "versatz_x_var: " + str(versatz_x_var) + "\n"
+                "versatz_y_var: " + str(versatz_y_var) + "\n"
+                "startGeodesicsAngle: " + str(startGeodesicsAngle) + "\n"
+                "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"
+                "startMarksSectors: " + str(startMarksSectors) + "\n"
+                "startMarkRadius: " + str(startMarkRadius) + "\n"
+                "startTextsSectors: " + str(startTextsSectors) + "\n"
+                "startTextContent: " + str(startTextContent) + "\n"
+                "text_dist_from_mid_y: " + str(text_dist_from_mid_y) + "\n"
+                "----------------------"
+                + "\n"
+                  "*/"
+                )
+
+    file.write("\n")
+    file.write("\n")
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
@@ -66,21 +92,20 @@ def main():
             rad1 = (ringzeile + 1) * dradius
             rad2 = (ringzeile + 2) * dradius
             radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
-
             sector_height = math.sqrt(math.pow(radial, 2) - math.pow(offset, 2))
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist +30
             else:
-                sector_y_dist = dradius + sector_height/2
+                sector_y_dist = dradius + sector_height/2 +30
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
             sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
             sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSize
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = 2*(dradius * (ringzeile + 2)) * math.sin(dphi*0.5)
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = 2*(dradius * (ringzeile + 1)) * math.sin(dphi*0.5)
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 2)) * dphi
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile + 1)) * dphi
 
 
 
@@ -135,28 +160,34 @@ def main():
 
 
 
-    lengthStartGeodesics = 0.45 * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]
 
-    deltaXStart = - versatz_x_var * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
-    deltaYStart = - versatz_y_var * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
 
-    variablenamesGeodesics = ["x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
+    variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
 
     geodesicValues = [[[] for ii in range(len(startGeodesicsAngle))] for jj in range(len(variablenamesGeodesics))]
 
     for startGeodesic in range(0, len(startGeodesicsAngle)):
-        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + deltaXStart * startGeodesic - versatz_x * sectorValues[sectorDict["sec_height"]][startGeodesicsSector]/2
-        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + deltaYStart * startGeodesic - versatz_y * sectorValues[sectorDict["sec_width"]][startGeodesicsSector]/2
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSector] + deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
-        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSector] + deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
 
-        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSector) + "," + str(startGeodesic) + "]"
+        lengthStartGeodesics = 0.45 * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+
+        deltaXStart = - versatz_x_var * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]] / 2
+        deltaYStart = - versatz_y_var * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]] / 2
+
+        geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
+        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + deltaXStart * startGeodesic - versatz_x * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]/2
+        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + deltaYStart * startGeodesic - versatz_y * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]/2
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+
+        geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSectors[startGeodesic]) + "," + str(startGeodesic) + "]"
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(startGeodesic) + "," + str(1) + "]"
         geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = 2
 
         geodesicValues[geodesicDict["startFill"]][startGeodesic] = "line_colors[" + str(startGeodesic) + "]"
         geodesicValues[geodesicDict["startStroke"]][startGeodesic] = "line_colors[" + str(startGeodesic) + "]"
+
+
 
     for ii in range(0, len(variablenamesGeodesics)):
         file.write(variablenamesGeodesics[ii] + "= [ ")
@@ -164,14 +195,16 @@ def main():
             file.write(str(geodesicValues[ii][jj]) + ', ')
         file.write("];\n")
 
-    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill","markStartStroke", "markStartParentSector", "markStartID"]
+
+
+    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill",
+                          "markStartStroke", "markStartParentSector", "markStartID"]
     markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
 
     markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
 
     for startMark in range(0, len(startMarksSectors)):
-        markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][
-            startMarksSectors[startMark]]
+        markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
         markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]] / 2
 
         markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(startMark) + "]"
@@ -190,40 +223,43 @@ def main():
 
 
 
-        variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textStartFontSize", "textStartParentSector", "textStartID", "textStartAngle"]
-        textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
+    variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textStartFontSize", "textStartParentSector", "textStartID", "textStartAngle"]
+    textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
 
-        textValues = [[[] for ii in range(len(startTextsSectors))] for jj in range(len(variablenamesTexts))]
+    textValues = [[[] for ii in range(len(startTextsSectors))] for jj in range(len(variablenamesTexts))]
 
-        for startText in range(0, len(startTextsSectors)):
+    for startText in range(0, len(startTextsSectors)):
 
-            sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
-            sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startText]]
-            textValues[textDict["textStart_x"]][startText] = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]] - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.sin(sector_angle * 0.5 * math.pi / 180) * math.cos(sector_angle * 0.5 * math.pi / 180)
-            textValues[textDict["textStart_y"]][startText] = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]] + sector_height / 2 * text_dist_from_mid_y[startText] - 0.000001 - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.pow(math.sin(sector_angle * 0.5 * math.pi / 180), 2) + 15
-            if (startText == 0):
-                textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(0) + "]"
+        sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
+        sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startText]]
+        textValues[textDict["textStart_x"]][startText] = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]] - 2 * (sector_height/2 * text_dist_from_mid_y[startText]) * math.sin(sector_angle * 0.5 * math.pi/180) * math.cos(sector_angle * 0.5 * math.pi/180)
+        textValues[textDict["textStart_y"]][startText] = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]] + sector_height/2 * text_dist_from_mid_y[startText] - 0.000001 - 2 * (sector_height/2 * text_dist_from_mid_y[startText]) * math.pow(math.sin(sector_angle * 0.5 * math.pi/180), 2) +15
+        if (startText == 0):
+            textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(0) + "]"
+        else:
+            positionInSector = 0
+            if (startTextsSectors[startText] == startTextsSectors[startText - 1]):
+                positionInSector += 1
+                textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
             else:
                 positionInSector = 0
-                if (startTextsSectors[startText] == startTextsSectors[startText - 1]):
-                    positionInSector += 1
-                    textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
-                else:
-                    positionInSector = 0
-                    textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
+                textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
 
-            textValues[textDict["textStartID"]][startText] = "[" + str(startText) + "]"
-            textValues[textDict["textStartFontSize"]][startText] = 15
-            textValues[textDict["textStartContent"]][startText] = "'" + startTextContent[startText] + "'"
-            textValues[textDict["textStartAngle"]][startText] = 0
+        textValues[textDict["textStartID"]][startText] = "[" + str(startText) + "]"
+        textValues[textDict["textStartFontSize"]][startText] = 15
+        textValues[textDict["textStartContent"]][startText] = "'" + startTextContent[startText] + "'"
+        textValues[textDict["textStartAngle"]][startText] = 0
 
-        for ii in range(0, len(variablenamesTexts)):
-            file.write(variablenamesTexts[ii] + "= [ ")
-            for jj in range(0, len(startTextsSectors)):
-                file.write(str(textValues[ii][jj]) + ', ')
-            file.write("];\n")
+    for ii in range(0, len(variablenamesTexts)):
+        file.write(variablenamesTexts[ii] + "= [ ")
+        for jj in range(0, len(startTextsSectors)):
+            file.write(str(textValues[ii][jj]) + ', ')
+        file.write("];\n")
 
-    file.write("startSector =" + str(startGeodesicsSector)+";")
+
+
+
+
 
     file.close()
 
