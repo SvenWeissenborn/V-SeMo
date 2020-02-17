@@ -2904,7 +2904,7 @@ function timeToSnap(trapez, snap_radius_sectors) {
 
                 for (let jj = 0; jj < 4; jj++) {
                     if (trapez.parent.neighbourhood[jj] > -1) {
-                        sectors[trapez.parent.neighbourhood[jj]].trapez.fill = 'white'
+                        sectors[trapez.parent.neighbourhood[jj]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[jj]].ID]
                     }
                 }
 
@@ -2953,7 +2953,7 @@ function timeToSnap(trapez, snap_radius_sectors) {
                 for (let jj = 0; jj < 4; jj++) {
                     if (trapez.parent.neighbourhood[jj] > -1) {
 
-                        sectors[trapez.parent.neighbourhood[jj]].trapez.fill = 'white'
+                        sectors[trapez.parent.neighbourhood[jj]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[jj]].ID]
                     }
                 }
 
@@ -3147,7 +3147,7 @@ function snapping(trapez) {
 
                 //console.log(trapez.parent.snapEdges)
 
-                sectors[sec_idx].trapez.fill = 'white';
+                sectors[sec_idx].trapez.fill = sec_fill[sec_idx];
 
                 if (sectors[sec_idx].snapStatus.every(function (element) {
                     return element === 0;
@@ -3234,7 +3234,7 @@ function snappingOnMouseUp(trapez, sectorToSnap){
 
 
 
-            sectors[sec_idx].trapez.fill = 'white';
+            sectors[sec_idx].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
 
 
 
@@ -3339,7 +3339,7 @@ function snappingOnMouseUp(trapez, sectorToSnap){
     }
     for (let ii = 0; ii < 4; ii++) {
         if (trapez.parent.neighbourhood[ii] > -1) {
-            sectors[trapez.parent.neighbourhood[ii]].trapez.fill = 'white'
+            sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
         }
     }
 

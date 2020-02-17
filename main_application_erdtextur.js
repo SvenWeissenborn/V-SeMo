@@ -1784,7 +1784,7 @@ function initializeSectors() //keine Argumente
             top: this.pos_y,
             angle: this.sector_angle,
             fill: 'white',
-            strokeWidth: 2,
+            strokeWidth: 1,
             stroke: '#666',
             perPixelTargetFind: true,
             hasControls: true,
@@ -2007,6 +2007,54 @@ function initializeSectors() //keine Argumente
         if (arrowheadline !== -1) {
             arrowheadline = -1;
         }
+
+
+            for (let ii = 0; ii < 4; ii++) {
+                console.log(this.parent.snapStatus)
+                if (this.parent.snapStatus[ii] !== 0) {
+
+                    console.log('test')
+
+                    console.log(ii)
+
+                    transformMatrix = this.calcTransformMatrix();
+                    //point_1/2 gehören zum bewegten Trapez
+                    point_1_local = new fabric.Point(this.points[ii].x - this.width / 2,
+                        this.points[ii].y - this.height / 2);
+
+                    point_2_local = new fabric.Point(this.points[(ii + 1) % 4].x - this.width / 2,
+                        this.points[(ii + 1) % 4].y - this.height / 2);
+
+                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+
+                    point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+
+                    console.log('erfolgreich')
+                    let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
+
+                    let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
+                        strokeWidth: 1,
+                        fill: '#ccc',
+                        stroke: '#ccc',
+                        originX: 'center',
+                        originY: 'center',
+                        perPixelTargetFind: true,
+                        objectCaching: false,
+                        hasBorders: false,
+                        hasControls: false,
+                        evented: false,
+                        selectable: false,
+                    });
+
+                    edge.ID = ii;
+
+                    canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
+
+                    //edge.bringToFront();
+                    this.parent.snapEdges[ii] = edge;
+                }
+            }
+        //}
         if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
             return;
         }
@@ -2421,6 +2469,7 @@ function Sector() {
     this.neighbourhood = [-1,-1,-1,-1];
     this.snapStatus = [0,0,0,0];
     this.overlapStatus = [0,0,0,0];
+    this.snapEdges = [[0],[0],[0],[0]];
 }
 
 
@@ -2766,6 +2815,27 @@ function snapping(trapez) {
         let dist_2b;
 
         let sec_idx = trapez.parent.neighbourhood[ii];
+
+        for (let ii = 0; ii < 4; ii++) {
+
+            let sec_idx = trapez.parent.neighbourhood[ii];
+
+            if (trapez.parent.snapEdges[ii] !== 0) {
+                let edgeToRemove = trapez.parent.snapEdges[ii];
+                canvas.remove(edgeToRemove);
+                trapez.parent.snapEdges[ii] = [0];
+            }
+
+            if (sec_idx > -1) {
+
+                if (sectors[sec_idx].snapEdges[(ii + 2) % 4] !== 0) {
+                    let edgeToRemove = sectors[sec_idx].snapEdges[(ii + 2) % 4];
+                    canvas.remove(edgeToRemove);
+                    sectors[sec_idx].snapEdges[(ii + 2) % 4] = [0];
+                }
+            }
+        }
+
         if(sec_idx > -1){
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
@@ -2852,13 +2922,30 @@ function snapping(trapez) {
                         sectors[sec_idx].snapStatus[jj] = 1;
                     }
                 }
+
                 trapez.parent.snapStatus[ii] = 1;
+                /*
                 sectors[sec_idx].trapez.stroke = 'green';
                 trapez.stroke = 'green';
+                */
+
 
 
             } else {
                 for (let jj = 0; jj < 4; jj++) {
+
+                    if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
+
+                        sectors[sec_idx].snapStatus[jj] = 0;
+
+                        let edgeToRemove = trapez.parent.snapEdges[jj];
+
+                        canvas.remove(edgeToRemove);
+                        trapez.parent.snapEdges[jj] = [0];
+
+                    }
+
+
                     if (sectors[sec_idx].neighbourhood[jj] === trapez.parent.ID) {
 
                         sectors[sec_idx].snapStatus[jj] = 0;
@@ -2867,6 +2954,7 @@ function snapping(trapez) {
                 }
                 trapez.parent.snapStatus[ii] = 0;
 
+                /*
                 if (sectors[sec_idx].snapStatus.every(function (element) {
                     return element === 0;
                 })) {
@@ -2877,6 +2965,7 @@ function snapping(trapez) {
                 })) {
                     trapez.stroke = '#666';
                 }
+                */
             }
 
 
@@ -3399,7 +3488,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
     ];
     fabric.Image.fromURL(panels[ii], function (img) {
 
-        img.scaleToWidth(sec_width[ii] +2);
+        img.scaleToWidth(sec_width[ii] +4);
 
         let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
         patternSourceCanvas.add(img);
@@ -3408,11 +3497,13 @@ for (let ii = 0; ii < sec_name.length; ii ++){
             source: function () {
                 patternSourceCanvas.setDimensions({
                     width: img.getScaledWidth(),
-                    height: img.getScaledHeight()
+                    height: img.getScaledHeight(),
+
                 });
                 patternSourceCanvas.renderAll();
                 return patternSourceCanvas.getElement();
-            }
+            },
+            repeat: 'no-repeat'
         });
         sec.trapez.fill = pattern;
         canvas.renderAll();
