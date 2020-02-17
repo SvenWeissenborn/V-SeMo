@@ -717,6 +717,76 @@ window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;
 
+let geodreieck
+//-----------------Geodreieck---------------------------------
+fabric.Image.fromURL('geodreieck.png', function(img) {
+    geodreieck = img.set({
+        opacity: 1,
+        originX: "center",
+        originY: "center",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: true,
+        transparentCorners: true,
+        cornerSize: 40,
+        angle: 0,
+        evented: true,
+        selectable: true,
+        scaleX: 0.12 ,
+        scaleY: 0.12 ,
+        hoverCursor: "pointer"});
+
+    geodreieck.on('mousedown', function (o) {
+        canvas.bringToFront(geodreieck);
+    });
+
+
+
+    geodreieck.setControlsVisibility({
+        tl: false,
+        mt: false,
+        tr: true,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
+
+    geodreieck.snapAngle = 0.1;
+
+});
+
+fabric.Image.prototype._drawControl  = function(control, ctx, methodName, left, top) {
+    if (!this.isControlVisible(control)) {
+        return;
+    }
+    let SelectedIconImage = new Image();
+    let size = geodreieck.cornerSize;
+    /*  fabric.isVML() ||*/
+    geodreieck.transparentCorners || ctx.clearRect(left, top, size, size);
+    if(control === 'mtr')
+    {
+        SelectedIconImage.src = 'rotate.png';
+    }else {
+        ctx[methodName](left, top, size, size);
+    }
+
+    if (control === 'mtr') {
+        try {
+            ctx.drawImage(SelectedIconImage, left, top, 40, 40);
+        } catch (e) {
+            ctx[methodName](left, top, size, size);
+        }
+    }
+};
+
+//-----------------Geodreieck Ende---------------------------------
+
+
 
 //Globale Variablen
 let isLineStarted = false;
@@ -3234,6 +3304,9 @@ function toolChange(argument) {
                 sectors[ii].trapez.hasControls = false;
                 sectors[ii].trapez.lockMovementX = true;
                 sectors[ii].trapez.lockMovementY = true;
+                if (geodreieck !== undefined){
+                    geodreieck.selectable = false
+                }
 
             } else {
                 cursor = 'grabbing';
@@ -3241,6 +3314,9 @@ function toolChange(argument) {
                 sectors[ii].trapez.hasControls = true;
                 sectors[ii].trapez.lockMovementX = false;
                 sectors[ii].trapez.lockMovementY = false;
+                if (geodreieck !== undefined){
+                    geodreieck.selectable = true
+                }
             }
             sectors[ii].trapez.hoverCursor = cursor;
         }
