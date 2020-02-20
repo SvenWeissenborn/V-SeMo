@@ -22,11 +22,96 @@ function changeGeodesicWidth(targetWidth){
     }
 }
 
+/*
+let scroll;
+fabric.Image.fromURL('scroll.png', function(img) {
+    scroll = img.set({
+        left: 80,
+        top: window.innerHeight/2,
+        opacity: 1,
+        originX: "left",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: true,
+        lockMovementX: true,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
 
+    scroll.on('mousedown', function(opt) {
+
+        if (dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
+            this.lockMovementY = true;
+            console.log('true');
+            return
+        }
+
+    });
+
+    scroll.on('moving', function(opt) {
+
+        if(this.top > window.innerHeight){
+            this.set('top' , window.innerHeight).setCoords();
+        }
+
+        if(this.top < 0){
+            this.set('top' , 0).setCoords();
+        }
+
+        let lastValueSlider = 0.00;
+        let startValueSlider;
+        startValueSlider = this.top - window.innerHeight / 2 ;
+
+
+        //Die Rapidität wird wie üblich mit theta abgekürzt
+
+        let theta = (startValueSlider - lastValueSlider) / window.innerHeight; // '-' damit der Sektor nach oben verscheert wird
+        console.log(theta)
+
+        canvas_side_bar_perm.viewportTransform[5] = (dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist) - window.innerHeight)/window.innerHeight * theta
+
+    });
+
+
+    canvas_side_bar_perm.add(scroll);
+});
+
+*/
+
+canvas_side_bar_perm.on('mouse:wheel', function(opt) {
+    /*
+    if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
+        return
+    }
+    */
+    var delta = -opt.e.deltaY;
+    if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
+
+        this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist));
+        this.requestRenderAll();
+
+    }
+    if (this.viewportTransform[5] > 0){
+        console.log(delta)
+        console.log(this.viewportTransform[5])
+        this.viewportTransform[5] = 0;
+        this.requestRenderAll();
+    }
+    else {
+
+        canvas_side_bar_perm.viewportTransform[5] += delta * 10
+        console.log(delta)
+        this.requestRenderAll();
+    }
+});
 
 canvas_side_bar_perm.on('mouse:down', function(opt) {
 
-    if (dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
+    if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
         return
     }
 
@@ -58,8 +143,12 @@ canvas_side_bar_perm.on('mouse:down', function(opt) {
 canvas_side_bar_perm.on('mouse:move', function(opt) {
     if (shiftPressed === true) return;
     if (this.isDragging) {
-        if (this.viewportTransform[5] < -300){
-            this.viewportTransform[5] = -300
+        console.log('viewportTransform:', this.viewportTransform[5]);
+        console.log('window:', window.innerHeight);
+        console.log('diff:', window.innerHeight - (dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist)))
+        if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
+
+            this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
         }
         if (this.viewportTransform[5] > 0){
             this.viewportTransform[5] = 0
@@ -411,20 +500,51 @@ fabric.Image.fromURL('add.png', function(img) {
         showGeodesicButtons(false);
         toolChange('paint');
         geodreieck.selectable = false;
+        //add.opacity = 0;
+        //add_black.opacity = 1;
     });
     canvas_side_bar_perm.add(add);
 });
 
+/*
+
+let add_black;
+fabric.Image.fromURL('add_black.png', function(img) {
+    add_black = img.set({
+        left: 50,
+        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 0,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    add_black.on('mousedown', function (o) {
+        changeGeodesicWidth(2);
+        showGeodesicButtons(false);
+        toolChange('grab');
+        geodreieck.selectable = true;
+        add.opacity = 1;
+        add_black.opacity = 0;
+    });
+    canvas_side_bar_perm.add(add_black);
+});
+*/
+
+
 let button_dreieck;
-let dreieckWasThere = false
+
 
 function addGeodreieck(geodreieckToAdd){
     if (geodreieckToAdd == true){
         canvas.add(geodreieck);
-        if (dreieckWasThere == false) {
-            geodreieck.center();
-        }
-        dreieckWasThere = true;
 
         let zoom = canvas.getZoom();
 
@@ -646,7 +766,7 @@ let change_direction_counterclock_high;
 fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(img) {
     change_direction_counterclock_high = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
