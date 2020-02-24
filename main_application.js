@@ -224,7 +224,7 @@ canvas.on('mouse:move', function (o) {
         }else{
             let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
             let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
-            if (Math.abs(alpha - beta) <= Math.PI / 36) {
+            if (Math.abs(alpha - beta) <= Math.PI / 36 || Math.abs(alpha + beta) <= Math.PI / 36) {
                 line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1,y2: pointer.y});
             } else {
                 line.set({x2: pointer.x, y2: pointer.y});
@@ -278,8 +278,12 @@ canvas.on('mouse:move', function (o) {
 
                 if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltGeodreieck_x, deltGeodreieck_y) < 5 & angleDifference < 20) {
 
-                    line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI/180) + line.y1});
-
+                    if (Math.abs(geodreieck.angle - 90) < epsilon){
+                        line.set({x2: line.x1, y2: pointer.y})
+                    }
+                    if (Math.abs(geodreieck.angle - 90) > epsilon){
+                        line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                    }
                 }else {
                     line.set({x2: pointer.x, y2: pointer.y});
                 }
@@ -287,7 +291,6 @@ canvas.on('mouse:move', function (o) {
             }else {
                 line.set({x2: pointer.x, y2: pointer.y});
             }
-
         }
     }
 
@@ -645,8 +648,6 @@ window.addEventListener('keydown',function(event){
 
 });
 
-//Test für Vollbildmodus
-
 window.addEventListener('keydown',function(event){
     if(event.key === 'Shift'){
 
@@ -804,7 +805,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
     geodreieck.setControlsVisibility({
         tl: false,
         mt: false,
-        tr: true,
+        tr: false,
 
         mr: false,
         ml: false,
@@ -818,8 +819,6 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
     geodreieck.on('moving',function(){rotateGeodreieck(this)});
     geodreieck.on('rotating',function(){rotateGeodreieck(this)});
-
-
 
 });
 
@@ -2143,7 +2142,7 @@ function initializeSectors() //keine Argumente
                     showGeodesicButtons(true);
 
                     line = new fabric.Line(points, {
-                        strokeWidth: lineStrokeWidthWhenSelected,
+                        strokeWidth: startStrokeWidth,
                         stroke: color,
                         fill: color,
                         originX: 'center',

@@ -87,7 +87,7 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
     if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
         return
     }
-    
+
 
     var delta = -opt.e.deltaY;
 
@@ -108,8 +108,8 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
         canvas_side_bar_perm.viewportTransform[5] += delta * 10;
         console.log('ergebnis:', canvas_side_bar_perm.viewportTransform[5])
         this.requestRenderAll();
-    }
         }
+    }
 });
 
 canvas_side_bar_perm.on('mouse:down', function(opt) {
@@ -842,7 +842,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
 
     change_direction_clockwise_high.on('mouseup', function () {
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID)
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
     });
 
@@ -876,13 +876,13 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
 
     change_direction_counterclock_low.on('mouseout', function () {
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID)
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_counterclock_low.on('mouseup', function () {
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID)
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
     });
 
@@ -917,13 +917,13 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
 
     change_direction_clockwise_low.on('mouseout', function () {
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID)
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_low.on('mouseup', function () {
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID)
+        drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
     });
 
@@ -985,8 +985,6 @@ fabric.Image.fromURL('delete.png', function(img) {
 });
 
 
-console.log(dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist))
-console.log(window.innerHeight)
 /*
 fabric.Image.fromURL('delete_last.png', function(img) {
     let delete_last_part = img.set({
