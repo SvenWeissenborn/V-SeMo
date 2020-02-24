@@ -170,8 +170,6 @@ canvas.on('mouse:move', function (o) {
         }
 
 
-
-
         for (let ii = 0; ii < markPoints.length; ii++) {
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
             if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
@@ -2032,7 +2030,6 @@ function initializeSectors() //keine Argumente
         br: false,
     });
 
-
     //Rotationskontrolle: Icon und Position werden verändert
     fabric.Polygon.prototype._drawControl  = function(control, ctx, methodName, left, top) {
         if (!this.isControlVisible(control)) {
@@ -3866,6 +3863,11 @@ function toolChange(argument) {
                 if (geodreieck !== undefined){
                     geodreieck.selectable = false
                 }
+                if (add !== undefined){
+                    add.opacity = 0;
+                    add_dark.opacity = 1
+                    canvas_side_bar_perm.renderAll()
+                }
 
             } else {
                 cursor = 'grabbing';
@@ -3875,6 +3877,11 @@ function toolChange(argument) {
                 sectors[ii].trapez.lockMovementY = false;
                 if (geodreieck !== undefined){
                     geodreieck.selectable = true
+                }
+                if (add_dark !== undefined){
+                    add.opacity = 1;
+                    add_dark.opacity = 0
+                    canvas_side_bar_perm.renderAll()
                 }
             }
             sectors[ii].trapez.hoverCursor = cursor;

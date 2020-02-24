@@ -91,23 +91,25 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
 
     var delta = -opt.e.deltaY;
 
+    console.log(canvas_side_bar_perm.viewportTransform[5] += delta * 10)
     if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
 
         this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist));
         this.requestRenderAll();
 
+    }else{
+        if ((canvas_side_bar_perm.viewportTransform[5] += delta * 10) >= 0){
+
+        this.viewportTransform[5] = 0;
+        this.requestRenderAll();
+
     }else {
-        if ((canvas_side_bar_perm.viewportTransform[5] += delta * 10) >= 0) {
 
-            this.viewportTransform[5] = 0;
-            this.requestRenderAll();
-
-        } else {
-
-            canvas_side_bar_perm.viewportTransform[5] += delta * 10;
-            this.requestRenderAll();
-        }
+        canvas_side_bar_perm.viewportTransform[5] += delta * 10;
+        console.log('ergebnis:', canvas_side_bar_perm.viewportTransform[5])
+        this.requestRenderAll();
     }
+        }
 });
 
 canvas_side_bar_perm.on('mouse:down', function(opt) {
@@ -160,7 +162,7 @@ canvas_side_bar_perm.on('mouse:move', function(opt) {
         }
 
 
-
+        console.log(canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY)
         if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) < window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))) {
 
             this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
@@ -504,16 +506,16 @@ fabric.Image.fromURL('add.png', function(img) {
         toolChange('paint');
         geodreieck.selectable = false;
         //add.opacity = 0;
-        //add_black.opacity = 1;
+        //add_dark.opacity = 1;
     });
     canvas_side_bar_perm.add(add);
 });
 
-/*
 
-let add_black;
-fabric.Image.fromURL('add_black.png', function(img) {
-    add_black = img.set({
+
+let add_dark;
+fabric.Image.fromURL('add_dark.png', function(img) {
+    add_dark = img.set({
         left: 50,
         top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
@@ -529,17 +531,17 @@ fabric.Image.fromURL('add_black.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
-    add_black.on('mousedown', function (o) {
+    add_dark.on('mousedown', function (o) {
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toolChange('grab');
         geodreieck.selectable = true;
-        add.opacity = 1;
-        add_black.opacity = 0;
+        //add.opacity = 1;
+        //add_dark.opacity = 0;
     });
-    canvas_side_bar_perm.add(add_black);
+    canvas_side_bar_perm.add(add_dark);
 });
-*/
+
 
 
 let button_dreieck;

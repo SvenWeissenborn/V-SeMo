@@ -3439,6 +3439,11 @@ function toolChange(argument) {
                 if (geodreieck !== undefined){
                     geodreieck.selectable = false
                 }
+                if (add !== undefined){
+                    add.opacity = 0;
+                    add_dark.opacity = 1
+                    canvas_side_bar_perm.renderAll()
+                }
 
             } else {
                 cursor = 'grabbing';
@@ -3448,6 +3453,11 @@ function toolChange(argument) {
                 sectors[ii].trapez.lockMovementY = false;
                 if (geodreieck !== undefined){
                     geodreieck.selectable = true
+                }
+                if (add_dark !== undefined){
+                    add.opacity = 1;
+                    add_dark.opacity = 0
+                    canvas_side_bar_perm.renderAll()
                 }
             }
             sectors[ii].trapez.hoverCursor = cursor;
