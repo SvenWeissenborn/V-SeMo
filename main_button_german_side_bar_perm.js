@@ -83,29 +83,30 @@ fabric.Image.fromURL('scroll.png', function(img) {
 */
 
 canvas_side_bar_perm.on('mouse:wheel', function(opt) {
-    /*
+
     if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
         return
     }
-    */
+    
+
     var delta = -opt.e.deltaY;
+
     if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
 
         this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist));
         this.requestRenderAll();
 
-    }
-    if (this.viewportTransform[5] > 0){
-        console.log(delta)
-        console.log(this.viewportTransform[5])
-        this.viewportTransform[5] = 0;
-        this.requestRenderAll();
-    }
-    else {
+    }else {
+        if ((canvas_side_bar_perm.viewportTransform[5] += delta * 10) >= 0) {
 
-        canvas_side_bar_perm.viewportTransform[5] += delta * 10
-        console.log(delta)
-        this.requestRenderAll();
+            this.viewportTransform[5] = 0;
+            this.requestRenderAll();
+
+        } else {
+
+            canvas_side_bar_perm.viewportTransform[5] += delta * 10;
+            this.requestRenderAll();
+        }
     }
 });
 
@@ -143,41 +144,43 @@ canvas_side_bar_perm.on('mouse:down', function(opt) {
 canvas_side_bar_perm.on('mouse:move', function(opt) {
     if (shiftPressed === true) return;
     if (this.isDragging) {
-        console.log('viewportTransform:', this.viewportTransform[5]);
-        console.log('window:', window.innerHeight);
-        console.log('diff:', window.innerHeight - (dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist)))
-        if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
 
-            this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
-        }
-        if (this.viewportTransform[5] > 0){
-            this.viewportTransform[5] = 0
-        }else{
         var e = opt.e;
-        let XCoord;
+
         let YCoord;
         let touch = e.touches;
 
 
-        if (typeof touch !== 'undefined' ) {
-            XCoord = touch[0].clientX;
+        if (typeof touch !== 'undefined') {
+
             YCoord = touch[0].clientY;
-        }else {
-            XCoord = e.clientX;
+        } else {
+
             YCoord = e.clientY;
         }
 
 
-        //this.viewportTransform[4] += XCoord - this.lastPosX;
-        this.viewportTransform[5] += YCoord - this.lastPosY;
 
-        this.requestRenderAll();
-        this.lastPosX = XCoord;
-        this.lastPosY = YCoord;
+        if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) < window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))) {
 
+            this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
+
+        } else {
+            if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) >= 0) {
+
+                this.viewportTransform[5] = 0
+
+            } else {
+
+                this.viewportTransform[5] += YCoord - this.lastPosY;
+
+                this.requestRenderAll();
+
+                this.lastPosY = YCoord;
+
+            }
         }
     }
-
 });
 
 canvas_side_bar_perm.on('mouse:up', function(opt) {
