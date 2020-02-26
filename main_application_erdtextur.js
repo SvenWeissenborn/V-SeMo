@@ -854,74 +854,7 @@ function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y,
 
 }
 
-function rotateGeodreieck(geodreieckToRotate){
 
-    let geodreieckWdithHalf = geodreieckToRotate.width / 2 * 0.12;
-    let geodreieckHeightHalf = geodreieckToRotate.height / 2 * 0.12;
-    let geodreieckMidPoint = new fabric.Point(geodreieckToRotate.left, geodreieckToRotate.top);
-
-    //gEL1 = geodreieckEdgeLocal1
-    //gEL2 = geodreieckEdgeLocal2
-    let gEL1 = new fabric.Point(geodreieckToRotate.left - geodreieckWdithHalf, geodreieckToRotate.top + geodreieckHeightHalf);
-    let gEL2 = new fabric.Point(geodreieckToRotate.left + geodreieckWdithHalf, geodreieckToRotate.top + geodreieckHeightHalf);
-
-    let translation_x = geodreieckToRotate.left;
-    let translation_y = geodreieckToRotate.top;
-
-
-    // x = cos(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.left
-    // y = sin(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.top
-
-    let geodreieckEdgeMidPoint = new fabric.Point(geodreieckToRotate.left + Math.cos((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf, geodreieckToRotate.top + Math.sin((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf);
-
-    let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y);
-    let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y);
-
-    //console.log({geodreieckEdgePoint1});
-
-    //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint1.x , top: geodreieckEdgePoint1.y, originX: 'center', originY: 'center' }));
-    //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint2.x , top: geodreieckEdgePoint2.y, originX: 'center', originY: 'center' }));
-
-    //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', left: geodreieckEdgeMidPoint.x, top: geodreieckEdgeMidPoint.y, originX: 'center', originY: 'center' }));
-    for (let ii = 0; ii < geodesics.length; ii++){
-        for (let jj = 0; jj < geodesics[ii].length; jj++)
-        {
-
-            let segment_end_point = new fabric.Point(geodesics[ii][jj].calcLinePoints().x2,geodesics[ii][jj].calcLinePoints().y2);
-            segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[ii][jj].calcTransformMatrix() );
-
-            let geodesic_start_point = new fabric.Point(geodesics[ii][jj].calcLinePoints().x1, geodesics[ii][jj].calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[ii][jj].calcTransformMatrix());
-
-            let xg1 = geodesic_start_point.x;
-            let yg1 = geodesic_start_point.y;
-            let xg2 = segment_end_point.x;
-            let yg2 = segment_end_point.y;
-
-            let delta_x = xg2 - xg1;
-            let delta_y = yg2 - yg1;
-
-            //atan2 bruacht zwei Argumente die eingegeben werden muessen. In diesem Fall die Differenzen der Koordinaten.
-            let geodesicAngle = Math.atan2(delta_y, delta_x) * 180 / Math.PI;
-
-            let lineSegmentMidPoint = new fabric.Point(xg1 + 0.5 * (xg2 - xg1), yg1 + 0.5 * (yg2 - yg1));
-
-            //Float-Modulo: verschiebt die Winkeldifferenz so lange um 180, dass der Zielwert zwischen -90 und +90 liegt
-            // -> Math.abs((geodesicAngle - geodreieck.angle ) - Math.round((geodesicAngle - geodreieck.angle )/ 180) * 180)
-            if (Math.abs((geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180) < 5 & distancePointStraightLine(geodreieckEdgeMidPoint.x, geodreieckEdgeMidPoint.y, xg1, yg1, delta_x, delta_y) < 10 & distance(geodreieckEdgeMidPoint, lineSegmentMidPoint) < geodreieckWdithHalf - Math.sqrt(delta_x * delta_x + delta_y * delta_y)/2){
-
-                geodreieckToRotate.angle += (geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180
-
-            }
-
-        }
-
-
-
-
-    }
-
-}
 
 //-----------------Geodreieck Ende---------------------------------
 
@@ -2650,6 +2583,80 @@ function resetZoomPan(){
     canvas.viewportTransform[5]= 0;
 }
 
+
+function rotateGeodreieck(geodreieckToRotate){
+
+    let geodreieckWdithHalf = geodreieckToRotate.width / 2 * 0.12;
+    let geodreieckHeightHalf = geodreieckToRotate.height / 2 * 0.12;
+    let geodreieckMidPoint = new fabric.Point(geodreieckToRotate.left, geodreieckToRotate.top);
+
+    //gEL1 = geodreieckEdgeLocal1
+    //gEL2 = geodreieckEdgeLocal2
+    let gEL1 = new fabric.Point(geodreieckToRotate.left - geodreieckWdithHalf, geodreieckToRotate.top + geodreieckHeightHalf);
+    let gEL2 = new fabric.Point(geodreieckToRotate.left + geodreieckWdithHalf, geodreieckToRotate.top + geodreieckHeightHalf);
+
+    let translation_x = geodreieckToRotate.left;
+    let translation_y = geodreieckToRotate.top;
+
+
+    // x = cos(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.left
+    // y = sin(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.top
+
+    let geodreieckEdgeMidPoint = new fabric.Point(geodreieckToRotate.left + Math.cos((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf, geodreieckToRotate.top + Math.sin((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf);
+
+    let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y);
+    let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y);
+
+    //console.log({geodreieckEdgePoint1});
+
+    //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint1.x , top: geodreieckEdgePoint1.y, originX: 'center', originY: 'center' }));
+    //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint2.x , top: geodreieckEdgePoint2.y, originX: 'center', originY: 'center' }));
+
+    //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', left: geodreieckEdgeMidPoint.x, top: geodreieckEdgeMidPoint.y, originX: 'center', originY: 'center' }));
+    for (let ii = 0; ii < geodesics.length; ii++){
+        for (let jj = 0; jj < geodesics[ii].length; jj++)
+        {
+
+            let segment_end_point = new fabric.Point(geodesics[ii][jj].calcLinePoints().x2,geodesics[ii][jj].calcLinePoints().y2);
+            segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[ii][jj].calcTransformMatrix() );
+
+            let geodesic_start_point = new fabric.Point(geodesics[ii][jj].calcLinePoints().x1, geodesics[ii][jj].calcLinePoints().y1);
+            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[ii][jj].calcTransformMatrix());
+
+            let xg1 = geodesic_start_point.x;
+            let yg1 = geodesic_start_point.y;
+            let xg2 = segment_end_point.x;
+            let yg2 = segment_end_point.y;
+
+            let delta_x = xg2 - xg1;
+            let delta_y = yg2 - yg1;
+
+            //atan2 bruacht zwei Argumente die eingegeben werden muessen. In diesem Fall die Differenzen der Koordinaten.
+            let geodesicAngle = Math.atan2(delta_y, delta_x) * 180 / Math.PI;
+
+            let lineSegmentMidPoint = new fabric.Point(xg1 + 0.5 * (xg2 - xg1), yg1 + 0.5 * (yg2 - yg1));
+
+            //Float-Modulo: verschiebt die Winkeldifferenz so lange um 180, dass der Zielwert zwischen -90 und +90 liegt
+            // -> Math.abs((geodesicAngle - geodreieck.angle ) - Math.round((geodesicAngle - geodreieck.angle )/ 180) * 180)
+            if (Math.abs((geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180) < 5 & distancePointStraightLine(geodreieckEdgeMidPoint.x, geodreieckEdgeMidPoint.y, xg1, yg1, delta_x, delta_y) < 10 & distance(geodreieckEdgeMidPoint, lineSegmentMidPoint) < geodreieckWdithHalf - Math.sqrt(delta_x * delta_x + delta_y * delta_y)/2){
+
+                geodreieckToRotate.angle += (geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180
+
+            }
+            if (Math.abs((geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180) < 5 & distance(geodreieckMidPoint, lineSegmentMidPoint) < 50){
+
+                geodreieckToRotate.angle += (geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180
+
+            }
+
+        }
+
+
+
+
+    }
+
+}
 
 //Anlegen der Sector-Klasse
 function Sector() {
