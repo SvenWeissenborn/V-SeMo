@@ -1638,7 +1638,6 @@ function continueGeodesic(geodesicToContinue) {
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({angle: 0});
 
 
-
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].setCoords();
 
 
@@ -1656,7 +1655,6 @@ function continueGeodesic(geodesicToContinue) {
 
 
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
-
 
 
                 for (lauf = 0; lauf < 100; lauf++) {
@@ -2142,7 +2140,7 @@ function initializeSectors() //keine Argumente
                     showGeodesicButtons(true);
 
                     line = new fabric.Line(points, {
-                        strokeWidth: startStrokeWidth,
+                        strokeWidth: startStrokeWidth[0],
                         stroke: color,
                         fill: color,
                         originX: 'center',

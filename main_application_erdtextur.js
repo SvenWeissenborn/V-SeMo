@@ -807,7 +807,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
     geodreieck.setControlsVisibility({
         tl: false,
         mt: false,
-        tr: true,
+        tr: false,
 
         mr: false,
         ml: false,
@@ -821,8 +821,6 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
     geodreieck.on('moving',function(){rotateGeodreieck(this)});
     geodreieck.on('rotating',function(){rotateGeodreieck(this)});
-
-
 
 });
 
@@ -1005,8 +1003,6 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
             if (entryToSplice_tmp < sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1]){
                 sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[jj].parentSector[1] -=1
             }
-            //console.log('hier:', sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].ID, sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].parentSector[1])
-            //console.log(sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].fill, sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].lineSegments[jj].parentSector[1])
         }
         let lineSegment = geodesics[chosenGeodesicTochangeDirection][ii];
         canvas.remove(lineSegment);
@@ -1635,9 +1631,9 @@ function continueGeodesic(geodesicToContinue) {
 
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
-            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x, y1: geodesic_start_point.y });
 
-            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
 
             //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
             //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
@@ -2136,7 +2132,7 @@ function initializeSectors() //keine Argumente
                     showGeodesicButtons(true);
 
                     line = new fabric.Line(points, {
-                        strokeWidth: lineStrokeWidthWhenSelected,
+                        strokeWidth: startStrokeWidth[0],
                         stroke: color,
                         fill: color,
                         originX: 'center',
@@ -2216,8 +2212,16 @@ function initializeSectors() //keine Argumente
     //Beenden von Linien; nur auf Trapezen möglich
     this.trapez.on('mouseup', function (o) {
 
-
             for (let ii = 0; ii < 4; ii++) {
+
+                let sec_idx = this.parent.neighbourhood[ii];
+
+                if (this.parent.snapEdges[ii] !== 0) {
+
+                    let edgeToRemove = this.parent.snapEdges[ii];
+                    canvas.remove(edgeToRemove);
+                    this.parent.snapEdges[ii] = [0];
+                }
 
                 if (this.parent.snapStatus[ii] !== 0) {
 
@@ -2260,9 +2264,9 @@ function initializeSectors() //keine Argumente
                 }
             }
 
-        if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
-            return;
-        }
+        //if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
+        //    return;
+        //}
 
     });
 
@@ -3378,7 +3382,7 @@ function toolChange(argument) {
                 geodesics[ii][jj].strokeWidth = 2;
                 geodesics[ii][geodesics[ii].length - 1].hoverCursor = 'pointer';
                 geodesics[ii][geodesics[ii].length - 1].evented = true;
-                geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5;
+                geodesics[ii][geodesics[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
 
             }
 
@@ -3485,7 +3489,7 @@ function toolChange(argument) {
                     geodesics[ii][jj].strokeWidth = 2;
                     geodesics[ii][geodesics[ii].length - 1].hoverCursor = 'pointer';
                     geodesics[ii][geodesics[ii].length - 1].evented = true;
-                    geodesics[ii][geodesics[ii].length - 1].strokeWidth = 5;
+                    geodesics[ii][geodesics[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
 
                 }
             }
