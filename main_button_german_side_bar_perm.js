@@ -221,6 +221,19 @@ fabric.Image.fromURL('back.png', function(img) {
     canvas_side_bar_perm.add(back);
 });
 
+//Unter Vorsicht!!!!
+//Mögliche Screenshot-Funktion
+window.addEventListener('keydown',function(event){
+    let canvasToDownload = document.getElementById("canvas");
+    if(event.key === 'q') {
+
+        canvasToDownload.toBlob(function(blob) {
+            saveAs(blob, "ergebnis.png");
+        });
+    }
+
+});
+
 let fullscreen;
 fabric.Image.fromURL('fullscreen.png', function(img) {
     fullscreen = img.set({
