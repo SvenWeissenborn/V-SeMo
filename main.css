@@ -29,6 +29,12 @@ html, body {
     z-index: 1;
 }
 
+#container_side_tools_right{
+    z-index: 1;
+    right: 0px;
+    bottom: 0px;
+}
+
 #container_side_bar_perm_right_top{
     z-index: 1;
 }

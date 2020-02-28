@@ -1863,8 +1863,11 @@ function fitResponsiveCanvas() {
 
     scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
 
-    canvas_side_bar_perm.setWidth(100);
+    canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
+
+    canvas_side_tools_right.setWidth(200 * scaleRatio);
+    canvas_side_tools_right.setHeight(100 * scaleRatio);
 
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
@@ -1873,6 +1876,7 @@ function fitResponsiveCanvas() {
 
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
+    canvas_side_tools_right.setZoom(scaleRatio);
 
     if (!document.fullscreenElement) {
         if (fullscreen == undefined || exitFullscreen == undefined){
@@ -2012,7 +2016,7 @@ function initializeSectors() //keine Argumente
     this.ID_text.relationship = desiredTransform;
 
     this.trapez.on('moving',function(){snapping(this); updateMinions(this)});
-    this.trapez.on('rotating',function(){updateMinions(this)});
+    this.trapez.on('rotating',function(){updateMinions(this); snapping(this)});
     this.trapez.on('modified',function(){snapping(this);snapping(this);updateMinions(this); for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
@@ -2200,6 +2204,8 @@ function initializeSectors() //keine Argumente
         //if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
         //    return;
         //}
+
+
 
     });
 

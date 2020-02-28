@@ -1861,8 +1861,11 @@ function fitResponsiveCanvas() {
 
     scaleRatio = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
 
-    canvas_side_bar_perm.setWidth(100);
+    canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
+
+    canvas_side_tools_right.setWidth(200 * scaleRatio);
+    canvas_side_tools_right.setHeight(100 * scaleRatio);
 
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
@@ -1871,6 +1874,7 @@ function fitResponsiveCanvas() {
 
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
+    canvas_side_tools_right.setZoom(scaleRatio);
 
     if (!document.fullscreenElement) {
         if (fullscreen == undefined || exitFullscreen == undefined){
@@ -3478,21 +3482,64 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             trapez.setCoords();
 
 
+
+
+
+
+
+
+
+            trapez.setCoords();
+            updateMinions(trapez)
+
+
+        }
+
+
+        if(sec_idx !== -1) {
+
+            let transformMatrix;
+            let point_1_local;
+            let point_2_local;
+            let point_1;
+            let point_2;
+            let point_a;
+            let point_b;
+
+
             transformMatrix = trapez.calcTransformMatrix();
+            //point_1/2 gehören zum bewegten Trapez
+            point_1_local = new fabric.Point(trapez.points[ii].x - trapez.width / 2,
+                trapez.points[ii].y - trapez.height / 2);
+
+            point_2_local = new fabric.Point(trapez.points[(ii + 1) % 4].x - trapez.width / 2,
+                trapez.points[(ii + 1) % 4].y - trapez.height / 2);
+
             point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
             point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
 
+            transformMatrix = sectors[sec_idx].trapez.calcTransformMatrix();
+
+            //point_a/b gehören zum unbewegten Trapez (der zu überprüfenden Nachbarn)
+            point_a = new fabric.Point(sectors[sec_idx].trapez.points[(ii + 3) % 4].x - sectors[sec_idx].trapez.width / 2,
+                sectors[sec_idx].trapez.points[(ii + 3) % 4].y - sectors[sec_idx].trapez.height / 2);
+
+            point_b = new fabric.Point(sectors[sec_idx].trapez.points[(ii + 2) % 4].x - sectors[sec_idx].trapez.width / 2,
+                sectors[sec_idx].trapez.points[(ii + 2) % 4].y - sectors[sec_idx].trapez.height / 2);
+
+            point_a = fabric.util.transformPoint(point_a, transformMatrix);
+            point_b = fabric.util.transformPoint(point_b, transformMatrix);
+
             dist_1a = distance(point_1, point_a);
             dist_2b = distance(point_2, point_b);
 
-            if (dist_1a < epsilon & dist_2b < epsilon & trapez.parent.snapEdges[ii]==0){
-
+            if (dist_1a < epsilon & dist_2b < epsilon) {
 
 
                 let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(trapez);
 
-                let edge = new fabric.Line([point_1.x , point_1.y, point_2.x, point_2.y,], {
+                let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                     strokeWidth: 1.5,
                     fill: '#ccc',
                     stroke: '#ccc',
@@ -3508,45 +3555,37 @@ function snappingOnMouseUp(trapez, sectorToSnap){
 
                 edge.ID = ii;
 
-                canvas.insertAt(edge, stack_idx_of_clicked_sector+1);
+                canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
 
                 //edge.bringToFront();
                 trapez.parent.snapEdges[ii] = edge;
 
 
-
                 trapez.parent.snapStatus[ii] = 1;
-                for (let jj = 0; jj < sectors[sec_idx].lineSegments.length; jj++){
-                    if (sectors[sec_idx].lineSegments[jj].dragPoint !== undefined){
+
+                /*
+
+                -----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+                for (let jj = 0; jj < sectors[sec_idx].lineSegments.length; jj++) {
+                    if (sectors[sec_idx].lineSegments[jj].dragPoint !== undefined) {
                         canvas.bringToFront(sectors[sec_idx].lineSegments[jj].dragPoint)
-                        console.log('huhu', jj)
-                        console.log(sectors[sec_idx].lineSegments[jj].dragPoint)
                     }
                 }
-                console.log(trapez.parent.snapStatus)
-
-
-            }
-
-
-
-
-
-
-            trapez.setCoords();
-            updateMinions(trapez)
-
+            */
 
         }
-
-
-
     }
-    for (let ii = 0; ii < 4; ii++) {
-        if (trapez.parent.neighbourhood[ii] > -1) {
-            sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
-        }
+
+
+
+}
+
+
+for (let ii = 0; ii < 4; ii++) {
+    if (trapez.parent.neighbourhood[ii] > -1) {
+        sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
     }
+}
 
     //Zurücksetzen des Sektors an den gesnappt werden soll
     sectorToSnap = -1;

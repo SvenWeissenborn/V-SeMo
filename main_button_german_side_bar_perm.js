@@ -1,6 +1,8 @@
 let canvas_side_bar_perm = new fabric.Canvas('canvas_side_bar_perm',{preserveObjectStacking: true,  });
+let canvas_side_tools_right = new fabric.Canvas('canvas_side_tools_right',{preserveObjectStacking: true });
 
 canvas_side_bar_perm.selection = false;
+canvas_side_tools_right.selection = false;
 
 let win_width = window.innerWidth;
 let win_height = window.innerHeight *0.08;
@@ -234,155 +236,11 @@ window.addEventListener('keydown',function(event){
 
 });
 
-let fullscreen;
-fabric.Image.fromURL('fullscreen.png', function(img) {
-    fullscreen = img.set({
-        left: 50,
-        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 1,
-        originX: "center",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"});
-
-    fullscreen.on('mousedown', function (o) {
-        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
-            if (document.cancelFullScreen) {
-                document.cancelFullScreen();
-            } else {
-                if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else {
-                    if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen();
-                    }
-                }
-            }
-        } else {
-            const _element = document.documentElement;
-            if (_element.requestFullscreen) {
-                _element.requestFullscreen();
-            } else {
-                if (_element.mozRequestFullScreen) {
-                    _element.mozRequestFullScreen();
-                } else {
-                    if (_element.webkitRequestFullscreen) {
-                        _element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                    }
-                }
-            }
-        }
-
-        /*
-        let elem = document.getElementById("canvas-overAll");
-
-
-
-
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-            fullscreen.opacity = 0;
-            exitFullscreen.opacity = 1;
-
-        } else {
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-                exitFullscreen.opacity = 0;
-                fullscreen.opacity = 1;
-
-            }
-        }
-        */
-    });
-
-    canvas_side_bar_perm.add(fullscreen);
-});
-
-let exitFullscreen;
-fabric.Image.fromURL('exit_fullscreen.png', function(img) {
-    exitFullscreen = img.set({
-        left: 50,
-        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 0,
-        originX: "center",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"});
-
-    exitFullscreen.on('mousedown', function (o) {
-
-        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
-            if (document.cancelFullScreen) {
-                document.cancelFullScreen();
-            } else {
-                if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else {
-                    if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen();
-                    }
-                }
-            }
-        } else {
-            const _element = document.documentElement;
-            if (_element.requestFullscreen) {
-                _element.requestFullscreen();
-            } else {
-                if (_element.mozRequestFullScreen) {
-                    _element.mozRequestFullScreen();
-                } else {
-                    if (_element.webkitRequestFullscreen) {
-                        _element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                    }
-                }
-            }
-        }
-
-        /*
-        let elem = document.getElementById("canvas-overAll");
-
-
-
-
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-            fullscreen.opacity = 0;
-            exitFullscreen.opacity = 1;
-
-        } else {
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-                exitFullscreen.opacity = 0;
-                fullscreen.opacity = 1;
-
-            }
-        }
-        */
-
-    });
-
-    canvas_side_bar_perm.add(exitFullscreen);
-});
-
 
 fabric.Image.fromURL('restart.png', function(img) {
     let reset = img.set({
         left: 50 ,
-        top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -408,7 +266,7 @@ fabric.Image.fromURL('restart.png', function(img) {
 fabric.Image.fromURL('reset.png', function(img) {
     let reset = img.set({
         left: 50,
-        top: dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -467,7 +325,7 @@ let undo;
 fabric.Image.fromURL('undo.png', function(img) {
     undo = img.set({
         left: 50,
-        top: dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -499,7 +357,7 @@ let add;
 fabric.Image.fromURL('add.png', function(img) {
      add = img.set({
         left: 50,
-        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -530,7 +388,7 @@ let add_dark;
 fabric.Image.fromURL('add_dark.png', function(img) {
     add_dark = img.set({
         left: 50,
-        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -588,7 +446,7 @@ function addGeodreieck(geodreieckToAdd){
 fabric.Image.fromURL('button_dreieck.png', function(img) {
     button_dreieck = img.set({
         left: 50,
-        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -616,7 +474,7 @@ let button_dreieck_empty;
 fabric.Image.fromURL('button_dreieck_empty.png', function(img) {
     button_dreieck_empty = img.set({
         left: 50,
-        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -693,10 +551,10 @@ function moveDirectionButtons(visibleToSet){
 
     if (visibleToSet == true) {
         visible = true;
-        set_sectors.set('top', dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         set_sectors.setCoords();
 
-        delete_whole.set('top', dist_to_top + 11 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.set('top', dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist));
         delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 1);
@@ -706,9 +564,9 @@ function moveDirectionButtons(visibleToSet){
 
     } else {
         visible = false;
-        set_sectors.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
         set_sectors.setCoords();
-        delete_whole.set('top', dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 0);
@@ -722,7 +580,7 @@ let autocomplete;
 fabric.Image.fromURL('autocomplete.png', function(img) {
     autocomplete = img.set({
         left: 50,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -752,7 +610,7 @@ let visible = false;
 fabric.Image.fromURL('direction.png', function(img) {
     direction = img.set({
         left: 50,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -784,7 +642,7 @@ let change_direction_counterclock_high;
 fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(img) {
     change_direction_counterclock_high = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -825,7 +683,7 @@ let change_direction_clockwise_high;
 fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img) {
     change_direction_clockwise_high = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -865,7 +723,7 @@ let change_direction_counterclock_low;
 fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(img) {
     change_direction_counterclock_low = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -906,7 +764,7 @@ let change_direction_clockwise_low;
 fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) {
     change_direction_clockwise_low = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -947,7 +805,7 @@ let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
     set_sectors = img.set({
         left: 50,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -974,7 +832,7 @@ let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
     delete_whole = img.set({
         left: 50,
-        top: dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -998,27 +856,176 @@ fabric.Image.fromURL('delete.png', function(img) {
 });
 
 
-/*
-fabric.Image.fromURL('delete_last.png', function(img) {
-    let delete_last_part = img.set({
-        left: 0.01 * win_width,
-        top: 360* screenFactor,
+let camera;
+fabric.Image.fromURL('camera.png', function(img) {
+    camera = img.set({
+        left: 50 + 0 * 136 * buttonfactor * screenFactor,
+        top: dist_to_top * 0.6,
         opacity: 1,
-        originX: "left",
+        originX: "center",
         originY: "top",
-        //perPixelTargetFind: true,
+        perPixelTargetFind: true,
         objectCaching: false,
         hasBorders: false,
         hasControls: false,
         evented: true,
         selectable: false,
-        scaleX: 0.4 * screenFactor,
-        scaleY: 0.4 * screenFactor,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
-    delete_last_part.on('mousedown', function (o) {
-        toolChange('delete');
+    camera.on('mousedown', function (o) {let canvasToDownload = document.getElementById("canvas");
+
+
+        canvasToDownload.toBlob(function(blob) {
+            saveAs(blob, name_picture_result.valueOf() + ".png");
+        });
+
     });
-    canvas_side_bar_perm.add(delete_last_part);
+
+    canvas_side_tools_right.add(camera);
 });
-*/
+
+let fullscreen;
+fabric.Image.fromURL('fullscreen.png', function(img) {
+    fullscreen = img.set({
+        left: 50 + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top * 0.6,
+        opacity: 1,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    fullscreen.on('mousedown', function (o) {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else {
+                if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else {
+                    if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                }
+            }
+        } else {
+            const _element = document.documentElement;
+            if (_element.requestFullscreen) {
+                _element.requestFullscreen();
+            } else {
+                if (_element.mozRequestFullScreen) {
+                    _element.mozRequestFullScreen();
+                } else {
+                    if (_element.webkitRequestFullscreen) {
+                        _element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                }
+            }
+        }
+
+        /*
+        let elem = document.getElementById("canvas-overAll");
+
+
+
+
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            fullscreen.opacity = 0;
+            exitFullscreen.opacity = 1;
+
+        } else {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                exitFullscreen.opacity = 0;
+                fullscreen.opacity = 1;
+
+            }
+        }
+        */
+    });
+
+    canvas_side_tools_right.add(fullscreen);
+});
+
+let exitFullscreen;
+fabric.Image.fromURL('exit_fullscreen.png', function(img) {
+    exitFullscreen = img.set({
+        left: 50 + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top * 0.6,
+        opacity: 0,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    exitFullscreen.on('mousedown', function (o) {
+
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else {
+                if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else {
+                    if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                }
+            }
+        } else {
+            const _element = document.documentElement;
+            if (_element.requestFullscreen) {
+                _element.requestFullscreen();
+            } else {
+                if (_element.mozRequestFullScreen) {
+                    _element.mozRequestFullScreen();
+                } else {
+                    if (_element.webkitRequestFullscreen) {
+                        _element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                }
+            }
+        }
+
+        /*
+        let elem = document.getElementById("canvas-overAll");
+
+
+
+
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            fullscreen.opacity = 0;
+            exitFullscreen.opacity = 1;
+
+        } else {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                exitFullscreen.opacity = 0;
+                fullscreen.opacity = 1;
+
+            }
+        }
+        */
+
+    });
+
+    canvas_side_tools_right.add(exitFullscreen);
+});
