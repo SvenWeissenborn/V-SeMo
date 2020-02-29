@@ -855,6 +855,14 @@ fabric.Image.fromURL('delete.png', function(img) {
     canvas_side_bar_perm.add(delete_whole);
 });
 
+function download_image(){
+    let canvasToDownload = document.getElementById("canvas");
+    image = canvas.toDataURL("image/png")//.replace("image/png", "image/octet-stream");
+    var link = document.createElement('a');
+    link.download = name_picture_result.valueOf() + ".png";
+    link.href = image;
+    link.click();
+}
 
 let camera;
 fabric.Image.fromURL('camera.png', function(img) {
@@ -874,12 +882,9 @@ fabric.Image.fromURL('camera.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
-    camera.on('mousedown', function (o) {let canvasToDownload = document.getElementById("canvas");
+    camera.on('mousedown', function (o) {
 
-
-        canvasToDownload.toBlob(function(blob) {
-            saveAs(blob, name_picture_result.valueOf() + ".png");
-        });
+        download_image()
 
     });
 
