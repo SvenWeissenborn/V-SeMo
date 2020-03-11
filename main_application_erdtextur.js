@@ -2163,6 +2163,13 @@ function initializeSectors() //keine Argumente
                 if (this.parent.snapStatus[ii] !== 0) {
 
 
+                    //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+                    for (let jj = 0; jj < sectors[sec_idx].lineSegments.length; jj++) {
+                        if (sectors[sec_idx].lineSegments[jj].dragPoint !== undefined) {
+                            canvas.bringToFront(sectors[sec_idx].lineSegments[jj].dragPoint)
+                        }
+                    }
+
                     transformMatrix = this.calcTransformMatrix();
                     //point_1/2 gehören zum bewegten Trapez
                     point_1_local = new fabric.Point(this.points[ii].x - this.width / 2,
@@ -2199,6 +2206,7 @@ function initializeSectors() //keine Argumente
                     //edge.bringToFront();
                     this.parent.snapEdges[ii] = edge;
                 }
+
             }
 
         //if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
@@ -3151,8 +3159,6 @@ function snapping(trapez) {
                 trapez.stroke = 'green';
                 */
 
-
-
             } else {
                 for (let jj = 0; jj < 4; jj++) {
 
@@ -3195,7 +3201,11 @@ function snapping(trapez) {
             trapez.setCoords();
 
         }
+
+
     }
+
+
 }
 
 
