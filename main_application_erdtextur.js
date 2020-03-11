@@ -894,7 +894,7 @@ let paddingFactor = 0.00001;
 let multiply = fabric.util.multiplyTransformMatrices;
 let invert = fabric.util.invertTransform;
 
-let canvasSize = {
+canvasSize = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
@@ -1866,8 +1866,8 @@ function fitResponsiveCanvas() {
     canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
 
-    canvas_side_tools_right.setWidth(300 * scaleRatio);
-    canvas_side_tools_right.setHeight(100 * scaleRatio);
+    canvas_side_tools_right.setWidth(220 * scaleRatio);
+    canvas_side_tools_right.setHeight(80 * scaleRatio);
 
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);

@@ -6,8 +6,17 @@ canvas_side_tools_right.selection = false;
 
 let win_width = window.innerWidth;
 let win_height = window.innerHeight *0.08;
-let screenFactor = win_width/1920;
-let buttonfactor = 0.6;
+let containerSize = {
+    width: document.getElementById('canvas-overAll').offsetWidth,
+    height: document.getElementById('canvas-overAll').offsetHeight
+};
+
+let canvasSize = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+};
+let screenFactor = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
+let buttonfactor = 0.4;
 //let buttonwidth = buttonfactor * win_width;
 //let buttonheight = win_height * 0.5;
 let buttondist = 25;
@@ -202,7 +211,7 @@ canvas_side_bar_perm.on('mouse:up', function(opt) {
 
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 0 * 136 * buttonfactor * screenFactor ,
         opacity: 1,
         originX: "center",
@@ -239,7 +248,7 @@ window.addEventListener('keydown',function(event){
 
 fabric.Image.fromURL('restart.png', function(img) {
     let reset = img.set({
-        left: 50 ,
+        left: 51.5 ,
         top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -265,7 +274,7 @@ fabric.Image.fromURL('restart.png', function(img) {
 
 fabric.Image.fromURL('reset.png', function(img) {
     let reset = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -293,7 +302,7 @@ fabric.Image.fromURL('reset.png', function(img) {
 /*
 fabric.Image.fromURL('grab.png', function(img) {
     let grab = img.set({
-        left: 50,
+        left: 51.5,
         top: 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -324,7 +333,7 @@ fabric.Image.fromURL('grab.png', function(img) {
 let undo;
 fabric.Image.fromURL('undo.png', function(img) {
     undo = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -356,7 +365,7 @@ fabric.Image.fromURL('undo.png', function(img) {
 let add;
 fabric.Image.fromURL('add.png', function(img) {
      add = img.set({
-        left: 50,
+        left: 51.5,
         top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -387,7 +396,7 @@ fabric.Image.fromURL('add.png', function(img) {
 let add_dark;
 fabric.Image.fromURL('add_dark.png', function(img) {
     add_dark = img.set({
-        left: 50,
+        left: 51.5,
         top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -445,7 +454,7 @@ function addGeodreieck(geodreieckToAdd){
 
 fabric.Image.fromURL('button_dreieck.png', function(img) {
     button_dreieck = img.set({
-        left: 50,
+        left: 51.5,
         top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -473,7 +482,7 @@ fabric.Image.fromURL('button_dreieck.png', function(img) {
 let button_dreieck_empty;
 fabric.Image.fromURL('button_dreieck_empty.png', function(img) {
     button_dreieck_empty = img.set({
-        left: 50,
+        left: 51.5,
         top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -547,39 +556,12 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
 }
 
-function moveDirectionButtons(visibleToSet){
 
-    if (visibleToSet == true) {
-        visible = true;
-        set_sectors.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
-        set_sectors.setCoords();
-
-        delete_whole.set('top', dist_to_top + 10 * (136 * buttonfactor * screenFactor + buttondist));
-        delete_whole.setCoords();
-
-        change_direction_counterclock_high.set('opacity', 1);
-        change_direction_clockwise_high.set('opacity', 1);
-        change_direction_counterclock_low.set('opacity', 1);
-        change_direction_clockwise_low.set('opacity', 1)
-
-    } else {
-        visible = false;
-        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
-        set_sectors.setCoords();
-        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
-        delete_whole.setCoords();
-
-        change_direction_counterclock_high.set('opacity', 0);
-        change_direction_clockwise_high.set('opacity', 0);
-        change_direction_counterclock_low.set('opacity', 0);
-        change_direction_clockwise_low.set('opacity', 0)
-    }
-}
 
 let autocomplete;
 fabric.Image.fromURL('autocomplete.png', function(img) {
     autocomplete = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -607,9 +589,38 @@ fabric.Image.fromURL('autocomplete.png', function(img) {
 let direction;
 let visible = false;
 
+function moveDirectionButtons(visibleToSet){
+
+    if (visibleToSet == true) {
+        visible = true;
+        set_sectors.set('top', dist_to_top + 9.5 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.setCoords();
+
+        delete_whole.set('top', dist_to_top + 10.5 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.setCoords();
+
+        change_direction_counterclock_high.set('opacity', 1);
+        change_direction_clockwise_high.set('opacity', 1);
+        change_direction_counterclock_low.set('opacity', 1);
+        change_direction_clockwise_low.set('opacity', 1)
+
+    } else {
+        visible = false;
+        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
+        set_sectors.setCoords();
+        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
+        delete_whole.setCoords();
+
+        change_direction_counterclock_high.set('opacity', 0);
+        change_direction_clockwise_high.set('opacity', 0);
+        change_direction_counterclock_low.set('opacity', 0);
+        change_direction_clockwise_low.set('opacity', 0)
+    }
+}
+
 fabric.Image.fromURL('direction.png', function(img) {
     direction = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -658,7 +669,7 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
 
     change_direction_counterclock_high.on('mousedown', function (event) {
         changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);}, 150);
+        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -699,7 +710,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
 
     change_direction_clockwise_high.on('mousedown', function (event) {
         changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);}, 150);
+        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -739,7 +750,7 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
 
     change_direction_counterclock_low.on('mousedown', function (event) {
         changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1 , chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 150);
+        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -780,7 +791,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
 
     change_direction_clockwise_low.on('mousedown', function (event) {
         changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 150);
+        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -804,7 +815,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
 let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
     set_sectors = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -831,7 +842,7 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
     delete_whole = img.set({
-        left: 50,
+        left: 51.5,
         top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -870,8 +881,8 @@ let camera;
 fabric.Image.fromURL('camera.png', function(img) {
     camera = img.set({
 
-        left: 300 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
-        top: 100 * scaleRatio- buttondist/2,
+        left: 220 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
+        top: 80 * scaleRatio- buttondist/2,
 
         opacity: 1,
         originX: "right",
@@ -924,8 +935,8 @@ let isMobile = {
 let fullscreen;
 fabric.Image.fromURL('fullscreen.png', function(img) {
     fullscreen = img.set({
-        left: 300 * scaleRatio - buttondist,
-        top: 100 * scaleRatio- buttondist/2,
+        left: 220 * scaleRatio - buttondist,
+        top: 80 * scaleRatio- buttondist/2,
         opacity: 1,
         originX: "right",
         originY: "bottom",
@@ -1006,8 +1017,8 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
 let exitFullscreen;
 fabric.Image.fromURL('exit_fullscreen.png', function(img) {
     exitFullscreen = img.set({
-        left: 300 * scaleRatio - buttondist,
-        top: 100 * scaleRatio- buttondist/2,
+        left: 220 * scaleRatio - buttondist,
+        top: 80 * scaleRatio- buttondist/2,
         opacity: 0,
         originX: "right",
         originY: "bottom",
@@ -1079,8 +1090,8 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
 let zoomReset;
 fabric.Image.fromURL('zoomReset.png', function(img) {
     zoomReset = img.set({
-        left: 300 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
-        top: 100 * scaleRatio - buttondist / 2,
+        left: 220 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
+        top: 80 * scaleRatio - buttondist / 2,
         opacity: 1,
         originX: "right",
         originY: "bottom",
@@ -1097,7 +1108,6 @@ fabric.Image.fromURL('zoomReset.png', function(img) {
 
     zoomReset.on('mousedown', function (o) {
         resetZoomPan();
-        changeGeodesicWidth(2);
     });
 
     canvas_side_tools_right.add(zoomReset);
