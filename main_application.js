@@ -1864,7 +1864,7 @@ function fitResponsiveCanvas() {
     canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
 
-    canvas_side_tools_right.setWidth(200 * scaleRatio);
+    canvas_side_tools_right.setWidth(300 * scaleRatio);
     canvas_side_tools_right.setHeight(100 * scaleRatio);
 
     canvas.setWidth(containerSize.width * 1);
@@ -2025,14 +2025,21 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('moving',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this)});
     this.trapez.on('rotating',function(){updateMinions(this)});
-    this.trapez.on('modified',function(){timeToSnap(this, snap_radius_sectors);timeToSnap(this, snap_radius_sectors);updateMinions(this); /*for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}*/});
+    this.trapez.on('modified',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this); /*for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}*/});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
         showGeodesicButtons(false);
 
+        console.log('Ich bin da')
 
+        if (selectedTool === 'grab') {
+            timeToSnap(this, snap_radius_sectors);
+            console.log('ich bin kein Problem')
+            console.log('ich bin kein Problem')
+
+        }
 /*        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
         if (arrowheadline !== -1){
             let idx = geodesics[arrowheadline][geodesics[arrowheadline].length - 1].parentSector[0];
@@ -2155,27 +2162,21 @@ function initializeSectors() //keine Argumente
     });
 
 
-    //Beenden von Linien; nur auf Trapezen möglich
-    this.trapez.on('mouseup', function (o) {
-        if (sectorToSnap > -1) {
-            snappingOnMouseUp(this, sectorToSnap);
-            for (let ii = 0; ii < 4; ii++) {
 
-//                if (this.parent.snapStatus[ii] !== 0) {
-//                    this.parent.snapEdges[ii].bringToFront()
-//                }
+    this.trapez.on('mouseup', function (o) {
+
+        if (selectedTool === 'grab'){
+            if (sectorToSnap > -1) {
+                console.log({sectorToSnap});
+                snappingOnMouseUp(this, sectorToSnap);
+                console.log('Ich bin dran')
             }
         }
-        //Test!!!
 
-        if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
-            return;
-        }
+    });
 
-                    });
-
-                    canvas.add(this.trapez);
-                    canvas.add(this.ID_text);
+    canvas.add(this.trapez);
+    canvas.add(this.ID_text);
 }
 
 
@@ -2549,9 +2550,9 @@ function resetSectors() {
 }
 
 function resetZoomPan(){
-    canvas.setZoom( 1.1);
-    canvas.viewportTransform[4]= -350;
-    canvas.viewportTransform[5]= -30;
+    canvas.setZoom( scaleRatio);
+    canvas.viewportTransform[4]= 0;
+    canvas.viewportTransform[5]= 0;
 }
 
 //reset Zoom and Pan
@@ -3381,21 +3382,18 @@ function snapping(trapez) {
     }
 }
 
-function snappingOnMouseUp(trapez, sectorToSnap){
+function snappingOnMouseUp(trapez, sectorToSnapInFunction){
 
-    for (let ii = 0; ii < 4; ii++){
+    let sec_idx;
+    let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
+    let midpointSectorStatic;
+    let distanceMidPoints;
+    let dist_1a;
+    let dist_2b;
+    for (let ii = 0; ii < 4; ii++) {
+        sec_idx = trapez.parent.neighbourhood[ii];
 
-        let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
-        let midpointSectorStatic;
-        let distanceMidPoints;
-        let dist_1a;
-        let dist_2b;
-
-        let sec_idx = trapez.parent.neighbourhood[ii];
-
-        if(sec_idx == sectorToSnap){
-
-            //console.log({ii})
+        if (sec_idx == sectorToSnapInFunction) {
 
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointSectorStatic);
@@ -3407,9 +3405,6 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             let point_2;
             let point_a;
             let point_b;
-
-
-
 
 
             transformMatrix = trapez.calcTransformMatrix();
@@ -3440,29 +3435,28 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             dist_2b = distance(point_2, point_b);
 
 
-
-
-
             sectors[sec_idx].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
-
 
 
             //Bestimmung des kleineren Abstands -> legt die Translation und Rotation fest
 
-            dxs_tmp = sectors[sec_idx].trapez.points[ii].x-sectors[sec_idx].trapez.points[(ii+1)%4].x;
-            dys_tmp = sectors[sec_idx].trapez.points[ii].y-sectors[sec_idx].trapez.points[(ii+1)%4].y;
-            if (Math.abs(dys_tmp)>epsilon) {
+            dxs_tmp = sectors[sec_idx].trapez.points[ii].x - sectors[sec_idx].trapez.points[(ii + 1) % 4].x;
+            dys_tmp = sectors[sec_idx].trapez.points[ii].y - sectors[sec_idx].trapez.points[(ii + 1) % 4].y;
+            if (Math.abs(dys_tmp) > epsilon) {
                 gamma_static = Math.atan(dxs_tmp / dys_tmp);
-            }else{gamma_static=0.0}
-            dxs_tmp = trapez.points[(ii+2)%4].x - trapez.points[(ii+3)%4].x;
-            dys_tmp = trapez.points[(ii+2)%4].y - trapez.points[(ii+3)%4].y;
-            if (Math.abs(dys_tmp)>epsilon) {
-                gamma_neighbour =Math.atan(dxs_tmp/dys_tmp );
-            }else{gamma_neighbour=0.0}
+            } else {
+                gamma_static = 0.0
+            }
+            dxs_tmp = trapez.points[(ii + 2) % 4].x - trapez.points[(ii + 3) % 4].x;
+            dys_tmp = trapez.points[(ii + 2) % 4].y - trapez.points[(ii + 3) % 4].y;
+            if (Math.abs(dys_tmp) > epsilon) {
+                gamma_neighbour = Math.atan(dxs_tmp / dys_tmp);
+            } else {
+                gamma_neighbour = 0.0
+            }
 
 
-            trapez.angle = sectors[sec_idx].trapez.angle + gamma_static/ Math.PI * 180 - gamma_neighbour/ Math.PI * 180;
-
+            trapez.angle = sectors[sec_idx].trapez.angle + gamma_static / Math.PI * 180 - gamma_neighbour / Math.PI * 180;
 
 
             trapez.setCoords();
@@ -3474,29 +3468,22 @@ function snappingOnMouseUp(trapez, sectorToSnap){
             point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
 
-
-
             trapez.left += point_a.x - point_1.x;
             trapez.top += point_a.y - point_1.y;
 
             trapez.setCoords();
 
-
-
-
-
-
-
-
-
-            trapez.setCoords();
             updateMinions(trapez)
 
 
         }
+    }
 
-
+    for (let ii = 0; ii < 4; ii++) {
+        sec_idx = trapez.parent.neighbourhood[ii];
         if(sec_idx !== -1) {
+
+
 
             let transformMatrix;
             let point_1_local;
@@ -3536,7 +3523,6 @@ function snappingOnMouseUp(trapez, sectorToSnap){
 
             if (dist_1a < epsilon & dist_2b < epsilon) {
 
-
                 let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(trapez);
 
                 let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
@@ -3563,32 +3549,34 @@ function snappingOnMouseUp(trapez, sectorToSnap){
 
                 trapez.parent.snapStatus[ii] = 1;
 
-                /*
 
-                -----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+
+                //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
                 for (let jj = 0; jj < sectors[sec_idx].lineSegments.length; jj++) {
                     if (sectors[sec_idx].lineSegments[jj].dragPoint !== undefined) {
                         canvas.bringToFront(sectors[sec_idx].lineSegments[jj].dragPoint)
                     }
                 }
-            */
 
+
+            }
+
+        }
+
+
+
+    }
+
+
+    for (let ii = 0; ii < 4; ii++) {
+        if (trapez.parent.neighbourhood[ii] > -1) {
+            sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
         }
     }
 
-
-
-}
-
-
-for (let ii = 0; ii < 4; ii++) {
-    if (trapez.parent.neighbourhood[ii] > -1) {
-        sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
-    }
-}
-
-    //Zurücksetzen des Sektors an den gesnappt werden soll
+        //Zurücksetzen des Sektors an den gesnappt werden soll
     sectorToSnap = -1;
+    console.log({sectorToSnap})
 }
 
 //Achtung! Die Liniensegmente der Startgeodäten können nicht gelöscht werden, weil sie keine gültige ID tragen

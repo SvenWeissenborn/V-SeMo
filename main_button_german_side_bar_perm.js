@@ -864,14 +864,18 @@ function download_image(){
     link.click();
 }
 
+
+
 let camera;
 fabric.Image.fromURL('camera.png', function(img) {
     camera = img.set({
-        left: 50 + 0 * 136 * buttonfactor * screenFactor,
-        top: dist_to_top * 0.6,
+
+        left: 300 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
+        top: 100 * scaleRatio- buttondist/2,
+
         opacity: 1,
-        originX: "center",
-        originY: "top",
+        originX: "right",
+        originY: "bottom",
         perPixelTargetFind: true,
         objectCaching: false,
         hasBorders: false,
@@ -891,14 +895,40 @@ fabric.Image.fromURL('camera.png', function(img) {
     canvas_side_tools_right.add(camera);
 });
 
+/*
+let userAgent = window.navigator.userAgent.toLowerCase();
+let safari = /safari/.test( userAgent );
+*/
+
+let isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
 let fullscreen;
 fabric.Image.fromURL('fullscreen.png', function(img) {
     fullscreen = img.set({
-        left: 50 + 1 * (136 * buttonfactor * screenFactor + buttondist),
-        top: dist_to_top * 0.6,
+        left: 300 * scaleRatio - buttondist,
+        top: 100 * scaleRatio- buttondist/2,
         opacity: 1,
-        originX: "center",
-        originY: "top",
+        originX: "right",
+        originY: "bottom",
         perPixelTargetFind: true,
         objectCaching: false,
         hasBorders: false,
@@ -910,6 +940,17 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
         hoverCursor: "pointer"});
 
     fullscreen.on('mousedown', function (o) {
+
+        /*
+        if( safari ) {
+            alert('Diese Funktion ist für iOS nicht integriert.\nThis function is not integrated for iOS.')
+        }
+        */
+
+
+        if( isMobile.iOS() ) alert('Diese Funktion steht iOS-Nutzern nicht zur Verfügung.\nThis feature is not available to iOS users.');
+
+
         if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
             if (document.cancelFullScreen) {
                 document.cancelFullScreen();
@@ -965,11 +1006,11 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
 let exitFullscreen;
 fabric.Image.fromURL('exit_fullscreen.png', function(img) {
     exitFullscreen = img.set({
-        left: 50 + 1 * (136 * buttonfactor * screenFactor + buttondist),
-        top: dist_to_top * 0.6,
+        left: 300 * scaleRatio - buttondist,
+        top: 100 * scaleRatio- buttondist/2,
         opacity: 0,
-        originX: "center",
-        originY: "top",
+        originX: "right",
+        originY: "bottom",
         perPixelTargetFind: true,
         objectCaching: false,
         hasBorders: false,
@@ -1033,4 +1074,32 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
     });
 
     canvas_side_tools_right.add(exitFullscreen);
+});
+
+let zoomReset;
+fabric.Image.fromURL('zoomReset.png', function(img) {
+    zoomReset = img.set({
+        left: 300 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
+        top: 100 * scaleRatio - buttondist / 2,
+        opacity: 1,
+        originX: "right",
+        originY: "bottom",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"
+    });
+
+    zoomReset.on('mousedown', function (o) {
+        resetZoomPan();
+        changeGeodesicWidth(2);
+    });
+
+    canvas_side_tools_right.add(zoomReset);
+
 });
