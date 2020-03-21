@@ -767,11 +767,52 @@ window.addEventListener('keydown',function(event){
 });
 
 
-
 //Button-Funktionen
 window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;
+
+
+fabric.Image.fromURL('instructional_overlay.png', function(img) {
+    instructional_overlay = img.set({
+        opacity: 1,
+        originX: "center",
+        originY: "center",
+        perPixelTargetFind: true,
+        lockMovementX: 'true',
+        lockMovementY: 'true',
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: true,
+        transparentCorners: true,
+        cornerSize: 40,
+        angle: 0,
+        evented: true,
+        selectable: true,
+        scaleX: scaleFacotor ,
+        scaleY: scaleFacotor ,
+        hoverCursor: "pointer"});
+
+    instructional_overlay.setControlsVisibility({
+        tl: false,
+        mt: false,
+        tr: false,
+
+        mr: false,
+        ml: false,
+
+        bl: false,
+        mb: false,
+        br: false,
+    });
+
+    instructional_overlay.on('mousedown', function (o) {
+        canvas.remove(instructional_overlay)
+        exitHelp.opacity = 0.0
+        canvas_side_tools_right.renderAll()
+    });
+
+});
 
 
 //-----------------Geodreieck---------------------------------
@@ -1864,7 +1905,7 @@ function fitResponsiveCanvas() {
     canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
 
-    canvas_side_tools_right.setWidth(220 * scaleRatio);
+    canvas_side_tools_right.setWidth(300 * scaleRatio);
     canvas_side_tools_right.setHeight(80 * scaleRatio);
 
     canvas.setWidth(containerSize.width * 1);

@@ -427,6 +427,7 @@ fabric.Image.fromURL('add_dark.png', function(img) {
 let button_dreieck;
 
 
+
 function addGeodreieck(geodreieckToAdd){
     if (geodreieckToAdd == true){
         canvas.add(geodreieck);
@@ -881,7 +882,7 @@ let camera;
 fabric.Image.fromURL('camera.png', function(img) {
     camera = img.set({
 
-        left: 220 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
+        left: 300 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
         top: 80 * scaleRatio- buttondist/2,
 
         opacity: 1,
@@ -935,7 +936,7 @@ let isMobile = {
 let fullscreen;
 fabric.Image.fromURL('fullscreen.png', function(img) {
     fullscreen = img.set({
-        left: 220 * scaleRatio - buttondist,
+        left: 300 * scaleRatio - buttondist,
         top: 80 * scaleRatio- buttondist/2,
         opacity: 1,
         originX: "right",
@@ -1017,7 +1018,7 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
 let exitFullscreen;
 fabric.Image.fromURL('exit_fullscreen.png', function(img) {
     exitFullscreen = img.set({
-        left: 220 * scaleRatio - buttondist,
+        left: 300 * scaleRatio - buttondist,
         top: 80 * scaleRatio- buttondist/2,
         opacity: 0,
         originX: "right",
@@ -1090,7 +1091,7 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
 let zoomReset;
 fabric.Image.fromURL('zoomReset.png', function(img) {
     zoomReset = img.set({
-        left: 220 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
+        left: 300 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
         top: 80 * scaleRatio - buttondist / 2,
         opacity: 1,
         originX: "right",
@@ -1113,3 +1114,85 @@ fabric.Image.fromURL('zoomReset.png', function(img) {
     canvas_side_tools_right.add(zoomReset);
 
 });
+
+let help;
+fabric.Image.fromURL('help.png', function(img) {
+    help = img.set({
+        left: 300 * scaleRatio - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
+        top: 80 * scaleRatio - buttondist / 2,
+        opacity: 1,
+        originX: "right",
+        originY: "bottom",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"
+    });
+
+    help.on('mousedown', function (o) {
+        addInstructionalOverlay(true);
+        exitHelp.opacity = 1.0
+    });
+
+    canvas_side_tools_right.add(help);
+
+});
+
+let exitHelp;
+fabric.Image.fromURL('exit_help.png', function(img) {
+    exitHelp = img.set({
+        left: 300 * scaleRatio - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
+        top: 80 * scaleRatio - buttondist / 2,
+        opacity: 0,
+        originX: "right",
+        originY: "bottom",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"
+    });
+
+    exitHelp.on('mousedown', function (o) {
+        addInstructionalOverlay(false);
+        exitHelp.opacity = 0.0
+    });
+
+    canvas_side_tools_right.add(exitHelp);
+
+});
+
+function addInstructionalOverlay(InstructionalOverlayToAdd){
+    if (InstructionalOverlayToAdd == true){
+        canvas.add(instructional_overlay);
+
+        let zoom = canvas.getZoom();
+
+        let viewpoint_x = fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2;
+        let viewpoint_y = fabric.util.invertTransform(canvas.viewportTransform)[5]+(canvas.height/zoom)/2;
+
+        instructional_overlay.set('left', viewpoint_x);
+        instructional_overlay.set('top', viewpoint_y);
+        /*
+                instructional_overlay.setCoords();
+                instructional_overlay.opacity = 0;
+                button_dreieck_empty.opacity = 1;
+        */
+    } else{
+        canvas.remove(instructional_overlay);
+        /*
+         button_dreieck.opacity = 1;
+         button_dreieck_empty.opacity = 0;
+ */
+    }
+
+}
