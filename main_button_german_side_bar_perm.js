@@ -1136,7 +1136,8 @@ fabric.Image.fromURL('help.png', function(img) {
 
     help.on('mousedown', function (o) {
         addInstructionalOverlay(true);
-        exitHelp.opacity = 1.0
+        exitHelp.opacity = 1.0;
+        canvas_side_tools_right.renderAll();
     });
 
     canvas_side_tools_right.add(help);
@@ -1164,7 +1165,8 @@ fabric.Image.fromURL('exit_help.png', function(img) {
 
     exitHelp.on('mousedown', function (o) {
         addInstructionalOverlay(false);
-        exitHelp.opacity = 0.0
+        exitHelp.opacity = 0.0;
+        canvas_side_tools_right.renderAll();
     });
 
     canvas_side_tools_right.add(exitHelp);

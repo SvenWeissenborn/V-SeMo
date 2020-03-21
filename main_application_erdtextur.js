@@ -791,8 +791,8 @@ fabric.Image.fromURL('instructional_overlay.png', function(img) {
         angle: 0,
         evented: true,
         selectable: true,
-        scaleX: scaleFacotor ,
-        scaleY: scaleFacotor ,
+        scaleX: scaleFacotor * 0.9 ,
+        scaleY: scaleFacotor * 0.9,
         hoverCursor: "pointer"});
 
     instructional_overlay.setControlsVisibility({
