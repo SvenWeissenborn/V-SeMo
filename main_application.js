@@ -861,6 +861,9 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
     geodreieck.on('moving',function(){rotateGeodreieck(this)});
     geodreieck.on('rotating',function(){rotateGeodreieck(this)});
 
+    geodreieck.on('mousedown', function () {geodreieckIsClicked = true;});
+    geodreieck.on('mouseup', function () {geodreieckIsClicked = false;})
+
 });
 
 fabric.Image.prototype._drawControl  = function(control, ctx, methodName, left, top) {

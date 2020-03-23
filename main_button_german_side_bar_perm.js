@@ -427,7 +427,6 @@ fabric.Image.fromURL('add_dark.png', function(img) {
 let button_dreieck;
 
 
-
 function addGeodreieck(geodreieckToAdd){
     if (geodreieckToAdd == true){
         canvas.add(geodreieck);
@@ -504,6 +503,17 @@ fabric.Image.fromURL('button_dreieck_empty.png', function(img) {
         //toolChange('grab');
         addGeodreieck(false);
     });
+
+    button_dreieck_empty.on('mouseover', function (o) {
+
+        if (geodreieckIsClicked == true) {
+            //changeGeodesicWidth(2);
+            //showGeodesicButtons(false);
+            //toolChange('grab');
+            addGeodreieck(false);
+        }
+    });
+
     canvas_side_bar_perm.add(button_dreieck_empty);
 });
 
