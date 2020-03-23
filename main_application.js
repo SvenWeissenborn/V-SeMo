@@ -772,7 +772,10 @@ window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;
 
+//-----------------Instructional Overlay---------------------------------
 
+
+let instructional_overlay;
 fabric.Image.fromURL('instructional_overlay.png', function(img) {
     instructional_overlay = img.set({
         opacity: 1,
@@ -807,8 +810,8 @@ fabric.Image.fromURL('instructional_overlay.png', function(img) {
     });
 
     instructional_overlay.on('mousedown', function (o) {
-        canvas.remove(instructional_overlay)
-        exitHelp.opacity = 0.0
+        canvas.remove(instructional_overlay);
+        exitHelp.opacity = 0.0;
         canvas_side_tools_right.renderAll()
     });
 
@@ -816,6 +819,7 @@ fabric.Image.fromURL('instructional_overlay.png', function(img) {
 
 
 //-----------------Geodreieck---------------------------------
+let geodreieckIsClicked = false;
 let geodreieck;
 let geodreieckScale = 0.12;
 
@@ -2076,13 +2080,8 @@ function initializeSectors() //keine Argumente
 
         showGeodesicButtons(false);
 
-        console.log('Ich bin da')
-
         if (selectedTool === 'grab') {
             timeToSnap(this, snap_radius_sectors);
-            console.log('ich bin kein Problem')
-            console.log('ich bin kein Problem')
-
         }
 /*        //Test: Abbruch des Linienziehens, wenn die Sektorindizes nicht passen
         if (arrowheadline !== -1){
@@ -2211,9 +2210,7 @@ function initializeSectors() //keine Argumente
 
         if (selectedTool === 'grab'){
             if (sectorToSnap > -1) {
-                console.log({sectorToSnap});
                 snappingOnMouseUp(this, sectorToSnap);
-                console.log('Ich bin dran')
             }
         }
 

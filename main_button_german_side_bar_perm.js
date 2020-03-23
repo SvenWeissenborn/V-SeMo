@@ -892,8 +892,8 @@ let camera;
 fabric.Image.fromURL('camera.png', function(img) {
     camera = img.set({
 
-        left: 300 * scaleRatio - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
-        top: 80 * scaleRatio- buttondist/2,
+        left: 300 * screenFactor - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
+        top: 80 * screenFactor- buttondist/2,
 
         opacity: 1,
         originX: "right",
@@ -946,8 +946,8 @@ let isMobile = {
 let fullscreen;
 fabric.Image.fromURL('fullscreen.png', function(img) {
     fullscreen = img.set({
-        left: 300 * scaleRatio - buttondist,
-        top: 80 * scaleRatio- buttondist/2,
+        left: 300 * screenFactor - buttondist,
+        top: 80 * screenFactor- buttondist/2,
         opacity: 1,
         originX: "right",
         originY: "bottom",
@@ -1028,8 +1028,8 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
 let exitFullscreen;
 fabric.Image.fromURL('exit_fullscreen.png', function(img) {
     exitFullscreen = img.set({
-        left: 300 * scaleRatio - buttondist,
-        top: 80 * scaleRatio- buttondist/2,
+        left: 300 * screenFactor - buttondist,
+        top: 80 * screenFactor- buttondist/2,
         opacity: 0,
         originX: "right",
         originY: "bottom",
@@ -1101,8 +1101,8 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
 let zoomReset;
 fabric.Image.fromURL('zoomReset.png', function(img) {
     zoomReset = img.set({
-        left: 300 * scaleRatio - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
-        top: 80 * scaleRatio - buttondist / 2,
+        left: 300 * screenFactor - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
+        top: 80 * screenFactor - buttondist / 2,
         opacity: 1,
         originX: "right",
         originY: "bottom",
@@ -1128,8 +1128,8 @@ fabric.Image.fromURL('zoomReset.png', function(img) {
 let help;
 fabric.Image.fromURL('help.png', function(img) {
     help = img.set({
-        left: 300 * scaleRatio - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
-        top: 80 * scaleRatio - buttondist / 2,
+        left: 300 * screenFactor - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
+        top: 80 * screenFactor - buttondist / 2,
         opacity: 1,
         originX: "right",
         originY: "bottom",
@@ -1157,8 +1157,8 @@ fabric.Image.fromURL('help.png', function(img) {
 let exitHelp;
 fabric.Image.fromURL('exit_help.png', function(img) {
     exitHelp = img.set({
-        left: 300 * scaleRatio - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
-        top: 80 * scaleRatio - buttondist / 2,
+        left: 300 * screenFactor - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
+        top: 80 * screenFactor - buttondist / 2,
         opacity: 0,
         originX: "right",
         originY: "bottom",

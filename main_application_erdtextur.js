@@ -775,6 +775,10 @@ window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;
 
+//-----------------Instructional Overlay---------------------------------
+
+
+let instructional_overlay;
 fabric.Image.fromURL('instructional_overlay.png', function(img) {
     instructional_overlay = img.set({
         opacity: 1,
@@ -791,7 +795,7 @@ fabric.Image.fromURL('instructional_overlay.png', function(img) {
         angle: 0,
         evented: true,
         selectable: true,
-        scaleX: scaleFacotor * 0.9 ,
+        scaleX: scaleFacotor * 0.9,
         scaleY: scaleFacotor * 0.9,
         hoverCursor: "pointer"});
 
@@ -809,14 +813,16 @@ fabric.Image.fromURL('instructional_overlay.png', function(img) {
     });
 
     instructional_overlay.on('mousedown', function (o) {
-        canvas.remove(instructional_overlay)
-        exitHelp.opacity = 0.0
+        canvas.remove(instructional_overlay);
+        exitHelp.opacity = 0.0;
         canvas_side_tools_right.renderAll()
     });
 
 });
 
-//-----------------Geodreieck---------------------------------
+
+//-----------------Geodreieck--------------------------------
+let geodreieckIsClicked = false;
 let geodreieck;
 let geodreieckScale = 0.12;
 
@@ -861,6 +867,9 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
     geodreieck.on('moving',function(){rotateGeodreieck(this)});
     geodreieck.on('rotating',function(){rotateGeodreieck(this)});
+
+    geodreieck.on('mousedown', function () {geodreieckIsClicked = true;});
+    geodreieck.on('mouseup', function () {geodreieckIsClicked = false;})
 
 });
 
