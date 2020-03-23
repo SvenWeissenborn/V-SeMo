@@ -3058,7 +3058,65 @@ function setSectors(chosenGeodesicToSetSectors) {
                     yt1 = transformedPoints[kantenIndex].y;
                     yt2 = transformedPoints[(kantenIndex + 1) % 4].y;
 
+                    snapping(sectors[neighbourSector].trapez);
 
+                    for (let kk = 0; kk < 4; kk++) {
+
+                        let sec_idx = sectors[staticSector].neighbourhood[kk];
+
+
+                        if (sectors[staticSector].snapStatus[kk] !== 0) {
+
+
+
+
+                            transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
+                            //point_1/2 gehören zum bewegten Trapez
+                            point_1_local = new fabric.Point(sectors[staticSector].trapez.points[kk].x - sectors[staticSector].trapez.width / 2,
+                                sectors[staticSector].trapez.points[kk].y - sectors[staticSector].trapez.height / 2);
+
+                            point_2_local = new fabric.Point(sectors[staticSector].trapez.points[(kk + 1) % 4].x - sectors[staticSector].trapez.width / 2,
+                                sectors[staticSector].trapez.points[(kk + 1) % 4].y - sectors[staticSector].trapez.height / 2);
+
+                            point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+
+                            point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+
+
+                            let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
+
+                            let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
+                                strokeWidth: 1,
+                                fill: '#ccc',
+                                stroke: '#ccc',
+                                originX: 'center',
+                                originY: 'center',
+                                perPixelTargetFind: true,
+                                objectCaching: false,
+                                hasBorders: false,
+                                hasControls: false,
+                                evented: false,
+                                selectable: false,
+                            });
+
+                            edge.ID = kk;
+
+                            canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
+
+                            edge.bringToFront();
+                            sectors[staticSector].snapEdges[kk] = edge;
+
+                            //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+                            for (let ll = 0; ll < sectors[sec_idx].lineSegments.length; ll++) {
+                                if (sectors[sec_idx].lineSegments[ll].dragPoint !== undefined) {
+                                    canvas.bringToFront(sectors[sec_idx].lineSegments[ll].dragPoint)
+                                }
+                            }
+                        }
+
+
+
+                    }
 
                     staticSector = neighbourSector;
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
