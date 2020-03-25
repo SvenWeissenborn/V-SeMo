@@ -101,6 +101,7 @@ let arrowheadline = -1;
 let startAtMarkPoint = -1;
 let arrowhead;
 let pointer;
+let snap_radius_end_to_start = 10;
 
 
 /* Prüfen:  - ob Geodätenende in der Nähe, falls ja -> visuelles Signal
@@ -219,7 +220,16 @@ canvas.on('mouse:move', function (o) {
             if (Math.abs(alpha - beta) <= Math.PI / 36) {
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
             } else {
-                line.set({x2: pointer.x, y2: pointer.y});
+                let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
+                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point,geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+                if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start){
+                    line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
+                }
+                else{
+                    line.set({x2: pointer.x, y2: pointer.y})
+
+                };
             }
         }else{
             let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
@@ -227,7 +237,16 @@ canvas.on('mouse:move', function (o) {
             if (Math.abs(alpha - beta) <= Math.PI / 36 || Math.abs(alpha + beta) <= Math.PI / 36) {
                 line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1,y2: pointer.y});
             } else {
-                line.set({x2: pointer.x, y2: pointer.y});
+                let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
+                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point,geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+                if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start){
+                    line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
+                }
+                else{
+                    line.set({x2: pointer.x, y2: pointer.y})
+
+                };
             }
         }
     }else {
@@ -266,17 +285,17 @@ canvas.on('mouse:move', function (o) {
                 let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y)
                 let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y)
 
-                let deltGeodreieck_x = geodreieckEdgePoint2.x - geodreieckEdgePoint1.x
-                let deltGeodreieck_y = geodreieckEdgePoint2.y - geodreieckEdgePoint1.y
+                let deltaGeodreieck_x = geodreieckEdgePoint2.x - geodreieckEdgePoint1.x;
+                let deltaGeodreieck_y = geodreieckEdgePoint2.y - geodreieckEdgePoint1.y;
 
                 //atan2 bruacht zwei Argumente die eingegeben werden muessen. In diesem Fall die Differenzen der Koordinaten.
                 let geodesicAngle = Math.atan2(delta_y, delta_x) * 180 / Math.PI;
 
-                let lineStartPoint = new fabric.Point(line.x1, line.y1)
+                let lineStartPoint = new fabric.Point(line.x1, line.y1);
 
                 let angleDifference = Math.abs((geodesicAngle - geodreieck.angle ) - Math.round((geodesicAngle - geodreieck.angle )/ 180) * 180)
 
-                if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltGeodreieck_x, deltGeodreieck_y) < 5 & angleDifference < 20) {
+                if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltaGeodreieck_x, deltaGeodreieck_y) < 5 & angleDifference < 20) {
 
                     if (Math.abs(geodreieck.angle - 90) < epsilon){
                         line.set({x2: line.x1, y2: pointer.y})
@@ -376,8 +395,9 @@ canvas.on('mouse:wheel', function(opt) {
     opt.e.stopPropagation();
 
     for (let ii = geodesics.length - 1; ii >= 0; ii--) {
-        geodesics[ii][geodesics[ii].length-1].dragPoint.padding = dragPointPadding * 1/zoom;
-
+        if(geodesics[ii][geodesics[ii].length-1] !== undefined) {
+            geodesics[ii][geodesics[ii].length - 1].dragPoint.padding = dragPointPadding * 1 / zoom;
+        }
     }
 });
 
@@ -648,8 +668,6 @@ window.addEventListener('keydown',function(event){
 
 });
 
-//Test für Vollbildmodus
-
 window.addEventListener('keydown',function(event){
     if(event.key === 'Shift'){
 
@@ -767,7 +785,6 @@ window.addEventListener('keydown',function(event){
     }
 
 });
-
 
 
 //Button-Funktionen
@@ -1043,7 +1060,7 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
         dxt12 = xt2 - xt1;
         dyt12 = yt2 - yt1;
 
-// Beachte, dass nun in der veraenderten Form vom Startpunkt der Geodaete ausgegangen wird -> deshalb ueberall xg1 und yg1
+        // Beachte, dass nun in der veraenderten Form vom Startpunkt der Geodaete ausgegangen wird -> deshalb ueberall xg1 und yg1
 
         if (dxg > epsilon) {
             alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
@@ -1360,7 +1377,7 @@ function continueAllGeodesics() {
                 canvas.insertAt(lineSegment,stackIdx);
                 geodesics[ii].push(lineSegment);
 
-*/
+                */
 
             let invertedtrapezTransform = invert(transformMatrix);
             let desiredTransform = multiply(
@@ -2198,7 +2215,13 @@ function initializeSectors() //keine Argumente
     //Beenden von Linien; nur auf Trapezen möglich
     this.trapez.on('mouseup', function (o) {
 
-            for (let ii = 0; ii < 4; ii++) {
+
+        //WICHTIG: Dieser Teil wird erst ausgelöst wenn die Maustaste losgelassen wird,
+        //da sonst die Snapkanten bereits beim ransnappen erscheinen
+
+        for (let ii = 0; ii < 4; ii++) {
+
+            if (this.parent.neighbourhood[ii] > -1) {
 
                 let sec_idx = this.parent.neighbourhood[ii];
 
@@ -2258,12 +2281,7 @@ function initializeSectors() //keine Argumente
 
             }
 
-        //if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
-        //    return;
-        //}
-
-
-
+        }
     });
 
     canvas.add(this.trapez);
@@ -3060,6 +3078,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     snapping(sectors[neighbourSector].trapez);
 
+                    /*
                     for (let kk = 0; kk < 4; kk++) {
 
                         let sec_idx = sectors[staticSector].neighbourhood[kk];
@@ -3067,7 +3086,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                         if (sectors[staticSector].snapStatus[kk] !== 0) {
 
-
+                            console.log('sektor:', staticSector, 'snapstatus:', sectors[staticSector].snapStatus[kk])
 
 
                             transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
@@ -3081,7 +3100,6 @@ function setSectors(chosenGeodesicToSetSectors) {
                             point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
                             point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
-
 
                             let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
 
@@ -3117,6 +3135,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
                     }
+                    */
 
                     staticSector = neighbourSector;
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
@@ -3239,7 +3258,6 @@ function snapping(trapez) {
                 trapez.angle = sectors[sec_idx].trapez.angle + gamma_static/ Math.PI * 180 - gamma_neighbour/ Math.PI * 180;
 
 
-
                 trapez.setCoords();
 
                 transformMatrix = trapez.calcTransformMatrix();
@@ -3289,30 +3307,12 @@ function snapping(trapez) {
                 }
                 trapez.parent.snapStatus[ii] = 0;
 
-                /*
-                if (sectors[sec_idx].snapStatus.every(function (element) {
-                    return element === 0;
-                })) {
-                    sectors[sec_idx].trapez.stroke = '#666';
-                }
-                if (trapez.parent.snapStatus.every(function (element) {
-                    return element === 0;
-                })) {
-                    trapez.stroke = '#666';
-                }
-                */
             }
-
-
 
             trapez.setCoords();
 
         }
-
-
     }
-
-
 }
 
 
@@ -3320,7 +3320,7 @@ function snapping(trapez) {
 function startGeodesics(){
 
 
-    for (let ii =  0; ii < startSectors.length; ii++) {
+    for (let ii = 0; ii < startSectors.length; ii++) {
 
         let sec = sectors[startSectors[ii]];
 
