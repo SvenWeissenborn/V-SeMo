@@ -77,7 +77,6 @@ canvas.on('selection:created', function(obj){
     obj.target.on('moving', function(){
         if ( this._objects == undefined){return}
         this._objects.forEach(function(elem){
-            console.log(this._objects);
             if(elem.type === 'polygon') updateMinions(elem)
         });
     });
@@ -539,7 +538,6 @@ canvas.on('mouse:up', function(opt) {
                     if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)){
 
                         if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
-                            console.log('creating lineSegments:',ii);
 
                             lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
                                 strokeWidth: lineStrokeWidthWhenSelected ,
@@ -615,7 +613,7 @@ canvas.on('mouse:up', function(opt) {
                                         lineSegment.opacity = 0.5;
                                         lineSegment.parentSector = [-1,-1];
                                         lineSegment.relationship = [];
-                                        console.log('sollte bnicht mehr vorkommen')
+
 
                                     }else{
 
@@ -673,7 +671,7 @@ window.addEventListener('keydown',function(event){
 
         canvas.selection = true;
         shiftPressed = true;
-        console.log(canvas.selection)
+
     }
 });
 
@@ -681,7 +679,7 @@ window.addEventListener('keyup',function(event){
     if(event.key === 'Shift'){
         canvas.selection = false;
         shiftPressed = false;
-        console.log(canvas.selection)
+
     }
 });
 
@@ -993,7 +991,7 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
     for (let ii = geodesics[chosenGeodesicTochangeDirection].length -1; ii > 0; ii--) {
 
         let entryToSplice_tmp = sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[1]].parentSector[1]
-        //console.log('Sektor:', sectors[geodesics[chosenGeodesicGlobalID][ii].parentSector[0]].ID, 'entryToSplice_tmp:', entryToSplice_tmp)
+
         sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[1]].parentSector[1], 1)
 
         for (let jj = 0; jj < (sectors[geodesics[chosenGeodesicTochangeDirection][ii].parentSector[0]].lineSegments.length ); jj++){
@@ -1783,14 +1781,12 @@ function deleteWholeGeodesic(geodesicToDelete) {
     for (let ii = geodesics[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
 
-        //console.log('kk:', kk)
-        //console.log('ParentSector der zu löschenden:', geodesics[chosenGeodesicGlobalID][kk].parentSector)
 
 
 
         let entryToSplice_tmp = sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1]
 
-        //console.log(entryToSplice_tmp)
+
 
         sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1], 1)
 
@@ -1798,11 +1794,11 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
 
             if (entryToSplice_tmp < sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1]) {
-                //console.log('doit')
+
                 sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1] -= 1
 
             }
-            //console.log(sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].fill, sectors[geodesics[chosenGeodesicGlobalID][kk].parentSector[0]].lineSegments[ll].parentSector[1])
+
         }
 
         let lineSegment = geodesics[geodesicToDelete][ii];
@@ -2109,8 +2105,7 @@ function initializeSectors() //keine Argumente
             let stack_idx_of_line_parent_ID_Text = canvas.getObjects().indexOf(sectors[idx].ID_text);
             let stack_idx_of_clicked_sector_ID_Text = canvas.getObjects().indexOf(this.parent.ID_text);
             if (stack_idx_of_line_parent_ID_Text !== stack_idx_of_clicked_sector_ID_Text) {
-                console.log({stack_idx_of_line_parent_ID_Text});
-                console.log({stack_idx_of_clicked_sector_ID_Text});
+
                 return
             }
         }
@@ -2653,7 +2648,7 @@ function rotateGeodreieck(geodreieckToRotate){
     let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y);
     let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y);
 
-    //console.log({geodreieckEdgePoint1});
+
 
     //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint1.x , top: geodreieckEdgePoint1.y, originX: 'center', originY: 'center' }));
     //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint2.x , top: geodreieckEdgePoint2.y, originX: 'center', originY: 'center' }));
@@ -2948,7 +2943,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                             let edgeToRemove = sectors[staticSector].snapEdges[ll];
                             canvas.remove(edgeToRemove);
                             sectors[staticSector].snapEdges[ll] = [0];
-                            console.log('ich gehe an 1')
+
                         }
 
                         if (sec_idx > -1) {
@@ -2957,7 +2952,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                                 let edgeToRemove = sectors[sec_idx].snapEdges[(ll + 2) % 4];
                                 canvas.remove(edgeToRemove);
                                 sectors[sec_idx].snapEdges[(ll + 2) % 4] = [0];
-                                console.log('ich gehe an 2')
+
                             }
                         }
                     }
@@ -3091,7 +3086,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                         if (sectors[staticSector].snapStatus[kk] !== 0) {
 
-                            console.log('sektor:', staticSector, 'snapstatus:', sectors[neighbourSector].snapStatus[kk])
+
 
 
                             transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
@@ -3202,7 +3197,7 @@ function timeToSnap(trapez, snap_radius_sectors) {
 
         for (let jj = 0; jj < 4; jj++) {
             if (sec_idx > -1) {
-                console.log('löse ich aus?')
+
                 trapez.parent.snapStatus[jj] = 0;
             }
         }
@@ -3239,7 +3234,6 @@ function timeToSnap(trapez, snap_radius_sectors) {
 
             point_1_2_mid = new fabric.Point(point_1.x + (point_1.x - point_2.x) * 0.5, point_1.y + (point_1.y - point_2.y) * 0.5);
 
-            //console.log({point_1_2_mid});
 
             transformMatrix = sectors[sec_idx].trapez.calcTransformMatrix();
 
@@ -3558,7 +3552,7 @@ function snapping(trapez, sectorToSnapInFunction){
 
         //Zurücksetzen des Sektors an den gesnappt werden soll
     sectorToSnap = -1;
-    console.log({sectorToSnap})
+
 }
 
 //Achtung! Die Liniensegmente der Startgeodäten können nicht gelöscht werden, weil sie keine gültige ID tragen
@@ -3607,7 +3601,7 @@ function startGeodesics(){
 function startMarks() {
 
     for (let ii = 0; ii < markStartParentSector.length; ii++) {
-        console.log(markStartParentSector[ii][0]);
+
         let sec = sectors[markStartParentSector[ii][0]];
 
         let mark = new fabric.Circle({
@@ -3637,9 +3631,6 @@ function startMarks() {
 
         mark.parentSector = markStartParentSector[ii];
 
-        console.log(canvas.getObjects().indexOf(sectors[mark.parentSector[0]].ID_text))
-
-
         let trapezTransform = sec.trapez.calcTransformMatrix();
         let invertedtrapezTransform = invert(trapezTransform);
         let desiredTransform = multiply(
@@ -3656,7 +3647,6 @@ function startMarks() {
         markPoints.push(mark);
 
         mark.on('mousedown',function(o){
-            console.log('test');
 
             for (let kk = 0; kk < geodesics.length; kk++){
                 for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -3674,7 +3664,7 @@ function startMarks() {
             color = line_colors[geodesics.length % line_colors.length];
             if (!isLineStarted) {
                 isLineStarted = true;
-                console.log('test2');
+
                 let pointer = canvas.getPointer(o.e);
                 let points = [this.left, this.top, pointer.x, pointer.y];
 
@@ -3731,9 +3721,6 @@ function startTexts() {
             top: textStart_y[ii]  + (window.innerHeight - window.innerHeight*0.08)/2,
             angle: textStartAngle[ii],
         });
-        console.log(textStartContent[ii]);
-
-
 
         text.parentSector = textStartParentSector[ii];
 
