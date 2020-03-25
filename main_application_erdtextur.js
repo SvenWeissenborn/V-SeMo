@@ -3073,7 +3073,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     snapping(sectors[neighbourSector].trapez);
 
-                    /*
+
                     for (let kk = 0; kk < 4; kk++) {
 
                         let sec_idx = sectors[staticSector].neighbourhood[kk];
@@ -3129,7 +3129,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
                     }
-                    */
+
 
                     staticSector = neighbourSector;
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
