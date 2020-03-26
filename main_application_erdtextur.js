@@ -3573,6 +3573,7 @@ function toolChange(argument) {
                 if (add !== undefined){
                     add.opacity = 0;
                     add_dark.opacity = 1
+                    add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
 
@@ -3588,6 +3589,7 @@ function toolChange(argument) {
                 if (add_dark !== undefined){
                     add.opacity = 1;
                     add_dark.opacity = 0
+                    add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
             }

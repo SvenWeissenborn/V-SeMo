@@ -3866,6 +3866,7 @@ function toolChange(argument) {
                 if (add !== undefined){
                     add.opacity = 0;
                     add_dark.opacity = 1
+                    add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
 
@@ -3881,6 +3882,7 @@ function toolChange(argument) {
                 if (add_dark !== undefined){
                     add.opacity = 1;
                     add_dark.opacity = 0
+                    add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
             }
@@ -4107,8 +4109,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    sec.name = ii;
-    //sec.name = sec_name[ii];
+    //sec.name = ii;
+    sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
     sec.fontSize = sec_fontSize[ii];
     sec.pos_x = sec_posx[ii] + window.innerWidth/2;
