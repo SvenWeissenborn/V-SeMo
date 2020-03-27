@@ -120,79 +120,6 @@ canvas.on('mouse:move', function (o) {
 
 
     if (!isLineStarted){
-/*
-        for (let ii = 0; ii < geodesics.length; ii++) {
-            if (geodesics[ii].length > 0) {
-                let geodesic_end_point = new fabric.Point(geodesics[ii][geodesics[ii].length - 1].calcLinePoints().x2, geodesics[ii][geodesics[ii].length - 1].calcLinePoints().y2);
-                geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[ii][geodesics[ii].length - 1].calcTransformMatrix());
-                let geodesic_start_point = new fabric.Point(geodesics[ii][geodesics[ii].length - 1].calcLinePoints().x1, geodesics[ii][geodesics[ii].length - 1].calcLinePoints().y1);
-                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[ii][geodesics[ii].length - 1].calcTransformMatrix());
-                let alpha = Math.atan2(geodesic_end_point.y - geodesic_start_point.y, geodesic_end_point.x - geodesic_start_point.x);
-                if (distance(pointer, geodesic_end_point) <= snap_radius_line * 1/canvas.getZoom()) {
-                    let idx = geodesics[ii][geodesics[ii].length - 1].parentSector;
-                    //es kann nur auf nicht überlappenden Sektoren gezeichnet werden
-                    //if(sectors[idx[0]].trapez.opacity !== 1 ) return;
-                    sectors[idx[0]].trapez.hoverCursor = 'crosshair';
-
-                    color = line_colors[ii % line_colors.length];
-                    if (arrowheadline < 0) {
-
-                        //WICHTIG dies deaktiviert die Rotation um das Zentrum und setzt den origin als Rotationspunkt
-                        fabric.Triangle.prototype.centeredRotation = false;
-
-                        arrowhead = new fabric.Triangle({
-                            width: 10,
-                            height: 20,
-                            left: geodesic_end_point.x ,
-                            top: geodesic_end_point.y ,
-                            fill: color,
-                            evented: false,
-                            originX: 'center',
-                            originY: 'bottom'
-
-                        });
-                        arrowhead.rotate(alpha * 180 / Math.PI + 90);
-                        arrowheadline = ii;
-                        canvas.add(arrowhead);
-                    }
-
-                } else {
-                    if (arrowheadline === ii) {
-                        let idx = geodesics[ii][geodesics[ii].length - 1].parentSector;
-                        sectors[idx[0]].trapez.hoverCursor = 'grabbing';
-                        canvas.remove(arrowhead);
-                        arrowheadline = -1;
-
-                    }
-                }
-                //canvas.renderAll();
-            }
-        }
-
-
-        for (let ii = 0; ii < markPoints.length; ii++) {
-            let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
-            if (distance(pointer, markPointCoords) <= snap_radius_markPoint * 1/canvas.getZoom()) {
-
-                let idx = markPoints[ii].parentSector[0];
-
-                //if(sectors[idx].trapez.opacity !== 1 ) return;
-                if (arrowheadline < 0 && startAtMarkPoint < 0) {
-                    startAtMarkPoint = ii;
-                    toolChange('paint')
-
-                }
-
-            }else {
-                if (startAtMarkPoint === ii) {
-                    let idx = markPoints[ii].parentSector[0];
-                    sectors[idx].trapez.hoverCursor = 'grabbing';
-                    startAtMarkPoint = -1;
-                    toolChange('grab')
-                }
-            }
-        }
-*/
         return;
     }
 
@@ -204,7 +131,9 @@ canvas.on('mouse:move', function (o) {
 
 
     //Richtung der verlängerten Geodäte annehmen
+
     pointer = canvas.getPointer(o.e);
+
     if(lineContinueAt !== -1){
         let segment_end_point = new fabric.Point(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().x2,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().y2);
         segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcTransformMatrix() );
@@ -216,37 +145,165 @@ canvas.on('mouse:move', function (o) {
             let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
             let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
 
+
+            //Richtung der restlichen Geodäte
             if (Math.abs(alpha - beta) <= Math.PI / 36) {
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
             } else {
-                let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
-                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point,geodesics[lineContinueAt][0].calcTransformMatrix() );
 
-                if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start){
-                    line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
-                }
-                else{
+                if (button_dreieck_empty.opacity !== 0){
+                    let geodreieckWdithHalf = geodreieck.width / 2 * 0.12;
+                    let geodreieckHeightHalf = geodreieck.height / 2 * 0.12;
+                    let geodreieckMidPoint = new fabric.Point(geodreieck.left, geodreieck.top);
+
+                    //gEL1 = geodreieckEdgeLocal1
+                    //gEL2 = geodreieckEdgeLocal2
+                    let gEL1 = new fabric.Point(geodreieck.left - geodreieckWdithHalf, geodreieck.top + geodreieckHeightHalf);
+                    let gEL2 = new fabric.Point(geodreieck.left + geodreieckWdithHalf, geodreieck.top + geodreieckHeightHalf);
+
+                    let translation_x = geodreieck.left;
+                    let translation_y = geodreieck.top;
+
+
+                    // x = cos(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.left
+                    // y = sin(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.top
+
+                    let geodreieckEdgeMidPoint = new fabric.Point(geodreieck.left + Math.cos((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf, geodreieck.top + Math.sin((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf);
+
+
+                    let xg1 = line.x1;
+                    let yg1 = line.y1;
+                    let xg2 = pointer.x;
+                    let yg2 = pointer.y;
+
+                    let delta_x = xg2 - xg1;
+                    let delta_y = yg2 - yg1;
+
+                    let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y)
+                    let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y)
+
+                    let deltaGeodreieck_x = geodreieckEdgePoint2.x - geodreieckEdgePoint1.x;
+                    let deltaGeodreieck_y = geodreieckEdgePoint2.y - geodreieckEdgePoint1.y;
+
+                    //atan2 bruacht zwei Argumente die eingegeben werden muessen. In diesem Fall die Differenzen der Koordinaten.
+                    let geodesicAngle = Math.atan2(delta_y, delta_x) * 180 / Math.PI;
+
+                    let lineStartPoint = new fabric.Point(line.x1, line.y1);
+
+                    let angleDifference = Math.abs((geodesicAngle - geodreieck.angle ) - Math.round((geodesicAngle - geodreieck.angle )/ 180) * 180)
+
+                    if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltaGeodreieck_x, deltaGeodreieck_y) < 5 & angleDifference < 20) {
+
+                        if (Math.abs(geodreieck.angle - 90) < epsilon){
+                            line.set({x2: line.x1, y2: pointer.y})
+                        }
+                        if (Math.abs(geodreieck.angle - 90) > epsilon){
+                            line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                        }
+                    }else {
+                        //Ansnappen an den Startpunkt einer Geodäte
+                        let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
+                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point,geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+                        if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start){
+                            line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
+                        }
+                        else{
+                            //Linienende sitzt am Cursor
+                            line.set({x2: pointer.x, y2: pointer.y})
+
+                        };
+                    }
+
+                } else{
+                    //Linienende sitzt am Cursor
                     line.set({x2: pointer.x, y2: pointer.y})
 
                 };
+
+
             }
-        }else{
+        }else {
             let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
             let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
             if (Math.abs(alpha - beta) <= Math.PI / 36 || Math.abs(alpha + beta) <= Math.PI / 36) {
-                line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1,y2: pointer.y});
+                line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
             } else {
-                let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
-                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point,geodesics[lineContinueAt][0].calcTransformMatrix() );
 
-                if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start){
-                    line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
-                }
-                else{
+                if (button_dreieck_empty.opacity !== 0) {
+                    let geodreieckWdithHalf = geodreieck.width / 2 * 0.12;
+                    let geodreieckHeightHalf = geodreieck.height / 2 * 0.12;
+                    let geodreieckMidPoint = new fabric.Point(geodreieck.left, geodreieck.top);
+
+                    //gEL1 = geodreieckEdgeLocal1
+                    //gEL2 = geodreieckEdgeLocal2
+                    let gEL1 = new fabric.Point(geodreieck.left - geodreieckWdithHalf, geodreieck.top + geodreieckHeightHalf);
+                    let gEL2 = new fabric.Point(geodreieck.left + geodreieckWdithHalf, geodreieck.top + geodreieckHeightHalf);
+
+                    let translation_x = geodreieck.left;
+                    let translation_y = geodreieck.top;
+
+
+                    // x = cos(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.left
+                    // y = sin(geodreieckWinkel) * abstandPunktMittelpunkt + geodreieck.top
+
+                    let geodreieckEdgeMidPoint = new fabric.Point(geodreieck.left + Math.cos((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf, geodreieck.top + Math.sin((geodreieck.angle + 90) * Math.PI / 180) * geodreieckHeightHalf);
+
+
+                    let xg1 = line.x1;
+                    let yg1 = line.y1;
+                    let xg2 = pointer.x;
+                    let yg2 = pointer.y;
+
+                    let delta_x = xg2 - xg1;
+                    let delta_y = yg2 - yg1;
+
+                    let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y)
+                    let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y)
+
+                    let deltaGeodreieck_x = geodreieckEdgePoint2.x - geodreieckEdgePoint1.x;
+                    let deltaGeodreieck_y = geodreieckEdgePoint2.y - geodreieckEdgePoint1.y;
+
+                    //atan2 bruacht zwei Argumente die eingegeben werden muessen. In diesem Fall die Differenzen der Koordinaten.
+                    let geodesicAngle = Math.atan2(delta_y, delta_x) * 180 / Math.PI;
+
+                    let lineStartPoint = new fabric.Point(line.x1, line.y1);
+
+                    let angleDifference = Math.abs((geodesicAngle - geodreieck.angle) - Math.round((geodesicAngle - geodreieck.angle) / 180) * 180)
+
+                    if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltaGeodreieck_x, deltaGeodreieck_y) < 5 & angleDifference < 20) {
+
+                        if (Math.abs(geodreieck.angle - 90) < epsilon) {
+                            line.set({x2: line.x1, y2: pointer.y})
+                        }
+                        if (Math.abs(geodreieck.angle - 90) > epsilon) {
+                            line.set({
+                                x2: pointer.x,
+                                y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1
+                            });
+                        }
+                    } else {
+                        let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
+                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[lineContinueAt][0].calcTransformMatrix());
+
+                        if (distance(pointer, geodesic_start_point) < snap_radius_end_to_start) {
+                            line.set({x2: geodesic_start_point.x, y2: geodesic_start_point.y})
+                        }
+                        else {
+                            line.set({x2: pointer.x, y2: pointer.y})
+
+                        }
+                        ;
+                    }
+
+
+                } else {
+                    //Linienende sitzt am Cursor
                     line.set({x2: pointer.x, y2: pointer.y})
-
-                };
+                }
+                ;
             }
+
         }
     }else {
         if(selectedTool == 'paint' || startAtMarkPoint !== -1) {
@@ -2625,6 +2682,7 @@ function removeLines() {
     resetSectors();
     startGeodesics();
     toolChange('grab');
+    geodreieck.set('angle', 0);
     canvas.renderAll()
 }
 

@@ -304,6 +304,7 @@ fabric.Image.fromURL('restart.png', function(img) {
         showGeodesicButtons(false);
         removeLines();
         addGeodreieck(false);
+        canvas_side_bar_perm.renderAll();
 
     });
     canvas_side_bar_perm.add(restart);
