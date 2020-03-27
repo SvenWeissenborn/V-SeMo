@@ -356,8 +356,6 @@ canvas.on('mouse:move', function (o) {
 
                 if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltaGeodreieck_x, deltaGeodreieck_y) < 5 & angleDifference < 20) {
 
-                    console.log(Math.abs(geodreieck.angle - 90))
-                    console.log((pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1)
                     if (Math.abs(geodreieck.angle - 90) < 0.01){
                         line.set({x2: line.x1, y2: pointer.y})
                     }
