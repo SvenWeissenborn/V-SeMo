@@ -918,7 +918,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
         hasControls: true,
         transparentCorners: true,
         cornerSize: 40,
-        angle: 90,
+        angle: 0,
         evented: true,
         selectable: true,
         scaleX: geodreieckScale ,
