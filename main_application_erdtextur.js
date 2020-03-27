@@ -198,7 +198,11 @@ canvas.on('mouse:move', function (o) {
                             line.set({x2: line.x1, y2: pointer.y})
                         }
                         if (Math.abs(geodreieck.angle - 90) > epsilon){
-                            line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                            if(Math.abs(geodreieckEdgePoint2.x - geodreieckEdgePoint1.x) > Math.abs(geodreieckEdgePoint2.y - geodreieckEdgePoint1.y)) {
+                                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                            }else{
+                                line.set({x2: (pointer.y - line.y1) * Math.tan((- geodreieck.angle  + 90) * Math.PI / 180) + line.x1, y2: pointer.y});
+                            }
                         }
                     }else {
                         //Ansnappen an den Startpunkt einer Geodäte
@@ -277,10 +281,11 @@ canvas.on('mouse:move', function (o) {
                             line.set({x2: line.x1, y2: pointer.y})
                         }
                         if (Math.abs(geodreieck.angle - 90) > epsilon) {
-                            line.set({
-                                x2: pointer.x,
-                                y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1
-                            });
+                            if(Math.abs(geodreieckEdgePoint2.x - geodreieckEdgePoint1.x) > Math.abs(geodreieckEdgePoint2.y - geodreieckEdgePoint1.y)) {
+                                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                            }else{
+                                line.set({x2: (pointer.y - line.y1) * Math.tan((- geodreieck.angle  + 90) * Math.PI / 180) + line.x1, y2: pointer.y});
+                            }
                         }
                     } else {
                         let geodesic_start_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1, geodesics[lineContinueAt][0].calcLinePoints().y1);
@@ -357,7 +362,11 @@ canvas.on('mouse:move', function (o) {
                         line.set({x2: line.x1, y2: pointer.y})
                     }
                     if (Math.abs(geodreieck.angle - 90) > epsilon){
-                        line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                        if(Math.abs(geodreieckEdgePoint2.x - geodreieckEdgePoint1.x) > Math.abs(geodreieckEdgePoint2.y - geodreieckEdgePoint1.y)) {
+                            line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+                        }else{
+                            line.set({x2: (pointer.y - line.y1) * Math.tan((- geodreieck.angle  + 90) * Math.PI / 180) + line.x1, y2: pointer.y});
+                        }
                     }
                 }else {
                     line.set({x2: pointer.x, y2: pointer.y});
