@@ -554,7 +554,8 @@ canvas.on('mouse:up', function(opt) {
 
     if(isLineStarted) {
 
-        isLineStarted= false;
+        isLineStarted = false;
+        startAtMarkPoint = -1;
         line.setCoords(); //Alle Änderungen der Member sollen übernommen werden
         canvas.renderAll();
         xg1 = line.x1;
@@ -2206,6 +2207,10 @@ function initializeSectors() //keine Argumente
                     isLineStarted = true;
 
                     showGeodesicButtons(true);
+
+                    if ( startStrokeWidth[0] == undefined){
+                        startStrokeWidth[0] = 2
+                    }
 
                     line = new fabric.Line(points, {
                         strokeWidth: startStrokeWidth[0],
