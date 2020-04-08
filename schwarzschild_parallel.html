@@ -9,8 +9,6 @@
 
 
 
-<body>
-
 <body onresize="fitResponsiveCanvas()">
 
 <div id="canvas-overAll">
@@ -39,13 +37,20 @@
 <script>
     //Name des Bildes zum runterladen
     let name_picture_result = "ergebnis_schwarzes_loch_2"
+
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
+    let language = getUrlVars()["language"]
 </script>
 
 <script src="fabric.js"></script>
-<script src="canvas-toBlob.js"></script>
-<script src="FileSaver.js"></script>
-<script src="main_button_german_side_bar_perm.js"></script>
-
+<script src="main_button_side_bar_perm.js"></script>
 
 <script src="schwarzschildmetrik_parallel.js"></script>
 <script src="main_application.js"></script>

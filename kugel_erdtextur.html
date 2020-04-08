@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="main.css" type="text/css">
 <link rel="icon" href="visemo_logo.png">
 
-<body>
 
 <body onresize="fitResponsiveCanvas()">
 
@@ -36,16 +35,23 @@
 <script>
     //Name des Bildes zum runterladen
     let name_picture_result = "ergebnis_kugel"
+
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
+    let language = getUrlVars()["language"]
 </script>
 
 
 <script src="fabric.js"></script>
-<script src="canvas-toBlob.js"></script>
-<script src="FileSaver.js"></script>
-<script src="main_button_german_side_bar_perm.js"></script>
+<script src="main_button_side_bar_perm.js"></script>
 
 <script src="kugelmetrik.js"></script>
-
 <script src="main_application_erdtextur.js"></script>
 
 

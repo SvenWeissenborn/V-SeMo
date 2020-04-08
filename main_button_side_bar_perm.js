@@ -223,6 +223,14 @@ let shadowOff = {
     opacity: 0.8
 }
 
+let back_language;
+if(language == "german"){
+    back_language = 'german.html'
+}
+if(language == "english"){
+    back_language = 'english.html'
+}
+
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
         left: 51.5,
@@ -253,7 +261,7 @@ fabric.Image.fromURL('back.png', function(img) {
 
     back.on('mouseup', function (o) {
         back.setShadow(shadowOff);
-        window.location = 'german.html';
+        window.location = back_language;
     });
     canvas_side_bar_perm.add(back);
 });

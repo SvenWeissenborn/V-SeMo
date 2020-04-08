@@ -857,11 +857,25 @@ window.resetSectors = resetSectors;
 
 window.undoLastLine = undoLastLine;
 
-//-----------------Instructional Overlay---------------------------------
+let scaleFacotor;
 
+if (window.innerWidth < 1000 || window.innerHeight < 1000){
+    scaleFacotor = Math.min(window.innerHeight/1000, window.innerWidth/1000)
+} else {
+    scaleFacotor = Math.min(window.innerHeight/1000, window.innerWidth/1000)
+}
+
+//-----------------Instructional Overlay---------------------------------
+let instructional_overlay_language;
+if(language == "german"){
+    instructional_overlay_language = 'instructional_overlay.png'
+}
+if(language == "english"){
+    instructional_overlay_language = 'instructional_overlay_en.png'
+}
 
 let instructional_overlay;
-fabric.Image.fromURL('instructional_overlay.png', function(img) {
+fabric.Image.fromURL(instructional_overlay_language, function(img) {
     instructional_overlay = img.set({
         opacity: 1,
         originX: "center",
@@ -996,13 +1010,7 @@ let isLineStarted = false;
 let lineContinueAt = -1;
 let selectedTool = 'grab';
 
-let scaleFacotor;
 
-if (window.innerWidth < 1000 || window.innerHeight < 1000){
-    scaleFacotor = Math.min(window.innerHeight/1000, window.innerWidth/1000)
-} else {
-    scaleFacotor = Math.min(window.innerHeight/1000, window.innerWidth/1000)
-}
 
 let epsilon = 0.0000001;
 let snap_radius_sectors = 8;
