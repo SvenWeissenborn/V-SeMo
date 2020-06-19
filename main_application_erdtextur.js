@@ -1718,6 +1718,9 @@ function distance(punkt1, punkt2) {
 }
 
 function drawDragPoint(geodesicToGivePoint) {
+    if (geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1] == undefined){
+        return
+    }
     if(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1].dragPoint!==undefined){
         canvas.remove(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint);
         delete geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint;

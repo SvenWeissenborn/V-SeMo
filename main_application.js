@@ -170,7 +170,8 @@ canvas.on('mouse:move', function (o) {
 
                 if (button_dreieck_empty.opacity !== 0) {
                     geodesicToGeodreieck();
-                } else {
+                }
+                else {
                     //Linienende sitzt am Cursor
                     line.set({x2: pointer.x, y2: pointer.y})
                 };
@@ -1714,7 +1715,10 @@ function distance(punkt1, punkt2) {
 }
 
 function drawDragPoint(geodesicToGivePoint) {
-    if(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1].dragPoint!==undefined){
+    if (geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1] == undefined){
+        return
+    }
+    if(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1].dragPoint !== undefined){
         canvas.remove(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint);
         delete geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint;
     }
@@ -1979,7 +1983,7 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('moving',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this)});
     this.trapez.on('rotating',function(){updateMinions(this)});
-    this.trapez.on('modified',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this);for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
+    this.trapez.on('modified',function(){timeToSnap(this, snap_radius_sectors); updateMinions(this);})//for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
