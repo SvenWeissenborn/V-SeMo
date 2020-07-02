@@ -11,7 +11,7 @@ let canvas = new fabric.Canvas('canvas',{preserveObjectStacking: true, backgroun
 canvas.rotationCursor = 'col-resize';
 
 //Ausschalten der Gruppenfunktion per "Lasso"
-//updateMinions ist für Gruppen implementiert, es fehlt noch die snapping-Funktion für Gruppen
+//updateMinions ist für Gruppen implementiert, es fehlt noch die snappingToChosen-Funktion für Gruppen
 canvas.selection = false;
 
 let shiftPressed = false;
@@ -170,8 +170,8 @@ canvas.on('mouse:move', function (o) {
 
                 if (button_dreieck_empty.opacity !== 0) {
                     geodesicToGeodreieck();
-                }
-                else {
+
+                } else {
                     //Linienende sitzt am Cursor
                     line.set({x2: pointer.x, y2: pointer.y})
                 };
@@ -184,7 +184,7 @@ canvas.on('mouse:move', function (o) {
             //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
 
             if (button_dreieck_empty.opacity !== 0){
-                geodesicToGeodreieck()
+                geodesicToGeodreieck();
             }else {
                 line.set({x2: pointer.x, y2: pointer.y});
             }
@@ -825,8 +825,6 @@ function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y,
 let isLineStarted = false;
 let lineContinueAt = -1;
 let selectedTool = 'grab';
-
-
 
 let epsilon = 0.0000001;
 let snap_radius_sectors = 8;
@@ -1519,7 +1517,7 @@ function continueGeodesic(geodesicToContinue) {
 
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
-            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x, y1: geodesic_start_point.y})
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x1: geodesic_start_point.x, y1: geodesic_start_point.y});
 
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
 
@@ -1551,7 +1549,7 @@ function continueGeodesic(geodesicToContinue) {
 
                     if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
 
-                        drawDragPoint(geodesicToContinue)
+                        drawDragPoint(geodesicToContinue);
 
                         break;
                     }
@@ -2113,7 +2111,6 @@ function initializeSectors() //keine Argumente
                     toolChange('grab')
                 }
                 */
-
         }
     });
 
@@ -2127,7 +2124,7 @@ function initializeSectors() //keine Argumente
 
         if (selectedTool === 'grab'){
             if (sectorToSnap > -1) {
-                snapping(this, sectorToSnap);
+                snappingToChosen(this, sectorToSnap);
             }
         }
 
@@ -2539,7 +2536,6 @@ function removeLines() {
     toolChange('grab');
     geodreieck.set('angle', 0);
     canvas.renderAll();
-
 }
 
 
@@ -2605,7 +2601,6 @@ function rotateGeodreieck(geodreieckToRotate){
 
     let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y);
     let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y);
-
 
 
     //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: geodreieckEdgePoint1.x , top: geodreieckEdgePoint1.y, originX: 'center', originY: 'center' }));
@@ -2886,8 +2881,6 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
-
-
                     if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
 
                         break
@@ -3033,8 +3026,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                     yt1 = transformedPoints[kantenIndex].y;
                     yt2 = transformedPoints[(kantenIndex + 1) % 4].y;
 
-
-                    snapping(sectors[neighbourSector].trapez, staticSector);
+                    snappingToChosen(sectors[neighbourSector].trapez, staticSector);
 
 
                     for (let kk = 0; kk < 4; kk++) {
@@ -3043,7 +3035,6 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
                         if (sectors[staticSector].snapStatus[kk] !== 0) {
-
 
 
 
@@ -3117,11 +3108,11 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
 
-//snapping prüft für alle gültigen Nachbarn den Abstand bestimmter Eckpunktpaare
+//snappingToChosen prüft für alle gültigen Nachbarn den Abstand bestimmter Eckpunktpaare
 // -> falls kleiner als Snap_radius_sector entsprechende Translation und Rotation
 
 let sectorToSnap = -1;
-let snappingDistance = 1;
+let snappingToChosenDistance = 1;
 
 function timeToSnap(trapez, snap_radius_sectors) {
 
@@ -3207,13 +3198,13 @@ function timeToSnap(trapez, snap_radius_sectors) {
 
             point_a_b_mid = new fabric.Point(point_a.x + (point_a.x - point_b.x) * 0.5, point_a.y + (point_a.y - point_b.y) * 0.5);
 
-            if (distance(point_1_2_mid, point_a_b_mid) <= snap_radius_sectors || distanceMidPoints <= snappingDistance * trapez.aussenkreisradius ) {
+            if (distance(point_1_2_mid, point_a_b_mid) <= snap_radius_sectors || distanceMidPoints <= snappingToChosenDistance * trapez.aussenkreisradius ) {
 
             //-------------------------------------------------------------------------------------------
 
 
             /* Diese Zeile auskommentieren*/
-            //if (distanceMidPoints <= snappingDistance * trapez.aussenkreisradius ) {
+            //if (distanceMidPoints <= snappingToChosenDistance * trapez.aussenkreisradius ) {
 
                 for (let jj = 0; jj < 4; jj++) {
                     if (trapez.parent.neighbourhood[jj] > -1) {
@@ -3278,7 +3269,7 @@ function timeToSnap(trapez, snap_radius_sectors) {
 
 
 //WICHTIG: DIESES SNAPPING IST DAS NEUE SNAPPING, ES IST NICHT DAS SELBE WIE BEI DER ERDTEXTUR
-function snapping(trapez, sectorToSnapInFunction){
+function snappingToChosen(trapez, sectorToSnapInFunction){
 
     let sec_idx;
     let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
@@ -3571,7 +3562,7 @@ function startMarks() {
             stroke: markStartStroke[ii],
             strokeWidth: markStartStrokeWidth[ii],
             fill: markStartFill[ii],
-            perPixelTargetFind: false,
+            perPixelTargetFind: true,
             hasBorders: false,
             objectCaching: false,
             selectable: false,
@@ -3654,9 +3645,6 @@ function startMarks() {
 
 
         canvas.renderAll();
-
-
-
     }
 }
 
@@ -3823,7 +3811,7 @@ function toolChange(argument) {
                 }
                 if (add !== undefined){
                     add.opacity = 0;
-                    add_dark.opacity = 1
+                    add_dark.opacity = 1;
                     add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
@@ -3839,7 +3827,7 @@ function toolChange(argument) {
                 }
                 if (add_dark !== undefined){
                     add.opacity = 1;
-                    add_dark.opacity = 0
+                    add_dark.opacity = 0;
                     add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
@@ -4092,10 +4080,7 @@ fitResponsiveCanvas();
 
 positionSectors();
 
-console.log({buildStartGeodesics})
-console.log({isLineStarted})
 if (buildStartGeodesics == 1){startGeodesics();}
-
 
 startMarks();
 
