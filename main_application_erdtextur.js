@@ -1969,9 +1969,22 @@ function initializeSectors() //keine Argumente
 
     this.ID_text.relationship = desiredTransform;
 
-    this.trapez.on('moving',function(){snapping(this); updateMinions(this)});
-    this.trapez.on('rotating',function(){snapping(this); updateMinions(this)});
-    this.trapez.on('modified',function(){snapping(this); updateMinions(this); for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
+    this.trapez.on('moving',function(){
+        snapping(this);
+        updateMinions(this)
+    });
+
+    this.trapez.on('rotating',function(){
+        snapping(this);
+        updateMinions(this)
+    });
+
+    this.trapez.on('modified',function(){
+        snapping(this); updateMinions(this);
+        for (let ii = 0; ii < sectors.length; ii++){
+            overlapControll(sectors[ii].trapez)
+        }
+    });
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
