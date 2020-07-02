@@ -3822,7 +3822,7 @@ fitResponsiveCanvas();
 
 positionSectors();
 
-startGeodesics();
+if (buildStartGeodesics == true){startGeodesics();}
 
 startMarks();
 

@@ -4092,7 +4092,10 @@ fitResponsiveCanvas();
 
 positionSectors();
 
-startGeodesics();
+console.log({buildStartGeodesics})
+console.log({isLineStarted})
+if (buildStartGeodesics == 1){startGeodesics();}
+
 
 startMarks();
 
