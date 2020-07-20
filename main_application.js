@@ -150,12 +150,24 @@ canvas.on('mouse:move', function (o) {
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
             } else {
 
+                //Wenn der Der Geodreieck-Empty-Button sichtbar ist
                 if (button_dreieck_empty.opacity !== 0){
                     geodesicToGeodreieck();
 
                 } else{
-                    //Linienende sitzt am Cursor
-                    line.set({x2: pointer.x, y2: pointer.y})
+                    //Liegt der Endpunkt in der Nähe des Startpunktes?
+                    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
+                    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+                    if (distance(geodesic_begin_point, pointer) < 5) {
+                        line.set({x2: geodesic_begin_point.x, y2: geodesic_begin_point.y})
+                    }else {
+                        //Linienende sitzt am Cursor
+                        line.set({x2: pointer.x, y2: pointer.y})
+                    }
+
+
+
 
                 };
 
@@ -168,12 +180,21 @@ canvas.on('mouse:move', function (o) {
                 line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
             } else {
 
+                //Wenn der Der Geodreieck-Empty-Button sichtbar ist
                 if (button_dreieck_empty.opacity !== 0) {
                     geodesicToGeodreieck();
 
                 } else {
-                    //Linienende sitzt am Cursor
-                    line.set({x2: pointer.x, y2: pointer.y})
+                    //Liegt der Endpunkt in der Nähe des Startpunktes?
+                    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
+                    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+                    if (distance(geodesic_begin_point, pointer) < 5) {
+                        line.set({x2: geodesic_begin_point.x, y2: geodesic_begin_point.y})
+                    }else {
+                        //Linienende sitzt am Cursor
+                        line.set({x2: pointer.x, y2: pointer.y})
+                    }
                 };
             }
 
@@ -205,7 +226,7 @@ canvas.on('mouse:move', function (o) {
 
         let stackIdx = 0;
 
-        if (autoSet == 1) {
+        if (autoSet == "1") {
             for (let ii = sectors.length -1; ii >= 0; ii--) {
 
                 if(canvas.getObjects().indexOf(sectors[ii].ID_text) > stackIdx) {
