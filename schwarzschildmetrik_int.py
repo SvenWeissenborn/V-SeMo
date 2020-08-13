@@ -3,7 +3,7 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 32
+nSektorzeilenVonRing = 35
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 60
@@ -24,9 +24,9 @@ versatz_y_var = 0.8
 
 # WICHTIG: startGeodesicsAngle benötigt genauso viele Einträge wie startGeodesicsSectors
 
-startGeodesicsAngle = [60,130]
+startGeodesicsAngle = []
 
-startGeodesicsSectors = [179,130]
+startGeodesicsSectors = []
 
 startMarksSectors = []
 startMarkRadius = [3]
