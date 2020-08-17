@@ -929,7 +929,7 @@ window.addEventListener('keydown',function(event){
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
     if(event.key === 'l'){
-        canvas.setZoom( 0.2 );
+        canvas.setZoom( 0.1 );
         canvas.viewportTransform[4]= 750;
         canvas.viewportTransform[5]= 400;
     }
@@ -3046,110 +3046,117 @@ function rotateGeodreieck(geodreieckToRotate){
 function setOuterSectorsToCircle() {
     for (let ii = 0; ii < sectors.length; ii++) {
 
-        if ((ii + 1) % (sectors.length / 12) == 0) {
+        console.log(sectors[ii].sector_type)
+
+        if (sectors[ii].sector_type == 'euklid') {
 
 
+            //console.log("SectorID:", sectors[ii].ID)
+            //console.log("Nachbar rechts:", sectors[ii].neighbourhood[1])
 
+            let ausgangssektorID;
+            let nachbarsektorRechtsID;
 
-                console.log("SectorID:", sectors[ii].ID)
-                console.log("Nachbar rechts:", sectors[ii].neighbourhood[1])
+            let ausgangssektor;
+            let nachbarsektorRechts;
 
-                let ausgangssektorID;
-                let nachbarsektorRechtsID;
+            let transformMatrix;
 
-                let ausgangssektor;
-                let nachbarsektorRechts;
+            let point_1_local;
+            let point_2_local;
+            let point_1;
+            let point_2;
+            let point_a;
+            let point_b;
 
-                let transformMatrix;
+            let dist_1a;
+            let dist_2b;
 
-                let point_1_local;
-                let point_2_local;
-                let point_1;
-                let point_2;
-                let point_a;
-                let point_b;
+            ausgangssektor = sectors[sectors[ii].ID];
 
-                let dist_1a;
-                let dist_2b;
+            for (let jj = 0; jj < 2; jj++) {
 
-                ausgangssektor = sectors[sectors[ii].ID];
-                nachbarsektorRechts = sectors[sectors[ii].neighbourhood[1]];
+                nachbarsektorRechts = sectors[sectors[ii].neighbourhood[jj]];
 
                 ausgangssektorID = sectors[ii].ID;
-                nachbarsektorRechtsID = sectors[ii].neighbourhood[1];
+                nachbarsektorRechtsID = sectors[ii].neighbourhood[jj];
 
-            if (sectors[ii].ID < sectors[ii].neighbourhood[1]) {
+                //console.log(jj)
 
-                transformMatrix = ausgangssektor.trapez.calcTransformMatrix();
-                //point_1/2 gehören zum Ausgangssektor
-                point_1_local = new fabric.Point(ausgangssektor.trapez.points[1].x - ausgangssektor.trapez.width / 2,
-                    ausgangssektor.trapez.points[1].y - ausgangssektor.trapez.height / 2);
+                if (sectors[ii].ID < sectors[ii].neighbourhood[jj]) {
 
-                point_2_local = new fabric.Point(ausgangssektor.trapez.points[(1 + 1) % 4].x - ausgangssektor.trapez.width / 2,
-                    ausgangssektor.trapez.points[(1 + 1) % 4].y - ausgangssektor.trapez.height / 2);
+                    transformMatrix = ausgangssektor.trapez.calcTransformMatrix();
+                    //point_1/2 gehören zum Ausgangssektor
+                    point_1_local = new fabric.Point(ausgangssektor.trapez.points[jj].x - ausgangssektor.trapez.width / 2,
+                        ausgangssektor.trapez.points[jj].y - ausgangssektor.trapez.height / 2);
 
-                point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+                    point_2_local = new fabric.Point(ausgangssektor.trapez.points[(jj + 1) % 4].x - ausgangssektor.trapez.width / 2,
+                        ausgangssektor.trapez.points[(jj + 1) % 4].y - ausgangssektor.trapez.height / 2);
 
-                point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
-                //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', top: point_1.y, left: point_1.x, originY: 'center', originX: 'center' }));
-                //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', top: point_2.y, left: point_2.x, originY: 'center', originX: 'center' }));
+                    point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
 
-                transformMatrix = nachbarsektorRechts.trapez.calcTransformMatrix();
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', top: point_1.y, left: point_1.x, originY: 'center', originX: 'center' }));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'blue', top: point_2.y, left: point_2.x, originY: 'center', originX: 'center' }));
 
-                //point_a/b gehören zum rechten Nachbarn)
-                point_a = new fabric.Point(nachbarsektorRechts.trapez.points[(1 + 3) % 4].x - nachbarsektorRechts.trapez.width / 2,
-                    nachbarsektorRechts.trapez.points[(1 + 3) % 4].y - nachbarsektorRechts.trapez.height / 2);
+                    transformMatrix = nachbarsektorRechts.trapez.calcTransformMatrix();
 
-                point_b = new fabric.Point(nachbarsektorRechts.trapez.points[(1 + 2) % 4].x - nachbarsektorRechts.trapez.width / 2,
-                    nachbarsektorRechts.trapez.points[(1 + 2) % 4].y - nachbarsektorRechts.trapez.height / 2);
+                    //point_a/b gehören zum rechten Nachbarn)
+                    point_a = new fabric.Point(nachbarsektorRechts.trapez.points[(jj + 3) % 4].x - nachbarsektorRechts.trapez.width / 2,
+                        nachbarsektorRechts.trapez.points[(jj + 3) % 4].y - nachbarsektorRechts.trapez.height / 2);
 
-                point_a = fabric.util.transformPoint(point_a, transformMatrix);
-                point_b = fabric.util.transformPoint(point_b, transformMatrix);
+                    point_b = new fabric.Point(nachbarsektorRechts.trapez.points[(jj + 2) % 4].x - nachbarsektorRechts.trapez.width / 2,
+                        nachbarsektorRechts.trapez.points[(jj + 2) % 4].y - nachbarsektorRechts.trapez.height / 2);
 
-                //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_a.y, left: point_a.x, originY: 'center', originX: 'center' }));
-                //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_b.y, left: point_b.x, originY: 'center', originX: 'center' }));
+                    point_a = fabric.util.transformPoint(point_a, transformMatrix);
+                    point_b = fabric.util.transformPoint(point_b, transformMatrix);
 
-                dist_1a = distance(point_1, point_a);
-                dist_2b = distance(point_2, point_b);
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_a.y, left: point_a.x, originY: 'center', originX: 'center' }));
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'red', top: point_b.y, left: point_b.x, originY: 'center', originX: 'center' }));
 
+                    dist_1a = distance(point_1, point_a);
+                    dist_2b = distance(point_2, point_b);
 
-                //Bestimmung des kleineren Abstands -> legt die Translation und Rotation fest
+                    //Bestimmung des kleineren Abstands -> legt die Translation und Rotation fest
 
-                dxs_tmp = ausgangssektor.trapez.points[1].x - ausgangssektor.trapez.points[(1 + 1) % 4].x;
-                dys_tmp = ausgangssektor.trapez.points[1].y - ausgangssektor.trapez.points[(1 + 1) % 4].y;
-                if (Math.abs(dys_tmp) > epsilon) {
-                    gamma_static = Math.atan(dxs_tmp / dys_tmp);
-                } else {
-                    gamma_static = 0.0
+                    dxs_tmp = ausgangssektor.trapez.points[jj].x - ausgangssektor.trapez.points[(jj + 1) % 4].x;
+                    dys_tmp = ausgangssektor.trapez.points[jj].y - ausgangssektor.trapez.points[(jj + 1) % 4].y;
+                    if (Math.abs(dys_tmp) > epsilon) {
+                        gamma_static = Math.atan(dxs_tmp / dys_tmp);
+                    } else {
+                        gamma_static = 0.0
+                    }
+                    dxs_tmp = nachbarsektorRechts.trapez.points[(jj + 2) % 4].x - nachbarsektorRechts.trapez.points[(jj + 3) % 4].x;
+                    dys_tmp = nachbarsektorRechts.trapez.points[(jj + 2) % 4].y - nachbarsektorRechts.trapez.points[(jj + 3) % 4].y;
+                    if (Math.abs(dys_tmp) > epsilon) {
+                        gamma_neighbour = Math.atan(dxs_tmp / dys_tmp);
+                    } else {
+                        gamma_neighbour = 0.0
+                    }
+
+                    nachbarsektorRechts.trapez.angle = ausgangssektor.trapez.angle - gamma_static / Math.PI * 180 + gamma_neighbour / Math.PI * 180;
+
+                    nachbarsektorRechts.trapez.setCoords();
+
+                    transformMatrix = nachbarsektorRechts.trapez.calcTransformMatrix();
+
+                    point_a_local = new fabric.Point(nachbarsektorRechts.trapez.points[(jj + 3) % 4].x - nachbarsektorRechts.trapez.width / 2,
+                        nachbarsektorRechts.trapez.points[(jj + 3) % 4].y - nachbarsektorRechts.trapez.height / 2);
+                    point_a = fabric.util.transformPoint(point_a_local, transformMatrix);
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_a.y, left: point_a.x, originY: 'center', originX: 'center' }));
+
+                    //canvas.add(new fabric.Circle({ radius: 5, fill: 'green', top: point_a.y, left: point_a.x, originY: 'center', originX: 'center' }));
+
+                    nachbarsektorRechts.trapez.left += point_1.x - point_a.x;
+                    nachbarsektorRechts.trapez.top += point_1.y - point_a.y;
+
+                    nachbarsektorRechts.trapez.setCoords();
+
+                    updateMinions(nachbarsektorRechts.trapez)
+
                 }
-                dxs_tmp = nachbarsektorRechts.trapez.points[(1 + 2) % 4].x - nachbarsektorRechts.trapez.points[(1 + 3) % 4].x;
-                dys_tmp = nachbarsektorRechts.trapez.points[(1 + 2) % 4].y - nachbarsektorRechts.trapez.points[(1 + 3) % 4].y;
-                if (Math.abs(dys_tmp) > epsilon) {
-                    gamma_neighbour = Math.atan(dxs_tmp / dys_tmp);
-                } else {
-                    gamma_neighbour = 0.0
-                }
-
-                nachbarsektorRechts.trapez.angle = ausgangssektor.trapez.angle - gamma_static / Math.PI * 180 + gamma_neighbour / Math.PI * 180;
-
-                nachbarsektorRechts.trapez.setCoords();
-
-                transformMatrix = nachbarsektorRechts.trapez.calcTransformMatrix();
-
-                point_a_local = new fabric.Point(nachbarsektorRechts.trapez.points[0].x - nachbarsektorRechts.trapez.width / 2,
-                    nachbarsektorRechts.trapez.points[0].y - nachbarsektorRechts.trapez.height / 2);
-                point_a = fabric.util.transformPoint(point_a_local, transformMatrix);
-
-                //canvas.add(new fabric.Circle({ radius: 5, fill: 'green', top: point_a.y, left: point_a.x, originY: 'center', originX: 'center' }));
-
-                nachbarsektorRechts.trapez.left += point_1.x - point_a.x;
-                nachbarsektorRechts.trapez.top += point_1.y - point_a.y;
-
-                nachbarsektorRechts.trapez.setCoords();
-
-                updateMinions(nachbarsektorRechts.trapez)
-
             }
 
             for (let jj = 0; jj < 4; jj++) {
@@ -3276,13 +3283,16 @@ function setOuterSectorsToCircle() {
         }
 
 
-        if ((ii + 1) % (sectors.length / 12) > 0 || ii == 0) {
-            sectors[ii].trapez.set('top', 5000);
-            sectors[ii].trapez.set('left', 5000);
+
+        if (sectors[ii].sector_type !== 'euklid') {
+            sectors[ii].trapez.set('top', 8000);
+            sectors[ii].trapez.set('left', 8000);
             sectors[ii].trapez.setCoords();
             updateMinions(sectors[ii].trapez);
 
         }
+
+
 
     }
 
@@ -3321,6 +3331,7 @@ function Sector() {
     this.name;
     this.ID;
     this.fill;
+    this.sector_type;
 
     this.init = initializeSectors; // das Objekt Sektor bekommt die Methode 'initializeSectors' mitgegeben, keine Klammern
 
@@ -4305,7 +4316,6 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
 //Achtung! Die Liniensegmente der Startgeodäten können nicht gelöscht werden, weil sie keine gültige ID tragen
 function startGeodesics(){
 
-
     for (let ii = 0; ii < startSectors.length; ii++) {
 
         let sec = sectors[startSectors[ii]];
@@ -4853,9 +4863,10 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    //sec.name = ii;
-    sec.name = sec_name[ii];
+    sec.name = ii;
+    //sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
+    sec.sector_type = sec_type[ii];
     sec.fontSize = sec_fontSize[ii];
     sec.pos_x = sec_posx[ii] + window.innerWidth/2;
     sec.pos_y = sec_posy[ii] + (window.innerHeight - window.innerHeight*0.08)/2;
@@ -4866,6 +4877,10 @@ for (let ii = 0; ii < sec_name.length; ii ++){
     sec.offset_x = sec_offset[ii];
     sec.sector_width = sec_width[ii];
     sec.neighbourhood = [sec_neighbour_top[ii],sec_neighbour_right[ii],sec_neighbour_bottom[ii],sec_neighbour_left[ii]];
+
+
+
+
 
     if (textured !== "1") {
         sec.fill = sec_fill[ii];

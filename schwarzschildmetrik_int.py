@@ -3,8 +3,11 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 32
+nSektorzeilenVonRing = 40
 nSektorspaltenVonRing = 12
+
+nSektorzeilenVonRingSchwarzschild = 3
+nSektorzeilenVonRingEuklid = 8
 
 schwarzschildradius = 60
 dr = 1.25
@@ -51,6 +54,8 @@ def main():
                 "------Parameter-------" +"\n"
                 "nSektorzeilenVonRing: " + str(nSektorzeilenVonRing) +"\n"
                 "nSektorspaltenVonRing: " + str(nSektorspaltenVonRing) +"\n"
+                "nSektorzeilenVonRingSchwarzschild: " + str(nSektorzeilenVonRingSchwarzschild) +"\n"
+                "nSektorzeilenVonRingEuklid: " + str(nSektorzeilenVonRingEuklid) +"\n"
                 "schwarzschildradius: " + str(schwarzschildradius) +"\n"
                 "dradius: " + str(dr) + " * " +str(schwarzschildradius) + "\n"
                 "fontSize: " + str(fontSize) + "\n"                                                        
@@ -79,7 +84,7 @@ def main():
         "let mark_colors = ['grey'];")
     file.write("\n")
 
-    variablenamesSectors = ["sec_name", "sec_ID", "sec_fill", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
+    variablenamesSectors = ["sec_name", "sec_ID", "sec_type", "sec_fill", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = nSektorzeilenVonRing * nSektorspaltenVonRing
 
@@ -95,15 +100,15 @@ def main():
 
             wichtungsfaktor = 0.0
 
-            if(ringzeile < 3):
+            if(ringzeile < nSektorzeilenVonRingSchwarzschild):
                 wichtungsfaktorBottom = 0.0
                 wichtungsfaktorTop = 0.0
                 wichtungsfaktorRadial = 0.0
-            elif(ringzeile < nSektorzeilenVonRing -2):
-                wichtungsfaktorBottom = (ringzeile - 3) * 1 / (nSektorzeilenVonRing - 5)
-                wichtungsfaktorTop = (ringzeile - 2) * 1 / (nSektorzeilenVonRing - 5)
-                wichtungsfaktorRadial = (ringzeile - 2) * 1 / (nSektorzeilenVonRing - 4)
-            elif(ringzeile >= nSektorzeilenVonRing - 2):
+            elif(ringzeile < nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
+                wichtungsfaktorBottom = (ringzeile - nSektorzeilenVonRingSchwarzschild) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
+                wichtungsfaktorTop = (ringzeile - nSektorzeilenVonRingEuklid) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
+                wichtungsfaktorRadial = (ringzeile - nSektorzeilenVonRingEuklid) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild -1 + nSektorzeilenVonRingEuklid))
+            elif(ringzeile >= nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
                 wichtungsfaktorBottom = 1.0
                 wichtungsfaktorTop = 1.0
                 wichtungsfaktorRadial = 1.0
@@ -133,11 +138,11 @@ def main():
             radialSchwarzschild = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
             radialEuklidisch = dradius
 
-            if(ringzeile < 3):
+            if(ringzeile < nSektorzeilenVonRingSchwarzschild):
                 radial = radialSchwarzschild
-            elif(ringzeile < nSektorzeilenVonRing - 2):
+            elif(ringzeile < nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
                 radial = (1 - wichtungsfaktorRadial) * radialSchwarzschild + wichtungsfaktorRadial * radialEuklidisch
-            elif(ringzeile >= nSektorzeilenVonRing - 2):
+            elif(ringzeile >= nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
                 radial = radialEuklidisch
             #offset = dradius * dphi * 0.5
             offset = abs(lengthTopMid - lengthBottomMid) / 2
@@ -151,6 +156,12 @@ def main():
 
             sectorValues[sectorDict["sec_name"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'%c%d'" % (chr(ringzeile + 97).upper(),(ringspalte+1))
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
+
+            if (ringzeile >= nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
+                sectorValues[sectorDict["sec_type"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'euklid'"
+            else:
+                sectorValues[sectorDict["sec_type"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'noneuklid'"
+
             sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
             sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSize
             sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = lengthTopMid #(dradius * (ringzeile + 2)) * dphi
