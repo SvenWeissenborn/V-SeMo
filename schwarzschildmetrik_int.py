@@ -3,7 +3,7 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 35
+nSektorzeilenVonRing = 32
 nSektorspaltenVonRing = 12
 
 schwarzschildradius = 60
@@ -89,10 +89,58 @@ def main():
 
     for ringspalte in range(0, nSektorspaltenVonRing):
         for ringzeile in range(0, nSektorzeilenVonRing):
-            offset = dradius * dphi * 0.5
+
             rad1 = (ringzeile + 1) * dradius
             rad2 = (ringzeile + 2) * dradius
-            radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+
+            wichtungsfaktor = 0.0
+
+            if(ringzeile < 3):
+                wichtungsfaktorBottom = 0.0
+                wichtungsfaktorTop = 0.0
+                wichtungsfaktorRadial = 0.0
+            elif(ringzeile < nSektorzeilenVonRing -2):
+                wichtungsfaktorBottom = (ringzeile - 3) * 1 / (nSektorzeilenVonRing - 5)
+                wichtungsfaktorTop = (ringzeile - 2) * 1 / (nSektorzeilenVonRing - 5)
+                wichtungsfaktorRadial = (ringzeile - 2) * 1 / (nSektorzeilenVonRing - 4)
+            elif(ringzeile >= nSektorzeilenVonRing - 2):
+                wichtungsfaktorBottom = 1.0
+                wichtungsfaktorTop = 1.0
+                wichtungsfaktorRadial = 1.0
+
+            print("zzzzzzzzzzz")
+            print("WB: " + str(wichtungsfaktorBottom))
+            print("WT: " + str(wichtungsfaktorTop))
+            print("WR: "+ str(wichtungsfaktorRadial))
+
+
+            lengthSchwarzschildBottom = rad1 * dphi
+            lengthSchwarzschildTop = rad2 * dphi
+            lengthEuklidBottom = rad1 * 2 * math.sin(dphi / 2)
+            lengthEuklidTop = rad2 * 2 * math.sin(dphi / 2)
+
+            print("SB: "+ str(lengthSchwarzschildBottom))
+            print("ST: "+ str(lengthSchwarzschildTop))
+            print("EB: "+ str(lengthEuklidBottom))
+            print("ET: "+ str(lengthEuklidTop))
+
+            lengthBottomMid = (1 - wichtungsfaktorBottom) * lengthSchwarzschildBottom + wichtungsfaktorBottom * lengthEuklidBottom
+            lengthTopMid = (1 - wichtungsfaktorTop) * lengthSchwarzschildTop + wichtungsfaktorTop * lengthEuklidTop
+
+            print("MB: " + str(lengthBottomMid))
+            print("MT: " + str(lengthTopMid))
+
+            radialSchwarzschild = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+            radialEuklidisch = dradius
+
+            if(ringzeile < 3):
+                radial = radialSchwarzschild
+            elif(ringzeile < nSektorzeilenVonRing - 2):
+                radial = (1 - wichtungsfaktorRadial) * radialSchwarzschild + wichtungsfaktorRadial * radialEuklidisch
+            elif(ringzeile >= nSektorzeilenVonRing - 2):
+                radial = radialEuklidisch
+            #offset = dradius * dphi * 0.5
+            offset = abs(lengthTopMid - lengthBottomMid) / 2
             sector_height = math.sqrt(math.pow(radial, 2) - math.pow(offset, 2))
 
 
@@ -105,8 +153,8 @@ def main():
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
             sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
             sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSize
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 2)) * dphi
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile + 1)) * dphi
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = lengthTopMid #(dradius * (ringzeile + 2)) * dphi
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = lengthBottomMid #(dradius * (ringzeile + 1)) * dphi
 
 
 

@@ -8,7 +8,6 @@
 <link rel="icon" href="visemo_logo.png">
 
 
-
 <body onresize="fitResponsiveCanvas()">
 
 <div id="canvas-overAll">
@@ -21,10 +20,10 @@
     </div>
 
     <div
-            id="container_side_bar_temp"
-            class = "part">
-        <canvas id="canvas_side_bar_temp" class = "part"></canvas>
+            id="container_side_tools_right" class = "part">
+        <canvas id="canvas_side_tools_right" class = "part"></canvas>
     </div>
+
 
     <div id="container_canvas" class = "part">
         <canvas id="canvas" ></canvas>
@@ -45,15 +44,17 @@
         return vars;
     }
 
-    let language = getUrlVars()["language"]
+    let language = getUrlVars()["language"];
+    let buildStartGeodesics = getUrlVars()["buildStartGeodesics"];
+    let textured = getUrlVars()["textured"];
+    let autoSet = getUrlVars()["autoSet"];
 </script>
 
 
 <script src="fabric.js"></script>
+<script src="main_button_side_bar_perm.js"></script>
+
 <script src="schwarzschildmetrik_big_model.js"></script>
-
-
-<script src="schwarzschildmetrik_parallel.js"></script>
 <script src="main_application.js"></script>
 
 </body>

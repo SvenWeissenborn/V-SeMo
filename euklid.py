@@ -91,7 +91,8 @@ def main():
             offset = dradius * math.sin(dphi * 0.5)
             rad1 = (ringzeile + 1) * dradius
             rad2 = (ringzeile + 2) * dradius
-            radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+            #radial = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
+            radial = dradius
             sector_height = math.sqrt(math.pow(radial, 2) - math.pow(offset, 2))
 
 
@@ -104,8 +105,11 @@ def main():
             sectorValues[sectorDict["sec_ID"]][ringzeile + ringspalte * nSektorzeilenVonRing] = ringzeile + ringspalte * (nSektorzeilenVonRing)
             sectorValues[sectorDict["sec_fill"]][ringzeile + ringspalte * nSektorzeilenVonRing] = "'white'"
             sectorValues[sectorDict["sec_fontSize"]][ringzeile + ringspalte * nSektorzeilenVonRing] = fontSize
-            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = (dradius * (ringzeile + 2)) * dphi
-            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = (dradius * (ringzeile + 1)) * dphi
+            sectorValues[sectorDict["sec_top"]][ringzeile + ringspalte * nSektorzeilenVonRing] = 2 * rad2 * math.sin(dphi / 2)
+            sectorValues[sectorDict["sec_bottom"]][ringzeile + ringspalte * (nSektorzeilenVonRing)] = 2 * rad1 * math.sin(dphi / 2)
+
+            print('top '+ str(2 * (dradius * (ringzeile + 2)) * math.sin(dphi / 2)))
+            print('bottom '+ str(2 * (dradius * (ringzeile + 1)) * math.sin(dphi / 2)))
 
 
 
