@@ -61,6 +61,6 @@ textStart_x= [ 589.3930283836249, -187.08884625451321, -225.59938360752142, ];
 textStart_y= [ 355.2862225957744, -93.01579674741951, -115.24986585481591, ];
 textStartContent= [ 'Karl', 'P1', 'P2', ];
 textStartFontSize= [ 15, 15, 15, ];
-textStartParentSector= [ [53,0], [113,0], [113,1], ];
+textStartParentSector= [ [53,0], [113,1], [113,1], ];
 textStartID= [ [0], [1], [2], ];
 textStartAngle= [ 0, 0, 0, ];

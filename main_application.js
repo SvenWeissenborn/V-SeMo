@@ -111,6 +111,8 @@ let actualSector;
 
 canvas.on('mouse:move', function (o) {
 
+
+
     if(selectedTool !== 'paint' && selectedTool !== 'grab') return;
 
     let color;
@@ -151,27 +153,24 @@ canvas.on('mouse:move', function (o) {
             } else {
 
                 //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-                if (button_dreieck_empty.opacity !== 0){
+
+                if (geodesicToGeodreieckCalc()){
                     geodesicToGeodreieck();
+                }
+                else if (geodesicToStartCalc()){
+                    geodesicToStart();
 
-                } else{
-                    //Liegt der Endpunkt in der Nähe des Startpunktes?
-                    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
-                    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+                }else {
+                    let geodesicNearToMark = geodesicToMarkCalc();
 
-                    if (distance(geodesic_begin_point, pointer) < 5) {
-                        line.set({x2: geodesic_begin_point.x, y2: geodesic_begin_point.y})
-                    }else {
+                    if (geodesicNearToMark[0]) {
+                        geodesicToMark(geodesicNearToMark[1]);
+                    } else{
+
                         //Linienende sitzt am Cursor
                         line.set({x2: pointer.x, y2: pointer.y})
                     }
-
-
-
-
                 };
-
-
             }
         }else {
             let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
@@ -181,19 +180,22 @@ canvas.on('mouse:move', function (o) {
             } else {
 
                 //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-                if (button_dreieck_empty.opacity !== 0) {
-                    geodesicToGeodreieck();
 
-                } else {
-                    //Liegt der Endpunkt in der Nähe des Startpunktes?
-                    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
-                    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+                if (geodesicToGeodreieckCalc()){
+                        geodesicToGeodreieck();
+                    }
+                else if (geodesicToStartCalc()){
+                    geodesicToStart();
 
-                    if (distance(geodesic_begin_point, pointer) < 5) {
-                        line.set({x2: geodesic_begin_point.x, y2: geodesic_begin_point.y})
-                    }else {
-                        //Linienende sitzt am Cursor
-                        line.set({x2: pointer.x, y2: pointer.y})
+                }else {
+                    let geodesicNearToMark = geodesicToMarkCalc();
+
+                    if (geodesicNearToMark[0]) {
+                        geodesicToMark(geodesicNearToMark[1]);
+                    } else{
+
+                    //Linienende sitzt am Cursor
+                    line.set({x2: pointer.x, y2: pointer.y})
                     }
                 };
             }
@@ -204,11 +206,19 @@ canvas.on('mouse:move', function (o) {
 
             //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
 
-            if (button_dreieck_empty.opacity !== 0){
+            if (geodesicToGeodreieckCalc()){
                 geodesicToGeodreieck();
-            }else {
-                line.set({x2: pointer.x, y2: pointer.y});
-            }
+            } else {
+                let geodesicNearToMark = geodesicToMarkCalc();
+
+                if (geodesicNearToMark[0]) {
+                    geodesicToMark(geodesicNearToMark[1]);
+                } else{
+
+                    //Linienende sitzt am Cursor
+                    line.set({x2: pointer.x, y2: pointer.y})
+                }
+            };
         }
     }
 
@@ -271,6 +281,7 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
+        //TODO autoSet muss endlich fertig gestellt werden
         if (autoSet == "1") {
 
             //Umrechnung der lokalen in globale Koordinaten
@@ -912,7 +923,9 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'a'){
-        continueAllGeodesics();
+        for (let ii = 0; ii < geodesics.length; ii++) {
+            continueGeodesic(geodesics[ii][geodesics[ii].length-1].ID[0])
+        }
         toolChange('grab');
 
     }
@@ -928,14 +941,22 @@ window.addEventListener('keydown',function(event){
 
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
-    if(event.key === 'l'){
-        canvas.setZoom( 0.1 );
-        canvas.viewportTransform[4]= 750;
-        canvas.viewportTransform[5]= 400;
+    if(event.key === '1'){
+        canvas.setZoom( 0.12 );
+        canvas.viewportTransform[4]= 800;
+        canvas.viewportTransform[5]= 480;
     }
 
 });
 
+window.addEventListener('keydown',function(event){
+    if(event.key === '2'){
+        canvas.setZoom( 0.175 );
+        canvas.viewportTransform[4]= 700;
+        canvas.viewportTransform[5]= 640;
+    }
+
+});
 
 //Button-Funktionen
 window.resetSectors = resetSectors;
@@ -1047,8 +1068,8 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
     geodreieck.snapAngle = 0.1;
 
-    geodreieck.on('moving',function(){rotateGeodreieck(this)});
-    geodreieck.on('rotating',function(){rotateGeodreieck(this)});
+    geodreieck.on('moving',function(){geodreieckRotate(this); geodreieckMove(this)});
+    geodreieck.on('rotating',function(){geodreieckRotate(this); geodreieckMove(this)});
 
     geodreieck.on('mousedown', function () {geodreieckIsClicked = true;});
     geodreieck.on('mouseup', function () {geodreieckIsClicked = false;})
@@ -1100,6 +1121,8 @@ let epsilon = 0.0000001;
 let snap_radius_sectors = 8;
 let snap_radius_line = 15;
 let snap_radius_markPoint = 15;
+
+let snap_geodreieck_on_mark = 5
 
 let abortlength = 20;
 
@@ -1391,6 +1414,9 @@ function changeZIndexOf_canvas_side_bar_temp(newIndex) {
     side_bar_for_change_temp.style.zIndex = newIndex;
 }
 
+
+//Wird nun über eine Schleife mit allen Geodäten über die Funktion continueGeodesic gemacht
+/*
 function continueAllGeodesics() {
 
     let lambda;
@@ -1501,7 +1527,7 @@ function continueAllGeodesics() {
 
             geodesics[ii][geodesics[ii].length - 1].setCoords();
 
-            /*
+
             if (kantenIndex >= 0) {
                 let lineSegment = new fabric.Line([xg2, yg2, xt1 + alpha * dxt12, yt1 + alpha * dyt12], {
                     strokeWidth: 2,
@@ -1534,7 +1560,7 @@ function continueAllGeodesics() {
                 canvas.insertAt(lineSegment,stackIdx);
                 geodesics[ii].push(lineSegment);
 
-                */
+
 
             let invertedtrapezTransform = invert(transformMatrix);
             let desiredTransform = multiply(
@@ -1672,7 +1698,7 @@ function continueAllGeodesics() {
     //}
     //canvas.renderAll();
 }
-
+*/
 
 
 function continueGeodesic(geodesicToContinue) {
@@ -2520,7 +2546,49 @@ function initializeSectors() //keine Argumente
     canvas.add(this.ID_text);
 }
 
-function geodesicToGeodreieck(){
+function geodesicToStartCalc(){
+
+    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
+    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+    if (distance(geodesic_begin_point, pointer) < 5) {
+        return true
+    }
+
+    return false
+
+}
+
+function geodesicToStart(){
+
+    let geodesic_begin_point = new fabric.Point(geodesics[lineContinueAt][0].calcLinePoints().x1,geodesics[lineContinueAt][0].calcLinePoints().y1);
+    geodesic_begin_point = fabric.util.transformPoint(geodesic_begin_point, geodesics[lineContinueAt][0].calcTransformMatrix() );
+
+    line.set({x2: geodesic_begin_point.x, y2: geodesic_begin_point.y})
+}
+
+function geodesicToMarkCalc() {
+
+    if (markPoints.length > 0) {
+        for (let ii = 0; ii < markPoints.length; ii++) {
+            //console.log(markPoints)
+            let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
+            if (distance(markPointCoords, pointer) < 10) {
+                return [true, ii];
+            }
+        }
+
+    }
+
+    return [false, ]
+}
+
+function geodesicToMark(markNumber) {
+    let markPointCoords = new fabric.Point(markPoints[markNumber].left, markPoints[markNumber].top);
+    line.set({x2: markPointCoords.x, y2: markPointCoords.y})
+}
+
+function geodesicToGeodreieckCalc(){
     let geodreieckWdithHalf = geodreieck.width / 2 * 0.12;
     let geodreieckHeightHalf = geodreieck.height / 2 * 0.12;
     let geodreieckMidPoint = new fabric.Point(geodreieck.left, geodreieck.top);
@@ -2563,19 +2631,39 @@ function geodesicToGeodreieck(){
 
     if (distancePointStraightLine(lineStartPoint.x, lineStartPoint.y, geodreieckEdgePoint1.x, geodreieckEdgePoint1.y, deltaGeodreieck_x, deltaGeodreieck_y) < 5 & angleDifference < 20) {
 
-        if (Math.abs(geodreieck.angle - 90) < epsilon){
-            line.set({x2: line.x1, y2: pointer.y})
-        }
-        if (Math.abs(geodreieck.angle - 90) > epsilon){
-            if(Math.abs(geodreieckEdgePoint2.x - geodreieckEdgePoint1.x) > Math.abs(geodreieckEdgePoint2.y - geodreieckEdgePoint1.y)) {
-                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
-            }else{
-                line.set({x2: (pointer.y - line.y1) * Math.tan((- geodreieck.angle  + 90) * Math.PI / 180) + line.x1, y2: pointer.y});
-            }
-        }
-    }else {
-        line.set({x2: pointer.x, y2: pointer.y});
+        return true
+    }else{
+        return false
     }
+}
+
+function geodesicToGeodreieck(){
+    let geodreieckWdithHalf = geodreieck.width / 2 * 0.12;
+
+
+    //gEL1 = geodreieckEdgeLocal1
+    //gEL2 = geodreieckEdgeLocal2
+    let gEL1 = new fabric.Point(geodreieck.left - geodreieckWdithHalf, geodreieck.top);
+    let gEL2 = new fabric.Point(geodreieck.left + geodreieckWdithHalf, geodreieck.top);
+
+    let translation_x = geodreieck.left;
+    let translation_y = geodreieck.top;
+
+    let geodreieckEdgePoint1 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL1.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL1.y - translation_y) + translation_y)
+    let geodreieckEdgePoint2 = new fabric.Point(Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) - Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_x, Math.sin(geodreieck.angle * Math.PI / 180) * (gEL2.x - translation_x) + Math.cos(geodreieck.angle * Math.PI / 180) * (gEL2.y - translation_y) + translation_y)
+
+
+    if (Math.abs(geodreieck.angle - 90) < epsilon){
+        line.set({x2: line.x1, y2: pointer.y})
+    }
+    if (Math.abs(geodreieck.angle - 90) > epsilon){
+        if(Math.abs(geodreieckEdgePoint2.x - geodreieckEdgePoint1.x) > Math.abs(geodreieckEdgePoint2.y - geodreieckEdgePoint1.y)) {
+            line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan((geodreieck.angle) * Math.PI / 180) + line.y1});
+        }else{
+            line.set({x2: (pointer.y - line.y1) * Math.tan((- geodreieck.angle  + 90) * Math.PI / 180) + line.x1, y2: pointer.y});
+        }
+    }
+
 }
 
 
@@ -2963,13 +3051,35 @@ function resetZoomPan(){
 
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
-    if(event.key === 'u'){
+    if(event.key === 'l'){
         setSectorsToCenter();
     }
 
 });
 
-function rotateGeodreieck(geodreieckToRotate){
+function geodreieckMove(geodreieckToMove){
+
+    if (markPoints.length < 1){
+        return
+    }
+
+    for (let ii = 0; ii < markPoints.length; ii++) {
+        //console.log(markPoints)
+        let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
+        let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
+        if (distance(markPointCoords, geodreieckMidKante) < snap_geodreieck_on_mark) {
+
+            dist_x = markPointCoords.x - geodreieckMidKante.x;
+            dist_y = markPointCoords.y - geodreieckMidKante.y;
+
+            geodreieckToMove.left += dist_x;
+            geodreieckToMove.top += dist_y
+        }
+    }
+
+}
+
+function geodreieckRotate(geodreieckToRotate){
 
     let geodreieckWdithHalf = geodreieckToRotate.width / 2 * 0.12;
     let geodreieckHeightHalf = geodreieckToRotate.height / 2 * 0.12;
@@ -3302,10 +3412,10 @@ function setOuterSectorsToCircle() {
 function setSectorsToCenter(){
 
     for (let ii =0; ii < sectors.length; ii++){
-        
-        if ((ii + 1) % (sectors.length/12) > 0 || ii == 0) {
-            sectors[ii].trapez.set('top', 5000);
-            sectors[ii].trapez.set('left', 5000);
+
+        if (sectors[ii].sector_type !== 'euklid') {
+            sectors[ii].trapez.set('top', 8000);
+            sectors[ii].trapez.set('left', 8000);
             sectors[ii].trapez.setCoords();
             updateMinions(sectors[ii].trapez);
 
@@ -4383,6 +4493,8 @@ function startMarks() {
             padding: 10
         });
 
+        console.log(mark)
+
 
 
 
@@ -4723,33 +4835,30 @@ function updateMinions(boss) {
         }
     }
     */
-    if (boss.parent.ID_text.relationship) {
-        boss.parent.ID_text.bringToFront();
 
-        let relationship = boss.parent.ID_text.relationship;
-
-        let newTransform = multiply(
-            boss.calcTransformMatrix(),
-            relationship
-        );
-
-        let options;
-        options = fabric.util.qrDecompose(newTransform);
-
-
-        boss.parent.ID_text.set({
-            flipX: false,
-            flipY: false,
-        });
-
-        boss.parent.ID_text.setPositionByOrigin(
-            {x: options.translateX, y: options.translateY},
-            'center',
-            'center'
-        );
-
-        boss.parent.ID_text.set(options);
-        boss.parent.ID_text.setCoords();
+    for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
+        let markPoint = boss.parent.markCircles[ii];
+        if (markPoint.relationship) {
+            markPoint.bringToFront();
+            let relationship = markPoint.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            markPoint.set({
+                flipX: false,
+                flipY: false,
+            });
+            markPoint.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            markPoint.set(options);
+            markPoint.setCoords();
+        }
     }
 
     for (let ii = 0; ii < boss.parent.lineSegments.length; ii++) {
@@ -4802,30 +4911,7 @@ function updateMinions(boss) {
         }
     }
 
-    for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
-        let markPoint = boss.parent.markCircles[ii];
-        if (markPoint.relationship) {
-            markPoint.bringToFront();
-            let relationship = markPoint.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            markPoint.set({
-                flipX: false,
-                flipY: false,
-            });
-            markPoint.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            markPoint.set(options);
-            markPoint.setCoords();
-        }
-    }
+
 
     for (let ii = 0; ii < boss.parent.texts.length; ii++) {
         let text = boss.parent.texts[ii];
@@ -4851,6 +4937,35 @@ function updateMinions(boss) {
             text.setCoords();
         }
     }
+
+    if (boss.parent.ID_text.relationship) {
+        boss.parent.ID_text.bringToFront();
+
+        let relationship = boss.parent.ID_text.relationship;
+
+        let newTransform = multiply(
+            boss.calcTransformMatrix(),
+            relationship
+        );
+
+        let options;
+        options = fabric.util.qrDecompose(newTransform);
+
+
+        boss.parent.ID_text.set({
+            flipX: false,
+            flipY: false,
+        });
+
+        boss.parent.ID_text.setPositionByOrigin(
+            {x: options.translateX, y: options.translateY},
+            'center',
+            'center'
+        );
+
+        boss.parent.ID_text.set(options);
+        boss.parent.ID_text.setCoords();
+    }
 }
 
 
@@ -4863,8 +4978,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    sec.name = ii;
-    //sec.name = sec_name[ii];
+    //sec.name = ii;
+    sec.name = sec_name[ii];
     sec.ID = sec_ID[ii];
     sec.sector_type = sec_type[ii];
     sec.fontSize = sec_fontSize[ii];
@@ -4938,7 +5053,7 @@ positionSectors();
 
 if (buildStartGeodesics == "1"){startGeodesics();}
 
-startMarks();
+if (buildStartMarks == "1"){startMarks();}
 
 startTexts();
 

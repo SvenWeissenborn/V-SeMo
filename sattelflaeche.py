@@ -173,7 +173,15 @@ def main():
         markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
         markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]] / 2
 
-        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(startMark) + "]"
+        markNumberInSector = 0
+
+        if (startMark > 0):
+            if (len(startMarksSectors) > 0):
+                for jj in range(0, startMark):
+                    if (startMarksSectors[jj] == startMarksSectors[startMark]):
+                        markNumberInSector += 1
+
+        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(markNumberInSector) + "]"
         markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
         markValues[markDict["markStartStrokeWidth"]][startMark] = 2
         markValues[markDict["markStartRadius"]][startMark] = startMarkRadius[startMark]

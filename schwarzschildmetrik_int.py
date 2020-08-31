@@ -20,16 +20,16 @@ fontSize = 15
 # versatz_x versetzt die Geodäten in der x-Richtung vom Mittelpunkt des Sektors weg
 # versatz_y liegt zwischen -1 und 1 und sorgt bei gleichen Winkel für parallele Geodäten
 
-versatz_x = 0.4
-versatz_y = 0.0
+versatz_x = 1.0
+versatz_y = 0.3
 versatz_x_var = 0.0
-versatz_y_var = 0.8
+versatz_y_var = 0.2
 
 # WICHTIG: startGeodesicsAngle benötigt genauso viele Einträge wie startGeodesicsSectors
 
-startGeodesicsAngle = []
+startGeodesicsAngle = [90]
 
-startGeodesicsSectors = []
+startGeodesicsSectors = [399]
 
 startMarksSectors = []
 startMarkRadius = [3]
@@ -236,8 +236,8 @@ def main():
         geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
         geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + deltaXStart * startGeodesic - versatz_x * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]/2
         geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + deltaYStart * startGeodesic - versatz_y * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]/2
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + deltaXStart + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
-        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + deltaYStart * startGeodesic + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = geodesicValues[geodesicDict["x_Start"]][startGeodesic] + math.sin(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
+        geodesicValues[geodesicDict["y_End"]][startGeodesic] = geodesicValues[geodesicDict["y_Start"]][startGeodesic] + math.cos(startGeodesicsAngle[startGeodesic] * math.pi/180) * lengthStartGeodesics
 
         geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSectors[startGeodesic]) + "," + str(startGeodesic) + "]"
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(startGeodesic) + "," + str(1) + "]"

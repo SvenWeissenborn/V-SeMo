@@ -9,8 +9,8 @@ sectorabstand_x: 100
 sectorabstand_y: 30
 fontSize: 15
 startGeodesicsSectors: [2, 2]
-startMarksSectors: []
-startMarkRadius: [3]
+startMarksSectors: [2, 3, 8]
+startMarkRadius: [5, 5, 5]
 startTextsSectors: []
 startTextContent: ['P1', 'P2']
 text_dist_from_mid_y: [0.5, -0.9]
@@ -18,7 +18,7 @@ text_dist_from_mid_y: [0.5, -0.9]
 */
 
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
-let mark_colors = ['grey'];
+let mark_colors = ['grey', 'grey', 'grey'];
 sec_name= [ 1, 2, 3, 4, 5, 6, 7, 8, 9, ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, ];
 sec_type= [ [], [], [], [], [], [], [], [], [], ];
@@ -45,63 +45,14 @@ startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [2,0], [2,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStart_y= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartStrokeWidth= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartRadius= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartFill= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartStroke= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartParentSector= [ ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
-markStartID= [ ];
+markStart_x= [ -271.8813778923013, 0.0, 271.8813778923013, ];
+markStart_y= [ 206.3372559067418, -202.1124186355806, 206.3372559067418, ];
+markStartStrokeWidth= [ 2, 2, 2, ];
+markStartRadius= [ 5, 5, 5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartParentSector= [ [2,0], [3,0], [8,0], ];
+markStartID= [ [0,1], [1,1], [2,1], ];
 textStart_x= [ ];
 textStart_y= [ ];
 textStartContent= [ ];

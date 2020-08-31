@@ -212,36 +212,27 @@ def main():
             file.write(str(geodesicValues[ii][jj]) + ', ')
         file.write("];\n")
 
-
-
-
-
-
-
-
     variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill", "markStartStroke", "markStartParentSector", "markStartID"]
     markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
 
     markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
 
     for startMark in range(0, len(startMarksSectors)):
-
         sector_height = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
         sector_angle = sectorValues[sectorDict["sec_angle"]][startMarksSectors[startMark]]
         markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]] - 2 * (sector_height/2 * mark_dist_from_mid_y[startMark]) * math.sin(sector_angle * 0.5 * math.pi/180) * math.cos(sector_angle * 0.5 * math.pi/180)
         markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sector_height/2 * mark_dist_from_mid_y[startMark] - 0.000001 - 2 * (sector_height/2 * mark_dist_from_mid_y[startMark]) * math.pow(math.sin(sector_angle * 0.5 * math.pi/180), 2)
-        if (startMark == 0):
-            markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(0) + "]"
-        else:
-            positionInSector = 0
-            if (startMarksSectors[startMark] == startMarksSectors[startMark - 1]):
-                positionInSector += 1
-                markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(positionInSector) + "]"
-            else:
-                positionInSector = 0
-                markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(positionInSector) + "]"
+
+        markNumberInSector = 0
+
+        if (startMark > 0):
+            if (len(startMarksSectors) > 0):
+                for jj in range(0, startMark):
+                    if (startMarksSectors[jj] == startMarksSectors[startMark]):
+                        markNumberInSector += 1
 
 
+        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(markNumberInSector) + "]"
         markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "]"
         markValues[markDict["markStartStrokeWidth"]][startMark] = 2
         markValues[markDict["markStartRadius"]][startMark] = startMarkRadius[startMark]
@@ -254,9 +245,6 @@ def main():
             file.write(str(markValues[ii][jj]) + ', ')
         file.write("];\n")
 
-
-
-
     variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textStartFontSize", "textStartParentSector", "textStartID", "textStartAngle"]
     textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
 
@@ -266,19 +254,18 @@ def main():
 
         sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
         sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startText]]
-        textValues[textDict["textStart_x"]][startText] = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]] - 2 * (sector_height/2 * text_dist_from_mid_y[startText]) * math.sin(sector_angle * 0.5 * math.pi/180) * math.cos(sector_angle * 0.5 * math.pi/180)
-        textValues[textDict["textStart_y"]][startText] = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]] + sector_height/2 * text_dist_from_mid_y[startText] - 0.000001 - 2 * (sector_height/2 * text_dist_from_mid_y[startText]) * math.pow(math.sin(sector_angle * 0.5 * math.pi/180), 2) +15
-        if (startText == 0):
-            textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(0) + "]"
-        else:
-            positionInSector = 0
-            if (startTextsSectors[startText] == startTextsSectors[startText - 1]):
-                positionInSector += 1
-                textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
-            else:
-                positionInSector = 0
-                textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(positionInSector) + "]"
+        textValues[textDict["textStart_x"]][startText] = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]] - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.sin(sector_angle * 0.5 * math.pi / 180) * math.cos(sector_angle * 0.5 * math.pi / 180)
+        textValues[textDict["textStart_y"]][startText] = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]] + sector_height / 2 * text_dist_from_mid_y[startText] - 0.000001 - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.pow(math.sin(sector_angle * 0.5 * math.pi / 180), 2) + 15
 
+        textNumberInSector = 0
+
+        if (startText > 0):
+            if (len(startTextsSectors) > 0):
+                for jj in range(0, startMark):
+                    if (startTextsSectors[jj] == startTextsSectors[startText]):
+                        textNumberInSector += 1
+
+        textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(textNumberInSector) + "]"
         textValues[textDict["textStartID"]][startText] = "[" + str(startText) + "]"
         textValues[textDict["textStartFontSize"]][startText] = 15
         textValues[textDict["textStartContent"]][startText] = "'" + startTextContent[startText] + "'"
@@ -289,9 +276,6 @@ def main():
         for jj in range(0, len(startTextsSectors)):
             file.write(str(textValues[ii][jj]) + ', ')
         file.write("];\n")
-
-
-
 
 
 
