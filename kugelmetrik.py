@@ -6,7 +6,7 @@ nSektorspaltenVonKugel = 18
 zeilenanzahl = 3
 spaltenanzahl = 3
 radius_sphere = 500
-sectorabstand_x = 100
+sectorabstand_x = 30
 sectorabstand_y = 30
 
 fontSize = 15

@@ -462,8 +462,8 @@ canvas.on('mouse:move', function (o) {
 
                     let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                         strokeWidth: 1,
-                        fill: '#ccc',
-                        stroke: '#ccc',
+                        fill: edgeColor,
+                        stroke: edgeColor,
                         originX: 'center',
                         originY: 'center',
                         perPixelTargetFind: true,
@@ -958,6 +958,15 @@ window.addEventListener('keydown',function(event){
 
 });
 
+window.addEventListener('keydown',function(event){
+    if(event.key === '3'){
+        canvas.setZoom( 1.5 );
+        canvas.viewportTransform[4]= -500;
+        canvas.viewportTransform[5]= -200;
+    }
+
+});
+
 //Button-Funktionen
 window.resetSectors = resetSectors;
 
@@ -1122,7 +1131,11 @@ let snap_radius_sectors = 8;
 let snap_radius_line = 15;
 let snap_radius_markPoint = 15;
 
-let snap_geodreieck_on_mark = 5
+let snap_geodreieck_on_mark = 5;
+
+let edgeColor = '#ccc';
+//let edgeColor = '#666';
+
 
 let abortlength = 20;
 
@@ -2506,8 +2519,8 @@ function initializeSectors() //keine Argumente
 
                     let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                         strokeWidth: 1,
-                        fill: '#ccc',
-                        stroke: '#ccc',
+                        fill: edgeColor,
+                        stroke: edgeColor,
                         originX: 'center',
                         originY: 'center',
                         perPixelTargetFind: true,
@@ -2990,21 +3003,27 @@ function positionSectors() {
 //Reset-Button der Geodäten; ordnet zudem die Sektoren in ihrer Startposition wieder an
 function removeLines() {
     geodesics = [];
-    for( let ii=0;ii<sectors.length;ii++){
+    for( let ii = 0; ii < sectors.length; ii++){
         sectors[ii].lineSegments = [];
+        sectors[ii].markCircles = [];
     }
 
     let objects = canvas.getObjects('line');
-    for (let ii=0; ii<objects.length;ii++) {
+    for (let ii=0; ii < objects.length; ii++) {
         canvas.remove(objects[ii]);
     }
 
+
     objects = canvas.getObjects('circle');
-    for (let ii=0; ii<objects.length;ii++) {
+    for (let ii = 0; ii < objects.length; ii++) {
+        console.log(objects)
         canvas.remove(objects[ii]);
     }
+
     resetSectors();
-    startGeodesics();
+    if (buildStartGeodesics == "1"){startGeodesics();}
+
+    if (buildStartMarks == "1"){startMarks();}
     toolChange('grab');
     geodreieck.set('angle', 0);
     canvas.renderAll();
@@ -3353,8 +3372,8 @@ function setOuterSectorsToCircle() {
 
                                     let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                                         strokeWidth: 1,
-                                        fill: '#ccc',
-                                        stroke: '#ccc',
+                                        fill: edgeColor,
+                                        stroke: edgeColor,
                                         originX: 'center',
                                         originY: 'center',
                                         perPixelTargetFind: true,
@@ -3821,8 +3840,8 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                             let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                                 strokeWidth: 1,
-                                fill: '#ccc',
-                                stroke: '#ccc',
+                                fill: edgeColor,
+                                stroke: edgeColor,
                                 originX: 'center',
                                 originY: 'center',
                                 perPixelTargetFind: true,
@@ -4371,8 +4390,8 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
 
                             let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                                 strokeWidth: 1,
-                                fill: '#ccc',
-                                stroke: '#ccc',
+                                fill: edgeColor,
+                                stroke: edgeColor,
                                 originX: 'center',
                                 originY: 'center',
                                 perPixelTargetFind: true,
@@ -4974,12 +4993,13 @@ function updateMinions(boss) {
 /*********************************** MAIN ***********************************/
 
 //***************************Sektoren entsprechend der Metrik anlegen********************************
-// Für Programmierung sec.name = ii, ansonsten sec.name = sec_name[ii]
+// Für Programmierung sec.name = ii, ansonsten sec.name = sec_name[ii], wenn keine (für Bilder) sec.name = "";
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
     //sec.name = ii;
     sec.name = sec_name[ii];
+    //sec.name = "";
     sec.ID = sec_ID[ii];
     sec.sector_type = sec_type[ii];
     sec.fontSize = sec_fontSize[ii];
@@ -5006,18 +5026,33 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
     if (textured == "1") {
         //----------------Nur wichtig, wenn Textur. Beachte, dass .fill in Overlap angepasst werden muss-------
-        let panels = [
-            'panel-5.3.png',
-            'panel-5.4.png',
-            'panel-5.5.png',
-            'panel-6.3.png',
-            'panel-6.4.png',
-            'panel-6.5.png',
-            'panel-7.3.png',
-            'panel-7.4.png',
-            'panel-7.5.png'
+        let panelsSuedAmerika =
+
+            [
+                'panel-5.3.png',
+                'panel-5.4.png',
+                'panel-5.5.png',
+                'panel-6.3.png',
+                'panel-6.4.png',
+                'panel-6.5.png',
+                'panel-7.3.png',
+                'panel-7.4.png',
+                'panel-7.5.png'
+            ];
+        let panelsSuedAmerikaAfrika =
+            [
+            'panel-7.3.jpg',
+            'panel-7.4.jpg',
+            'panel-7.5.jpg',
+            'panel-8.3.jpg',
+            'panel-8.4.jpg',
+            'panel-8.5.jpg',
+            'panel-9.3.jpg',
+            'panel-9.4.jpg',
+            'panel-9.5.jpg'
         ];
-        fabric.Image.fromURL(panels[ii], function (img) {
+
+        fabric.Image.fromURL(panelsSuedAmerika[ii], function (img) {
 
             img.scaleToWidth(sec_width[ii] + 4);
 
