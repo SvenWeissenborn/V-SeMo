@@ -102,7 +102,7 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
 
     var delta = -opt.e.deltaY;
 
-    console.log(canvas_side_bar_perm.viewportTransform[5] += delta * 10)
+
     if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
 
         this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist));
@@ -117,7 +117,6 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
     }else {
 
         canvas_side_bar_perm.viewportTransform[5] += delta * 10;
-        console.log('ergebnis:', canvas_side_bar_perm.viewportTransform[5])
         this.requestRenderAll();
         }
     }
@@ -173,7 +172,7 @@ canvas_side_bar_perm.on('mouse:move', function(opt) {
         }
 
 
-        console.log(canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY)
+
         if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) < window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))) {
 
             this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
@@ -776,7 +775,6 @@ if (showAutoSet == "0"){
 let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number + 1
 if (showChangeDirection == "0"){
     dist_to_top_auto_complete_main_button_number -= 1;
-    console.log(dist_to_top_auto_complete_main_button_number)
 }
 
 //dist_to_top_direction_main_button_number beschreibt die Höhe des Buttons und wird bei den kleinen Button gebraucht
