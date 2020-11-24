@@ -3,11 +3,11 @@ import numpy as np
 import math
 import string
 
-nSektorzeilenVonRing = 40
+nSektorzeilenVonRing = 3
 nSektorspaltenVonRing = 12
 
 nSektorzeilenVonRingSchwarzschild = 3
-nSektorzeilenVonRingEuklid = 8
+nSektorzeilenVonRingEuklid = 0
 
 schwarzschildradius = 60
 dr = 1.25
@@ -21,15 +21,15 @@ fontSize = 15
 # versatz_y liegt zwischen -1 und 1 und sorgt bei gleichen Winkel für parallele Geodäten
 
 versatz_x = 1.0
-versatz_y = 0.3
+versatz_y = 0.0
 versatz_x_var = 0.0
-versatz_y_var = 0.2
+versatz_y_var = 0.4
 
 # WICHTIG: startGeodesicsAngle benötigt genauso viele Einträge wie startGeodesicsSectors
 
-startGeodesicsAngle = [90]
+startGeodesicsAngle = [68, 68]
 
-startGeodesicsSectors = [399]
+startGeodesicsSectors = [29, 29]
 
 startMarksSectors = []
 startMarkRadius = [3]
@@ -48,7 +48,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_big_model.js",'w')
+    file = io.open("schwarzschildmetrik_parallel.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" +"\n"

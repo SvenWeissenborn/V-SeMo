@@ -35,23 +35,9 @@
 <script>
     //Name des Bildes zum runterladen
     let name_picture_result = "ergebnis_neutronenstern";
-
-    function getUrlVars() {
-        var vars = {};
-        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-            vars[key] = value;
-        });
-        return vars;
-    }
-
-    let language = getUrlVars()["language"];
-    let buildStartGeodesics = getUrlVars()["buildStartGeodesics"];
-    let buildStartMarks = getUrlVars()["buildStartMarks"];
-    let textured = getUrlVars()["textured"];
-    let autoSet = getUrlVars()["autoSet"];
 </script>
 
-
+<script src="url_variables.js"></script>
 <script src="fabric.js"></script>
 <script src="main_button_side_bar_perm.js"></script>
 
