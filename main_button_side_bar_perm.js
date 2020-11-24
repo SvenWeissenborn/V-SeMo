@@ -656,15 +656,15 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
         delete_whole.set('opacity', 1);
 
-        if (showAutoSet == "1") {
+        if (showAutoSet !== "0") {
             set_sectors.set('opacity', 1);
         }
 
-        if (showAutoComplete == "1") {
+        if (showAutoComplete !== "0") {
             autocomplete.set('opacity', 1);
         }
 
-        if (showChangeDirection == "1") {
+        if (showChangeDirection !== "0") {
             direction.set('opacity', 1);
         }
 
@@ -770,12 +770,15 @@ let direction;
 let visible = false;
 
 let dist_to_top_direction_main_button_number = 8
-if (showAutoSet !== "1"){
+if (showAutoSet == "0"){
     dist_to_top_direction_main_button_number -= 1;
-    if (showChangeDirection !== "1"){
-        dist_to_top_direction_main_button_number -= 1;
-    }
 }
+let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number + 1
+if (showChangeDirection == "0"){
+    dist_to_top_auto_complete_main_button_number -= 1;
+    console.log(dist_to_top_auto_complete_main_button_number)
+}
+
 //dist_to_top_direction_main_button_number beschreibt die Höhe des Buttons und wird bei den kleinen Button gebraucht
 //Ebenfalls wird dies bei den großen FolgeButtons gebraucht
 
@@ -783,7 +786,7 @@ function moveDirectionButtons(visibleToSet){
 
     if (visibleToSet == true) {
         visible = true;
-        autocomplete.set('top', dist_to_top + (dist_to_top_direction_main_button_number + 2.5) * (136 * buttonfactor * screenFactor + buttondist));
+        autocomplete.set('top', dist_to_top + (dist_to_top_auto_complete_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
         autocomplete.setCoords();
 
         //delete_whole.set('top', dist_to_top + 10.5 * (136 * buttonfactor * screenFactor + buttondist));
@@ -798,7 +801,7 @@ function moveDirectionButtons(visibleToSet){
     } else {
         visible = false;
 
-        autocomplete.set('top', dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist));
+        autocomplete.set('top', dist_to_top + dist_to_top_auto_complete_main_button_number * (136 * buttonfactor * screenFactor + buttondist));
         autocomplete.setCoords();
         //delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         //delete_whole.setCoords();
@@ -1032,7 +1035,7 @@ let autocomplete;
 fabric.Image.fromURL('autocomplete.png', function(img) {
     autocomplete = img.set({
         left: 51.5,
-        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + (dist_to_top_auto_complete_main_button_number) * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
