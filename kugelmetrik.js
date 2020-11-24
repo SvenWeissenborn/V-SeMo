@@ -20,6 +20,7 @@ text_dist_from_mid_y: [0.5, -0.9]
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey', 'grey', 'grey'];
 sec_name= [ 1, 2, 3, 4, 5, 6, 7, 8, 9, ];
+sec_fill= [ 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, ];
 sec_type= [ [], [], [], [], [], [], [], [], [], ];
 sec_fontSize= [ 15, 15, 15, 15, 15, 15, 15, 15, 15, ];

@@ -82,7 +82,7 @@ def main():
         "let mark_colors = ['grey', 'grey', 'grey'];")
     file.write("\n")
 
-    variablenamesSectors = ["sec_name", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
+    variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = zeilenanzahl * spaltenanzahl
 
@@ -97,7 +97,7 @@ def main():
         sectorValues[sectorDict["sec_name"]][id] = id + 1
         sectorValues[sectorDict["sec_ID"]][id] = id
         # Bei Bedarf muss die Fläche dazu genommen werden: Wichtig, "sec_fill" muss der Liste variablenamesSectors hinzugefügt werden!!!
-        # sectorValues[sectorDict["sec_fill"]][id] = "'white'"
+        sectorValues[sectorDict["sec_fill"]][id] = "'white'"
         sectorValues[sectorDict["sec_fontSize"]][id] = fontSize
 
     for zeile in range(zeilestart, zeileende):

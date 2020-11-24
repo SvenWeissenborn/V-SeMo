@@ -654,20 +654,34 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
         geodesicButtonsvisible = true;
 
-        autocomplete.set('opacity', 1);
-        direction.set('opacity', 1);
-        set_sectors.set('opacity', 1);
         delete_whole.set('opacity', 1);
+
+        if (showAutoSet == "1") {
+            set_sectors.set('opacity', 1);
+        }
+
+        if (showAutoComplete == "1") {
+            autocomplete.set('opacity', 1);
+        }
+
+        if (showChangeDirection == "1") {
+            direction.set('opacity', 1);
+        }
+
+
+
 
 
     }else {
 
         geodesicButtonsvisible = false;
 
+        delete_whole.set('opacity', 0);
+
         autocomplete.set('opacity', 0);
         direction.set('opacity', 0);
         set_sectors.set('opacity', 0);
-        delete_whole.set('opacity', 0);
+
         canvas_side_bar_perm.viewportTransform[5] = 0;
         canvas_side_bar_perm.forEachObject(function(o) {
             o.setCoords();
@@ -679,11 +693,9 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
 }
 
-
-
-let autocomplete;
-fabric.Image.fromURL('autocomplete.png', function(img) {
-    autocomplete = img.set({
+let delete_whole;
+fabric.Image.fromURL('delete.png', function(img) {
+    delete_whole = img.set({
         left: 51.5,
         top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
@@ -699,60 +711,111 @@ fabric.Image.fromURL('autocomplete.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
-    autocomplete.on('mousedown', function (o) {
-        autocomplete.setShadow(shadowOn);
+    delete_whole.on('mousedown', function (o) {
+        delete_whole.setShadow(shadowOn);
     });
-    autocomplete.on('mouseout', function (o) {
-        autocomplete.setShadow(shadowOff);
+    delete_whole.on('mouseout', function (o) {
+        delete_whole.setShadow(shadowOff);
     });
 
-    autocomplete.on('mouseup', function (o) {
-        autocomplete.setShadow(shadowOff);
-        continueGeodesic(chosenGeodesicGlobalID);
+    delete_whole.on('mouseup', function (o) {
+        delete_whole.setShadow(shadowOff);
+        deleteWholeGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
-
+        arrowheadline = -1;
         moveDirectionButtons(false);
     });
-    canvas_side_bar_perm.add(autocomplete);
+    canvas_side_bar_perm.add(delete_whole);
 });
+
+let set_sectors;
+fabric.Image.fromURL('set_sectors.png', function(img) {
+    set_sectors = img.set({
+        left: 51.5,
+        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 0,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    set_sectors.on('mousedown', function (o) {
+        set_sectors.setShadow(shadowOn);
+    });
+    set_sectors.on('mouseout', function (o) {
+        set_sectors.setShadow(shadowOff);
+    });
+
+    set_sectors.on('mouseup', function (o) {
+        set_sectors.setShadow(shadowOff);
+        setSectors(chosenGeodesicGlobalID);
+        toolChange('grab');
+        arrowheadline = -1;
+        moveDirectionButtons(false);
+    });
+    canvas_side_bar_perm.add(set_sectors);
+});
+
+
 
 
 let direction;
 let visible = false;
 
+let dist_to_top_direction_main_button_number = 8
+if (showAutoSet !== "1"){
+    dist_to_top_direction_main_button_number -= 1;
+    if (showChangeDirection !== "1"){
+        dist_to_top_direction_main_button_number -= 1;
+    }
+}
+//dist_to_top_direction_main_button_number beschreibt die Höhe des Buttons und wird bei den kleinen Button gebraucht
+//Ebenfalls wird dies bei den großen FolgeButtons gebraucht
+
 function moveDirectionButtons(visibleToSet){
 
     if (visibleToSet == true) {
         visible = true;
-        set_sectors.set('top', dist_to_top + 9.5 * (136 * buttonfactor * screenFactor + buttondist));
-        set_sectors.setCoords();
+        autocomplete.set('top', dist_to_top + (dist_to_top_direction_main_button_number + 2.5) * (136 * buttonfactor * screenFactor + buttondist));
+        autocomplete.setCoords();
 
-        delete_whole.set('top', dist_to_top + 10.5 * (136 * buttonfactor * screenFactor + buttondist));
-        delete_whole.setCoords();
+        //delete_whole.set('top', dist_to_top + 10.5 * (136 * buttonfactor * screenFactor + buttondist));
+        //delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 1);
         change_direction_clockwise_high.set('opacity', 1);
         change_direction_counterclock_low.set('opacity', 1);
         change_direction_clockwise_low.set('opacity', 1)
+        canvas_side_bar_perm.renderAll()
 
     } else {
         visible = false;
-        set_sectors.set('top', dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist));
-        set_sectors.setCoords();
-        delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
-        delete_whole.setCoords();
+
+        autocomplete.set('top', dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist));
+        autocomplete.setCoords();
+        //delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
+        //delete_whole.setCoords();
 
         change_direction_counterclock_high.set('opacity', 0);
         change_direction_clockwise_high.set('opacity', 0);
         change_direction_counterclock_low.set('opacity', 0);
         change_direction_clockwise_low.set('opacity', 0)
+        canvas_side_bar_perm.renderAll()
     }
 }
+
 
 fabric.Image.fromURL('direction.png', function(img) {
     direction = img.set({
         left: 51.5,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + dist_to_top_direction_main_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -790,8 +853,8 @@ let buttondist_local = 10 * screenFactor;
 let change_direction_counterclock_high;
 fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(img) {
     change_direction_counterclock_high = img.set({
-        left: 50 - 5 *screenFactor,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        left: 50 - 5 * screenFactor,
+        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -837,7 +900,7 @@ let change_direction_clockwise_high;
 fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img) {
     change_direction_clockwise_high = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -880,7 +943,7 @@ let change_direction_counterclock_low;
 fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(img) {
     change_direction_counterclock_low = img.set({
         left: 50 - 5 *screenFactor,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "right",
         originY: "top",
         perPixelTargetFind: true,
@@ -924,7 +987,7 @@ let change_direction_clockwise_low;
 fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) {
     change_direction_clockwise_low = img.set({
         left: 50 + 5 *screenFactor,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
+        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist) + 136 *scalefactorclockbutton * screenFactor + 10 *screenFactor,
         originX: "left",
         originY: "top",
         perPixelTargetFind: true,
@@ -964,11 +1027,12 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
     canvas_side_bar_perm.add(change_direction_clockwise_low);
 });
 
-let set_sectors;
-fabric.Image.fromURL('set_sectors.png', function(img) {
-    set_sectors = img.set({
+
+let autocomplete;
+fabric.Image.fromURL('autocomplete.png', function(img) {
+    autocomplete = img.set({
         left: 51.5,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + (dist_to_top_direction_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -982,57 +1046,23 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
-    set_sectors.on('mousedown', function (o) {
-        set_sectors.setShadow(shadowOn);
+    autocomplete.on('mousedown', function (o) {
+        autocomplete.setShadow(shadowOn);
     });
-    set_sectors.on('mouseout', function (o) {
-        set_sectors.setShadow(shadowOff);
+    autocomplete.on('mouseout', function (o) {
+        autocomplete.setShadow(shadowOff);
     });
 
-    set_sectors.on('mouseup', function (o) {
-        set_sectors.setShadow(shadowOff);
-        setSectors(chosenGeodesicGlobalID);
+    autocomplete.on('mouseup', function (o) {
+        autocomplete.setShadow(shadowOff);
+        continueGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
-        arrowheadline = -1;
+
         moveDirectionButtons(false);
     });
-    canvas_side_bar_perm.add(set_sectors);
+    canvas_side_bar_perm.add(autocomplete);
 });
 
-let delete_whole;
-fabric.Image.fromURL('delete.png', function(img) {
-    delete_whole = img.set({
-        left: 51.5,
-        top: dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 0,
-        originX: "center",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"});
-
-    delete_whole.on('mousedown', function (o) {
-        delete_whole.setShadow(shadowOn);
-    });
-    delete_whole.on('mouseout', function (o) {
-        delete_whole.setShadow(shadowOff);
-    });
-
-    delete_whole.on('mouseup', function (o) {
-        delete_whole.setShadow(shadowOff);
-        deleteWholeGeodesic(chosenGeodesicGlobalID);
-        toolChange('grab');
-        arrowheadline = -1;
-        moveDirectionButtons(false);
-    });
-    canvas_side_bar_perm.add(delete_whole);
-});
 
 function download_image(){
     let canvasToDownload = document.getElementById("canvas");

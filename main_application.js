@@ -236,7 +236,7 @@ canvas.on('mouse:move', function (o) {
 
         let stackIdx = 0;
 
-        if (autoSet == "1") {
+        if (autoSetOnDraw == "1") {
             for (let ii = sectors.length -1; ii >= 0; ii--) {
 
                 if(canvas.getObjects().indexOf(sectors[ii].ID_text) > stackIdx) {
@@ -275,14 +275,14 @@ canvas.on('mouse:move', function (o) {
             line.fill = color;
 
         } else {
-            if (autoSet !== "1") {
+            if (autoSetOnDraw !== "1") {
                 line.stroke = 'red';
                 line.fill = 'red';
             }
         }
 
-        //TODO autoSet muss endlich fertig gestellt werden
-        if (autoSet == "1") {
+        //TODO autoSetOnDraw muss endlich fertig gestellt werden
+        if (autoSetOnDraw == "1") {
 
             //Umrechnung der lokalen in globale Koordinaten
             let transformMatrix = sectors[actualSector].trapez.calcTransformMatrix('True');
@@ -2064,7 +2064,7 @@ function drawDragPoint(geodesicToGivePoint) {
         chosenGeodesicGlobalID = lineSegment.ID[0];
         showGeodesicButtons(true);
 
-        if (autoSet == "1") {
+        if (autoSetOnDraw == "1") {
             sectors[lineSegment.parentSector[0]].trapez.bringToFront();
             updateMinions(sectors[lineSegment.parentSector[0]].trapez)
         }
