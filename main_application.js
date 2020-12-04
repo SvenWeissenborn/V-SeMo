@@ -1212,7 +1212,16 @@ function snapSectorsForDeficitAngle(trapezID) {
     }
 
     sectorCountToCalcAngle.push(trapezID);
-    sectors[trapezID].trapez.fill = 'yellow';
+    //sectors[trapezID].trapez.fill = 'yellow';
+
+
+    sectors[trapezID].trapez.setShadow({  color: 'rgba(0,0,0,0.2)',
+        blur: 10,
+        offsetX: 5,
+        offsetY: 0
+    });
+
+
     console.log({sectorCountToCalcAngle});
     
     if (sectorCountToCalcAngle.length == 4){
@@ -1272,8 +1281,8 @@ function snapSectorsForDeficitAngle(trapezID) {
 
         point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
 
-        canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: point_1.y, left: point_1.x, originX: 'center', originY: 'center', }));
-        canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: point_2.y, left: point_2.x, originX: 'center', originY: 'center', }));
+        //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: point_1.y, left: point_1.x, originX: 'center', originY: 'center', }));
+        //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', top: point_2.y, left: point_2.x, originX: 'center', originY: 'center', }));
 
         transformMatrix = sectors[sectorCountToCalcAngle[2]].trapez.calcTransformMatrix();
 
@@ -1287,8 +1296,8 @@ function snapSectorsForDeficitAngle(trapezID) {
         point_a = fabric.util.transformPoint(point_a, transformMatrix);
         point_b = fabric.util.transformPoint(point_b, transformMatrix);
 
-        canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_a.y, left: point_a.x, originX: 'center', originY: 'center', }));
-        canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_b.y, left: point_b.x, originX: 'center', originY: 'center', }));
+        //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_a.y, left: point_a.x, originX: 'center', originY: 'center', }));
+        //canvas.add(new fabric.Circle({ radius: 5, fill: 'yellow', top: point_b.y, left: point_b.x, originX: 'center', originY: 'center', }));
 
         let vec_12_x = point_1.x - point_2.x;
         let vec_12_y = point_1.y - point_2.y;
@@ -1301,6 +1310,10 @@ function snapSectorsForDeficitAngle(trapezID) {
         let deficitAngle = Math.acos((vec_12_x * vec_ab_x + vec_12_y * vec_ab_y) / (betrag_vec_12 * betrag_vec_ab))
 
         console.log({deficitAngle})
+
+        for (let ii = 0; ii < sectorCountToCalcAngle.length; ii++){
+            overlapControll(sectors[sectorCountToCalcAngle[ii]].trapez)
+        }
 
         sectorCountToCalcAngle = [];
 
@@ -4417,8 +4430,9 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
             dist_1a = distance(point_1, point_a);
             dist_2b = distance(point_2, point_b);
 
-
-            sectors[sec_idx].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
+            if(textured !== "1") {
+                sectors[sec_idx].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
+            }
 
 
             //Bestimmung des kleineren Abstands -> legt die Translation und Rotation fest
@@ -4591,7 +4605,10 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
 
     for (let ii = 0; ii < 4; ii++) {
         if (trapez.parent.neighbourhood[ii] > -1) {
-            sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
+            if(textured !== "1") {
+                sectors[trapez.parent.neighbourhood[ii]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[ii]].ID];
+            }
+            sectors[trapez.parent.neighbourhood[ii]].trapez.setShadow({  color: 'rgba(0,0,0,0)'});
         }
     }
 
