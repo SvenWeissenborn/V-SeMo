@@ -645,6 +645,39 @@ canvas_side_bar_perm.on('mouse:out', function(e) {
 });
 */
 
+fabric.Image.fromURL('area_sector.png', function(img) {
+    area_sector = img.set({
+        left: 51.5,
+        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 1,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    area_sector.on('mousedown', function (o) {
+        area_sector.setShadow(shadowOn);
+    });
+
+    area_sector.on('mouseout', function (o) {
+        area_sector.setShadow(shadowOff);
+    });
+
+    area_sector.on('mouseup', function (o) {
+        area_sector.setShadow(shadowOff);
+        calcSectorArea();
+        canvas_side_bar_perm.renderAll()
+
+    });
+    canvas_side_bar_perm.add(area_sector);
+});
 
 let geodesicButtonsvisible;
 
@@ -696,7 +729,7 @@ let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
     delete_whole = img.set({
         left: 51.5,
-        top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -731,7 +764,7 @@ let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
     set_sectors = img.set({
         left: 51.5,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -768,7 +801,7 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 let direction;
 let visible = false;
 
-let dist_to_top_direction_main_button_number = 8
+let dist_to_top_direction_main_button_number = 9
 if (showAutoSet == "0"){
     dist_to_top_direction_main_button_number -= 1;
 }
