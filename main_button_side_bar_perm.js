@@ -311,6 +311,8 @@ fabric.Image.fromURL('restart.png', function(img) {
         showGeodesicButtons(false);
         removeLines();
         addGeodreieck(false);
+        toCalcSectorArea = false;
+        showSectorAreaInfobox(false);
         canvas_side_bar_perm.renderAll();
 
     });
@@ -350,6 +352,8 @@ fabric.Image.fromURL('reset.png', function(img) {
         showGeodesicButtons(false);
         resetSectors();
         addGeodreieck(false);
+        toCalcSectorArea = false;
+        showSectorAreaInfobox(false);
         canvas_side_bar_perm.renderAll()
 
     });
@@ -570,6 +574,8 @@ fabric.Image.fromURL('button_dreieck.png', function(img) {
         button_dreieck.setShadow(shadowOff);
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
+        toCalcSectorArea = false;
+        showSectorAreaInfobox(false);
         toolChange('grab');
         addGeodreieck(true);
         canvas_side_bar_perm.renderAll()
@@ -645,39 +651,6 @@ canvas_side_bar_perm.on('mouse:out', function(e) {
 });
 */
 
-fabric.Image.fromURL('area_sector.png', function(img) {
-    area_sector = img.set({
-        left: 51.5,
-        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 1,
-        originX: "center",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"});
-
-    area_sector.on('mousedown', function (o) {
-        area_sector.setShadow(shadowOn);
-    });
-
-    area_sector.on('mouseout', function (o) {
-        area_sector.setShadow(shadowOff);
-    });
-
-    area_sector.on('mouseup', function (o) {
-        area_sector.setShadow(shadowOff);
-        calcSectorArea();
-        canvas_side_bar_perm.renderAll()
-
-    });
-    canvas_side_bar_perm.add(area_sector);
-});
 
 let geodesicButtonsvisible;
 
@@ -688,15 +661,15 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
         delete_whole.set('opacity', 1);
 
-        if (showAutoSet !== "0") {
+        if (showAutoSet == "1") {
             set_sectors.set('opacity', 1);
         }
 
-        if (showAutoComplete !== "0") {
+        if (showAutoComplete == "1") {
             autocomplete.set('opacity', 1);
         }
 
-        if (showChangeDirection !== "0") {
+        if (showChangeDirection == "1") {
             direction.set('opacity', 1);
         }
 
@@ -724,12 +697,106 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
     canvas_side_bar_perm.renderAll()
 
 }
+let areaSectorOpacity = 0
+if (showAreaSector == "1") {
+    areaSectorOpacity = 1 ;
+}
+
+let area_sector
+fabric.Image.fromURL('area_sector.png', function(img) {
+    area_sector = img.set({
+        left: 51.5,
+        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: areaSectorOpacity,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    area_sector.on('mousedown', function (o) {
+        area_sector.setShadow(shadowOn);
+    });
+
+    area_sector.on('mouseout', function (o) {
+        area_sector.setShadow(shadowOff);
+    });
+
+    area_sector.on('mouseup', function (o) {
+        area_sector.setShadow(shadowOff);
+        calcSectorArea();
+        changeGeodesicWidth(2);
+        showGeodesicButtons(false);
+        toolChange('grab');
+        canvas_side_bar_perm.renderAll()
+
+    });
+    canvas_side_bar_perm.add(area_sector);
+});
+
+let infoboxArea;
+infoboxArea = new fabric.Rect({
+    left: 140 * screenFactor,
+    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+    opacity: 0,
+    width: 110 * screenFactor,
+    height: 50 * screenFactor,
+    stroke: '#575656',
+    fill: 'white',
+    strokeWidth: 3,
+    rx:5,
+    ry:5,
+    originX: 'center',
+    originY: 'top',
+    hasBorders: false,
+    hasControls: false,
+    selectable: false,
+    perPixelTargetFind: true,
+});
+canvas_side_bar_perm.add(infoboxArea);
+
+let infoboxAreaTextByLanguage = "wähle einen\nSektor";
+if (language == "english"){
+    infoboxAreaTextByLanguage = "click on\na sector"
+}
+
+let infoboxAreaText
+infoboxAreaText = new fabric.Text("Text", {
+    opacity: 0,
+    fontSize: 16 * screenFactor,
+    fontFamily: 'arial',
+    fontWeight: 'bold',
+    selectable: false,
+    originX: 'center',
+    originY: 'center',
+    left: 140 * screenFactor,
+    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
+    text: infoboxAreaTextByLanguage,
+    fill: '#575656',
+    hasBorders: false,
+    hasControls: false,
+    selectable: false,
+    perPixelTargetFind: true,
+});
+
+canvas_side_bar_perm.add(infoboxAreaText);
+
+let dist_to_top_delete_whole_button_number = 6
+if (showAreaSector == "1"){
+    dist_to_top_delete_whole_button_number += 1;
+}
 
 let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
     delete_whole = img.set({
         left: 51.5,
-        top: dist_to_top + 7 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + dist_to_top_delete_whole_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -760,11 +827,16 @@ fabric.Image.fromURL('delete.png', function(img) {
     canvas_side_bar_perm.add(delete_whole);
 });
 
+let dist_to_top_set_sectors_button_number = 7
+if (showAreaSector == "1"){
+    dist_to_top_set_sectors_button_number += 1;
+}
+
 let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
     set_sectors = img.set({
         left: 51.5,
-        top: dist_to_top + 8 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + dist_to_top_set_sectors_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -801,13 +873,13 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 let direction;
 let visible = false;
 
-let dist_to_top_direction_main_button_number = 9
-if (showAutoSet == "0"){
-    dist_to_top_direction_main_button_number -= 1;
+let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number
+if (showAutoSet == "1"){
+    dist_to_top_direction_main_button_number += 1;
 }
-let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number + 1
-if (showChangeDirection == "0"){
-    dist_to_top_auto_complete_main_button_number -= 1;
+let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number
+if (showChangeDirection == "1"){
+    dist_to_top_auto_complete_main_button_number += 1;
 }
 
 //dist_to_top_direction_main_button_number beschreibt die Höhe des Buttons und wird bei den kleinen Button gebraucht

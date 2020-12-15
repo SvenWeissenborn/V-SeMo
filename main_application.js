@@ -981,10 +981,8 @@ if (window.innerWidth < 1000 || window.innerHeight < 1000){
 }
 
 //-----------------Instructional Overlay---------------------------------
-let instructional_overlay_language;
-if(language == "german"){
-    instructional_overlay_language = 'instructional_overlay.png'
-}
+let instructional_overlay_language = 'instructional_overlay.png';
+
 if(language == "english"){
     instructional_overlay_language = 'instructional_overlay_en.png'
 }
@@ -1177,10 +1175,28 @@ let toCalcSectorArea = false;
 function calcSectorArea() {
     if (toCalcSectorArea !== true){
         toCalcSectorArea = true
+        showSectorAreaInfobox(true)
     }else {
         toCalcSectorArea = false
+        showSectorAreaInfobox(false)
     }
     console.log(toCalcSectorArea)
+}
+
+function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
+    if (sectorAreaInfoboxVisibleToSet == true) {
+        canvas_side_bar_perm.setWidth(200 * scaleRatio);
+        infoboxArea.opacity = 1;
+        infoboxAreaText.opacity = 1;
+    }
+
+    if (sectorAreaInfoboxVisibleToSet == false) {
+        canvas_side_bar_perm.setWidth(100 * scaleRatio);
+        infoboxArea.opacity = 0;
+        infoboxAreaText.opacity = 0;
+        infoboxAreaText.set('text', infoboxAreaTextByLanguage)
+    }
+
 }
 
 let toShowVertices = false;
@@ -1307,9 +1323,12 @@ function snapSectorsForDeficitAngle(trapezID) {
         let vec_ab_y = point_a.y - point_b.y;
         let betrag_vec_ab = Math.sqrt(vec_ab_x * vec_ab_x + vec_ab_y * vec_ab_y)
 
-        let deficitAngle = Math.acos((vec_12_x * vec_ab_x + vec_12_y * vec_ab_y) / (betrag_vec_12 * betrag_vec_ab))
+        let deficitAngle = Math.asin((vec_12_x * vec_ab_y - vec_12_y * vec_ab_x) / (betrag_vec_12 * betrag_vec_ab))
+
+        //let deficitAngle2 = Math.acos((vec_12_x * vec_ab_x + vec_12_y * vec_ab_y) / (betrag_vec_12 * betrag_vec_ab))
 
         console.log({deficitAngle})
+
 
         for (let ii = 0; ii < sectorCountToCalcAngle.length; ii++){
             overlapControll(sectors[sectorCountToCalcAngle[ii]].trapez)
@@ -2711,17 +2730,21 @@ function initializeSectors() //keine Argumente
                 }
             }
         }
-
-
-    });
-
-    this.trapez.on('mouseover', function (o) {
-        if (toCalcSectorArea == true){
+        if (toCalcSectorArea == true & selectedTool == 'grab'){
             let sectorArea = 0.5 * (this.parent.sector_top * 0.03 + this.parent.sector_bottom * 0.03) * this.parent.sector_height * 0.03 ;
-            console.log({sectorArea})
-        }
-    });
+            let sectorArea4Dec = sectorArea.toFixed(4)
+            let infoboxAreaTextByLanguageOnClick = "Sektorfläche:";
+            if (language == "english"){
+                infoboxAreaTextByLanguageOnClick = "sector area:"
+            }
+            infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick+"\n"+ sectorArea4Dec.toString() +" " + "cm²")
 
+            canvas_side_bar_perm.renderAll()
+
+        };
+
+
+    });
     canvas.add(this.trapez);
     canvas.add(this.ID_text);
 }
@@ -4929,6 +4952,8 @@ function toolChange(argument) {
                     add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
+                toCalcSectorArea = false;
+                showSectorAreaInfobox(false);
 
             } else {
                 cursor = 'grabbing';
@@ -5170,10 +5195,21 @@ function updateMinions(boss) {
 //***************************Sektoren entsprechend der Metrik anlegen********************************
 // Für Programmierung sec.name = ii, ansonsten sec.name = sec_name[ii], wenn keine (für Bilder) sec.name = "";
 
+function randomPositionAndAngle(){
+    for (let ii = 0; ii < sectors.length; ii++){
+        let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+        sectors[ii].trapez.top += 100 * Math.random() * plusOrMinus;
+        sectors[ii].trapez.left += 100 * Math.random() * plusOrMinus;
+        sectors[ii].trapez.angle += 360 * Math.random() * plusOrMinus;
+        sectors[ii].trapez.setCoords();
+        updateMinions(sectors[ii].trapez);
+    }
+}
+
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    sec.name = ii;
-    //sec.name = sec_name[ii];
+    //sec.name = ii;
+    sec.name = sec_name[ii];
     //sec.name = "";
     sec.ID = sec_ID[ii];
     sec.sector_type = sec_type[ii];
@@ -5195,13 +5231,12 @@ for (let ii = 0; ii < sec_name.length; ii ++){
     if (textured !== "1") {
         sec.fill = sec_fill[ii];
     }
-
     sec.init();
     sectors.push(sec);
 
     if (textured == "1") {
         //----------------Nur wichtig, wenn Textur. Beachte, dass .fill in Overlap angepasst werden muss-------
-        let panelsSuedAmerika =
+        let panels =
 
             [
                 'panel-5.3.png',
@@ -5214,20 +5249,22 @@ for (let ii = 0; ii < sec_name.length; ii ++){
                 'panel-7.4.png',
                 'panel-7.5.png'
             ];
-        let panelsSuedAmerikaAfrika =
-            [
-            'panel-7.3.jpg',
-            'panel-7.4.jpg',
-            'panel-7.5.jpg',
-            'panel-8.3.jpg',
-            'panel-8.4.jpg',
-            'panel-8.5.jpg',
-            'panel-9.3.jpg',
-            'panel-9.4.jpg',
-            'panel-9.5.jpg'
-        ];
+        if (textureColored == "1") {
+            panels =
+                [
+                    'panel-7.3.jpg',
+                    'panel-7.4.jpg',
+                    'panel-7.5.jpg',
+                    'panel-8.3.jpg',
+                    'panel-8.4.jpg',
+                    'panel-8.5.jpg',
+                    'panel-9.3.jpg',
+                    'panel-9.4.jpg',
+                    'panel-9.5.jpg'
+                ];
+        }
 
-        fabric.Image.fromURL(panelsSuedAmerika[ii], function (img) {
+        fabric.Image.fromURL(panels[ii], function (img) {
 
             img.scaleToWidth(sec_width[ii] + 4);
 
@@ -5268,6 +5305,8 @@ if (buildStartMarks == "1"){startMarks();}
 startTexts();
 
 toolChange(selectedTool);
+
+if (setPositionAndAngleRandomly == "1"){randomPositionAndAngle();}
 
 canvas.renderAll();
 

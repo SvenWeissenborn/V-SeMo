@@ -94,7 +94,10 @@ def main():
     jj =0
 
     for id in range(0, anzahlDerSektoren):
-        sectorValues[sectorDict["sec_name"]][id] = id + 1
+        if (id == 5 or id == 8 ):
+            sectorValues[sectorDict["sec_name"]][id] = "'" + str(id + 1)+"." "'"
+        else:
+            sectorValues[sectorDict["sec_name"]][id] = id + 1
         sectorValues[sectorDict["sec_ID"]][id] = id
         # Bei Bedarf muss die Fläche dazu genommen werden: Wichtig, "sec_fill" muss der Liste variablenamesSectors hinzugefügt werden!!!
         sectorValues[sectorDict["sec_fill"]][id] = "'white'"
