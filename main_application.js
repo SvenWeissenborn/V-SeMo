@@ -2912,7 +2912,7 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
             let dyt12 = yt2 - yt1;
 
 
-            if( dxg > epsilon)
+            if( Math.abs(dxg) > epsilon)
             {
                 alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
                 lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
