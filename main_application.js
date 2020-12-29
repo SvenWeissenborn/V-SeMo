@@ -243,7 +243,6 @@ canvas.on('mouse:move', function (o) {
                         actualSector = ii;
                         let stackIdxOfActualSector = canvas.getObjects().indexOf(sectors[ii].trapez)
 
-                        console.log(actualSector, stackIdxOfActualSector)
                         break
                     }
                 }
@@ -1174,7 +1173,6 @@ function calcSectorArea() {
         toCalcSectorArea = false
         showSectorAreaInfobox(false)
     }
-    console.log(toCalcSectorArea)
 }
 
 function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
@@ -2147,7 +2145,6 @@ function initializeSectors() //keine Argumente
 
                 if (selectedTool == 'grab' && toShowVertices == true){
 
-                    console.log(this.parent.ID)
                     snapSectorsForDeficitAngle(this.parent.ID)
                     
 
@@ -2435,7 +2432,6 @@ function geodreieckMove(geodreieckToMove){
 
     for (let ii = 0; ii < geodesics.length; ii++){
         if (geodesics[ii][geodesics[ii].length-1] !== undefined){
-            console.log('test')
 
             let dragPointCoords = new fabric.Point(geodesics[ii][geodesics[ii].length-1].dragPoint.left, geodesics[ii][geodesics[ii].length-1].dragPoint.top);
             let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
@@ -2449,23 +2445,6 @@ function geodreieckMove(geodreieckToMove){
             }
         }
     }
-
-
-    /*
-    for (let ii = 0; ii < markPoints.length; ii++) {
-        //console.log(markPoints)
-        let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
-        let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
-        if (distance(markPointCoords, geodreieckMidKante) < snap_geodreieck_on_mark) {
-
-            dist_x = markPointCoords.x - geodreieckMidKante.x;
-            dist_y = markPointCoords.y - geodreieckMidKante.y;
-
-            geodreieckToMove.left += dist_x;
-            geodreieckToMove.top += dist_y
-        }
-    }
-    */
 
     if (markPoints.length < 1){
         return
@@ -2909,7 +2888,6 @@ function removeLines() {
 
     objects = canvas.getObjects('circle');
     for (let ii = 0; ii < objects.length; ii++) {
-        console.log(objects)
         canvas.remove(objects[ii]);
     }
 
@@ -2973,8 +2951,6 @@ window.addEventListener('keydown',function(event){
 
 function setOuterSectorsToCircle() {
     for (let ii = 0; ii < sectors.length; ii++) {
-
-        console.log(sectors[ii].sector_type)
 
         if (sectors[ii].sector_type == 'euklid') {
 
@@ -4020,7 +3996,7 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
     let dist_2b;
     for (let ii = 0; ii < 4; ii++) {
         sec_idx = trapez.parent.neighbourhood[ii];
-        console.log({sec_idx})
+
         if (sec_idx == sectorToSnapInFunction) {
 
             midpointSectorStatic = new fabric.Point(sectors[sec_idx].trapez.left, sectors[sec_idx].trapez.top);
@@ -4318,8 +4294,6 @@ function startMarks() {
             hoverCursor: 'crosshair',
             padding: 10
         });
-
-        console.log(mark)
 
 
 

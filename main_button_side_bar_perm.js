@@ -23,6 +23,31 @@ let buttondist = 25;
 let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 25;
 
+
+let dist_to_top_delete_whole_button_number = 6;
+if (showAreaSector == "1"){
+    dist_to_top_delete_whole_button_number += 1;
+}
+
+let dist_to_top_set_sectors_button_number = 7;
+if (showAreaSector == "1"){
+    dist_to_top_set_sectors_button_number += 1;
+}
+
+let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number;
+if (showAutoSet == "1"){
+    dist_to_top_direction_main_button_number += 1;
+}
+let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number;
+if (showChangeDirection == "1"){
+    dist_to_top_auto_complete_main_button_number += 1;
+}
+
+let maxScrollNumber = dist_to_top_auto_complete_main_button_number;
+if (showAutoComplete == "1"){
+    maxScrollNumber += 1;
+}
+
 function changeGeodesicWidth(targetWidth){
     chosenGeodesicGlobalID = -1;
     for (let ii = 0; ii < geodesics.length; ii++) {
@@ -103,9 +128,9 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
     var delta = -opt.e.deltaY;
 
 
-    if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))){
+    if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))){
 
-        this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist));
+        this.viewportTransform[5] = window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist));
         this.requestRenderAll();
 
     }else{
@@ -173,9 +198,9 @@ canvas_side_bar_perm.on('mouse:move', function(opt) {
 
 
 
-        if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) < window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))) {
+        if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) < window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))) {
 
-            this.viewportTransform[5] = window.innerHeight - (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist))
+            this.viewportTransform[5] = window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))
 
         } else {
             if ((canvas_side_bar_perm.viewportTransform[5] += YCoord - this.lastPosY) >= 0) {
@@ -787,10 +812,7 @@ infoboxAreaText = new fabric.Text("Text", {
 
 canvas_side_bar_perm.add(infoboxAreaText);
 
-let dist_to_top_delete_whole_button_number = 6
-if (showAreaSector == "1"){
-    dist_to_top_delete_whole_button_number += 1;
-}
+
 
 let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {
@@ -827,10 +849,7 @@ fabric.Image.fromURL('delete.png', function(img) {
     canvas_side_bar_perm.add(delete_whole);
 });
 
-let dist_to_top_set_sectors_button_number = 7
-if (showAreaSector == "1"){
-    dist_to_top_set_sectors_button_number += 1;
-}
+
 
 let set_sectors;
 fabric.Image.fromURL('set_sectors.png', function(img) {
@@ -873,14 +892,7 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 let direction;
 let visible = false;
 
-let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number
-if (showAutoSet == "1"){
-    dist_to_top_direction_main_button_number += 1;
-}
-let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number
-if (showChangeDirection == "1"){
-    dist_to_top_auto_complete_main_button_number += 1;
-}
+
 
 //dist_to_top_direction_main_button_number beschreibt die Höhe des Buttons und wird bei den kleinen Button gebraucht
 //Ebenfalls wird dies bei den großen FolgeButtons gebraucht
@@ -889,6 +901,9 @@ function moveDirectionButtons(visibleToSet){
 
     if (visibleToSet == true) {
         visible = true;
+
+        maxScrollNumber += 1.5;
+
         autocomplete.set('top', dist_to_top + (dist_to_top_auto_complete_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
         autocomplete.setCoords();
 
@@ -898,10 +913,19 @@ function moveDirectionButtons(visibleToSet){
         change_direction_counterclock_high.set('opacity', 1);
         change_direction_clockwise_high.set('opacity', 1);
         change_direction_counterclock_low.set('opacity', 1);
-        change_direction_clockwise_low.set('opacity', 1)
+        change_direction_clockwise_low.set('opacity', 1);
         canvas_side_bar_perm.renderAll()
 
     } else {
+
+        if (visible == true){
+            maxScrollNumber -= 1.5;
+            if (canvas_side_bar_perm.viewportTransform[5] < window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))) {
+                canvas_side_bar_perm.viewportTransform[5] = window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist));
+                canvas_side_bar_perm.requestRenderAll();
+            }
+        }
+
         visible = false;
 
         autocomplete.set('top', dist_to_top + dist_to_top_auto_complete_main_button_number * (136 * buttonfactor * screenFactor + buttondist));
