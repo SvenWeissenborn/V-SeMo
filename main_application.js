@@ -169,7 +169,7 @@ canvas.on('mouse:move', function (o) {
         }else {
             let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
             let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
-            if (Math.abs(alpha - beta) <= Math.PI / 36 || Math.abs(alpha + beta) <= Math.PI / 36) {
+            if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
                 line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
             } else {
 
