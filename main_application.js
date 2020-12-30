@@ -1157,6 +1157,8 @@ let markPoints = [];
 
 let texts = [];
 
+let cornerArcs = [];
+
 let geodesics = [];
 
 let chosenGeodesicGlobalID = -1;
@@ -1191,10 +1193,140 @@ function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
 
 }
 
+function toRadians(deg) {
+    return deg * Math.PI / 180
+}
+function toDegree(rad) {
+    return rad * 180 /Math.PI
+}
+
 let toShowVertices = false;
 function showVertices() {
     if (toShowVertices !== true){
         toShowVertices = true;
+
+        for (let ii = 0; ii < sectors.length; ii++){
+
+            let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
+            let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+            for (let jj = 0; jj < 4; jj++) {
+                transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width / 2;
+                transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height / 2;
+                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
+            }
+
+
+            for (let jj = 0; jj < 4; jj++) {
+
+
+
+                let point_a = transformedPoints[(jj + 1) % 4];
+
+                let point_b = transformedPoints[jj];
+                let point_c = transformedPoints[(jj + 3) % 4];
+
+                let vec_ba_x = point_a.x - point_b.x;
+                let vec_ba_y = point_a.y - point_b.y;
+
+                let vec_bc_x = point_c.x - point_b.x;
+                let vec_bc_y = point_c.y - point_b.y;
+
+                let cornerAngle;
+
+
+
+                cornerAngle = Math.acos((vec_ba_x * vec_bc_x + vec_ba_y * vec_bc_y) / (Math.sqrt(vec_ba_x * vec_ba_x + vec_ba_y * vec_ba_y) * Math.sqrt(vec_bc_x * vec_bc_x + vec_bc_y * vec_bc_y)))
+
+                let strokeColooooor = ['red', 'blue', 'green', 'yellow'];
+
+                let arc = new fabric.Circle({
+                    radius: 10,
+                    left: transformedPoints[jj].x,
+                    top: transformedPoints[jj].y,
+                    angle: 0 + 90 * jj + sectors[ii].trapez.angle - (jj % 2) * (toDegree(cornerAngle) - 90),
+                    startAngle:0,
+                    endAngle: cornerAngle,
+                    stroke: strokeColooooor[jj],
+                    strokeWidth: 20,
+                    fill: '',
+                    originY:'center',
+                    originX:'center',
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    lockScalingX: true,
+                    lockScalingY: true,
+                    selectable: false,
+                    hoverCursor: 'pointer',
+                    perPixelTargetFind: true,
+
+                });
+
+                canvas.add(arc);
+
+                let trapezTransform = sectors[ii].trapez.calcTransformMatrix();
+                let invertedtrapezTransform = invert(trapezTransform);
+                let desiredTransform = multiply(
+                    invertedtrapezTransform,
+                    arc.calcTransformMatrix());
+
+                arc.relationship = desiredTransform;
+
+                arc.parentSector = sectors[ii].ID;
+                arc.ID = jj;
+
+                sectors[ii].cornerArcs.push(arc);
+                cornerArcs.push(arc);
+                canvas.renderAll();
+
+
+
+                arc.on('mouseup', function (o) {
+
+
+
+                    let currentArcID = this.ID
+                    let pickedSectorID = this.parentSector;
+                    let nextSector = sectors[this.parentSector].neighbourhood[currentArcID]
+
+                    let sectorsToSnap = [pickedSectorID];
+
+                    for(let kk = 0; kk < 3; kk++){
+
+                        if (nextSector > -1){
+
+                            sectorsToSnap.push(nextSector)
+
+                            //snapSectorsForDeficitAngle(nextSector)
+                            currentArcID = (currentArcID + 3) % 4;
+                            nextSector = sectors[nextSector].neighbourhood[currentArcID]
+                        }else{
+                            sectorsToSnap = [];
+                            return
+                        }
+                    }
+
+                    console.log(sectorsToSnap)
+
+                    if (sectorsToSnap.length > 0){
+                        for (let kk = 0; kk < 3; kk++){
+
+                            snappingToChosen(sectors[sectorsToSnap[kk + 1]].trapez, sectorsToSnap[kk]);
+                            sectors[sectorsToSnap[kk]].snapStatus
+                        }
+
+                    }
+
+
+
+                    //snapSectorsForDeficitAngle(this.parentSector)
+
+                })
+
+
+            }
+        }
+
+
 
     }else {
         toShowVertices = false;
@@ -1213,6 +1345,7 @@ window.addEventListener('keydown',function(event){
         }
     }
 });
+
 
 function snapSectorsForDeficitAngle(trapezID) {
     if (sectorCountToCalcAngle.indexOf(trapezID) !== -1){
@@ -2141,13 +2274,6 @@ function initializeSectors() //keine Argumente
                     line.bringToFront();
 
                     canvas.renderAll();
-                }
-
-                if (selectedTool == 'grab' && toShowVertices == true){
-
-                    snapSectorsForDeficitAngle(this.parent.ID)
-                    
-
                 }
 /*
                 if (selectedTool == 'mark') {
@@ -3243,6 +3369,7 @@ function Sector() {
     this.lineSegments = [];
     this.markCircles = [];
     this.texts = [];
+    this.cornerArcs = [];
 
     this.ID_text;
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
@@ -3994,7 +4121,9 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
     let distanceMidPoints;
     let dist_1a;
     let dist_2b;
+
     for (let ii = 0; ii < 4; ii++) {
+
         sec_idx = trapez.parent.neighbourhood[ii];
 
         if (sec_idx == sectorToSnapInFunction) {
@@ -4740,6 +4869,31 @@ function updateMinions(boss) {
         }
     }
 
+    for (let ii = 0; ii < boss.parent.cornerArcs.length; ii++) {
+        let cornerArc = boss.parent.cornerArcs[ii];
+        if (cornerArc.relationship) {
+            cornerArc.bringToFront();
+            let relationship = cornerArc.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            cornerArc.set({
+                flipX: false,
+                flipY: false,
+            });
+            cornerArc.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            cornerArc.set(options);
+            cornerArc.setCoords();
+        }
+    }
+
     if (boss.parent.ID_text.relationship) {
         boss.parent.ID_text.bringToFront();
 
@@ -4768,6 +4922,7 @@ function updateMinions(boss) {
         boss.parent.ID_text.set(options);
         boss.parent.ID_text.setCoords();
     }
+
 }
 
 
