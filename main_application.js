@@ -277,22 +277,14 @@ canvas.on('mouse:move', function (o) {
         //TODO autoSetOnDraw muss endlich fertig gestellt werden
         if (autoSetOnDraw == "1") {
 
-            //Umrechnung der lokalen in globale Koordinaten
-            let transformMatrix = sectors[actualSector].trapez.calcTransformMatrix('True');
-            let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-            for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[actualSector].trapez.points[jj].x - sectors[actualSector].trapez.width / 2 - 0.5;
-                transformedPoints[jj].y = sectors[actualSector].trapez.points[jj].y - sectors[actualSector].trapez.height / 2 - 0.5;
-                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-            }
-
+            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[actualSector].trapez)
 
             for (let kk = 0; kk < 4; kk++) {
 
-                xt1 = transformedPoints[kk].x;
-                xt2 = transformedPoints[(kk + 1) % 4].x;
-                yt1 = transformedPoints[kk].y;
-                yt2 = transformedPoints[(kk + 1) % 4].y;
+                xt1 = trapezPointsAsGlobalCoords[kk].x;
+                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                yt1 = trapezPointsAsGlobalCoords[kk].y;
+                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
                 let dxg_tmp = xg2 - xg1;
                 let dyg_tmp = yg2 - yg1;
@@ -366,19 +358,14 @@ canvas.on('mouse:move', function (o) {
                 }
             }
             //Punkte des Nachbarsektors ermitteln
-            transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
-            transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-            for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2 - 0.5;
-                transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2 - 0.5;
-                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-            }
+            let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
+
 
             //Übergangspunkte übernehmen
-            xt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
-            xt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
-            yt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
-            yt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
+            xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+            xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+            yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
+            yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
 
 
             point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
@@ -412,8 +399,8 @@ canvas.on('mouse:move', function (o) {
 
             transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
 
-            point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2 - 0.5,
-                sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2 - 0.5);
+            point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
+                sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
             point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
 
             sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
@@ -1207,23 +1194,13 @@ function showVertices() {
 
         for (let ii = 0; ii < sectors.length; ii++){
 
-            let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
-            let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-            for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width / 2;
-                transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height / 2;
-                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-            }
-
+            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[ii].trapez);
 
             for (let jj = 0; jj < 4; jj++) {
 
-
-
-                let point_a = transformedPoints[(jj + 1) % 4];
-
-                let point_b = transformedPoints[jj];
-                let point_c = transformedPoints[(jj + 3) % 4];
+                let point_a = trapezPointsAsGlobalCoords[(jj + 1) % 4];
+                let point_b = trapezPointsAsGlobalCoords[jj];
+                let point_c = trapezPointsAsGlobalCoords[(jj + 3) % 4];
 
                 let vec_ba_x = point_a.x - point_b.x;
                 let vec_ba_y = point_a.y - point_b.y;
@@ -1233,16 +1210,14 @@ function showVertices() {
 
                 let cornerAngle;
 
-
-
                 cornerAngle = Math.acos((vec_ba_x * vec_bc_x + vec_ba_y * vec_bc_y) / (Math.sqrt(vec_ba_x * vec_ba_x + vec_ba_y * vec_ba_y) * Math.sqrt(vec_bc_x * vec_bc_x + vec_bc_y * vec_bc_y)))
 
                 let strokeColooooor = ['red', 'blue', 'green', 'yellow'];
 
                 let arc = new fabric.Circle({
                     radius: 10,
-                    left: transformedPoints[jj].x,
-                    top: transformedPoints[jj].y,
+                    left: trapezPointsAsGlobalCoords[jj].x,
+                    top: trapezPointsAsGlobalCoords[jj].y,
                     angle: 0 + 90 * jj + sectors[ii].trapez.angle - (jj % 2) * (toDegree(cornerAngle) - 90),
                     startAngle:0,
                     endAngle: cornerAngle,
@@ -1529,21 +1504,14 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
     //Bestimmen des Schnittpunktes des neuen Geodätenstücks mit der Sektorkante
 
-    let transformMatrix = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
-    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-    for (let jj = 0; jj < 4; jj++) {
-        transformedPoints[jj].x = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.width / 2;
-        transformedPoints[jj].y = sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez.height / 2;
-        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-    }
-
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez)
 
     for (let kk = 0; kk < 4; kk++) {
 
-        xt1 = transformedPoints[kk].x;
-        xt2 = transformedPoints[(kk + 1) % 4].x;
-        yt1 = transformedPoints[kk].y;
-        yt2 = transformedPoints[(kk + 1) % 4].y;
+        xt1 = trapezPointsAsGlobalCoords[kk].x;
+        xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+        yt1 = trapezPointsAsGlobalCoords[kk].y;
+        yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
         dxt12 = xt2 - xt1;
         dyt12 = yt2 - yt1;
@@ -1641,22 +1609,14 @@ function continueGeodesic(geodesicToContinue) {
             let xg1 = geodesic_start_point.x;
             let yg1 = geodesic_start_point.y;
 
-            //Umrechnung der lokalen in globale Koordinaten
-            let transformMatrix = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.calcTransformMatrix('True');
-            let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-            for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.points[jj].x - sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.width / 2;
-                transformedPoints[jj].y = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.points[jj].y - sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.height / 2;
-                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-            }
-
+            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez);
 
             for (let kk = 0; kk < 4; kk++) {
 
-                xt1 = transformedPoints[kk].x;
-                xt2 = transformedPoints[(kk + 1) % 4].x;
-                yt1 = transformedPoints[kk].y;
-                yt2 = transformedPoints[(kk + 1) % 4].y;
+                xt1 = trapezPointsAsGlobalCoords[kk].x;
+                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                yt1 = trapezPointsAsGlobalCoords[kk].y;
+                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
                 let dxg_tmp = xg2 - xg1;
                 let dyg_tmp = yg2 - yg1;
@@ -1736,20 +1696,13 @@ function continueGeodesic(geodesicToContinue) {
                         break;
                     }
 
-                    //Punkte des Nachbarsektors ermitteln
-                    let transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
-                    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-                    for (let jj = 0; jj < 4; jj++) {
-                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2;
-                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2;
-                        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-                    }
+                    let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
                     //Übergangspunkte übernehmen
-                    xt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
-                    xt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
-                    yt1_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
-                    yt2_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
+                    xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                    xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                    yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
+                    yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
 
                     dxt12_uebergang = xt2_uebergang - xt1_uebergang;
                     dyt12_uebergang = yt2_uebergang - yt1_uebergang;
@@ -1766,10 +1719,10 @@ function continueGeodesic(geodesicToContinue) {
 
                     for (let kk = 0; kk < 4; kk++) {
 
-                        xt1 = transformedPoints[kk].x;
-                        xt2 = transformedPoints[(kk + 1) % 4].x;
-                        yt1 = transformedPoints[kk].y;
-                        yt2 = transformedPoints[(kk + 1) % 4].y;
+                        xt1 = neighbourTrapezPointsAsGlobalCoords[kk].x;
+                        xt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                        yt1 = neighbourTrapezPointsAsGlobalCoords[kk].y;
+                        yt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
                         dxt12 = xt2 - xt1;
                         dyt12 = yt2 - yt1;
@@ -2684,23 +2637,15 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
     let lambdas = [0.0];
     for(let ii = 0; ii < sectors.length; ii++) {
 
-
-        //Umrechnung der lokalen in globale Koordinaten
-        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let jj = 0; jj < 4; jj++){
-            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
-            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
-            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
-        }
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[ii].trapez)
 
         for (let kk = 0; kk < 4; kk++) {
 
 
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
+            xt1 =  trapezPointsAsGlobalCoords[kk].x;
+            xt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+            yt1 =  trapezPointsAsGlobalCoords[kk].y;
+            yt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
 
             let dxg = xg2 - xg1;
@@ -2752,37 +2697,30 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
     for(let ii = 0; ii < sectors.length; ii++) {
         let object = sectors[ii].trapez;
 
-        //Umrechnung der lokalen in globale Koordinaten
-        let transformMatrix = sectors[ii].trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let jj = 0; jj < 4; jj++){
-            transformedPoints[jj].x = sectors[ii].trapez.points[jj].x - sectors[ii].trapez.width/2;
-            transformedPoints[jj].y = sectors[ii].trapez.points[jj].y - sectors[ii].trapez.height/2;
-            transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj],transformMatrix);
-        }
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[ii].trapez);
 
         //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
         //Verhindert das fälsche overlapping
-        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+        trapezPointsAsGlobalCoords[0].x = trapezPointsAsGlobalCoords[0].x + paddingFactor * (trapezPointsAsGlobalCoords[2].x-trapezPointsAsGlobalCoords[0].x);
+        trapezPointsAsGlobalCoords[0].y = trapezPointsAsGlobalCoords[0].y + paddingFactor * (trapezPointsAsGlobalCoords[2].y-trapezPointsAsGlobalCoords[0].y);
 
-        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+        trapezPointsAsGlobalCoords[2].x = trapezPointsAsGlobalCoords[2].x - paddingFactor * (trapezPointsAsGlobalCoords[2].x-trapezPointsAsGlobalCoords[0].x);
+        trapezPointsAsGlobalCoords[2].y = trapezPointsAsGlobalCoords[2].y - paddingFactor * (trapezPointsAsGlobalCoords[2].y-trapezPointsAsGlobalCoords[0].y);
 
-        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+        trapezPointsAsGlobalCoords[1].x = trapezPointsAsGlobalCoords[1].x + paddingFactor * (trapezPointsAsGlobalCoords[3].x-trapezPointsAsGlobalCoords[1].x);
+        trapezPointsAsGlobalCoords[1].y = trapezPointsAsGlobalCoords[1].y + paddingFactor * (trapezPointsAsGlobalCoords[3].y-trapezPointsAsGlobalCoords[1].y);
 
-        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+        trapezPointsAsGlobalCoords[3].x = trapezPointsAsGlobalCoords[3].x - paddingFactor * (trapezPointsAsGlobalCoords[3].x-trapezPointsAsGlobalCoords[1].x);
+        trapezPointsAsGlobalCoords[3].y = trapezPointsAsGlobalCoords[3].y - paddingFactor * (trapezPointsAsGlobalCoords[3].y-trapezPointsAsGlobalCoords[1].y);
 
 
         for (let kk = 0; kk < 4; kk++) {
 
 
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
+            xt1 =  trapezPointsAsGlobalCoords[kk].x;
+            xt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+            yt1 =  trapezPointsAsGlobalCoords[kk].y;
+            yt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
 
             let dxg = xg2 - xg1;
@@ -2815,6 +2753,19 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 }
 
 
+function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
+    let transformMatrix = trapezToGetGlobalCoords.calcTransformMatrix('True');
+    let globalCoords = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+    for (let ii = 0; ii < 4; ii++) {
+        globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2;
+        globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2;
+        globalCoords[ii] = fabric.util.transformPoint(globalCoords[ii], transformMatrix);
+    }
+
+    return globalCoords
+}
+
+
 function getMittelpunktsabstand(trapez) {
     let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
     let midpointSectorStatic;
@@ -2831,21 +2782,17 @@ function getMittelpunktsabstand(trapez) {
 }
 
 function overlapControll(trapez) {
-    let transformMatrix = trapez.calcTransformMatrix('True');
-    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+
     let overlap = false;
     let paddingOverlap = false;
-    for (let ii = 0; ii < 4; ii++) {
-        transformedPoints[ii].x = trapez.points[ii].x - trapez.width / 2;
-        transformedPoints[ii].y = trapez.points[ii].y - trapez.height / 2;
-        transformedPoints[ii] = fabric.util.transformPoint(transformedPoints[ii], transformMatrix);
-    }
+
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
 
     for (let ii = 0; ii < 4; ii++) {
-        xg1 = transformedPoints[ii].x;
-        xg2 = transformedPoints[(ii + 1) % 4].x;
-        yg1 = transformedPoints[ii].y;
-        yg2 = transformedPoints[(ii + 1) % 4].y;
+        xg1 = trapezPointsAsGlobalCoords[ii].x;
+        xg2 = trapezPointsAsGlobalCoords[(ii + 1) % 4].x;
+        yg1 = trapezPointsAsGlobalCoords[ii].y;
+        yg2 = trapezPointsAsGlobalCoords[(ii + 1) % 4].y;
 
         let kantenMittelpunkt = new fabric.Point(xg1 + (xg2 - xg1) / 2, yg1 + (yg2 - yg1) / 2);
 
@@ -2887,36 +2834,31 @@ function paddingContainsPoint(trapez,segmentMittelpunkt) {
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
         isPointInsideSectors = true;
-        let transformMatrix = trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let ll=0;ll<4;ll++){
-            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
-            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
-            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
-        }
+
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez)
 
         //Die folgenden Zeilen versetzen die zu verwendenden Eckpunkte des Trapzes nach Innen (bilden eines Padding)
-        transformedPoints[0].x = transformedPoints[0].x + paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[0].y = transformedPoints[0].y + paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+        trapezPointsAsGlobalCoords[0].x = trapezPointsAsGlobalCoords[0].x + paddingFactor * (trapezPointsAsGlobalCoords[2].x-trapezPointsAsGlobalCoords[0].x);
+        trapezPointsAsGlobalCoords[0].y = trapezPointsAsGlobalCoords[0].y + paddingFactor * (trapezPointsAsGlobalCoords[2].y-trapezPointsAsGlobalCoords[0].y);
 
-        transformedPoints[2].x = transformedPoints[2].x - paddingFactor * (transformedPoints[2].x-transformedPoints[0].x);
-        transformedPoints[2].y = transformedPoints[2].y - paddingFactor * (transformedPoints[2].y-transformedPoints[0].y);
+        trapezPointsAsGlobalCoords[2].x = trapezPointsAsGlobalCoords[2].x - paddingFactor * (trapezPointsAsGlobalCoords[2].x-trapezPointsAsGlobalCoords[0].x);
+        trapezPointsAsGlobalCoords[2].y = trapezPointsAsGlobalCoords[2].y - paddingFactor * (trapezPointsAsGlobalCoords[2].y-trapezPointsAsGlobalCoords[0].y);
 
-        transformedPoints[1].x = transformedPoints[1].x + paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[1].y = transformedPoints[1].y + paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+        trapezPointsAsGlobalCoords[1].x = trapezPointsAsGlobalCoords[1].x + paddingFactor * (trapezPointsAsGlobalCoords[3].x-trapezPointsAsGlobalCoords[1].x);
+        trapezPointsAsGlobalCoords[1].y = trapezPointsAsGlobalCoords[1].y + paddingFactor * (trapezPointsAsGlobalCoords[3].y-trapezPointsAsGlobalCoords[1].y);
 
-        transformedPoints[3].x = transformedPoints[3].x - paddingFactor * (transformedPoints[3].x-transformedPoints[1].x);
-        transformedPoints[3].y = transformedPoints[3].y - paddingFactor * (transformedPoints[3].y-transformedPoints[1].y);
+        trapezPointsAsGlobalCoords[3].x = trapezPointsAsGlobalCoords[3].x - paddingFactor * (trapezPointsAsGlobalCoords[3].x-trapezPointsAsGlobalCoords[1].x);
+        trapezPointsAsGlobalCoords[3].y = trapezPointsAsGlobalCoords[3].y - paddingFactor * (trapezPointsAsGlobalCoords[3].y-trapezPointsAsGlobalCoords[1].y);
 
 
 
 
         for (let kk = 0; kk < 4; kk++) {
 
-            let xt1 =  transformedPoints[kk].x;
-            let xt2 =  transformedPoints[(kk + 1) % 4].x;
-            let yt1 =  transformedPoints[kk].y;
-            let yt2 =  transformedPoints[(kk + 1) % 4].y;
+            let xt1 =  trapezPointsAsGlobalCoords[kk].x;
+            let xt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+            let yt1 =  trapezPointsAsGlobalCoords[kk].y;
+            let yt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
             /*let object = new fabric.Circle({
                 radius: 5,
@@ -2966,11 +2908,12 @@ function paddingContainsPoint(trapez,segmentMittelpunkt) {
                 isPointInsideSectors = false;
             }
 
+            /* Braucht man Das???
             xt1 =  transformedPoints[kk].x;
             xt2 =  transformedPoints[(kk + 1) % 4].x;
             yt1 =  transformedPoints[kk].y;
             yt2 =  transformedPoints[(kk + 1) % 4].y;
-
+            */
         }
 
     }
@@ -3390,21 +3333,18 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
         //Dazu berechnen der relativen Position (links-/rechtsorientiert zu den Sektorkanten)
         //Wenn zu allen Kanten rechtsorientiert (d. h. beta > 0) dann innerhalb des Polygons
         isPointInsideSectors = true;
-        let transformMatrix = trapez.calcTransformMatrix('True');
-        let transformedPoints = [{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0},{x:0.0,y:0.0}];
-        for(let ll=0;ll<4;ll++){
-            transformedPoints[ll].x = trapez.points[ll].x - trapez.width/2;
-            transformedPoints[ll].y = trapez.points[ll].y - trapez.height/2;
-            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll],transformMatrix);
-        }
+
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
+
+
         for (let kk = 0; kk < 4; kk++) {
 
 
 
-            let xt1 =  transformedPoints[kk].x;
-            let xt2 =  transformedPoints[(kk + 1) % 4].x;
-            let yt1 =  transformedPoints[kk].y;
-            let yt2 =  transformedPoints[(kk + 1) % 4].y;
+            let xt1 =  trapezPointsAsGlobalCoords[kk].x;
+            let xt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+            let yt1 =  trapezPointsAsGlobalCoords[kk].y;
+            let yt2 =  trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
 
             let dxt12 = xt2 - xt1;
@@ -3499,23 +3439,15 @@ function setSectors(chosenGeodesicToSetSectors) {
             let yg1 = geodesic_start_point.y;
 
             //Umrechnung der lokalen in globale Koordinaten
-            let transformMatrix = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.calcTransformMatrix('True');
-            let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-            for (let jj = 0; jj < 4; jj++) {
-                transformedPoints[jj].x = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].x - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.width / 2 -0.5;
-                transformedPoints[jj].y = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.points[jj].y - sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez.height / 2 -0.5;
-                transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-            }
 
-
-
+            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez);
 
             for (let kk = 0; kk < 4; kk++) {
 
-                xt1 = transformedPoints[kk].x;
-                xt2 = transformedPoints[(kk + 1) % 4].x;
-                yt1 = transformedPoints[kk].y;
-                yt2 = transformedPoints[(kk + 1) % 4].y;
+                xt1 = trapezPointsAsGlobalCoords[kk].x;
+                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                yt1 = trapezPointsAsGlobalCoords[kk].y;
+                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
                 let dxg_tmp = xg2 - xg1;
                 let dyg_tmp = yg2 - yg1;
@@ -3594,19 +3526,14 @@ function setSectors(chosenGeodesicToSetSectors) {
                         }
                     }
                     //Punkte des Nachbarsektors ermitteln
-                    let transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
-                    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-                    for (let jj = 0; jj < 4; jj++) {
-                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2 -0.5;
-                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2 -0.5;
-                        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-                    }
+
+                    let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
                     //Übergangspunkte übernehmen
-                    xt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].x;
-                    xt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].x;
-                    yt1_uebergang = transformedPoints[(kantenIndex + 2) % 4].y;
-                    yt2_uebergang = transformedPoints[(kantenIndex + 3) % 4].y;
+                    xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                    xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                    yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
+                    yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
 
                     dxt12_uebergang = xt2_uebergang - xt1_uebergang;
                     dyt12_uebergang = yt2_uebergang - yt1_uebergang;
@@ -3647,11 +3574,11 @@ function setSectors(chosenGeodesicToSetSectors) {
                     sectors[neighbourSector].trapez.angle = sectors[staticSector].trapez.angle - gamma_static/ Math.PI * 180 + gamma_neighbour/ Math.PI * 180;
                     sectors[neighbourSector].trapez.setCoords();
 
-                    transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
+                    let transformMatrixAfterRotate = sectors[neighbourSector].trapez.calcTransformMatrix();
 
-                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2 -0.5,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2 -0.5);
-                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
+                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2 );
+                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrixAfterRotate);
 
                     sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
                     sectors[neighbourSector].trapez.top += point_a.y - point_1.y;
@@ -3668,10 +3595,10 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     for (let kk = 0; kk < 4; kk++) {
 
-                        xt1 = transformedPoints[kk].x;
-                        xt2 = transformedPoints[(kk + 1) % 4].x;
-                        yt1 = transformedPoints[kk].y;
-                        yt2 = transformedPoints[(kk + 1) % 4].y;
+                        xt1 = neighbourTrapezPointsAsGlobalCoords[kk].x;
+                        xt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                        yt1 = neighbourTrapezPointsAsGlobalCoords[kk].y;
+                        yt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
                         dxt12 = xt2 - xt1;
                         dyt12 = yt2 - yt1;
@@ -3698,18 +3625,12 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
-                    transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix('True');
-                    transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-                    for (let jj = 0; jj < 4; jj++) {
-                        transformedPoints[jj].x = sectors[neighbourSector].trapez.points[jj].x - sectors[neighbourSector].trapez.width / 2 -0.5;
-                        transformedPoints[jj].y = sectors[neighbourSector].trapez.points[jj].y - sectors[neighbourSector].trapez.height / 2 -0.5;
-                        transformedPoints[jj] = fabric.util.transformPoint(transformedPoints[jj], transformMatrix);
-                    }
+                    let neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
-                    xt1 = transformedPoints[kantenIndex].x;
-                    xt2 = transformedPoints[(kantenIndex + 1) % 4].x;
-                    yt1 = transformedPoints[kantenIndex].y;
-                    yt2 = transformedPoints[(kantenIndex + 1) % 4].y;
+                    xt1 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[kantenIndex].x;
+                    xt2 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[(kantenIndex + 1) % 4].x;
+                    yt1 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[kantenIndex].y;
+                    yt2 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[(kantenIndex + 1) % 4].y;
 
                     if (textured == "1"){
                         snapping(sectors[neighbourSector].trapez);
@@ -3726,7 +3647,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 
 
-                            transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
+                            let transformMatrixAfterRotateAndTranslate = sectors[staticSector].trapez.calcTransformMatrix();
                             //point_1/2 gehören zum bewegten Trapez
                             point_1_local = new fabric.Point(sectors[staticSector].trapez.points[kk].x - sectors[staticSector].trapez.width / 2,
                                 sectors[staticSector].trapez.points[kk].y - sectors[staticSector].trapez.height / 2);
@@ -3734,9 +3655,9 @@ function setSectors(chosenGeodesicToSetSectors) {
                             point_2_local = new fabric.Point(sectors[staticSector].trapez.points[(kk + 1) % 4].x - sectors[staticSector].trapez.width / 2,
                                 sectors[staticSector].trapez.points[(kk + 1) % 4].y - sectors[staticSector].trapez.height / 2);
 
-                            point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+                            point_1 = fabric.util.transformPoint(point_1_local, transformMatrixAfterRotateAndTranslate);
 
-                            point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+                            point_2 = fabric.util.transformPoint(point_2_local, transformMatrixAfterRotateAndTranslate);
 
                             let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
 
