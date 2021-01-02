@@ -2907,13 +2907,6 @@ function paddingContainsPoint(trapez,segmentMittelpunkt) {
             if (beta < 0.0){
                 isPointInsideSectors = false;
             }
-
-            /* Braucht man Das???
-            xt1 =  transformedPoints[kk].x;
-            xt2 =  transformedPoints[(kk + 1) % 4].x;
-            yt1 =  transformedPoints[kk].y;
-            yt2 =  transformedPoints[(kk + 1) % 4].y;
-            */
         }
 
     }
@@ -3462,7 +3455,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                 slopeTrapez = dyt12 / dxt12;
 
 
-                if (dxg > epsilon) {
+                if (Math.abs(dxg) > epsilon) {
                     alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
                     lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
                 }
