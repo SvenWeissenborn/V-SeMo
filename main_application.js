@@ -702,14 +702,8 @@ canvas.on('mouse:up', function(opt) {
                     }
                 }
                 if (pointIsInSector === true) {
-                    let trapezTransform = sectors[lineSegment.parentSector[0]].trapez.calcTransformMatrix();
-                    let invertedtrapezTransform = invert(trapezTransform);
-                    let desiredTransform = multiply(
-                        invertedtrapezTransform,
-                        lineSegment.calcTransformMatrix());
 
-
-                    lineSegment.relationship = desiredTransform;
+                    lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
 
                     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
@@ -1238,13 +1232,8 @@ function showVertices() {
 
                 canvas.add(arc);
 
-                let trapezTransform = sectors[ii].trapez.calcTransformMatrix();
-                let invertedtrapezTransform = invert(trapezTransform);
-                let desiredTransform = multiply(
-                    invertedtrapezTransform,
-                    arc.calcTransformMatrix());
 
-                arc.relationship = desiredTransform;
+                arc.relationship = getRelationship(arc, sectors[ii].ID)
 
                 arc.parentSector = sectors[ii].ID;
                 arc.ID = jj;
@@ -1485,8 +1474,7 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
     let dxg;
     let dyg;
-    let dxt12;
-    let dyt12;
+
     let dxg_tmp = xg2 - xg1;
     let dyg_tmp = yg2 - yg1;
 
@@ -1504,7 +1492,32 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
     //Bestimmen des Schnittpunktes des neuen Geodätenstücks mit der Sektorkante
 
-    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0]].trapez)
+    let kantenParameter = getKantenParameter(geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].parentSector[0], xg1, yg1, dxg, dyg)
+    let lambda = kantenParameter[1];
+
+    //Setzen des neuen Geodätenstücks bis zum Rand des ersten Sektors
+
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
+
+    //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
+    //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({angle: 0});
+
+    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].setCoords();
+
+
+    //Verlängerung der Geodäte bis zum Rand des Modells
+    continueGeodesic(chosenGeodesicTochangeDirection)
+}
+
+function getKantenParameter(SectorID, xg1, yg1, dxg, dyg){
+
+    let alpha;
+    let lambda;
+    let kantenIndex;
+
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[SectorID].trapez)
 
     for (let kk = 0; kk < 4; kk++) {
 
@@ -1539,20 +1552,8 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
     }
 
-    //Setzen des neuen Geodätenstücks bis zum Rand des ersten Sektors
-
-    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x2: geodesic_start_point.x + dxg * lambda, y2: geodesic_start_point.y + dyg * lambda});
-    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({x1: geodesic_start_point.x , y1: geodesic_start_point.y });
-
-    //WICHTIG: WARUM DIESE EINSTELLUNG FUNKTIONIERT VERSTEHE ICH NICHT!!!
-    //Damit das zu setzende Geodätenstück nicht falsch gedreht wird, muss der Winkel eingestellt werden
-    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].set({angle: 0});
-
-    geodesics[chosenGeodesicTochangeDirection][geodesics[chosenGeodesicTochangeDirection].length - 1].setCoords();
-
-
-    //Verlängerung der Geodäte bis zum Rand des Modells
-    continueGeodesic(chosenGeodesicTochangeDirection)
+    let kantenParameter = [alpha, lambda, kantenIndex]
+    return kantenParameter
 }
 
 function continueGeodesic(geodesicToContinue) {
@@ -1609,53 +1610,30 @@ function continueGeodesic(geodesicToContinue) {
             let xg1 = geodesic_start_point.x;
             let yg1 = geodesic_start_point.y;
 
+            let dxg_tmp = xg2 - xg1;
+            let dyg_tmp = yg2 - yg1;
+
+            let dxg = dxg_tmp * 0.1;
+            let dyg = dyg_tmp * 0.1;
+
             let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez);
 
-            for (let kk = 0; kk < 4; kk++) {
+            let kantenParameter = getKantenParameter(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0], xg1, yg1, dxg, dyg)
 
-                xt1 = trapezPointsAsGlobalCoords[kk].x;
-                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-                yt1 = trapezPointsAsGlobalCoords[kk].y;
-                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+            let alpha = kantenParameter[0];
+            let lambda = kantenParameter[1];
+            let kantenIndex = kantenParameter[2];
 
-                let dxg_tmp = xg2 - xg1;
-                let dyg_tmp = yg2 - yg1;
+            xt1 = trapezPointsAsGlobalCoords[kantenIndex].x;
+            xt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+            yt1 = trapezPointsAsGlobalCoords[kantenIndex].y;
+            yt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
 
-                //Nur die Richtung ist wichtig. Deshalb kann der Richtungsvektor verkürzt werden. So umgeht man Probleme beim Ausrechnen der Sektorkante
+            dxt12 = xt2 - xt1;
+            dyt12 = yt2 - yt1;
 
-                dxg = dxg_tmp * 0.1;
-                dyg = dyg_tmp * 0.1;
-
-                dxt12 = xt2 - xt1;
-                dyt12 = yt2 - yt1;
-
-                slopeGeodesic = dyg / dxg;
-                slopeTrapez = dyt12 / dxt12;
-
-                // Beachte, dass nun in der veraenderten Form vom Startpunkt der Geodaete ausgegangen wird -> deshalb ueberall xg1 und yg1
-
-                if (dxg > epsilon) {
-                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-                }
-
-                else {
-                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
-                }
-
-
-                //Kommentar
-                if (lambda >=epsilon) {
-                    if (alpha >= 0.0 && alpha <= 1.0) {
-                        kantenIndex = kk;
-                        break;
-                    }
-                }
-
-
-            }
-
+            slopeGeodesic = dyg / dxg;
+            slopeTrapez = dyt12 / dxt12;
 
             let neighbourSector = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].neighbourhood[kantenIndex];
 
@@ -1672,14 +1650,9 @@ function continueGeodesic(geodesicToContinue) {
 
 
 
-                let transformMatrix = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.calcTransformMatrix()
-                let invertedtrapezTransform = invert(transformMatrix);
-                let desiredTransform = multiply(
-                    invertedtrapezTransform,
-                    geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].relationship = getRelationship(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1],
+                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]);
 
-
-                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].relationship = desiredTransform;
 
                 //Fortsetzung im nächsten Sektor
 
@@ -1717,35 +1690,19 @@ function continueGeodesic(geodesicToContinue) {
 
                     //Schnittpunkte mit den neuen Sektorkanten ermitteln
 
-                    for (let kk = 0; kk < 4; kk++) {
+                    kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
 
-                        xt1 = neighbourTrapezPointsAsGlobalCoords[kk].x;
-                        xt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-                        yt1 = neighbourTrapezPointsAsGlobalCoords[kk].y;
-                        yt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+                    alpha_2 = kantenParameter[0];
+                    lambda = kantenParameter[1];
+                    kantenIndex = kantenParameter[2];
 
-                        dxt12 = xt2 - xt1;
-                        dyt12 = yt2 - yt1;
+                    xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
+                    xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+                    yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
+                    yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
 
-
-                        if (dxg > epsilon) {
-                            alpha_2 = (y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                            lambda_2 = (xt1 + ((y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - x_kante_uebergang) / dxg;
-                        }
-
-                        else {
-                            alpha_2 = (x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                            lambda_2 = (yt1 + ((x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - y_kante_uebergang) / dyg;
-                        }
-
-
-                        if (lambda_2 > epsilon) {
-                            if (alpha_2 >= 0.0 && alpha_2 <= 1.0) {
-                                kantenIndex = kk;
-                                break;
-                            }
-                        }
-                    }
+                    dxt12 = xt2 - xt1;
+                    dyt12 = yt2 - yt1;
 
                     let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
                         strokeWidth: geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].strokeWidth ,
@@ -4494,6 +4451,7 @@ function startGeodesics(){
 
 
         lineSegment.relationship = desiredTransform;
+        lineSegment.relationship = getRelationship(lineSegment, sec.ID);
 
         sec.lineSegments.push(lineSegment);
         geodesics.push([lineSegment]);
@@ -4539,14 +4497,7 @@ function startMarks() {
 
         mark.parentSector = markStartParentSector[ii];
 
-        let trapezTransform = sec.trapez.calcTransformMatrix();
-        let invertedtrapezTransform = invert(trapezTransform);
-        let desiredTransform = multiply(
-            invertedtrapezTransform,
-            mark.calcTransformMatrix());
-
-
-        mark.relationship = desiredTransform;
+        mark.relationship = getRelationship(mark, sec.ID)
         mark.ID = markStartID[ii];
         sec.markCircles.push(mark);
         let stackIdx = canvas.getObjects().indexOf(sectors[mark.parentSector[0]].ID_text);
@@ -4629,14 +4580,7 @@ function startTexts() {
 
         text.parentSector = textStartParentSector[ii];
 
-        let trapezTransform = sec.trapez.calcTransformMatrix();
-        let invertedtrapezTransform = invert(trapezTransform);
-        let desiredTransform = multiply(
-            invertedtrapezTransform,
-            text.calcTransformMatrix());
-
-
-        text.relationship = desiredTransform;
+        text.relationship = getRelationship(text, textStartParentSector[ii][0]);
         text.ID = textStartID[ii];
         sec.texts.push(text);
         let stackIdx = canvas.getObjects().indexOf(sectors[text.parentSector[0]].ID_text);
