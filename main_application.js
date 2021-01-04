@@ -1672,7 +1672,7 @@ function continueGeodesic(geodesicToContinue) {
 
 
 
-
+                let transformMatrix = sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez.calcTransformMatrix()
                 let invertedtrapezTransform = invert(transformMatrix);
                 let desiredTransform = multiply(
                     invertedtrapezTransform,
@@ -1763,11 +1763,8 @@ function continueGeodesic(geodesicToContinue) {
 
                     lineSegmentContinue.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
                     lineSegmentContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
-                    trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix('True');
-                    invertedtrapezTransform = invert(trapezTransform);
-                    desiredTransform = multiply(invertedtrapezTransform, lineSegmentContinue.calcTransformMatrix());
 
-                    lineSegmentContinue.relationship = desiredTransform;
+                    lineSegmentContinue.relationship = getRelationship(lineSegmentContinue, neighbourSector)
 
                     sectors[lineSegmentContinue.parentSector[0]].lineSegments.push(lineSegmentContinue);
 
@@ -1934,16 +1931,19 @@ function drawDragPoint(geodesicToGivePoint) {
 
     });
 
-    let trapezTransform = sectors[lineSegment.parentSector[0]].trapez.calcTransformMatrix();
+    lineSegment.dragPoint.relationship = getRelationship(lineSegment.dragPoint, lineSegment.parentSector[0]);
+
+    canvas.add(lineSegment.dragPoint);
+}
+
+function getRelationship(ObjectToGiveRelation, parentSectorID) {
+    let trapezTransform = sectors[parentSectorID].trapez.calcTransformMatrix();
     let invertedtrapezTransform = invert(trapezTransform);
     let desiredTransform = multiply(
         invertedtrapezTransform,
-        lineSegment.dragPoint.calcTransformMatrix());
+        ObjectToGiveRelation.calcTransformMatrix());
 
-
-    lineSegment.dragPoint.relationship = desiredTransform;
-
-    canvas.add(lineSegment.dragPoint);
+    return desiredTransform;
 }
 
 function fitResponsiveCanvas() {
@@ -3481,9 +3481,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                     }
                 }
 
-
             }
-
 
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
@@ -3503,29 +3501,9 @@ function setSectors(chosenGeodesicToSetSectors) {
                         break
                     }
 
-                    if (textured !== "1") {
-                        for (let ll = 0; ll < 4; ll++) {
+                    removeSnapEdges(staticSector)
 
-                            let sec_idx = sectors[staticSector].neighbourhood[ll];
 
-                            if (sectors[staticSector].snapEdges[ll] !== 0) {
-                                let edgeToRemove = sectors[staticSector].snapEdges[ll];
-                                canvas.remove(edgeToRemove);
-                                sectors[staticSector].snapEdges[ll] = [0];
-
-                            }
-
-                            if (sec_idx > -1) {
-
-                                if (sectors[sec_idx].snapEdges[(ll + 2) % 4] !== 0) {
-                                    let edgeToRemove = sectors[sec_idx].snapEdges[(ll + 2) % 4];
-                                    canvas.remove(edgeToRemove);
-                                    sectors[sec_idx].snapEdges[(ll + 2) % 4] = [0];
-
-                                }
-                            }
-                        }
-                    }
                     //Punkte des Nachbarsektors ermitteln
 
                     let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
@@ -3547,47 +3525,9 @@ function setSectors(chosenGeodesicToSetSectors) {
                     dxg = nextGeodesic_x = -dxt12_uebergang * Math.cos(-slopeAngle) + dyt12_uebergang * Math.sin(-slopeAngle);
                     dyg = nextGeodesic_y = -dxt12_uebergang * Math.sin(-slopeAngle) - dyt12_uebergang * Math.cos(-slopeAngle);
 
-                    point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
-                    point_2 = new fabric.Point(xt2_uebergang, yt2_uebergang);
-                    point_a = new fabric.Point(xt2, yt2);
-                    point_b = new fabric.Point(xt1, yt1);
+                    rotateSectorToAlignAngle(neighbourSector, staticSector);
 
-                    dist_1a = distance(point_1, point_a);
-                    dist_2b = distance(point_2, point_b);
-
-
-
-
-
-                    // Steigung der Kante des ruhenden/ausgehenden Sektors im lokalen Koordinatensysten
-                    dxs_tmp = sectors[staticSector].trapez.points[kantenIndex].x-sectors[staticSector].trapez.points[(kantenIndex+1)%4].x
-                    dys_tmp = sectors[staticSector].trapez.points[kantenIndex].y-sectors[staticSector].trapez.points[(kantenIndex+1)%4].y
-                    if (Math.abs(dys_tmp)>epsilon) {
-                        gamma_static = Math.atan(dxs_tmp / dys_tmp);
-                    }else{gamma_static=0.0}
-                    dxs_tmp = sectors[neighbourSector].trapez.points[(kantenIndex+2)%4].x - sectors[neighbourSector].trapez.points[(kantenIndex+3)%4].x
-                    dys_tmp = sectors[neighbourSector].trapez.points[(kantenIndex+2)%4].y - sectors[neighbourSector].trapez.points[(kantenIndex+3)%4].y
-                    if (Math.abs(dys_tmp)>epsilon) {
-                        gamma_neighbour =Math.atan(dxs_tmp/dys_tmp );
-                    }else{gamma_neighbour=0.0}
-
-
-                    sectors[neighbourSector].trapez.angle = sectors[staticSector].trapez.angle - gamma_static/ Math.PI * 180 + gamma_neighbour/ Math.PI * 180;
-                    sectors[neighbourSector].trapez.setCoords();
-
-                    let transformMatrixAfterRotate = sectors[neighbourSector].trapez.calcTransformMatrix();
-
-                    point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
-                        sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2 );
-                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrixAfterRotate);
-
-                    sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
-                    sectors[neighbourSector].trapez.top += point_a.y - point_1.y;
-
-
-                    updateMinions(sectors[neighbourSector].trapez);
-
-                    sectors[neighbourSector].trapez.setCoords();
+                    translateInitialSectorToTargetSector(neighbourSector, staticSector);
 
 
 
@@ -3633,77 +3573,17 @@ function setSectors(chosenGeodesicToSetSectors) {
                     yt1 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[kantenIndex].y;
                     yt2 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[(kantenIndex + 1) % 4].y;
 
-                    if (textured == "1"){
-                        snapping(sectors[neighbourSector].trapez);
-                    } else {
-                        snappingToChosen(sectors[neighbourSector].trapez, staticSector);
-                    }
+                    changeSnapStatus(staticSector);
+                    changeSnapStatus(neighbourSector);
 
-                    for (let kk = 0; kk < 4; kk++) {
-
-                        let sec_idx = sectors[staticSector].neighbourhood[kk];
-
-
-                        if (sectors[staticSector].snapStatus[kk] !== 0) {
-
-
-
-                            let transformMatrixAfterRotateAndTranslate = sectors[staticSector].trapez.calcTransformMatrix();
-                            //point_1/2 gehören zum bewegten Trapez
-                            point_1_local = new fabric.Point(sectors[staticSector].trapez.points[kk].x - sectors[staticSector].trapez.width / 2,
-                                sectors[staticSector].trapez.points[kk].y - sectors[staticSector].trapez.height / 2);
-
-                            point_2_local = new fabric.Point(sectors[staticSector].trapez.points[(kk + 1) % 4].x - sectors[staticSector].trapez.width / 2,
-                                sectors[staticSector].trapez.points[(kk + 1) % 4].y - sectors[staticSector].trapez.height / 2);
-
-                            point_1 = fabric.util.transformPoint(point_1_local, transformMatrixAfterRotateAndTranslate);
-
-                            point_2 = fabric.util.transformPoint(point_2_local, transformMatrixAfterRotateAndTranslate);
-
-                            let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
-
-                            let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
-                                strokeWidth: 1,
-                                fill: edgeColor,
-                                stroke: edgeColor,
-                                originX: 'center',
-                                originY: 'center',
-                                perPixelTargetFind: true,
-                                objectCaching: false,
-                                hasBorders: false,
-                                hasControls: false,
-                                evented: false,
-                                selectable: false,
-                            });
-
-                            edge.ID = kk;
-
-                            canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
-
-                            edge.bringToFront();
-                            sectors[staticSector].snapEdges[kk] = edge;
-
-                            //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
-                            for (let ll = 0; ll < sectors[sec_idx].lineSegments.length; ll++) {
-                                if (sectors[sec_idx].lineSegments[ll].dragPoint !== undefined) {
-                                    canvas.bringToFront(sectors[sec_idx].lineSegments[ll].dragPoint)
-                                }
-                            }
-                        }
-
-
-
-                    }
+                    drawSnapEdges(staticSector);
+                    drawSnapEdges(neighbourSector);
 
                     staticSector = neighbourSector;
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
 
                     alpha = alpha_2;
-
-
-
-
 
                 }
 
@@ -3723,6 +3603,8 @@ function setSectors(chosenGeodesicToSetSectors) {
 
 let sectorToSnap = -1;
 let snappingToChosenDistance = 1;
+
+/*
 
 function timeToSnap(trapez, snap_radius_sectors) {
 
@@ -3817,7 +3699,7 @@ function timeToSnap(trapez, snap_radius_sectors) {
             //-------------------------------------------------------------------------------------------
 
 
-            /* Diese Zeile auskommentieren*/
+             Diese Zeile auskommentieren
             //if (distanceMidPoints <= snappingToChosenDistance * trapez.aussenkreisradius ) {
 
                 for (let jj = 0; jj < 4; jj++) {
@@ -3880,9 +3762,9 @@ function timeToSnap(trapez, snap_radius_sectors) {
         }
     }
 }
+*/
 
-
-
+/*
 function snapping(trapez) {
     for (let ii = 0; ii < 4; ii++){
         let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
@@ -4000,10 +3882,10 @@ function snapping(trapez) {
                 }
 
                 trapez.parent.snapStatus[ii] = 1;
-                /*
+
                 sectors[sec_idx].trapez.stroke = 'green';
                 trapez.stroke = 'green';
-                */
+
 
             } else {
                 for (let jj = 0; jj < 4; jj++) {
@@ -4035,9 +3917,9 @@ function snapping(trapez) {
         }
     }
 }
+*/
 
-//WICHTIG: DIESES SNAPPING IST DAS NEUE SNAPPING, ES IST NICHT DAS SELBE WIE BEI DER ERDTEXTUR
-function snappingToChosen(trapez, sectorToSnapInFunction){
+/* function snappingToChosen(trapez, sectorToSnapInFunction){
 
     let sec_idx;
     let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
@@ -4276,7 +4158,8 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
         //Zurücksetzen des Sektors an den gesnappt werden soll
     sectorToSnap = -1;
 
-}
+} */
+
 
 function getCommonEdgeNumber(initialSectorID, targetSectorID){
     let commonEdgeNumber;
@@ -4324,8 +4207,6 @@ function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 
 }
 
-
-
 function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
 
     let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
@@ -4366,7 +4247,6 @@ function getPointsOfOppositeEdges(initialSectorID, targetSectorID){
 }
 
 function changeSnapStatus(initialSectorID) {
-    console.log('------------------')
     for (let ii = 0; ii < 4; ii++){
         if (sectors[initialSectorID].neighbourhood[ii] > -1) {
             let edgePoints = getPointsOfOppositeEdges(initialSectorID, sectors[initialSectorID].neighbourhood[ii]);
@@ -4387,8 +4267,6 @@ function changeSnapStatus(initialSectorID) {
                 sectors[initialSectorID].snapStatus[ii] = 0;
                 sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 0;
             }
-            console.log('initSector:', initialSectorID, sectors[initialSectorID].snapStatus)
-            console.log('targetSector:', sectors[initialSectorID].neighbourhood[ii], sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus)
         }
     }
 
@@ -4401,14 +4279,14 @@ function drawSnapEdges(initialSectorID) {
 
             let neighbourSectorID = sectors[initialSectorID].neighbourhood[ii];
 
-            /*
+
             if (sectors[initialSectorID].snapEdges[ii] !== 0) {
 
-                let edgeToRemove = this.parent.snapEdges[ii];
+                let edgeToRemove = sectors[initialSectorID].snapEdges[ii];
                 canvas.remove(edgeToRemove);
-                this.parent.snapEdges[ii] = [0];
+                sectors[initialSectorID].snapEdges[ii] = [0];
             }
-            */
+
 
             if (sectors[initialSectorID].snapStatus[ii] !== 0) {
 
