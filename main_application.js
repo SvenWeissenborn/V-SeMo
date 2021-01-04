@@ -1248,9 +1248,9 @@ function showVertices() {
 
 
 
-                    let currentArcID = this.ID
+                    let currentArcID = this.ID;
                     let pickedSectorID = this.parentSector;
-                    let nextSector = sectors[this.parentSector].neighbourhood[currentArcID]
+                    let nextSector = sectors[this.parentSector].neighbourhood[currentArcID];
 
                     let sectorsToSnap = [pickedSectorID];
 
@@ -1259,10 +1259,9 @@ function showVertices() {
                         if (nextSector > -1){
 
                             sectorsToSnap.push(nextSector)
-
-                            //snapSectorsForDeficitAngle(nextSector)
                             currentArcID = (currentArcID + 3) % 4;
                             nextSector = sectors[nextSector].neighbourhood[currentArcID]
+
                         }else{
                             sectorsToSnap = [];
                             return
@@ -1274,8 +1273,16 @@ function showVertices() {
                     if (sectorsToSnap.length > 0){
                         for (let kk = 0; kk < 3; kk++){
 
-                            snappingToChosen(sectors[sectorsToSnap[kk + 1]].trapez, sectorsToSnap[kk]);
-                            sectors[sectorsToSnap[kk]].snapStatus
+                            snapInitialSectorToTargetSector(sectorsToSnap[kk + 1], sectorsToSnap[kk]);
+
+                        }
+
+                        for (let kk = 0; kk < 4; kk++){
+                            removeSnapEdges(sectorsToSnap[kk])
+                            changeSnapStatus(sectorsToSnap[kk])
+                            console.log(sectors[kk].ID, ':', sectors[kk].snapStatus)
+                            drawSnapEdges(sectorsToSnap[kk])
+
                         }
 
                     }
@@ -1306,6 +1313,22 @@ window.addEventListener('keydown',function(event){
         showVertices();
         if (toShowVertices == false){
             return
+        }
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'v'){
+        for (let ii = 0; ii < sectors.length; ii++){
+            console.log(sectors[ii].ID, ':', sectors[ii].snapStatus)
+        }
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === '5'){
+        for (let ii = 0; ii < sectors.length; ii++){
+            console.log(sectors[ii].ID, ':', sectors[ii].snapEdges)
         }
     }
 });
@@ -4242,6 +4265,7 @@ function drawSnapEdges(initialSectorID) {
                 let edgeToRemove = sectors[initialSectorID].snapEdges[ii];
                 canvas.remove(edgeToRemove);
                 sectors[initialSectorID].snapEdges[ii] = [0];
+
             }
 
 
