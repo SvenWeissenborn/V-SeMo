@@ -2126,17 +2126,17 @@ function initializeSectors() //keine Argumente
 
     if (textured == "1") {
         this.trapez.on('moving',function(){
-            snapping(this);
+            isItTimeToSnap(this);
             updateMinions(this)
         });
 
         this.trapez.on('rotating',function(){
-            snapping(this);
+            isItTimeToSnap(this);
             updateMinions(this)
         });
 
         this.trapez.on('modified',function(){
-            snapping(this); updateMinions(this);
+            isItTimeToSnap(this); updateMinions(this);
             for (let ii = 0; ii < sectors.length; ii++){
                 overlapControll(sectors[ii].trapez)
             }
@@ -2146,7 +2146,7 @@ function initializeSectors() //keine Argumente
     }
     else{
         this.trapez.on('moving', function () {
-            timeToSnap(this, snap_radius_sectors);
+            isItTimeToSnap(this);
             updateMinions(this)
         });
 
@@ -2155,7 +2155,7 @@ function initializeSectors() //keine Argumente
         });
 
         this.trapez.on('modified', function () {
-            timeToSnap(this, snap_radius_sectors);
+            isItTimeToSnap(this);
             updateMinions(this);
         })
 
@@ -2169,11 +2169,15 @@ function initializeSectors() //keine Argumente
 
         showGeodesicButtons(false);
 
+        removeSnapEdges(this.parent.ID)
+
+        /*
         if (textured !== "1") {
             if (selectedTool === 'grab') {
                 timeToSnap(this, snap_radius_sectors);
             }
         }
+        */
 
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -2290,8 +2294,19 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('mouseup', function (o) {
 
+        if (textured == "1") {
+            drawSnapEdges(this.parent.ID)
+        }else {
+            if (selectedTool === 'grab') {
+                if (sectorToSnap > -1) {
+                    snappingToChosen(this, sectorToSnap);
+                }
+            }
+        }
 
-        if (textured == "1"){
+
+        /*
+
             //WICHTIG: Dieser Teil wird erst ausgelöst wenn die Maustaste losgelassen wird,
             //da sonst die Snapkanten bereits beim ransnappen erscheinen
 
@@ -2358,15 +2373,10 @@ function initializeSectors() //keine Argumente
                 }
 
             }
-        } else {
+            */
 
 
-            if (selectedTool === 'grab') {
-                if (sectorToSnap > -1) {
-                    snappingToChosen(this, sectorToSnap);
-                }
-            }
-        }
+
 
         if (toCalcSectorArea == true & selectedTool == 'grab'){
             let sectorArea = 0.5 * (this.parent.sector_top * 0.03 + this.parent.sector_bottom * 0.03) * this.parent.sector_height * 0.03 ;
@@ -2383,6 +2393,8 @@ function initializeSectors() //keine Argumente
 
 
     });
+
+
     canvas.add(this.trapez);
     canvas.add(this.ID_text);
 }
@@ -2969,26 +2981,22 @@ function resetSectors() {
     canvas.discardActiveObject();
     canvas.renderAll();
     for (let rr = 0; rr < sectors.length; rr++){
+        removeSnapEdges(sectors[rr].ID);
+
         sectors[rr].trapez.left = sec_posx[rr] + window.innerWidth/2;
         sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2;
         sectors[rr].trapez.setCoords();
         sectors[rr].trapez.angle = sec_angle[rr];
-        sectors[rr].snapStatus = [0, 0, 0, 0];
-        if (textured == "1"){
-            overlapControll(sectors[rr].trapez);
-        }
+
         updateMinions(sectors[rr].trapez);
         updateMinions(sectors[rr].trapez);
 
 
     }
     for (let rr = 0; rr < sectors.length; rr++){
+        changeSnapStatus(sectors[rr].ID)
         if (textured == "1"){
-            snapping(sectors[rr].trapez);
             overlapControll(sectors[rr].trapez);
-        } else {
-            timeToSnap(sectors[rr].trapez, 0);
-            //overlapControll(sectors[rr].trapez);
         }
 
     }
@@ -3873,6 +3881,8 @@ function timeToSnap(trapez, snap_radius_sectors) {
     }
 }
 
+
+
 function snapping(trapez) {
     for (let ii = 0; ii < 4; ii++){
         let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
@@ -3952,7 +3962,7 @@ function snapping(trapez) {
 
 
             if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
-                //Bestimmung des kleineren Abstands -> legt den Translation und Rotation fest
+                //Bestimmung des Abstands -> Snappe!
 
                 dxs_tmp = sectors[sec_idx].trapez.points[ii].x-sectors[sec_idx].trapez.points[(ii+1)%4].x;
                 dys_tmp = sectors[sec_idx].trapez.points[ii].y-sectors[sec_idx].trapez.points[(ii+1)%4].y;
@@ -4267,6 +4277,314 @@ function snappingToChosen(trapez, sectorToSnapInFunction){
     sectorToSnap = -1;
 
 }
+
+function getCommonEdgeNumber(initialSectorID, targetSectorID){
+    let commonEdgeNumber;
+
+    for (let ii = 0; ii < 4; ii++) {
+        if (sectors[initialSectorID].neighbourhood[ii] === targetSectorID) {
+            commonEdgeNumber = ii
+        }
+    }
+
+    return commonEdgeNumber;
+}
+
+function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
+
+
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+    let dxs_tmp;
+    let dys_tmp;
+    let gamma_target;
+    let gamma_initial;
+
+    dxs_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].x - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].x;
+    dys_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].y - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_target = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_target = 0.0
+    }
+
+    dxs_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].x - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].x;
+    dys_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].y - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_initial = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_initial = 0.0
+    }
+
+    sectors[initialSectorID].trapez.angle = sectors[targetSectorID].trapez.angle + gamma_target / Math.PI * 180 - gamma_initial / Math.PI * 180;
+
+    sectors[initialSectorID].trapez.setCoords();
+
+
+}
+
+
+
+function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
+
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+
+    let initialTrapezPointsAsGlobalCoordsBeforeRotating = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+    let targetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
+
+    let point_1 = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+
+    let point_a = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+
+    sectors[initialSectorID].trapez.left += point_a.x - point_1.x;
+    sectors[initialSectorID].trapez.top += point_a.y - point_1.y;
+
+    sectors[initialSectorID].trapez.setCoords();
+
+    updateMinions(sectors[initialSectorID].trapez)
+
+}
+
+function getPointsOfOppositeEdges(initialSectorID, targetSectorID){
+
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+
+    let initialTrapezPointsAsGlobalCoordsBeforeRotating = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+    let potentialtargetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
+
+    let point_1 = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+    let point_2 = initialTrapezPointsAsGlobalCoordsBeforeRotating[(commonEdgeNumber + 1) % 4];
+
+    let point_a = potentialtargetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+    let point_b = potentialtargetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 2) % 4];
+
+    let edgePoints = [point_1, point_2, point_a, point_b];
+
+    return edgePoints
+
+}
+
+function changeSnapStatus(initialSectorID) {
+    console.log('------------------')
+    for (let ii = 0; ii < 4; ii++){
+        if (sectors[initialSectorID].neighbourhood[ii] > -1) {
+            let edgePoints = getPointsOfOppositeEdges(initialSectorID, sectors[initialSectorID].neighbourhood[ii]);
+
+            let point_1 = edgePoints[0];
+            let point_2 = edgePoints[1];
+
+            let point_a = edgePoints[2];
+            let point_b = edgePoints[3];
+
+            let dist_1a = distance(point_1, point_a);
+            let dist_2b = distance(point_2, point_b);
+
+            if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
+                sectors[initialSectorID].snapStatus[ii] = 1;
+                sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 1;
+            } else {
+                sectors[initialSectorID].snapStatus[ii] = 0;
+                sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 0;
+            }
+            console.log('initSector:', initialSectorID, sectors[initialSectorID].snapStatus)
+            console.log('targetSector:', sectors[initialSectorID].neighbourhood[ii], sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus)
+        }
+    }
+
+}
+
+function drawSnapEdges(initialSectorID) {
+    for (let ii = 0; ii < 4; ii++) {
+
+        if (sectors[initialSectorID].neighbourhood[ii] > -1) {
+
+            let neighbourSectorID = sectors[initialSectorID].neighbourhood[ii];
+
+            /*
+            if (sectors[initialSectorID].snapEdges[ii] !== 0) {
+
+                let edgeToRemove = this.parent.snapEdges[ii];
+                canvas.remove(edgeToRemove);
+                this.parent.snapEdges[ii] = [0];
+            }
+            */
+
+            if (sectors[initialSectorID].snapStatus[ii] !== 0) {
+
+
+                //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+                for (let jj = 0; jj < sectors[neighbourSectorID].lineSegments.length; jj++) {
+                    if (sectors[neighbourSectorID].lineSegments[jj].dragPoint !== undefined) {
+                        canvas.bringToFront(sectors[neighbourSectorID].lineSegments[jj].dragPoint)
+                    }
+                }
+
+                let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+
+                let point_1 = initialTrapezPointsAsGlobalCoords[ii];
+                let point_2 = initialTrapezPointsAsGlobalCoords[(ii + 1) % 4];
+
+                let stack_idx_initialSectorID = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
+
+                let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
+                    strokeWidth: 1,
+                    fill: edgeColor,
+                    stroke: edgeColor,
+                    originX: 'center',
+                    originY: 'center',
+                    perPixelTargetFind: true,
+                    objectCaching: false,
+                    hasBorders: false,
+                    hasControls: false,
+                    evented: false,
+                    selectable: false,
+                });
+
+                edge.ID = ii;
+
+                canvas.insertAt(edge, stack_idx_initialSectorID + 1);
+
+                //edge.bringToFront();
+                sectors[initialSectorID].snapEdges[ii] = edge;
+            }
+
+        }
+
+    }
+}
+
+function removeSnapEdges(initialSectorID) {
+    for (let ii = 0; ii < 4; ii++) {
+
+        let neighbourSectorID = sectors[initialSectorID].neighbourhood[ii];
+
+        if (sectors[initialSectorID].snapEdges[ii] !== 0) {
+            let edgeToRemove = sectors[initialSectorID].snapEdges[ii];
+            canvas.remove(edgeToRemove);
+            sectors[initialSectorID].snapEdges[ii] = [0];
+        }
+
+        if (neighbourSectorID > -1) {
+
+            if (sectors[neighbourSectorID].snapEdges[(ii + 2) % 4] !== 0) {
+                let edgeToRemove = sectors[neighbourSectorID].snapEdges[(ii + 2) % 4];
+                canvas.remove(edgeToRemove);
+                sectors[neighbourSectorID].snapEdges[(ii + 2) % 4] = [0];
+            }
+        }
+    }
+}
+
+
+function isItTimeToSnap(trapez) {
+    let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
+    let midpointpotentialSnappingPartnerID;
+    let distanceMidPoints;
+    let dist_1a;
+    let dist_2b;
+
+    changeSnapStatus(trapez.parent.ID)
+
+    for (let ii = 0; ii < 4; ii++){
+        let potentialSnappingPartnerID = trapez.parent.neighbourhood[ii];
+
+        if(potentialSnappingPartnerID > -1) {
+            midpointpotentialSnappingPartnerID = new fabric.Point(sectors[potentialSnappingPartnerID].trapez.left, sectors[potentialSnappingPartnerID].trapez.top);
+            distanceMidPoints = distance(midpointSectorMoved, midpointpotentialSnappingPartnerID);
+
+            let edgePoints = getPointsOfOppositeEdges(trapez.parent.ID, potentialSnappingPartnerID);
+
+            let point_1 = edgePoints[0];
+            let point_2 = edgePoints[1];
+
+            let point_a = edgePoints[2];
+            let point_b = edgePoints[3];
+
+            let point_1_2_mid = new fabric.Point(point_1.x + (point_1.x - point_2.x) * 0.5, point_1.y + (point_1.y - point_2.y) * 0.5);
+
+            let point_a_b_mid = new fabric.Point(point_a.x + (point_a.x - point_b.x) * 0.5, point_a.y + (point_a.y - point_b.y) * 0.5);
+
+
+            //---Falls die Textur eingeschaltet ist, wird Snapping direkt ausgeführt werden
+            //---Es erfolgt keine Auswahl des Snappingpartners
+            if (textured == "1"){
+                if(distanceMidPoints <= trapez.aussenkreisradius + sectors[potentialSnappingPartnerID].trapez.aussenkreisradius) {
+
+                    dist_1a = distance(point_1, point_a);
+                    dist_2b = distance(point_2, point_b);
+
+                }else{
+
+                    dist_1a = snap_radius_sectors + 1;
+                    dist_2b = snap_radius_sectors + 1;
+
+                }
+
+                if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
+                    snapInitialSectorToTargetSector(trapez.parent.ID, potentialSnappingPartnerID)
+                }
+            }
+
+            if (textured !== "1"){
+
+                if (distance(point_1_2_mid, point_a_b_mid) <= snap_radius_sectors || distanceMidPoints <= snappingToChosenDistance * trapez.aussenkreisradius ) {
+                    console.log('hier 1')
+
+
+
+                    for (let jj = 0; jj < 4; jj++) {
+                        if (trapez.parent.neighbourhood[jj] > -1) {
+                            sectors[trapez.parent.neighbourhood[jj]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[jj]].ID]
+                        }
+                    }
+
+                    sectors[potentialSnappingPartnerID].trapez.fill = '#E6E6E6';
+
+                    sectorToSnap = potentialSnappingPartnerID;
+
+                    rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID)
+
+                    return
+                }else {
+
+                    sectorToSnap = -1;
+
+                    console.log('hier 2')
+                    for (let jj = 0; jj < 4; jj++) {
+                        if (trapez.parent.neighbourhood[jj] > -1) {
+
+                            sectors[trapez.parent.neighbourhood[jj]].trapez.fill = sec_fill[sectors[trapez.parent.neighbourhood[jj]].ID]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
+
+    if(textured !== "1") {
+        sectors[targetSectorID].trapez.fill = sec_fill[sectors[targetSectorID].ID];
+    }
+
+    rotateSectorToAlignAngle(initialSectorID, targetSectorID);
+
+    translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+
+    updateMinions(sectors[initialSectorID].trapez)
+
+    sectorToSnap = -1;
+
+    changeSnapStatus(initialSectorID)
+
+}
+
+
 
 //Achtung! Die Liniensegmente der Startgeodäten können nicht gelöscht werden, weil sie keine gültige ID tragen
 function startGeodesics(){
@@ -4851,8 +5169,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    //sec.name = ii;
-    sec.name = sec_name[ii];
+    sec.name = ii;
+    //sec.name = sec_name[ii];
     //sec.name = "";
     sec.ID = sec_ID[ii];
     sec.sector_type = sec_type[ii];
