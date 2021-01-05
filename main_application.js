@@ -862,7 +862,9 @@ window.addEventListener('keydown',function(event){
         setSectors(chosenGeodesicGlobalID);
         if (chosenGeodesicGlobalID !== -1) {
             for (let ii = 0; ii < sectors.length; ii++) {
-                overlapControll(sectors[ii].trapez);
+                if (turnOverlapControllOn == "1"){
+                    overlapControll(sectors[ii].trapez);
+                }
             }
         }
         toolChange('grab');
@@ -1138,7 +1140,7 @@ let markPoints = [];
 
 let texts = [];
 
-let cornerArcs = [];
+let vertexAngleParts = [];
 
 let geodesics = [];
 
@@ -1236,10 +1238,11 @@ function showVertices() {
                 arc.relationship = getRelationship(arc, sectors[ii].ID)
 
                 arc.parentSector = sectors[ii].ID;
-                arc.ID = jj;
+                arc.ID_on_sector = jj;
 
                 sectors[ii].cornerArcs.push(arc);
-                cornerArcs.push(arc);
+                vertexAngleParts.push(arc);
+                arc.ID_in_global = vertexAngleParts.length-1
                 canvas.renderAll();
 
 
@@ -1248,9 +1251,11 @@ function showVertices() {
 
 
 
-                    let currentArcID = this.ID;
+                    let currentArcID = this.ID_on_sector;
                     let pickedSectorID = this.parentSector;
                     let nextSector = sectors[this.parentSector].neighbourhood[currentArcID];
+
+                    let cornerAngleSum = this.endAngle;
 
                     let sectorsToSnap = [pickedSectorID];
 
@@ -1259,8 +1264,12 @@ function showVertices() {
                         if (nextSector > -1){
 
                             sectorsToSnap.push(nextSector)
+                            //currentArcID im naechsten Sektor ermitteln
                             currentArcID = (currentArcID + 3) % 4;
-                            nextSector = sectors[nextSector].neighbourhood[currentArcID]
+
+                            cornerAngleSum += sectors[nextSector].cornerArcs[currentArcID].endAngle;
+
+                            nextSector = sectors[nextSector].neighbourhood[currentArcID];
 
                         }else{
                             sectorsToSnap = [];
@@ -1268,7 +1277,8 @@ function showVertices() {
                         }
                     }
 
-                    console.log(sectorsToSnap)
+                    console.log(360 - toDegree(cornerAngleSum))
+
 
                     if (sectorsToSnap.length > 0){
                         for (let kk = 0; kk < 3; kk++){
@@ -1280,11 +1290,16 @@ function showVertices() {
                         for (let kk = 0; kk < 4; kk++){
                             removeSnapEdges(sectorsToSnap[kk])
                             changeSnapStatus(sectorsToSnap[kk])
-                            console.log(sectors[kk].ID, ':', sectors[kk].snapStatus)
                             drawSnapEdges(sectorsToSnap[kk])
 
                         }
 
+                    }
+
+                    if (turnOverlapControllOn == "1") {
+                        for (let kk = 0; kk < sectors.length; kk++) {
+                            overlapControll(sectors[kk].trapez)
+                        }
                     }
 
 
@@ -2104,46 +2119,22 @@ function initializeSectors() //keine Argumente
 
     this.ID_text.relationship = desiredTransform;
 
-    if (textured == "1") {
-        this.trapez.on('moving',function(){
-            isItTimeToSnap(this);
-            updateMinions(this)
-        });
+    this.trapez.on('moving',function(){
+        isItTimeToSnap(this);
+        updateMinions(this)
+    });
 
-        this.trapez.on('rotating',function(){
-            isItTimeToSnap(this);
-            updateMinions(this)
-        });
+    this.trapez.on('rotating',function(){
+        isItTimeToSnap(this);
+        updateMinions(this)
+    });
 
-        this.trapez.on('modified',function(){
-            isItTimeToSnap(this); updateMinions(this);
-            for (let ii = 0; ii < sectors.length; ii++){
-                overlapControll(sectors[ii].trapez)
-            }
-        });
+    this.trapez.on('modified',function(){
+        isItTimeToSnap(this);
+        updateMinions(this);
+    });
 
 
-    }
-    else{
-        this.trapez.on('moving', function () {
-            isItTimeToSnap(this);
-            updateMinions(this)
-        });
-
-        this.trapez.on('rotating', function () {
-            updateMinions(this)
-        });
-
-        this.trapez.on('modified', function () {
-            isItTimeToSnap(this);
-            updateMinions(this);
-        })
-
-        //-----------------------
-        //Wenn Overlap an:
-        //for (let ii = 0; ii < sectors.length; ii++){ overlapControll(sectors[ii].trapez)}});
-        //-----------------------
-    }
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
@@ -2275,12 +2266,21 @@ function initializeSectors() //keine Argumente
     this.trapez.on('mouseup', function (o) {
 
         if (textured == "1") {
+            //nur drawSnapEdges weil der Sektor hier ja schon gesnappt sein sollte
             drawSnapEdges(this.parent.ID)
         }else {
             if (selectedTool === 'grab') {
                 if (sectorToSnap > -1) {
-                    snappingToChosen(this, sectorToSnap);
+                    snapInitialSectorToTargetSector(this.parent.ID, sectorToSnap);
                 }
+                drawSnapEdges(this.parent.ID)
+            }
+        }
+
+        //overlapControll nach dem Loslassen des Sektors funktioniert auch nach rotieren
+        if (turnOverlapControllOn == "1") {
+            for (let ii = 0; ii < sectors.length; ii++) {
+                overlapControll(sectors[ii].trapez)
             }
         }
 
@@ -2789,9 +2789,8 @@ function overlapControll(trapez) {
         let kantenMittelpunkt = new fabric.Point(xg1 + (xg2 - xg1) / 2, yg1 + (yg2 - yg1) / 2);
 
         overlapParameter = getSchnittpunktsparameterPadding(sectors, [xg1, yg1, xg2, yg2]);
-
         for (let jj = 0; jj < overlapParameter.length; jj++)
-            if (overlapParameter[jj] > 0.1 && overlapParameter[jj] < 0.979999999999999999999) {
+            if (overlapParameter[jj] > 0.1 && overlapParameter[jj] < 0.979999999999999) {
                 overlap = true;
             }
 
@@ -2975,7 +2974,7 @@ function resetSectors() {
     }
     for (let rr = 0; rr < sectors.length; rr++){
         changeSnapStatus(sectors[rr].ID)
-        if (textured == "1"){
+        if (turnOverlapControllOn == "1"){
             overlapControll(sectors[rr].trapez);
         }
 
@@ -3555,6 +3554,8 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     changeSnapStatus(staticSector);
                     changeSnapStatus(neighbourSector);
+
+                    console.log(staticSector)
 
                     drawSnapEdges(staticSector);
                     drawSnapEdges(neighbourSector);
@@ -4271,7 +4272,6 @@ function drawSnapEdges(initialSectorID) {
 
             if (sectors[initialSectorID].snapStatus[ii] !== 0) {
 
-
                 //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
                 for (let jj = 0; jj < sectors[neighbourSectorID].lineSegments.length; jj++) {
                     if (sectors[neighbourSectorID].lineSegments[jj].dragPoint !== undefined) {
@@ -4303,7 +4303,6 @@ function drawSnapEdges(initialSectorID) {
                 edge.ID = ii;
 
                 canvas.insertAt(edge, stack_idx_initialSectorID + 1);
-
                 //edge.bringToFront();
                 sectors[initialSectorID].snapEdges[ii] = edge;
             }

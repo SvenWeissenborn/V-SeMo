@@ -27,8 +27,11 @@ let showAreaSector = getUrlVars()["showAreaSector"];
 let showAutoComplete = getUrlVars()["showAutoComplete"];
 //showChangeDirection=1& um den Button fuer die Aenderung der Startrichtung anzuzeigen
 let showChangeDirection = getUrlVars()["showChangeDirection"];
+//turnOverlapControllOn=1& um die OverlapControll ein- und auszuschalten
+let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 //setPositionAndAngleRandomly=1& um die Startposition und den Startwinkel der Sektoren zufaellig einzurichten
 let setPositionAndAngleRandomly = getUrlVars()["setPositionAndAngleRandomly"];
+
 
 //autoSetOnDraw=1& um das automatische Zusammensetzen der Sektoren beim Zeichnen einer Linie zu aktivieren
 //noch zu entwickeln
