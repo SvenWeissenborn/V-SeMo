@@ -23,9 +23,17 @@ let buttondist = 25;
 let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 25;
 
+let dist_to_top_verticesOn_button_number = 6;
+if (showAreaSector == "1"){
+    dist_to_top_verticesOn_button_number += 1;
+}
 
 let dist_to_top_delete_whole_button_number = 6;
 if (showAreaSector == "1"){
+    dist_to_top_delete_whole_button_number += 1;
+}
+
+if (showVerticesOn == "1"){
     dist_to_top_delete_whole_button_number += 1;
 }
 
@@ -33,18 +41,30 @@ let dist_to_top_set_sectors_button_number = 7;
 if (showAreaSector == "1"){
     dist_to_top_set_sectors_button_number += 1;
 }
+if (showVerticesOn == "1"){
+    dist_to_top_set_sectors_button_number += 1;
+}
 
 let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number;
 if (showAutoSet == "1"){
+    dist_to_top_direction_main_button_number += 1;
+}
+if (showVerticesOn == "1"){
     dist_to_top_direction_main_button_number += 1;
 }
 let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number;
 if (showChangeDirection == "1"){
     dist_to_top_auto_complete_main_button_number += 1;
 }
+if (showVerticesOn == "1"){
+    dist_to_top_auto_complete_main_button_number += 1;
+}
 
 let maxScrollNumber = dist_to_top_auto_complete_main_button_number;
 if (showAutoComplete == "1"){
+    maxScrollNumber += 1;
+}
+if (showVerticesOn == "1"){
     maxScrollNumber += 1;
 }
 
@@ -722,6 +742,7 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
     canvas_side_bar_perm.renderAll()
 
 }
+
 let areaSectorOpacity = 0
 if (showAreaSector == "1") {
     areaSectorOpacity = 1 ;
@@ -812,7 +833,94 @@ infoboxAreaText = new fabric.Text("Text", {
 
 canvas_side_bar_perm.add(infoboxAreaText);
 
+let verticesOnOpacity = 0
+if (showVerticesOn == "1") {
+    verticesOnOpacity = 1 ;
+}
 
+let verticesOn
+fabric.Image.fromURL('verticesOn.png', function(img) {
+    verticesOn = img.set({
+        left: 51.5,
+        top:  dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: verticesOnOpacity,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    verticesOn.on('mousedown', function (o) {
+        verticesOn.setShadow(shadowOn);
+    });
+
+    verticesOn.on('mouseout', function (o) {
+        verticesOn.setShadow(shadowOff);
+    });
+
+    verticesOn.on('mouseup', function (o) {
+        verticesOn.setShadow(shadowOff);
+        showVertices();
+        changeGeodesicWidth(2);
+        showGeodesicButtons(false);
+        toolChange('grab');
+        canvas_side_bar_perm.renderAll()
+
+    });
+    canvas_side_bar_perm.add(verticesOn);
+});
+
+let infoboxDeficitAngle;
+infoboxDeficitAngle = new fabric.Rect({
+    left: 140 * screenFactor,
+    top: dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist),
+    opacity: 0,
+    width: 110 * screenFactor,
+    height: 50 * screenFactor,
+    stroke: '#575656',
+    fill: 'white',
+    strokeWidth: 3,
+    rx:5,
+    ry:5,
+    originX: 'center',
+    originY: 'top',
+    hasBorders: false,
+    hasControls: false,
+    selectable: false,
+    perPixelTargetFind: true,
+});
+canvas_side_bar_perm.add(infoboxDeficitAngle);
+
+let infoboxDeficitAngleTextByLanguage = "wähle einen\nVertex";
+if (language == "english"){
+    infoboxDeficitAngleTextByLanguage = "click on\na vertex"
+}
+
+let infoboxDeficitAngleText
+infoboxDeficitAngleText = new fabric.Text("Text", {
+    opacity: 0,
+    fontSize: 16 * screenFactor,
+    fontFamily: 'arial',
+    fontWeight: 'bold',
+    selectable: false,
+    originX: 'center',
+    originY: 'center',
+    left: 140 * screenFactor,
+    top: dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
+    text: infoboxDeficitAngleTextByLanguage,
+    fill: '#575656',
+    hasBorders: false,
+    hasControls: false,
+    selectable: false,
+    perPixelTargetFind: true,
+});
+canvas_side_bar_perm.add(infoboxDeficitAngleText);
 
 let delete_whole;
 fabric.Image.fromURL('delete.png', function(img) {

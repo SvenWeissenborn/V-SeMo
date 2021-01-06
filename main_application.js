@@ -1107,9 +1107,16 @@ let snap_radius_markPoint = 15;
 
 let snap_geodreieck_on_mark = 5;
 
-let edgeColor = '#ccc';
+let edgeColor
+//let edgeColor = '#ccc';
 //let edgeColor = '#666';
+//let edgeColor = '#FFFFFF';
 
+if (textured == "1"){
+    edgeColor = '#ccc';
+}else{
+    edgeColor = '#FFFFFF';
+}
 
 let abortlength = 20;
 
@@ -1168,7 +1175,9 @@ function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
     }
 
     if (sectorAreaInfoboxVisibleToSet == false) {
-        canvas_side_bar_perm.setWidth(100 * scaleRatio);
+        if (toShowVertices !== true){
+            canvas_side_bar_perm.setWidth(100 * scaleRatio);
+        }
         infoboxArea.opacity = 0;
         infoboxAreaText.opacity = 0;
         infoboxAreaText.set('text', infoboxAreaTextByLanguage)
@@ -1184,9 +1193,46 @@ function toDegree(rad) {
 }
 
 let toShowVertices = false;
-function showVertices() {
+
+function showVertices(){
     if (toShowVertices !== true){
         toShowVertices = true;
+        showDeficitAngleInfobox(true)
+        for (let ii = 0; ii < vertexAngleParts.length; ii++){
+            vertexAngleParts[ii].set('opacity', 1.0)
+        }
+        canvas.renderAll();
+
+    }else {
+        toShowVertices = false;
+        showDeficitAngleInfobox(false)
+        for (let ii = 0; ii < vertexAngleParts.length; ii++){
+            vertexAngleParts[ii].set('opacity', 0.0)
+        }
+        canvas.renderAll();
+    }
+}
+
+function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){
+    if (deficitAngleInfoboxVisibleToSet == true) {
+        canvas_side_bar_perm.setWidth(200 * scaleRatio);
+        infoboxDeficitAngle.opacity = 1;
+        infoboxDeficitAngleText.opacity = 1;
+    }
+
+    if (deficitAngleInfoboxVisibleToSet == false) {
+        if (toCalcSectorArea !== true) {
+            canvas_side_bar_perm.setWidth(100 * scaleRatio);
+        }
+        infoboxDeficitAngle.opacity = 0;
+        infoboxDeficitAngleText.opacity = 0;
+        infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguage)
+    }
+
+}
+
+function drawVertices() {
+
 
         for (let ii = 0; ii < sectors.length; ii++){
 
@@ -1211,17 +1257,18 @@ function showVertices() {
                 let strokeColooooor = ['red', 'blue', 'green', 'yellow'];
 
                 let arc = new fabric.Circle({
-                    radius: 10,
+                    radius: 8,
                     left: trapezPointsAsGlobalCoords[jj].x,
                     top: trapezPointsAsGlobalCoords[jj].y,
                     angle: 0 + 90 * jj + sectors[ii].trapez.angle - (jj % 2) * (toDegree(cornerAngle) - 90),
                     startAngle:0,
                     endAngle: cornerAngle,
-                    stroke: strokeColooooor[jj],
-                    strokeWidth: 20,
+                    stroke: '#575656',//strokeColooooor[jj],
+                    strokeWidth: 16,
                     fill: '',
                     originY:'center',
                     originX:'center',
+                    objectCaching: false,
                     lockMovementX: true,
                     lockMovementY: true,
                     lockScalingX: true,
@@ -1229,7 +1276,7 @@ function showVertices() {
                     selectable: false,
                     hoverCursor: 'pointer',
                     perPixelTargetFind: true,
-
+                    opacity: 0.0,
                 });
 
                 canvas.add(arc);
@@ -1252,6 +1299,7 @@ function showVertices() {
 
 
                     let currentArcID = this.ID_on_sector;
+                    console.log({currentArcID})
                     let pickedSectorID = this.parentSector;
                     let nextSector = sectors[this.parentSector].neighbourhood[currentArcID];
 
@@ -1259,7 +1307,7 @@ function showVertices() {
 
                     let sectorsToSnap = [pickedSectorID];
 
-                    for(let kk = 0; kk < 3; kk++){
+                    for (let kk = 0; kk < 3; kk++){
 
                         if (nextSector > -1){
 
@@ -1277,7 +1325,9 @@ function showVertices() {
                         }
                     }
 
-                    console.log(360 - toDegree(cornerAngleSum))
+                    let deficitAngle = 360 - toDegree(cornerAngleSum)
+
+                    console.log(deficitAngle)
 
 
                     if (sectorsToSnap.length > 0){
@@ -1303,6 +1353,24 @@ function showVertices() {
                     }
 
 
+                    drawLongEdgeLine(sectorsToSnap[0], this.ID_on_sector, false)
+
+                    drawLongEdgeLine(sectorsToSnap[sectorsToSnap.length - 1], (this.ID_on_sector + 1) % 4, true)
+
+                    drawAngleArc(sectorsToSnap[0],this.ID_on_sector , deficitAngle)
+
+                    let deficitAngle4Dec = deficitAngle.toFixed(4)
+                    let infoboxDeficitAngleTextByLanguageOnClick = "Defizitwinkel:";
+                    if (language == "english"){
+                        infoboxDeficitAngleTextByLanguageOnClick = "deficit angle:"
+                    }
+                    infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguageOnClick+"\n"+ deficitAngle4Dec.toString() +" " + "°")
+
+                    canvas_side_bar_perm.renderAll()
+
+
+
+
 
                     //snapSectorsForDeficitAngle(this.parentSector)
 
@@ -1313,12 +1381,86 @@ function showVertices() {
         }
 
 
+}
 
-    }else {
-        toShowVertices = false;
+function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClockwise){
+    let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
 
+    let countUpOrDown
+    if (constructClockwise == true){
+        countUpOrDown = 1
+    }else{countUpOrDown = 3}
+
+    let point_1 = initialTrapezPointsAsGlobalCoords[initialArcID_onSector];
+    let point_2 = initialTrapezPointsAsGlobalCoords[(initialArcID_onSector + countUpOrDown) % 4];
+
+    let dx = point_2.x - point_1.x;
+    let dy = point_2.y - point_1.y;
+
+    let stack_idx_initialSectorID = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
+
+    let longEdge = new fabric.Line([point_1.x, point_1.y, point_1.x + 1.5 * dx, point_1.y + 1.5 * dy], {
+        strokeWidth: 2,
+        fill: 'red',
+        stroke: 'red',
+        originX: 'center',
+        originY: 'center',
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: false,
+        selectable: false,
+    });
+
+    canvas.insertAt(longEdge, stack_idx_initialSectorID + 1);
+    longEdge.bringToFront()
+}
+
+function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngle){
+
+    let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+    let arcRadius = sectors[initialSectorID].trapez.height * 1.2
+
+    let startAngle;
+    let endAngle;
+
+    if (deficitAngle < 0){
+        startAngle = toRadians(deficitAngle);
+        endAngle = 0;
+    }else{
+        startAngle = 0;
+        endAngle = toRadians(deficitAngle);
     }
-    console.log({toShowVertices})
+
+    console.log('trapez.angle:', sectors[initialSectorID].trapez.angle)
+    console.log('cornerAngle:', toDegree(sectors[initialSectorID].cornerArcs[initialArcID_onSector].endAngle))
+    console.log(initialArcID_onSector, '*', '90° =', initialArcID_onSector * 90)
+
+    let arc = new fabric.Circle({
+        radius: arcRadius,
+        left: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].x,
+        top: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].y,
+        angle: sectors[initialSectorID].trapez.angle + toDegree(sectors[initialSectorID].cornerArcs[initialArcID_onSector].endAngle) + initialArcID_onSector * 90,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        stroke: 'red',
+        strokeWidth: 2,
+        fill: '',
+        originY:'center',
+        originX:'center',
+        objectCaching: false,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockScalingX: true,
+        lockScalingY: true,
+        selectable: true,
+        hoverCursor: 'pointer',
+        perPixelTargetFind: true,
+        opacity: 1.0,
+    });
+
+    canvas.add(arc);
 }
 
 let sectorCountToCalcAngle = [];
@@ -1326,9 +1468,6 @@ let sectorCountToCalcAngle = [];
 window.addEventListener('keydown',function(event){
     if(event.key === 'd'){
         showVertices();
-        if (toShowVertices == false){
-            return
-        }
     }
 });
 
@@ -2033,7 +2172,7 @@ function initializeSectors() //keine Argumente
             lockScalingX: true,
             lockScalingY: true,
             cornerSize: 30,
-            opacity: 1,
+            opacity: 0.95,
 
         });
 
@@ -4286,8 +4425,17 @@ function drawSnapEdges(initialSectorID) {
 
                 let stack_idx_initialSectorID = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
 
+                let strokeDashArray
+
+                if (textured !== "1"){
+                    strokeDashArray = [8, 5]
+                }else{
+                    strokeDashArray = [0, 0]
+                }
+
                 let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
                     strokeWidth: 1,
+                    strokeDashArray: strokeDashArray,
                     fill: edgeColor,
                     stroke: edgeColor,
                     originX: 'center',
@@ -5107,6 +5255,8 @@ positionSectors();
 if (buildStartGeodesics == "1"){startGeodesics();}
 
 if (buildStartMarks == "1"){startMarks();}
+
+if (showVerticesOn == "1"){drawVertices();}
 
 startTexts();
 
