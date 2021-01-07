@@ -309,15 +309,11 @@ canvas.on('mouse:move', function (o) {
                     lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
 
-
-                //console.log('xg1:', xg1, 'yg1:', yg1, 'xg2:', xg2, 'yg2:', yg2);
-                //console.log('alpha:', alpha);
                 if (lambda > epsilon) {
                     if (lambda > 0.0 && lambda <= 1.0 && alpha > 0.0 && alpha <= 1.0) {
 
                         kantenIndex = kk;
 
-                        //console.log('sector:', actualSector, 'kante:', kk, 'lambda:', lambda);
                         break;
                     }
                 }
@@ -1300,7 +1296,6 @@ function drawVertices() {
 
 
                     let currentArcID = this.ID_on_sector;
-                    console.log({currentArcID})
                     let pickedSectorID = this.parentSector;
                     let nextSector = sectors[this.parentSector].neighbourhood[currentArcID];
 
@@ -1453,30 +1448,6 @@ function drawDeficitAngleVisualizePolygon(sectorsToSnap, initialArcID_onSector, 
 
     canvas.add(deficitAngleVisualizePolygon)
 }
-
-let sectorCountToCalcAngle = [];
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'd'){
-        showVertices();
-    }
-});
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'v'){
-        for (let ii = 0; ii < sectors.length; ii++){
-            console.log(sectors[ii].ID, ':', sectors[ii].snapStatus)
-        }
-    }
-});
-
-window.addEventListener('keydown',function(event){
-    if(event.key === '5'){
-        for (let ii = 0; ii < sectors.length; ii++){
-            console.log(sectors[ii].ID, ':', sectors[ii].snapEdges)
-        }
-    }
-});
 
 function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeodesicTochangeDirection) {
     if (chosenGeodesicGlobalID == -1) {
@@ -2155,16 +2126,6 @@ function initializeSectors() //keine Argumente
 
         showGeodesicButtons(false);
 
-        console.log(sectors[this.parent.ID].snapStatus)
-
-        /*
-        if (textured !== "1") {
-            if (selectedTool === 'grab') {
-                timeToSnap(this, snap_radius_sectors);
-            }
-        }
-        */
-
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
                 geodesics[kk][ll].strokeWidth = 2 ;
@@ -2419,7 +2380,6 @@ function geodesicToMarkCalc() {
 
     if (markPoints.length > 0) {
         for (let ii = 0; ii < markPoints.length; ii++) {
-            //console.log(markPoints)
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
             if (distance(markPointCoords, pointer) < 10) {
                 return [true, ii];
@@ -2537,7 +2497,6 @@ function geodreieckMove(geodreieckToMove){
     }
 
     for (let ii = 0; ii < markPoints.length; ii++) {
-        //console.log(markPoints)
         let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
         let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
         if (distance(markPointCoords, geodreieckMidKante) < snap_geodreieck_on_mark) {
@@ -3022,10 +2981,6 @@ function setOuterSectorsToCircle() {
 
         if (sectors[ii].sector_type == 'euklid') {
 
-
-            //console.log("SectorID:", sectors[ii].ID)
-            //console.log("Nachbar rechts:", sectors[ii].neighbourhood[1])
-
             let ausgangssektorID;
             let nachbarsektorRechtsID;
 
@@ -3052,8 +3007,6 @@ function setOuterSectorsToCircle() {
 
                 ausgangssektorID = sectors[ii].ID;
                 nachbarsektorRechtsID = sectors[ii].neighbourhood[jj];
-
-                //console.log(jj)
 
                 if (sectors[ii].ID < sectors[ii].neighbourhood[jj]) {
 
@@ -3573,8 +3526,6 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     changeSnapStatus(staticSector);
                     changeSnapStatus(neighbourSector);
-
-                    console.log(staticSector)
 
                     drawSnapEdges(staticSector);
                     drawSnapEdges(neighbourSector);
@@ -4155,7 +4106,6 @@ function toolChange(argument) {
                         geodesics[chosenGeodesicGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
                     }
 
-
                     if (selectedTool !== 'delete') {
                         showGeodesicButtons(true);
                     }
@@ -4202,8 +4152,6 @@ function toolChange(argument) {
                     add.setShadow(shadowOff);
                     canvas_side_bar_perm.renderAll()
                 }
-                toCalcSectorArea = false;
-                showSectorAreaInfobox(false);
 
             } else {
                 cursor = 'grabbing';
