@@ -1199,7 +1199,7 @@ function showVertices(){
         toShowVertices = true;
         showDeficitAngleInfobox(true)
         for (let ii = 0; ii < vertexAngleParts.length; ii++){
-            vertexAngleParts[ii].set('opacity', 1.0)
+            vertexAngleParts[ii].set('opacity', 0.7)
         }
         canvas.renderAll();
 
@@ -1224,6 +1224,7 @@ function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){
         if (toCalcSectorArea !== true) {
             canvas_side_bar_perm.setWidth(100 * scaleRatio);
         }
+        removeDeficitAngleVisualize();
         infoboxDeficitAngle.opacity = 0;
         infoboxDeficitAngleText.opacity = 0;
         infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguage)
@@ -1325,10 +1326,10 @@ function drawVertices() {
                         }
                     }
 
-                    let deficitAngle = 360 - toDegree(cornerAngleSum)
 
-                    console.log(deficitAngle)
+                    let deficitAngleRad = 2 * Math.PI - cornerAngleSum
 
+                    let deficitAngleDeg = 360 - toDegree(cornerAngleSum)
 
                     if (sectorsToSnap.length > 0){
                         for (let kk = 0; kk < 3; kk++){
@@ -1352,19 +1353,24 @@ function drawVertices() {
                         }
                     }
 
+                    removeDeficitAngleVisualize()
 
-                    drawLongEdgeLine(sectorsToSnap[0], this.ID_on_sector, false)
+                    drawDeficitAngleVisualizePolygon(sectorsToSnap, this.ID_on_sector, deficitAngleRad)
 
-                    drawLongEdgeLine(sectorsToSnap[sectorsToSnap.length - 1], (this.ID_on_sector + 1) % 4, true)
+                    //drawLongEdgeLine(sectorsToSnap[0], this.ID_on_sector, false)
 
-                    drawAngleArc(sectorsToSnap[0],this.ID_on_sector , deficitAngle)
+                    //drawLongEdgeLine(sectorsToSnap[sectorsToSnap.length - 1], (this.ID_on_sector + 1) % 4, true)
 
-                    let deficitAngle4Dec = deficitAngle.toFixed(4)
+                    //drawAngleArc(sectorsToSnap[0],this.ID_on_sector , deficitAngleRad)
+
+
+
+                    let deficitAngleDeg4Dec = deficitAngleDeg.toFixed(4)
                     let infoboxDeficitAngleTextByLanguageOnClick = "Defizitwinkel:";
                     if (language == "english"){
                         infoboxDeficitAngleTextByLanguageOnClick = "deficit angle:"
                     }
-                    infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguageOnClick+"\n"+ deficitAngle4Dec.toString() +" " + "°")
+                    infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguageOnClick+"\n"+ deficitAngleDeg4Dec.toString() +" " + "°")
 
                     canvas_side_bar_perm.renderAll()
 
@@ -1383,6 +1389,84 @@ function drawVertices() {
 
 }
 
+let deficitAngleVisualize = new fabric.Group()
+
+function removeDeficitAngleVisualize() {
+    if (deficitAngleVisualizePolygon !== undefined) {
+        canvas.remove(deficitAngleVisualizePolygon);
+        infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguage)
+        canvas_side_bar_perm.requestRenderAll()
+    }
+}
+
+let deficitAngleVisualizePolygon
+
+function drawDeficitAngleVisualizePolygon(sectorsToSnap, initialArcID_onSector, deficitAngleRad){
+
+    let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[sectorsToSnap[0]].trapez);
+
+    let point_1 = initialTrapezPointsAsGlobalCoords[initialArcID_onSector]
+    let point_2 = initialTrapezPointsAsGlobalCoords[(initialArcID_onSector + 3) % 4]
+
+    let dx_tmp = point_2.x - point_1.x;
+    let dy_tmp = point_2.y - point_1.y;
+
+    let betrag_vec_12 = Math.sqrt(dx_tmp * dx_tmp + dy_tmp * dy_tmp)
+
+    let lengthFactorSide = 1.2
+    let lengthFactorTip = 1.01
+
+    let angleToRotate = toDegree(Math.atan2(dy_tmp, dx_tmp))
+
+    let x0 = 0;
+    let y0 = 0;
+    let x1 = betrag_vec_12 * lengthFactorSide;
+    let y1 = 0;
+    let x2 =  (x1 * lengthFactorTip * Math.cos(deficitAngleRad/2) - y1 * lengthFactorTip * Math.sin(deficitAngleRad/2));
+    let y2 =  (x1 * lengthFactorTip * Math.sin(deficitAngleRad/2) + y1 * lengthFactorTip * Math.cos(deficitAngleRad/2));
+    let x3 =  (x1 * Math.cos(deficitAngleRad) - y1 * Math.sin(deficitAngleRad));
+    let y3 =  (x1 * Math.sin(deficitAngleRad) + y1 * Math.cos(deficitAngleRad));
+
+    let toSetOriginY
+    if (deficitAngleRad < 0){
+        toSetOriginY = 'bottom'
+    }else{
+        toSetOriginY = 'top'
+    }
+
+    deficitAngleVisualizePolygon = new fabric.Polygon //Anlegen des Polygons (noch nicht geaddet), unter 'trapez' abgespeichert
+        (
+            [   {x: x0, y: y0},
+                {x: x1, y: y1},
+                {x: x2, y: y2},
+                {x: x3, y: y3},
+            ],
+
+            {
+                originX: 'left',
+                originY: toSetOriginY,
+                left: point_1.x - 0.5, //Koordinaten der linken oberen Ecke der Boundingbox
+                top: point_1.y - 0.5,
+                angle: angleToRotate,
+                fill: 'orange',
+                strokeWidth: 1,
+                stroke: 'black',
+                perPixelTargetFind: true,
+                hasControls: false,
+                hasBorders: false,
+                objectCaching: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                evented: false,
+                opacity: 0.9,
+
+            });
+
+    canvas.add(deficitAngleVisualizePolygon)
+}
+/*
 function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClockwise){
     let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
 
@@ -1411,37 +1495,43 @@ function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClock
         hasControls: false,
         evented: false,
         selectable: false,
+        opacity: 0.5,
     });
 
     canvas.insertAt(longEdge, stack_idx_initialSectorID + 1);
     longEdge.bringToFront()
+    deficitAngleVisualize.add(longEdge)
 }
 
-function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngle){
+function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
 
+    let point_1 = sectors[initialSectorID].trapez.points[initialArcID_onSector];
+    let point_2 = sectors[initialSectorID].trapez.points[(initialArcID_onSector +3) % 4 ];
+
+    let dx = point_2.x - point_1.x;
+    let dy = point_2.y - point_1.y;
+
+    let angleToRotate = sectors[initialSectorID].trapez.angle + toDegree(Math.atan2(dy, dx))
     let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
-    let arcRadius = sectors[initialSectorID].trapez.height * 1.2
+    let arcRadius = sectors[initialSectorID].trapez.height * 1.4
 
     let startAngle;
     let endAngle;
 
-    if (deficitAngle < 0){
-        startAngle = toRadians(deficitAngle);
+
+    if (deficitAngleRad < 0){
+        startAngle = deficitAngleRad;
         endAngle = 0;
     }else{
         startAngle = 0;
-        endAngle = toRadians(deficitAngle);
+        endAngle = deficitAngleRad;
     }
-
-    console.log('trapez.angle:', sectors[initialSectorID].trapez.angle)
-    console.log('cornerAngle:', toDegree(sectors[initialSectorID].cornerArcs[initialArcID_onSector].endAngle))
-    console.log(initialArcID_onSector, '*', '90° =', initialArcID_onSector * 90)
 
     let arc = new fabric.Circle({
         radius: arcRadius,
         left: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].x,
         top: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].y,
-        angle: sectors[initialSectorID].trapez.angle + toDegree(sectors[initialSectorID].cornerArcs[initialArcID_onSector].endAngle) + initialArcID_onSector * 90,
+        angle: angleToRotate,
         startAngle: startAngle,
         endAngle: endAngle,
         stroke: 'red',
@@ -1457,12 +1547,13 @@ function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngle){
         selectable: true,
         hoverCursor: 'pointer',
         perPixelTargetFind: true,
-        opacity: 1.0,
+        opacity: 0.5,
     });
 
     canvas.add(arc);
+    deficitAngleVisualize.add(arc)
 }
-
+*/
 let sectorCountToCalcAngle = [];
 
 window.addEventListener('keydown',function(event){
@@ -2260,17 +2351,20 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('moving',function(){
         isItTimeToSnap(this);
-        updateMinions(this)
+        updateMinions(this);
+        removeDeficitAngleVisualize();
     });
 
     this.trapez.on('rotating',function(){
         isItTimeToSnap(this);
-        updateMinions(this)
+        updateMinions(this);
+        removeDeficitAngleVisualize();
     });
 
     this.trapez.on('modified',function(){
         isItTimeToSnap(this);
         updateMinions(this);
+        removeDeficitAngleVisualize();
     });
 
 
@@ -3070,6 +3164,7 @@ function removeLines() {
     for( let ii = 0; ii < sectors.length; ii++){
         sectors[ii].lineSegments = [];
         sectors[ii].markCircles = [];
+        sectors[ii].cornerArcs = [];
     }
 
     let objects = canvas.getObjects('line');
@@ -3087,6 +3182,9 @@ function removeLines() {
     if (buildStartGeodesics == "1"){startGeodesics();}
 
     if (buildStartMarks == "1"){startMarks();}
+
+    if (showVerticesOn == "1"){drawVertices();}
+
     toolChange('grab');
     geodreieck.set('angle', 0);
     canvas.renderAll();

@@ -357,7 +357,9 @@ fabric.Image.fromURL('restart.png', function(img) {
         removeLines();
         addGeodreieck(false);
         toCalcSectorArea = false;
+        toShowVertices = false;
         showSectorAreaInfobox(false);
+        showDeficitAngleInfobox(false)
         canvas_side_bar_perm.renderAll();
 
     });
@@ -399,6 +401,7 @@ fabric.Image.fromURL('reset.png', function(img) {
         addGeodreieck(false);
         toCalcSectorArea = false;
         showSectorAreaInfobox(false);
+        removeDeficitAngleVisualize();
         canvas_side_bar_perm.renderAll()
 
     });
@@ -620,7 +623,9 @@ fabric.Image.fromURL('button_dreieck.png', function(img) {
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toCalcSectorArea = false;
+        toShowVertices = false;
         showSectorAreaInfobox(false);
+        showDeficitAngleInfobox(false)
         toolChange('grab');
         addGeodreieck(true);
         canvas_side_bar_perm.renderAll()
