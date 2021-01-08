@@ -1430,9 +1430,9 @@ function drawDeficitAngleVisualizePolygon(sectorsToSnap, initialArcID_onSector, 
                 left: point_1.x , //Koordinaten der linken oberen Ecke der Boundingbox
                 top: point_1.y,
                 angle: angleToRotate,
-                fill: 'orange',
-                strokeWidth: 0,
-                stroke: 'black',
+                fill: '',
+                strokeWidth: 1,
+                stroke: 'red',
                 perPixelTargetFind: true,
                 hasControls: false,
                 hasBorders: false,
@@ -4425,8 +4425,8 @@ function updateMinions(boss) {
 
 for (let ii = 0; ii < sec_name.length; ii ++){
     let sec = new Sector();
-    sec.name = ii;
-    //sec.name = sec_name[ii];
+    //sec.name = ii;
+    sec.name = sec_name[ii];
     //sec.name = "";
     sec.ID = sec_ID[ii];
     sec.sector_type = sec_type[ii];
