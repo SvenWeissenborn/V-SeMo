@@ -3648,7 +3648,9 @@ function changeSnapStatus(initialSectorID) {
             let dist_1a = distance(point_1, point_a);
             let dist_2b = distance(point_2, point_b);
 
-            if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
+            console
+
+            if (dist_1a < epsilon && dist_2b < epsilon) {
                 sectors[initialSectorID].snapStatus[ii] = 1;
                 sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 1;
             } else {
