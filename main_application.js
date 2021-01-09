@@ -1350,7 +1350,13 @@ function drawVertices() {
 
                     removeDeficitAngleVisualize()
 
-                    drawDeficitAngleVisualizePolygon(sectorsToSnap, this.ID_on_sector, deficitAngleRad)
+                    drawLongEdgeLine(sectorsToSnap[0], this.ID_on_sector, false)
+
+                    drawLongEdgeLine(sectorsToSnap[sectorsToSnap.length - 1], (this.ID_on_sector + 1) % 4, true)
+
+                    drawAngleArc(sectorsToSnap[0],this.ID_on_sector , deficitAngleRad)
+
+                    //drawDeficitAngleVisualizePolygon(sectorsToSnap, this.ID_on_sector, deficitAngleRad)
 
                     let deficitAngleDeg4Dec = deficitAngleDeg.toFixed(4)
                     let infoboxDeficitAngleTextByLanguageOnClick = "Defizitwinkel:";
@@ -1371,16 +1377,125 @@ function drawVertices() {
 
 }
 
+let deficitAngleVisualizeGroup = new fabric.Group;
+let deficitAngleVisualizeGroupOpacity = 0.5
+let longEdgeLineLengthFactor = 1.6
+function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClockwise){
+    let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+
+    let countUpOrDown
+    if (constructClockwise == true){
+        countUpOrDown = 1
+    }else{countUpOrDown = 3}
+
+
+
+    let point_1 = initialTrapezPointsAsGlobalCoords[initialArcID_onSector];
+    let point_2 = initialTrapezPointsAsGlobalCoords[(initialArcID_onSector + countUpOrDown) % 4];
+
+    let dx = point_2.x - point_1.x;
+    let dy = point_2.y - point_1.y;
+
+    let stack_idx_initialSectorID = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
+
+    let longEdge = new fabric.Line([point_1.x, point_1.y, point_1.x + longEdgeLineLengthFactor * dx, point_1.y + longEdgeLineLengthFactor * dy], {
+        strokeWidth: 2,
+        fill: 'red',
+        stroke: 'red',
+        originX: 'center',
+        originY: 'center',
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: false,
+        selectable: false,
+        opacity: deficitAngleVisualizeGroupOpacity,
+    });
+
+    canvas.insertAt(longEdge, stack_idx_initialSectorID + 1);
+    longEdge.bringToFront()
+    deficitAngleVisualizeGroup.add(longEdge)
+}
+
+function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
+
+    let point_1 = sectors[initialSectorID].trapez.points[initialArcID_onSector];
+    let point_2 = sectors[initialSectorID].trapez.points[(initialArcID_onSector +3) % 4 ];
+
+    let dx = point_2.x - point_1.x;
+    let dy = point_2.y - point_1.y;
+
+    let angleToRotate = sectors[initialSectorID].trapez.angle + toDegree(Math.atan2(dy, dx))
+    let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+    let arcRadius = sectors[initialSectorID].trapez.height * 1.2
+
+    let startAngle;
+    let endAngle;
+
+
+    if (deficitAngleRad < 0){
+        startAngle = deficitAngleRad;
+        endAngle = 0;
+    }else{
+        startAngle = 0;
+        endAngle = deficitAngleRad;
+    }
+
+    let arc = new fabric.Circle({
+        radius: arcRadius,
+        left: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].x,
+        top: initialTrapezPointsAsGlobalCoords[initialArcID_onSector].y,
+        angle: angleToRotate,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        stroke: 'red',
+        strokeWidth: 2,
+        fill: '',
+        originY:'center',
+        originX:'center',
+        objectCaching: false,
+        lockMovementX: false,
+        lockMovementY: false,
+        lockScalingX: true,
+        lockScalingY: true,
+        selectable: true,
+        hoverCursor: 'pointer',
+        perPixelTargetFind: true,
+        opacity: deficitAngleVisualizeGroupOpacity,
+    });
+
+    canvas.add(arc);
+    deficitAngleVisualizeGroup.add(arc)
+}
+
+
+
 let deficitAngleVisualize = new fabric.Group()
 
 function removeDeficitAngleVisualize() {
+
+
+    if (deficitAngleVisualizeGroup._objects.length > 0) {
+        for (let ii = 0; ii < deficitAngleVisualizeGroup._objects.length; ii++) {
+            let object = deficitAngleVisualizeGroup._objects[ii]
+            canvas.remove(object);
+        }
+        deficitAngleVisualizeGroup = new fabric.Group()
+        infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguage)
+        canvas_side_bar_perm.requestRenderAll()
+    }
+
+    /*
     if (deficitAngleVisualizePolygon !== undefined) {
         canvas.remove(deficitAngleVisualizePolygon);
         infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguage)
         canvas_side_bar_perm.requestRenderAll()
     }
+    */
 }
 
+/*
 let deficitAngleVisualizePolygon
 
 function drawDeficitAngleVisualizePolygon(sectorsToSnap, initialArcID_onSector, deficitAngleRad){
@@ -1448,6 +1563,8 @@ function drawDeficitAngleVisualizePolygon(sectorsToSnap, initialArcID_onSector, 
 
     canvas.add(deficitAngleVisualizePolygon)
 }
+*/
+
 
 function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeodesicTochangeDirection) {
     if (chosenGeodesicGlobalID == -1) {
@@ -2013,7 +2130,7 @@ function initializeSectors() //keine Argumente
             lockScalingX: true,
             lockScalingY: true,
             cornerSize: 30,
-            opacity: 0.95,
+            opacity: 0.9,
 
         });
 
