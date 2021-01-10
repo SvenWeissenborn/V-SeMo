@@ -294,17 +294,17 @@ fabric.Image.fromURL('back.png', function(img) {
 
 
     back.on('mousedown', function (o) {
-        back.setShadow(shadowOn);
+        back.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     back.on('mouseout', function (o) {
-        back.setShadow(shadowOff);
+        back.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
     back.on('mouseup', function (o) {
-        back.setShadow(shadowOff);
+        back.set('shadow', new fabric.Shadow(shadowOff));
         window.location = back_language;
     });
     canvas_side_bar_perm.add(back);
@@ -342,17 +342,17 @@ fabric.Image.fromURL('restart.png', function(img) {
         hoverCursor: "pointer"});
 
     restart.on('mousedown', function (o) {
-        restart.setShadow(shadowOn);
+        restart.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     restart.on('mouseout', function (o) {
-        restart.setShadow(shadowOff);
+        restart.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
     restart.on('mouseup', function (o) {
-        restart.setShadow(shadowOff);
+        restart.set('shadow', new fabric.Shadow(shadowOff));
         showGeodesicButtons(false);
         removeLines();
         addGeodreieck(false);
@@ -384,17 +384,17 @@ fabric.Image.fromURL('reset.png', function(img) {
         hoverCursor: "pointer"});
 
     reset.on('mousedown', function (o) {
-        reset.setShadow(shadowOn);
+        reset.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     reset.on('mouseout', function (o) {
-        reset.setShadow(shadowOff);
+        reset.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
     reset.on('mouseup', function (o) {
-        reset.setShadow(shadowOff);
+        reset.set('shadow', new fabric.Shadow(shadowOff));
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         resetSectors();
@@ -458,17 +458,17 @@ fabric.Image.fromURL('undo.png', function(img) {
         hoverCursor: "pointer"});
 
     undo.on('mousedown', function (o) {
-        undo.setShadow(shadowOn);
+        undo.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     undo.on('mouseout', function (o) {
-        undo.setShadow(shadowOff);
+        undo.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
     undo.on('mouseup', function (o) {
-        undo.setShadow(shadowOff);
+        undo.set('shadow', new fabric.Shadow(shadowOff));
         undoLastLine();
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
@@ -499,12 +499,12 @@ fabric.Image.fromURL('add.png', function(img) {
         hoverCursor: "pointer"});
 
     add.on('mousedown', function (o) {
-        add.setShadow(shadowOn);
+        add.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     add.on('mouseout', function (o) {
-        add.setShadow(shadowOff);
+        add.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
@@ -541,17 +541,17 @@ fabric.Image.fromURL('add_dark.png', function(img) {
         hoverCursor: "pointer"});
 
     add_dark.on('mousedown', function (o) {
-        add_dark.setShadow(shadowOn);
+        add_dark.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
     });
 
     add_dark.on('mouseout', function (o) {
-        add_dark.setShadow(shadowOff);
+        add_dark.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_bar_perm.renderAll()
     });
 
     add_dark.on('mouseup', function (o) {
-        add_dark.setShadow(shadowOff);
+        add_dark.set('shadow', new fabric.Shadow(shadowOff));
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toolChange('grab');
@@ -611,15 +611,15 @@ fabric.Image.fromURL('button_dreieck.png', function(img) {
         hoverCursor: "pointer"});
 
     button_dreieck.on('mousedown', function (o) {
-        button_dreieck.setShadow(shadowOn);
+        button_dreieck.set('shadow', new fabric.Shadow(shadowOn));
     });
 
     button_dreieck.on('mouseout', function (o) {
-        button_dreieck.setShadow(shadowOff);
+        button_dreieck.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     button_dreieck.on('mouseup', function (o) {
-        button_dreieck.setShadow(shadowOff);
+        button_dreieck.set('shadow', new fabric.Shadow(shadowOff));
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toCalcSectorArea = false;
@@ -653,15 +653,15 @@ fabric.Image.fromURL('button_dreieck_empty.png', function(img) {
         hoverCursor: "pointer"});
 
     button_dreieck_empty.on('mousedown', function (o) {
-        button_dreieck_empty.setShadow(shadowOn);
+        button_dreieck_empty.set('shadow', new fabric.Shadow(shadowOn));
     });
 
     button_dreieck_empty.on('mouseout', function (o) {
-        button_dreieck_empty.setShadow(shadowOff);
+        button_dreieck_empty.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     button_dreieck_empty.on('mouseup', function (o) {
-        button_dreieck_empty.setShadow(shadowOff);
+        button_dreieck_empty.set('shadow', new fabric.Shadow(shadowOff));
         //changeGeodesicWidth(2);
         //showGeodesicButtons(false);
         //toolChange('grab');
@@ -772,15 +772,15 @@ fabric.Image.fromURL('area_sector.png', function(img) {
         hoverCursor: "pointer"});
 
     area_sector.on('mousedown', function (o) {
-        area_sector.setShadow(shadowOn);
+        area_sector.set('shadow', new fabric.Shadow(shadowOn));
     });
 
     area_sector.on('mouseout', function (o) {
-        area_sector.setShadow(shadowOff);
+        area_sector.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     area_sector.on('mouseup', function (o) {
-        area_sector.setShadow(shadowOff);
+        area_sector.set('shadow', new fabric.Shadow(shadowOff));
         calcSectorArea();
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
@@ -862,15 +862,15 @@ fabric.Image.fromURL('verticesOn.png', function(img) {
         hoverCursor: "pointer"});
 
     verticesOn.on('mousedown', function (o) {
-        verticesOn.setShadow(shadowOn);
+        verticesOn.set('shadow', new fabric.Shadow(shadowOn));
     });
 
     verticesOn.on('mouseout', function (o) {
-        verticesOn.setShadow(shadowOff);
+        verticesOn.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     verticesOn.on('mouseup', function (o) {
-        verticesOn.setShadow(shadowOff);
+        verticesOn.set('shadow', new fabric.Shadow(shadowOff));
         showVertices();
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
@@ -946,14 +946,14 @@ fabric.Image.fromURL('delete.png', function(img) {
         hoverCursor: "pointer"});
 
     delete_whole.on('mousedown', function (o) {
-        delete_whole.setShadow(shadowOn);
+        delete_whole.set('shadow', new fabric.Shadow(shadowOn));
     });
     delete_whole.on('mouseout', function (o) {
-        delete_whole.setShadow(shadowOff);
+        delete_whole.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     delete_whole.on('mouseup', function (o) {
-        delete_whole.setShadow(shadowOff);
+        delete_whole.set('shadow', new fabric.Shadow(shadowOff));
         deleteWholeGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
         arrowheadline = -1;
@@ -983,14 +983,14 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
         hoverCursor: "pointer"});
 
     set_sectors.on('mousedown', function (o) {
-        set_sectors.setShadow(shadowOn);
+        set_sectors.set('shadow', new fabric.Shadow(shadowOn));
     });
     set_sectors.on('mouseout', function (o) {
-        set_sectors.setShadow(shadowOff);
+        set_sectors.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     set_sectors.on('mouseup', function (o) {
-        set_sectors.setShadow(shadowOff);
+        set_sectors.set('shadow', new fabric.Shadow(shadowOff));
         setSectors(chosenGeodesicGlobalID);
         toolChange('grab');
         arrowheadline = -1;
@@ -1073,14 +1073,14 @@ fabric.Image.fromURL('direction.png', function(img) {
         hoverCursor: "pointer"});
 
     direction.on('mousedown', function (o) {
-        direction.setShadow(shadowOn);
+        direction.set('shadow', new fabric.Shadow(shadowOn));
     });
     direction.on('mouseout', function (o) {
-        direction.setShadow(shadowOff);
+        direction.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     direction.on('mouseup', function (o) {
-        direction.setShadow(shadowOff);
+        direction.set('shadow', new fabric.Shadow(shadowOff));
         if (visible == true) {
             moveDirectionButtons(false)
         }else moveDirectionButtons(true)
@@ -1113,7 +1113,7 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
 
     change_direction_counterclock_high.on('mousedown', function (event) {
 
-        change_direction_counterclock_high.setShadow(shadowOn);
+        change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOn));
 
         changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);
         timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
@@ -1123,14 +1123,14 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
     });
 
     change_direction_counterclock_high.on('mouseout', function () {
-        change_direction_counterclock_high.setShadow(shadowOff);
+        change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
     });
 
     change_direction_counterclock_high.on('mouseup', function () {
-        change_direction_counterclock_high.setShadow(shadowOff);
+        change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
@@ -1158,7 +1158,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
         hoverCursor: "pointer"});
 
     change_direction_clockwise_high.on('mousedown', function (event) {
-        change_direction_clockwise_high.setShadow(shadowOn);
+        change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);
         timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
@@ -1167,14 +1167,14 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
     });
 
     change_direction_clockwise_high.on('mouseout', function () {
-        change_direction_clockwise_high.setShadow(shadowOff);
+        change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_high.on('mouseup', function () {
-        change_direction_clockwise_high.setShadow(shadowOff);
+        change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
@@ -1201,7 +1201,7 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
         hoverCursor: "pointer"});
 
     change_direction_counterclock_low.on('mousedown', function (event) {
-        change_direction_counterclock_low.setShadow(shadowOn);
+        change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1 , chosenGeodesicGlobalID);
         timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
@@ -1210,14 +1210,14 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
     });
 
     change_direction_counterclock_low.on('mouseout', function () {
-        change_direction_counterclock_low.setShadow(shadowOff);
+        change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_counterclock_low.on('mouseup', function () {
-        change_direction_counterclock_low.setShadow(shadowOff);
+        change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
@@ -1245,7 +1245,7 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
         hoverCursor: "pointer"});
 
     change_direction_clockwise_low.on('mousedown', function (event) {
-        change_direction_clockwise_low.setShadow(shadowOn);
+        change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);
         timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
         toolChange('grab');
@@ -1254,14 +1254,14 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
     });
 
     change_direction_clockwise_low.on('mouseout', function () {
-        change_direction_clockwise_low.setShadow(shadowOff);
+        change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_low.on('mouseup', function () {
-        change_direction_clockwise_low.setShadow(shadowOff);
+        change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
         drawDragPoint(chosenGeodesicGlobalID);
         toolChange('grab');
@@ -1290,14 +1290,14 @@ fabric.Image.fromURL('autocomplete.png', function(img) {
         hoverCursor: "pointer"});
 
     autocomplete.on('mousedown', function (o) {
-        autocomplete.setShadow(shadowOn);
+        autocomplete.set('shadow', new fabric.Shadow(shadowOn));
     });
     autocomplete.on('mouseout', function (o) {
-        autocomplete.setShadow(shadowOff);
+        autocomplete.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     autocomplete.on('mouseup', function (o) {
-        autocomplete.setShadow(shadowOff);
+        autocomplete.set('shadow', new fabric.Shadow(shadowOff));
         continueGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
 
@@ -1339,16 +1339,16 @@ fabric.Image.fromURL('camera.png', function(img) {
         hoverCursor: "pointer"});
 
     camera.on('mousedown', function (o) {
-        camera.setShadow(shadowOn);
+        camera.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
     });
     camera.on('mouseout', function (o) {
-        camera.setShadow(shadowOff);
+        camera.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
     });
 
     camera.on('mouseup', function (o) {
-        camera.setShadow(shadowOff);
+        camera.set('shadow', new fabric.Shadow(shadowOff));
         download_image()
         canvas_side_tools_right.renderAll()
 
@@ -1402,16 +1402,16 @@ fabric.Image.fromURL('fullscreen.png', function(img) {
         hoverCursor: "pointer"});
 
     fullscreen.on('mousedown', function (o) {
-        fullscreen.setShadow(shadowOn);
+        fullscreen.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
     });
     fullscreen.on('mouseout', function (o) {
-        fullscreen.setShadow(shadowOff);
+        fullscreen.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
     });
 
     fullscreen.on('mouseup', function (o) {
-        fullscreen.setShadow(shadowOff);
+        fullscreen.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
         /*
         if( safari ) {
@@ -1494,16 +1494,16 @@ fabric.Image.fromURL('exit_fullscreen.png', function(img) {
         hoverCursor: "pointer"});
 
     exitFullscreen.on('mousedown', function (o) {
-        exitFullscreen.setShadow(shadowOn);
+        exitFullscreen.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
     });
     exitFullscreen.on('mouseout', function (o) {
-        exitFullscreen.setShadow(shadowOff);
+        exitFullscreen.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
     });
 
     exitFullscreen.on('mouseup', function (o) {
-        exitFullscreen.setShadow(shadowOff);
+        exitFullscreen.set('shadow', new fabric.Shadow(shadowOff));
         if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
             if (document.cancelFullScreen) {
                 document.cancelFullScreen();
@@ -1577,16 +1577,16 @@ fabric.Image.fromURL('zoomReset.png', function(img) {
     });
 
     zoomReset.on('mousedown', function (o) {
-        zoomReset.setShadow(shadowOn);
+        zoomReset.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
     });
     zoomReset.on('mouseout', function (o) {
-        zoomReset.setShadow(shadowOff);
+        zoomReset.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
     });
 
     zoomReset.on('mouseup', function (o) {
-        zoomReset.setShadow(shadowOff);
+        zoomReset.set('shadow', new fabric.Shadow(shadowOff));
         resetZoomPan();
         canvas_side_tools_right.renderAll()
     });
@@ -1615,14 +1615,14 @@ fabric.Image.fromURL('help.png', function(img) {
     });
 
     help.on('mousedown', function (o) {
-        help.setShadow(shadowOn);
+        help.set('shadow', new fabric.Shadow(shadowOn));
     });
     help.on('mouseout', function (o) {
-        help.setShadow(shadowOff);
+        help.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     help.on('mouseup', function (o) {
-        help.setShadow(shadowOff);
+        help.set('shadow', new fabric.Shadow(shadowOff));
         addInstructionalOverlay(true);
         exitHelp.opacity = 1.0;
         canvas_side_tools_right.renderAll();
@@ -1652,14 +1652,14 @@ fabric.Image.fromURL('exit_help.png', function(img) {
     });
 
     exitHelp.on('mousedown', function (o) {
-        exitHelp.setShadow(shadowOn);
+        exitHelp.set('shadow', new fabric.Shadow(shadowOn));
     });
     exitHelp.on('mouseout', function (o) {
-        exitHelp.setShadow(shadowOff);
+        exitHelp.set('shadow', new fabric.Shadow(shadowOff));
     });
 
     exitHelp.on('mouseup', function (o) {
-        exitHelp.setShadow(shadowOff);
+        exitHelp.set('shadow', new fabric.Shadow(shadowOff));
         addInstructionalOverlay(false);
         exitHelp.opacity = 0.0;
         canvas_side_tools_right.renderAll();

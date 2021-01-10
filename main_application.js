@@ -1055,30 +1055,6 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
 });
 
-fabric.Image.prototype._drawControl  = function(control, ctx, methodName, left, top) {
-    if (!this.isControlVisible(control)) {
-        return;
-    }
-    let SelectedIconImage = new Image();
-    let size = geodreieck.cornerSize;
-    /*  fabric.isVML() ||*/
-    geodreieck.transparentCorners || ctx.clearRect(left, top, size, size);
-    if(control === 'mtr')
-    {
-        SelectedIconImage.src = 'rotate.png';
-    }else {
-        ctx[methodName](left, top, size, size);
-    }
-
-    if (control === 'mtr') {
-        try {
-            ctx.drawImage(SelectedIconImage, left, top, 40, 40);
-        } catch (e) {
-            ctx[methodName](left, top, size, size);
-        }
-    }
-};
-
 function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y, direction_x, direction_y) {
 
     return Math.abs(((point_x - point_line_x) * direction_y - (point_y - point_line_y) * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
@@ -2077,7 +2053,34 @@ function fitResponsiveCanvas() {
 
 }
 
+let rotateIcon = 'rotate.png'
+let img = document.createElement('img');
+img.src = rotateIcon;
 
+//------------Rotationskontrolle: Icon und Position werden verändert------------
+//Rotationskontrolle: Icon und Position werden verändert
+fabric.Object.prototype.controls.mtr = new fabric.Control({
+    x: 0,
+    y: -0.5,
+    offsetY: -15,
+    cursorStyle: 'col-resize',
+    actionHandler: fabric.controlsUtils.rotationWithSnapping,
+    actionName: 'rotate',
+    render: renderIcon,
+    cornerSize: 28,
+    withConnection: true
+})
+
+// here's where the render action for the control is defined
+function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+    let size = this.cornerSize;
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    ctx.drawImage(img, -size / 2, -size / 2, size, size);
+    ctx.restore();
+}
+//-----------------------------------------------------------------------------
 
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
@@ -2156,33 +2159,6 @@ function initializeSectors() //keine Argumente
         mb: false,
         br: false,
     });
-
-    //Rotationskontrolle: Icon und Position werden verändert
-    fabric.Polygon.prototype._drawControl  = function(control, ctx, methodName, left, top) {
-        if (!this.isControlVisible(control)) {
-            return;
-        }
-        let SelectedIconImage = new Image();
-        let size = this.cornerSize;
-        /*  fabric.isVML() ||*/
-        this.transparentCorners || ctx.clearRect(left, top, size, size);
-        if(control === 'mtr')
-        {
-            SelectedIconImage.src = 'rotate.png';
-        }else {
-            ctx[methodName](left, top, size, size);
-        }
-
-        if (control === 'mtr') {
-            try {
-                ctx.drawImage(SelectedIconImage, left, top, 30, 30);
-            } catch (e) {
-                ctx[methodName](left, top, size, size);
-            }
-        }
-    };
-    this.trapez.rotatingPointOffset = 15;
-
 
     //Zeiger, der wieder auf die Parentalsektor zeigt
     this.trapez.parent = this;
@@ -4268,7 +4244,7 @@ function toolChange(argument) {
                 if (add !== undefined){
                     add.opacity = 0;
                     add_dark.opacity = 1;
-                    add.setShadow(shadowOff);
+                    add.set('shadow', new fabric.Shadow(shadowOff));
                     canvas_side_bar_perm.renderAll()
                 }
 
@@ -4284,7 +4260,7 @@ function toolChange(argument) {
                 if (add_dark !== undefined){
                     add.opacity = 1;
                     add_dark.opacity = 0;
-                    add.setShadow(shadowOff);
+                    add.set('shadow', new fabric.Shadow(shadowOff));
                     canvas_side_bar_perm.renderAll()
                 }
             }
@@ -4598,27 +4574,43 @@ for (let ii = 0; ii < sec_name.length; ii ++){
                 ];
         }
 
+
+/*
+            fabric.util.loadImage(panels[ii], function (img) {
+
+                img.scaleToWidth(sec_width[ii] + 4);
+
+                sec.trapez.set('fill', new fabric.Pattern({
+                    source: img,
+                    repeat: 'no-repeat'
+                }));
+            })
+*/
+
+
         fabric.Image.fromURL(panels[ii], function (img) {
 
             img.scaleToWidth(sec_width[ii] + 4);
 
-            let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
+            let patternSourceCanvas = new fabric.StaticCanvas();
             patternSourceCanvas.add(img);
-            patternSourceCanvas.renderAll();
-            let pattern = new fabric.Pattern({
-                source: function () {
-                    patternSourceCanvas.setDimensions({
-                        width: img.getScaledWidth(),
-                        height: img.getScaledHeight(),
 
-                    });
-                    patternSourceCanvas.renderAll();
-                    return patternSourceCanvas.getElement();
-                },
+            patternSourceCanvas.setDimensions({
+                width: img.getScaledWidth(),
+                height: img.getScaledHeight(),
+
+            });
+
+            patternSourceCanvas.renderAll();
+
+            let pattern = new fabric.Pattern({
+                source: patternSourceCanvas,
                 repeat: 'no-repeat'
             });
-            sec.trapez.fill = pattern;
+
+            sec.trapez.set('fill', pattern)
             canvas.renderAll();
+
         });
         //--------------------------------------------------------------------
     }
