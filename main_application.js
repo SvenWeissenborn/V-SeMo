@@ -253,7 +253,7 @@ canvas.on('mouse:move', function (o) {
         if (lambdas.length === 1) {
             line.stroke = color;
             line.fill = color;
-            return;
+            //return;
         }
         lambdas.push(1.0);
 
@@ -4198,8 +4198,8 @@ function startTexts() {
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
 
-    let lineOverCanvas = [true];
-    for(let ii = 1; ii < lambdas.length-1; ii++)
+    let lineOverCanvas = [];
+    for(let ii = 0; ii < lambdas.length; ii++)
     {
         if (Math.abs(lambdas[ii] - lambdas[ii + 1])>epsilon){
             let lambdaMittelwert = (lambdas[ii] + lambdas[ii+1])/2;
