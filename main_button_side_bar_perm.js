@@ -23,11 +23,6 @@ let buttondist = 25;
 let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 25;
 
-let dist_to_top_verticesOn_button_number = 6;
-if (showAreaSector == "1"){
-    dist_to_top_verticesOn_button_number += 1;
-}
-
 let dist_to_top_delete_whole_button_number = 6;
 if (showAreaSector == "1"){
     dist_to_top_delete_whole_button_number += 1;
@@ -35,6 +30,11 @@ if (showAreaSector == "1"){
 
 if (showVerticesOn == "1"){
     dist_to_top_delete_whole_button_number += 1;
+}
+
+let dist_to_top_verticesOn_button_number = 6;
+if (showAreaSector == "1"){
+    dist_to_top_verticesOn_button_number += 1;
 }
 
 let dist_to_top_set_sectors_button_number = 7;
@@ -49,22 +49,13 @@ let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_nu
 if (showAutoSet == "1"){
     dist_to_top_direction_main_button_number += 1;
 }
-if (showVerticesOn == "1"){
-    dist_to_top_direction_main_button_number += 1;
-}
 let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number;
 if (showChangeDirection == "1"){
-    dist_to_top_auto_complete_main_button_number += 1;
-}
-if (showVerticesOn == "1"){
     dist_to_top_auto_complete_main_button_number += 1;
 }
 
 let maxScrollNumber = dist_to_top_auto_complete_main_button_number;
 if (showAutoComplete == "1"){
-    maxScrollNumber += 1;
-}
-if (showVerticesOn == "1"){
     maxScrollNumber += 1;
 }
 
@@ -140,13 +131,12 @@ fabric.Image.fromURL('scroll.png', function(img) {
 
 canvas_side_bar_perm.on('mouse:wheel', function(opt) {
 
-    if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
+    if (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
         return
     }
 
 
     var delta = -opt.e.deltaY;
-
 
     if (this.viewportTransform[5] <  window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))){
 
@@ -169,7 +159,7 @@ canvas_side_bar_perm.on('mouse:wheel', function(opt) {
 
 canvas_side_bar_perm.on('mouse:down', function(opt) {
 
-    if (dist_to_top + 12 * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
+    if (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist) < window.innerHeight || geodesicButtonsvisible !== true) {
         return
     }
 
@@ -830,6 +820,7 @@ infoboxAreaText = new fabric.Text("Text", {
     top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
     text: infoboxAreaTextByLanguage,
     fill: '#575656',
+    objectCaching: false,
     hasBorders: false,
     hasControls: false,
     selectable: false,
@@ -920,6 +911,7 @@ infoboxDeficitAngleText = new fabric.Text("Text", {
     top: dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
     text: infoboxDeficitAngleTextByLanguage,
     fill: '#575656',
+    objectCaching: false,
     hasBorders: false,
     hasControls: false,
     selectable: false,
@@ -1033,10 +1025,14 @@ function moveDirectionButtons(visibleToSet){
 
         if (visible == true){
             maxScrollNumber -= 1.5;
-            if (canvas_side_bar_perm.viewportTransform[5] < window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))) {
+            /*
+            console.log(maxScrollNumber)
+            if (canvas_side_bar_perm.viewportTransform[5] > window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist))) {
                 canvas_side_bar_perm.viewportTransform[5] = window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist));
+                console.log(window.innerHeight - (dist_to_top + maxScrollNumber * (136 * buttonfactor * screenFactor + buttondist)))
                 canvas_side_bar_perm.requestRenderAll();
             }
+            */
         }
 
         visible = false;

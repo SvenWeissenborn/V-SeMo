@@ -1339,8 +1339,7 @@ function drawVertices() {
                     if (language == "english"){
                         infoboxDeficitAngleTextByLanguageOnClick = "deficit angle:"
                     }
-                    infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguageOnClick+"\n"+ deficitAngleDeg4Dec.toString() +" " + "°")
-
+                    infoboxDeficitAngleText.set('text', infoboxDeficitAngleTextByLanguageOnClick+"\n"+ deficitAngleDeg4Dec.toString() + "°")
                     canvas_side_bar_perm.renderAll()
 
 
@@ -3740,8 +3739,6 @@ function changeSnapStatus(initialSectorID) {
 
             let dist_1a = distance(point_1, point_a);
             let dist_2b = distance(point_2, point_b);
-
-            console
 
             if (dist_1a < epsilon && dist_2b < epsilon) {
                 sectors[initialSectorID].snapStatus[ii] = 1;
