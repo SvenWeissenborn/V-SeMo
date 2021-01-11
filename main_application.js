@@ -4603,8 +4603,9 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
             patternSourceCanvas.renderAll();
 
+            //patternSourceCanvas.getElement() fixed das Problem mit der neuen Version
             let pattern = new fabric.Pattern({
-                source: patternSourceCanvas,
+                source: patternSourceCanvas.getElement(),
                 repeat: 'no-repeat'
             });
 
