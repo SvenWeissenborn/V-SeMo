@@ -480,6 +480,7 @@ canvas.on('mouse:move', function (o) {
 
 let pausePanning = false;
 
+/*
 canvas.on({
     'touch:gesture': function(e) {
         if (pausePanning == false && e.e.touches && e.e.touches.length == 2) {
@@ -506,6 +507,79 @@ canvas.on({
     'selection:cleared': function() {
         pausePanning = false;
     },
+});
+*/
+
+//var el = document.getElementById("canvas-wrap");
+var ham = new Hammer(canvas.upperCanvasEl, {
+    domEvents: true
+});
+
+canvas.on('mouse:down', function (opt){
+    console.log('test')
+})
+
+let trapeze = canvas.getObjects()
+
+let validPinch = false;
+ham.get('pinch').set({ enable: true });
+
+
+let zoomStartScale
+let zoomCenter
+ham.on('pinchstart', function (ev) {
+    validPinch = true;
+
+    zoomCenter = ev.center;
+    zoomStartScale = canvas.getZoom();
+
+    //canvas.discardActiveObject()
+    if (canvas.getActiveObject() !== undefined){
+        if(canvas.getActiveObject() !== null){
+            console.log(canvas.getActiveObject().parent.ID)
+            isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
+            if (sectorToSnap > -1){
+                snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
+            }
+
+            drawSnapEdges(canvas.getActiveObject().parent.ID)
+        }
+
+    }
+    canvas.discardActiveObject()
+    canvas.renderAll()
+    for (let ii = 0; ii < sectors.length; ii++){
+        sectors[ii].trapez.selectable = false;
+        sectors[ii].trapez.lockMovementX = true;
+        sectors[ii].trapez.lockMovementY = true;
+    }
+
+
+});
+
+ham.on('pinchin', function (ev) {
+    if (validPinch) {
+        let delta = zoomStartScale * ev.scale;
+        canvas.zoomToPoint(zoomCenter, delta)
+    }
+});
+
+ham.on('pinchout', function (ev) {
+    if (validPinch) {
+        canvas.discardActiveObject();
+        let delta = zoomStartScale * ev.scale;
+        canvas.zoomToPoint(zoomCenter, delta)
+    }
+});
+
+ham.on('pinchend', function (ev) {
+    validPinch = false;
+    for (let ii = 0; ii < sectors.length; ii++){
+        sectors[ii].trapez.selectable = true
+        sectors[ii].trapez.lockMovementX = false;
+        sectors[ii].trapez.lockMovementY = false;
+    }
+    canvas.renderAll()
 });
 
 canvas.on('mouse:wheel', function(opt) {
@@ -4642,8 +4716,6 @@ toolChange(selectedTool);
 if (setPositionAndAngleRandomly == "1"){randomPositionAndAngle();}
 
 canvas.renderAll();
-
-
 
 
 //--------------------Ausschuss-----------------------
