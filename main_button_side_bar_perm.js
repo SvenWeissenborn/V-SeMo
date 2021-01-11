@@ -506,6 +506,9 @@ fabric.Image.fromURL('add.png', function(img) {
         //add.opacity = 0;
         //add_dark.opacity = 1;
         canvas_side_bar_perm.renderAll()
+        showVertices(false);
+        showSectorAreaInfobox(false)
+        showDeficitAngleInfobox(false)
     });
     canvas_side_bar_perm.add(add);
 });
@@ -862,7 +865,11 @@ fabric.Image.fromURL('verticesOn.png', function(img) {
 
     verticesOn.on('mouseup', function (o) {
         verticesOn.set('shadow', new fabric.Shadow(shadowOff));
-        showVertices();
+        if (verticesVisible !== true){
+            showVertices(true);
+        }else{
+            showVertices(false);
+        }
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toolChange('grab');

@@ -1147,7 +1147,7 @@ function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
     }
 
     if (sectorAreaInfoboxVisibleToSet == false) {
-        if (toShowVertices !== true){
+        if (verticesVisible !== true){
             canvas_side_bar_perm.setWidth(100 * scaleRatio);
         }
         infoboxArea.opacity = 0;
@@ -1164,11 +1164,11 @@ function toDegree(rad) {
     return rad * 180 /Math.PI
 }
 
-let toShowVertices = false;
+let verticesVisible = false;
 
-function showVertices(){
-    if (toShowVertices !== true){
-        toShowVertices = true;
+function showVertices(toShowVertices){
+    if (toShowVertices == true){
+        verticesVisible = true;
         showDeficitAngleInfobox(true)
         for (let ii = 0; ii < vertexAngleParts.length; ii++){
             vertexAngleParts[ii].set('opacity', 0.7)
@@ -1176,7 +1176,7 @@ function showVertices(){
         canvas.renderAll();
 
     }else {
-        toShowVertices = false;
+        verticesVisible = false;
         showDeficitAngleInfobox(false)
         for (let ii = 0; ii < vertexAngleParts.length; ii++){
             vertexAngleParts[ii].set('opacity', 0.0)
@@ -1950,6 +1950,10 @@ function drawDragPoint(geodesicToGivePoint) {
     });
 
     lineSegment.dragPoint.on('mousedown',function(o){
+
+        showSectorAreaInfobox(false);
+        showDeficitAngleInfobox(false)
+        showVertices(false)
 
         chosenGeodesicGlobalID = lineSegment.ID[0];
         showGeodesicButtons(true);
@@ -4200,6 +4204,9 @@ function toolChange(argument) {
 
                     if (selectedTool !== 'delete') {
                         showGeodesicButtons(true);
+                        showSectorAreaInfobox(false);
+                        showDeficitAngleInfobox(false)
+                        showVertices(false)
                     }
 
                     chosenGeodesicGlobalID = this.ID[0];
