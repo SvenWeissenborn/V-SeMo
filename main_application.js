@@ -224,7 +224,51 @@ canvas.on('mouse:move', function (o) {
         let yg2 = line.y2;
 
         canvas.renderAll();
-        let lambdas = getSchnittpunktsparameter(sectors, [xg1, yg1, xg2, yg2]);
+        let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
+        let lambdas = [];
+        for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
+            lambdas.push(schnittpunktsparameters[ii][0])
+        }
+
+
+
+        //let lineOverTheseSectors = schnittpunktsparameter[1];
+        //let lineOverTheseEdges = schnittpunktsparameter[2];
+
+        if (schnittpunktsparameters.length > 0){
+            if ((schnittpunktsparameters.length + 1) % 2 == 0){
+                line.stroke = 'red';
+                line.fill = 'red';
+            }else{
+                line.stroke = color;
+                line.fill = color;
+                for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
+                    if ((ii + 1) % 2 == 0){
+                        continue
+                    }
+                    if (Math.abs(schnittpunktsparameters[ii][0] - schnittpunktsparameters[ii + 1][0]) < epsilon){
+                        console.log(sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]])
+                        console.log(sectors[schnittpunktsparameters[ii + 1][1]].snapStatus[schnittpunktsparameters[ii + 1][2]])
+                        if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == -1 && sectors[schnittpunktsparameters[ii + 1][1]].snapStatus[schnittpunktsparameters[ii + 1][2]] == -1){
+                            line.stroke = 'red';
+                            line.fill = 'red';
+                        }else{
+                            console.log('color:', color)
+                            line.stroke = color;
+                            line.fill = color;
+                        }
+                    }else{
+                        line.stroke = 'red';
+                        line.fill = 'red';
+                    }
+                }
+            }
+        }else{
+            line.stroke = color;
+            line.fill = color;
+        }
+
+/*
 
         let endPointLine = new fabric.Point(xg2, yg2)
 
@@ -257,10 +301,22 @@ canvas.on('mouse:move', function (o) {
         }
         lambdas.push(1.0);
 
-        let lineOverCanvas = testLocation(lambdas, [xg1, yg1, xg2, yg2]);
+        let lineOverSectors = testLocation(lambdas, [xg1, yg1, xg2, yg2]);
 
+        console.log({lineOverSectors})
 
-
+        for (let ii = 0; ii < lineOverSectors.length; ii++){
+            if (lineOverSectors[ii] == -1){
+                console.log('hier')
+                line.stroke = 'red';
+                line.fill = 'red';
+                return
+            }else{
+                line.stroke = color;
+                line.fill = color;
+            }
+        }
+/*
         if (lineOverCanvas.every(function (element) {
             return element
         })) {
@@ -273,6 +329,8 @@ canvas.on('mouse:move', function (o) {
                 line.fill = 'red';
             }
         }
+
+ */
 
         //TODO autoSetOnDraw muss endlich fertig gestellt werden
         if (autoSetOnDraw == "1") {
@@ -500,7 +558,7 @@ canvas.on({
             //IDEE: Größe des dragPoint in Abhängigkeit des Zooms setzen
             //geodesics[ii][geodesics[ii].length-1].dragPoint.radius = 10 * 1/zoom;
         }
-    },
+    },lambdas.push(1.0);
     'object:selected': function() {
         pausePanning = true;
     },
@@ -711,7 +769,34 @@ canvas.on('mouse:up', function(opt) {
             delete geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint;
         }
         //Splitting der Linie in Liniensegmente an den Sektorkanten
-        let lambdas = getSchnittpunktsparameter(sectors, [xg1, yg1, xg2, yg2]);
+
+        let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
+
+        console.log(schnittpunktsparameters)
+
+        let lambdas = [0];
+
+        if (schnittpunktsparameters.length > 0){
+
+            lambdas.push(schnittpunktsparameters[0][0])
+            for (let ii = 1; ii < schnittpunktsparameters.length; ii++){
+
+                if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0){
+                    lambdas.push(schnittpunktsparameters[ii][0])
+                    if (ii == schnittpunktsparameters.length - 1) {
+
+                        lambdas.push(1.0);
+                    }
+                }else{
+
+                    lambdas.push(schnittpunktsparameters[ii][0])
+                    break
+                }
+            }
+        }else{
+
+            lambdas.push(1.0);
+        }
 
         canvas.remove(line);
         let linestart_x = line.x1;
@@ -724,8 +809,6 @@ canvas.on('mouse:up', function(opt) {
 
         let geodesic = [];
         let lineSegment;
-
-        lambdas.push(1.0);
 
         for(let ii = 1; ii < lambdas.length; ii++) {
 
@@ -2756,7 +2839,7 @@ function geodreieckRotate(geodreieckToRotate){
 }
 
 
-function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
+function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
     let lambda;
     let alpha;
@@ -2766,11 +2849,16 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
     let yt1;
     let yt2;
 
+    let lambdaOfThisLineSegment;
+    let lineOverThisSector;
+    let lineOverThisEdge;
+
+    let schnittpunktsparameters = [];
+
     // Geradengleichung der Linie und die der Sektorkante gleichsetzen
     //Orientierung der Sektorkante durch Reihenfolge der Eckpunkte: left-top -> right-top -> right-bottom -> left-bottom
 
 
-    let lambdas = [0.0];
     for(let ii = 0; ii < sectors.length; ii++) {
 
         let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[ii].trapez)
@@ -2803,15 +2891,49 @@ function getSchnittpunktsparameter(sectors,[xg1,yg1,xg2,yg2]) {
 
             }
 
+            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1){ // && Math.abs(lambdas[lambdas.length-1] - lambda) >= epsilon) {
 
-            if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
-                lambdas.push(lambda);
+                lambdaOfThisLineSegment = lambda;
+                lineOverThisSector = ii;
+                lineOverThisEdge = kk;
 
+                let schnittpunktsparameter = [lambdaOfThisLineSegment, lineOverThisSector, lineOverThisEdge]
+
+                schnittpunktsparameters.push(schnittpunktsparameter)
             }
         }
     }
-    if(lambdas.length > 1){lambdas =  lambdas.sort(function(a, b) {return a - b;});}
-    return lambdas;
+    if(schnittpunktsparameters.length > 0){
+        schnittpunktsparameters =  schnittpunktsparameters.sort(function(a, b) {
+            return a[0] - b[0];
+        });
+
+        let lambdas = [0.0]
+        for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
+            lambdaToPush = schnittpunktsparameters[ii][0]
+            //console.log(lambdaToPush)
+            lambdas.push(lambdaToPush)
+        }
+        lambdas.push(1.0)
+
+        let sectorsWhichContainsLineSegmentMidpoints = testLocation(lambdas, [xg1, yg1, xg2, yg2])
+
+        let removeEntryFromIndex = []
+
+        for (let ii = 0; ii < sectorsWhichContainsLineSegmentMidpoints.length -1; ii++){
+            if (sectorsWhichContainsLineSegmentMidpoints[ii] == sectorsWhichContainsLineSegmentMidpoints [ii + 1]){
+                removeEntryFromIndex.push(ii)
+            }
+        }
+
+        for (let ii = removeEntryFromIndex.length -1; ii >= 0; ii--){
+            schnittpunktsparameters.splice(removeEntryFromIndex[ii], 1);
+        }
+
+
+
+    }
+    return schnittpunktsparameters;
 }
 
 
@@ -4198,31 +4320,41 @@ function startTexts() {
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
 
-    let lineOverCanvas = [];
-    for(let ii = 0; ii < lambdas.length; ii++)
-    {
+    let lineOverSectors = [];
+
+    for (let ii = 0; ii < lambdas.length - 1; ii++) {
+        let sectorID = -1;
         if (Math.abs(lambdas[ii] - lambdas[ii + 1])>epsilon){
             let lambdaMittelwert = (lambdas[ii] + lambdas[ii+1])/2;
 
-
             let segmentMittelpunkt = new fabric.Point((xg1 + lambdaMittelwert * (xg2 - xg1)),(yg1 + lambdaMittelwert * (yg2 - yg1)));
-
 
             let isPointInsideSectors = false;
 
+
+
+            let stackIdx = 0;
+
             for(let jj = 0; jj < sectors.length; jj++){
-                isPointInsideSectors = sectorContainsPoint(sectors[jj].trapez,segmentMittelpunkt);
+                isPointInsideSectors = sectorContainsPoint(sectors[jj].trapez, segmentMittelpunkt);
                 if (isPointInsideSectors) {
-                    break;
+                    if (canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
+                        sectorID = sectors[jj].ID
+                        //break;
+
+                        stackIdx = canvas.getObjects().indexOf(sectors[jj].ID_text);
+                    }
                 }
             }
 
-            lineOverCanvas.push(isPointInsideSectors);
 
             segmentMittelpunkt = null;
         }
+
+        lineOverSectors.push(sectorID)
     }
-    return lineOverCanvas;
+
+    return lineOverSectors;
 }
 
 
