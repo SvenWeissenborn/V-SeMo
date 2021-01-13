@@ -2108,6 +2108,22 @@ function drawDragPoint(geodesicToGivePoint) {
 
     lineSegment.dragPoint.on('mousedown',function(o){
 
+        let dragPointPoint = new fabric.Point(this.left, this. top)
+        for (let kk = 0; kk < sectors.length; kk++){
+            if(sectorContainsPoint(sectors[kk].trapez, dragPointPoint)){
+                if (sectors[kk].ID !== lineSegment.parentSector[0]){
+                    let stackIdx = canvas.getObjects().indexOf(sectors[kk].ID_text)
+                    if (stackIdx > canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text)){
+                        console.log('go away')
+                        return
+
+                    }
+                }
+            }
+
+        }
+
+
         showSectorAreaInfobox(false);
         showDeficitAngleInfobox(false)
         showVertices(false)
