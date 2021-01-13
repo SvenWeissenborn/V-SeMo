@@ -247,13 +247,10 @@ canvas.on('mouse:move', function (o) {
                         continue
                     }
                     if (Math.abs(schnittpunktsparameters[ii][0] - schnittpunktsparameters[ii + 1][0]) < epsilon){
-                        console.log(sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]])
-                        console.log(sectors[schnittpunktsparameters[ii + 1][1]].snapStatus[schnittpunktsparameters[ii + 1][2]])
                         if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == -1 && sectors[schnittpunktsparameters[ii + 1][1]].snapStatus[schnittpunktsparameters[ii + 1][2]] == -1){
                             line.stroke = 'red';
                             line.fill = 'red';
                         }else{
-                            console.log('color:', color)
                             line.stroke = color;
                             line.fill = color;
                         }
@@ -573,10 +570,6 @@ var ham = new Hammer(canvas.upperCanvasEl, {
     domEvents: true
 });
 
-canvas.on('mouse:down', function (opt){
-    console.log('test')
-})
-
 let trapeze = canvas.getObjects()
 
 let validPinch = false;
@@ -772,14 +765,12 @@ canvas.on('mouse:up', function(opt) {
 
         let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
 
-        console.log(schnittpunktsparameters)
-
         let lambdas = [0];
 
         if (schnittpunktsparameters.length > 0){
-
             lambdas.push(schnittpunktsparameters[0][0])
-            for (let ii = 1; ii < schnittpunktsparameters.length; ii++){
+
+            for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
 
                 if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0){
                     lambdas.push(schnittpunktsparameters[ii][0])
@@ -788,7 +779,6 @@ canvas.on('mouse:up', function(opt) {
                         lambdas.push(1.0);
                     }
                 }else{
-
                     lambdas.push(schnittpunktsparameters[ii][0])
                     break
                 }
