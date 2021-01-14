@@ -236,7 +236,7 @@ canvas.on('mouse:move', function (o) {
         //let lineOverTheseEdges = schnittpunktsparameter[2];
         line.stroke = color;
         line.fill = color;
-        console.log(schnittpunktsparameters)
+
         for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
             if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0){
                 line.stroke = 'red';
@@ -722,7 +722,7 @@ canvas.on('mouse:up', function(opt) {
             lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
 
             if(Math.abs(lineend_x - linestart_x) > epsilon || Math.abs(lineend_y - linestart_y) > epsilon) {
-
+                console.log('long enough')
                 let stackIdx = 0;
                 for (let jj = sectors.length -1; jj >= 0; jj--){
                     let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
@@ -807,6 +807,8 @@ canvas.on('mouse:up', function(opt) {
 
                                     }
                 */
+
+                history.push(immediatehistory);
             }
 
 
@@ -829,8 +831,6 @@ canvas.on('mouse:up', function(opt) {
 
         drawDragPoint(lineSegment.ID[0]);
         chosenGeodesicGlobalID = lineSegment.ID[0];
-
-        history.push(immediatehistory);
 
         canvas.renderAll();
         toolChange('grab')
