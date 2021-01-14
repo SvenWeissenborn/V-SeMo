@@ -519,6 +519,7 @@ ham.on('pinchstart', function (ev) {
         sectors[ii].trapez.selectable = false;
         sectors[ii].trapez.lockMovementX = true;
         sectors[ii].trapez.lockMovementY = true;
+        sectors[ii].trapez.lockRotation = true;
     }
 
 
@@ -545,6 +546,7 @@ ham.on('pinchend', function (ev) {
         sectors[ii].trapez.selectable = true
         sectors[ii].trapez.lockMovementX = false;
         sectors[ii].trapez.lockMovementY = false;
+        sectors[ii].trapez.lockRotation = false;
     }
     canvas.renderAll()
 });
@@ -2149,7 +2151,7 @@ fabric.Object.prototype.controls.mtr = new fabric.Control({
     actionHandler: fabric.controlsUtils.rotationWithSnapping,
     actionName: 'rotate',
     render: renderIcon,
-    cornerSize: 28,
+    cornerSize: 40,
     withConnection: true
 })
 
@@ -4732,7 +4734,7 @@ for (let ii = 0; ii < sec_name.length; ii ++){
 
             img.scaleToWidth(sec_width[ii] + 4);
 
-            let patternSourceCanvas = new fabric.StaticCanvas();
+            let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
             patternSourceCanvas.add(img);
 
             patternSourceCanvas.setDimensions({
