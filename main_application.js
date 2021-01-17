@@ -456,7 +456,15 @@ canvas.on({
     'touch:gesture': function(e) {
         if (pausePanning == false && e.e.touches && e.e.touches.length == 2) {
             //pausePanning = true;
-            var point = new fabric.Point(e.self.x, e.self.y);
+            var point = new fabric.Point
+
+
+
+
+
+
+
+(e.self.x, e.self.y);
             if (e.self.state == "start") {
                 zoomStartScale = canvas.getZoom();
             }
@@ -503,7 +511,6 @@ ham.on('pinchstart', function (ev) {
     //canvas.discardActiveObject()
     if (canvas.getActiveObject() !== undefined){
         if(canvas.getActiveObject() !== null){
-            console.log(canvas.getActiveObject().parent.ID)
             isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
             if (sectorToSnap > -1){
                 snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
@@ -724,7 +731,6 @@ canvas.on('mouse:up', function(opt) {
             lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
 
             if(Math.abs(lineend_x - linestart_x) > epsilon || Math.abs(lineend_y - linestart_y) > epsilon) {
-                console.log('long enough')
                 let stackIdx = 0;
                 for (let jj = sectors.length -1; jj >= 0; jj--){
                     let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
@@ -767,6 +773,17 @@ canvas.on('mouse:up', function(opt) {
                     lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
 
                     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
+
+                    if (turnLorentzTransformOn == "1"){
+                        geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+                        geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+
+                        lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[lineSegment.parentSector[0]].trapez)
+                        lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[lineSegment.parentSector[0]].trapez)
+                    }
+
 
 //                        let stackIndex = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
 
@@ -1177,6 +1194,8 @@ canvasSize = {
 };
 
 let scaleRatio;
+
+let snap_radius_slider = 10 * scaleFacotor;
 
 let sectors = [];
 
@@ -2022,7 +2041,6 @@ function drawDragPoint(geodesicToGivePoint) {
                 if (sectors[kk].ID !== lineSegment.parentSector[0]){
                     let stackIdx = canvas.getObjects().indexOf(sectors[kk].ID_text)
                     if (stackIdx > canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text)){
-                        console.log('go away')
                         return
 
                     }
@@ -2084,6 +2102,11 @@ function drawDragPoint(geodesicToGivePoint) {
     });
 
     lineSegment.dragPoint.relationship = getRelationship(lineSegment.dragPoint, lineSegment.parentSector[0]);
+
+    if (turnLorentzTransformOn == "1"){
+        lineSegment.dragPoint.start_pos_BL_dragPoint_x = lineSegment.end_point_BL.x;
+        lineSegment.dragPoint.start_pos_BL_dragPoint_y = lineSegment.end_point_BL.y;
+    }
 
     canvas.add(lineSegment.dragPoint);
 }
@@ -2168,26 +2191,25 @@ function renderIcon(ctx, left, top, styleOverride, fabricObject) {
 
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
-function initializeSectors() //keine Argumente
-{
+function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     if (typeof this.trapez !== 'undefined') {
         canvas.remove(this.trapez); //sollte ein Sektor zwei Trapeze erzeugen, wird der erste gelöscht
     }
 
-    //Berechnung der Koordinaten der Eckpunkte des Polygons
-
-
-
-    let x0 = -Math.min(0,this.offset_x);
-    let y0 = 0;
-    let x1 = this.sector_top - Math.min(0, this.offset_x );
-    let y1 = 0;
-    let x2 = this.sector_bottom + Math.max(0,this.offset_x); //+ offset_x;
-    let y2 = this.sector_height;
-    let x3 = Math.max(0,this.offset_x);
-    let y3 = this.sector_height;
-
     let sectorEdgeColor;
+
+    let originXToSet;
+    let originYToSet;
+
+    if (turnLorentzTransformOn == "1"){
+        originXToSet =  'left';
+        originYToSet = 'bottom';
+        lockRotationToSet = true;
+    }else{
+        originXToSet =  'center';
+        originYToSet = 'center';
+        lockRotationToSet = false;
+    }
 
     if (textured == "0" ){sectorEdgeColor = 'black'} else{sectorEdgeColor = '#666'}
 
@@ -2200,8 +2222,8 @@ function initializeSectors() //keine Argumente
         ],
 
         {
-            originX: 'center',
-            originY: 'center',
+            originX: originXToSet,
+            originY: originYToSet,
             left: this.pos_x, //Koordinaten der linken oberen Ecke der Boundingbox
             top: this.pos_y,
             angle: this.sector_angle,
@@ -2216,6 +2238,7 @@ function initializeSectors() //keine Argumente
             lockMovementY: false,
             lockScalingX: true,
             lockScalingY: true,
+            lockRotation: lockRotationToSet,
             cornerSize: 30,
             opacity: 0.9,
 
@@ -2228,7 +2251,15 @@ function initializeSectors() //keine Argumente
         offsetY: 0
     });
 */
+    this.trapez.x_offset = Math.min(x0,x1,x2,x3) + 0.5;
+    this.trapez.y_offset = Math.min(y0,y1,y2,y3) + 0.5;
 
+    let showRotationControll;
+    if (turnLorentzTransformOn == "1"){
+        showRotationControll = false;
+    }else{
+        showRotationControll = true;
+    }
 
     this.trapez.setControlsVisibility({
         //    mtr: false,
@@ -2242,12 +2273,25 @@ function initializeSectors() //keine Argumente
         bl: false,
         mb: false,
         br: false,
+
+        mtr : showRotationControll,
     });
 
     //Zeiger, der wieder auf die Parentalsektor zeigt
     this.trapez.parent = this;
 
     this.trapez.aussenkreisradius = Math.sqrt( Math.pow(this.sector_width/2, 2) + Math.pow(this.sector_height/2, 2));
+
+    let textPos_x;
+    let textPos_y;
+
+    if (turnLorentzTransformOn == "1"){
+        textPos_x = this.pos_x + this.sector_width/2;
+        textPos_y = this.pos_y - this.sector_height/2;
+    }else{
+        textPos_x = this.pos_x;
+        textPos_y = this.pos_y;
+    }
 
     this.ID_text = new fabric.Text("" + (this.name), {
         fontSize: this.fontSize,
@@ -2259,10 +2303,9 @@ function initializeSectors() //keine Argumente
         lockScalingY: true,
         selectable: false,
         evented: false,
-        left: this.pos_x , //Koordinaten der linken oberen Ecke der Boundingbox
-        top: this.pos_y ,
+        left: textPos_x,
+        top: textPos_y,
         angle: this.sector_angle,
-//        angle: this.sector_angle
     });
 
 
@@ -2275,6 +2318,13 @@ function initializeSectors() //keine Argumente
         this.ID_text.calcTransformMatrix());
 
     this.ID_text.relationship = desiredTransform;
+
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(this.trapez)
+
+    if (turnLorentzTransformOn == "1"){
+        this.ID_text.start_pos_BL_text_x = this.ID_text.left - trapezPointsAsGlobalCoords[3].x;
+        this.ID_text.start_pos_BL_text_y = this.ID_text.top - trapezPointsAsGlobalCoords[3].y;
+    }
 
     this.trapez.on('moving',function(){
         removeSnapEdges(this.parent.ID)
@@ -2298,10 +2348,45 @@ function initializeSectors() //keine Argumente
     });
 
 
+        this.trapez.on('selected', function () {
+            if (turnLorentzTransformOn == "1"){
+
+                for(let ii = 0; ii < this.parent.slider.length; ii++){
+                    this.parent.slider[ii].opacity = 1.00;
+                    //canvas.sendToBack(this.parent.slider[ii]);
+                    canvas.bringToFront(this.parent.slider[ii]);
+                    canvas.bringToFront(this.parent.slider[0]);
+                    //this.parent.slider[0].opacity =0.80;
+                }
+            }
+
+
+        });
+
+        this.trapez.on('deselected', function () {
+            if (turnLorentzTransformOn == "1") {
+                for (let ii = 0; ii < this.parent.slider.length; ii++) {
+                    this.parent.slider[ii].opacity = 0.00;
+                }
+            }
+        });
+
+
+    let rapidity_before_something;
+
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
         showGeodesicButtons(false);
+
+
+        if (turnLorentzTransformOn == "1"){
+
+            rapidity_before_something = this.parent.rapidity
+            console.log('rapidity before down:', rapidity_before_something)
+            dist_inv_min_x_old = Math.min(this.points[0].x, this.points[1].x, this.points[2].x, this.points[3].x);
+            dist_inv_max_y_old = Math.max(this.points[0].y, this.points[1].y, this.points[2].y, this.points[3].y);
+        }
 
         for (let kk = 0; kk < geodesics.length; kk++){
             for (let ll = 0; ll < geodesics[kk].length; ll++)
@@ -2418,6 +2503,73 @@ function initializeSectors() //keine Argumente
 
     this.trapez.on('mouseup', function (o) {
 
+        if (turnLorentzTransformOn == "1"){
+            console.log('rapidity before up:', rapidity_before_something)
+
+            let rapidity_after_something = this.parent.rapidity
+
+            console.log('rapidity after up:', rapidity_after_something)
+
+            //Der Sektor muss reinitialisiert werden, wenn die Maus losgelassen wird, jedoch nur, wenn sich an den Rapiditäten etwas getan hat.
+            //Sonst wird die Boundingbox nicht aktualisiert
+            //WICHTIG: Dies muss unabhängig vom Snapping passieren.
+            //Dennoch müssen spätere Kriterien erfüllt und abgearbeitet werden.
+            //Hierzu zählen das Setzen der entsprechenden Snap-Edges und das zurücksetzen der Färbung auf den Grundzustand
+
+            if (Math.abs(rapidity_after_something - rapidity_before_something) > epsilon) {
+                let lastTopTrapez = this.parent.trapez.top;
+                let lastLeftTrapez = this.parent.trapez.left;
+                let lastTopID_text = this.parent.ID_text.top;
+                let lastLeftID_text = this.parent.ID_text.left;
+
+                let start_pos_BL_text_x = this.parent.ID_text.start_pos_BL_text_x;
+                let start_pos_BL_text_y = this.parent.ID_text.start_pos_BL_text_y;
+
+                let dist_inv_min_x_new = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
+                let dist_inv_min_y_new = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
+
+
+                canvas.remove(this.parent.trapez);
+
+                canvas.remove(this.parent.ID_text);
+
+                this.parent.draw(this.parent.trapez.points[0].x, this.parent.trapez.points[0].y, this.parent.trapez.points[1].x, this.parent.trapez.points[1].y, this.parent.trapez.points[2].x, this.parent.trapez.points[2].y, this.parent.trapez.points[3].x, this.parent.trapez.points[3].y);
+
+                canvas.setActiveObject(this.parent.trapez);
+
+                this.parent.trapez.set('left', lastLeftTrapez + dist_inv_min_x_new - dist_inv_min_x_old).setCoords();
+                this.parent.trapez.set('top', lastTopTrapez + dist_inv_min_y_new - dist_inv_max_y_old).setCoords();
+
+                this.parent.ID_text.set('left', lastLeftID_text).setCoords();
+                this.parent.ID_text.set('top', lastTopID_text).setCoords();
+
+                this.parent.ID_text.start_pos_BL_text_x = start_pos_BL_text_x;
+                this.parent.ID_text.start_pos_BL_text_y = start_pos_BL_text_y;
+
+                this.parent.ID_text.relationship = getRelationship(this.parent.ID_text, this.parent.ID)
+
+                for (let ii = 0; ii < this.parent.slider.length; ii++) {
+                    this.parent.slider[ii].relationship = getRelationship(this.parent.slider[ii], this.parent.ID)
+                }
+
+                if (this.parent.lineSegments.length > 0) {
+                    for (let ii = 0; ii < this.parent.lineSegments.length; ii++) {
+                        canvas.bringToFront(this.parent.lineSegments[ii]);
+                    }
+
+                    for (let ii = 0; ii < this.parent.lineSegments.length; ii++) {
+                        this.parent.lineSegments[ii].relationship = getRelationship(this.parent.lineSegments[ii], this.parent.ID);
+
+                        if (this.parent.lineSegments[ii].dragPoint !== undefined) {
+                            canvas.bringToFront(this.parent.lineSegments[ii].dragPoint);
+                            this.parent.lineSegments[ii].dragPoint.relationship = getRelationship(this.parent.lineSegments[ii].dragPoint, this.parent.ID);
+                        }
+                    }
+                }
+            }
+        }
+
+
         if (textured == "1") {
             //nur drawSnapEdges weil der Sektor hier ja schon gesnappt sein sollte
             drawSnapEdges(this.parent.ID)
@@ -2530,6 +2682,415 @@ function initializeSectors() //keine Argumente
 
     canvas.add(this.trapez);
     canvas.add(this.ID_text);
+}
+
+let slider_max = 100;
+
+function drawSlider(pos_x, pos_y) {
+
+    this.slider = [];
+
+    let temporary;
+
+
+
+
+
+    temporary = new fabric.Rect
+    (
+        {
+            left: pos_x,
+            top: pos_y,
+            fill: 'white',
+            width: 20,
+            height: 40,
+            stroke: '#848484',
+            strokeWidth: 2,
+            perPixelTargetFind: true,
+            hasControls: false,
+            hasBorders: false,
+            objectCaching: false,
+            lockMovementX: true,
+            lockMovementY: false,
+            opacity: 0.00,
+            originX: 'center',
+            originY: 'center',
+
+        }
+    );
+
+    temporary.parent = this;
+    this.slider.push(temporary);
+
+    temporary = new fabric.Line
+    ([pos_x, pos_y + slider_max, pos_x, pos_y - slider_max],
+        {
+
+            fill: '#585858',
+            stroke: '#585858',
+            strokeWidth: 3,
+            selectable: false,
+            evented: false,
+            opacity: 0.00,
+            originX: 'center',
+            originY: 'center',
+        }
+    );
+    temporary.parent = this;
+    this.slider.push(temporary);
+
+    temporary = new fabric.Line
+    ([pos_x - 5, pos_y , pos_x + 5, pos_y],
+        {
+
+            fill: '#585858',
+            stroke: '#585858',
+            strokeWidth: 3,
+            selectable: false,
+            evented: false,
+            opacity: 0.00,
+            originX: 'center',
+            originY: 'center',
+        }
+    );
+    temporary.parent = this;
+    this.slider.push(temporary);
+
+    temporary = new fabric.Line
+    ([pos_x - 5, pos_y + slider_max, pos_x + 5, pos_y + slider_max],
+        {
+
+            fill: '#585858',
+            stroke: '#585858',
+            strokeWidth: 3,
+            selectable: false,
+            evented: false,
+            opacity: 0.00,
+            originX: 'center',
+            originY: 'center',
+        }
+    );
+    temporary.parent = this;
+    this.slider.push(temporary);
+
+
+    temporary = new fabric.Line
+    ([pos_x - 5, pos_y - slider_max, pos_x + 5, pos_y - slider_max],
+        {
+
+            fill: '#585858',
+            stroke: '#585858',
+            strokeWidth: 3,
+            selectable: false,
+            evented: false,
+            opacity: 0.00,
+            originX: 'center',
+            originY: 'center',
+        }
+    );
+    temporary.parent = this;
+    this.slider.push(temporary);
+
+    for(let ii = 0; ii < this.slider.length; ii++){
+        canvas.add(this.slider[ii]);
+
+    }
+    canvas.bringToFront(this.slider[0]);
+
+    //Anlegen der Variablen für die Koordinaten des neuen Sektors
+
+    let xn0 ;
+    let yn0 ;
+
+    let xn1 ;
+    let yn1 ;
+
+    let xn2 ;
+    let yn2 ;
+
+    let xn3 ;
+    let yn3 ;
+
+    let transformMatrix;
+    let transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+
+
+
+
+    //Berechnen der Sektorkoordinaten beim Klicken auf den Regler
+    /*
+    this.slider[0].on('mousedown', function f() {
+        transformMatrix = this.parent.trapez.calcTransformMatrix('True');
+        transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
+        for (let ll = 0; ll < 4; ll++) {
+            transformedPoints[ll].x = this.parent.trapez.points[ll].x - this.parent.trapez.width / 2.0 -this.parent.trapez.x_offset ;
+            transformedPoints[ll].y = this.parent.trapez.points[ll].y - this.parent.trapez.height / 2.0 -this.parent.trapez.y_offset;
+            transformedPoints[ll] = fabric.util.transformPoint(transformedPoints[ll], transformMatrix);
+            transformedPoints[ll].x -= 0.5;
+            transformedPoints[ll].y -= 0.5;
+
+        }
+    });
+    */
+
+
+    let hmpfx_alt;
+    let hmpfy_alt;
+
+
+
+    this.slider[0].on('mousedown', function(o) {
+
+        this.opacity = 0.8
+        hmpfx_alt = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
+        hmpfy_alt = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
+
+        if(this.parent.lineSegments.length > 0) {
+            geodesic_start_point = new fabric.Point(this.parent.lineSegments[0].calcLinePoints().x1, this.parent.lineSegments[0].calcLinePoints().y1);
+            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, this.parent.lineSegments[0].calcTransformMatrix());
+            geodesic_end_point = new fabric.Point(this.parent.lineSegments[0].calcLinePoints().x2, this.parent.lineSegments[0].calcLinePoints().y2);
+            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, this.parent.lineSegments[0].calcTransformMatrix());
+        }
+    });
+
+    //Wird der Regler bewegt, so passiert die Transformation
+    this.slider[0].on('moving', function(o) {
+
+        for (let ii = 0; ii < 4; ii++) {
+
+            let sec_idx = this.parent.neighbourhood[ii];
+
+            if (this.parent.snapEdges[ii] !== undefined) {
+
+                canvas.remove(this.parent.snapEdges[ii]);
+                this.parent.snapEdges[ii] = [];
+            }
+
+            if (sec_idx > -1) {
+
+                if (sectors[sec_idx].snapEdges[(ii + 2) % 4] !== undefined) {
+
+                    canvas.remove(sectors[sec_idx].snapEdges[(ii + 2) % 4]);
+                    sectors[sec_idx].snapEdges[(ii + 2) % 4] = [];
+                }
+            }
+            if (sec_idx > -1) {
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[sec_idx].neighbourhood[jj] === this.parent.ID) {
+
+                        sectors[sec_idx].snapStatus[jj] = 0;
+
+                    }
+                }
+                this.parent.snapStatus[ii] = 0;
+            }
+        }
+
+        console.log(this.parent.snapStatus)
+
+        if(this.top > this.parent.slider[1].top + slider_max){
+            this.set('top' , this.parent.slider[1].top + slider_max).setCoords();
+        }
+
+        if(this.top < this.parent.slider[1].top - slider_max){
+            this.set('top' , this.parent.slider[1].top - slider_max).setCoords();
+        }
+
+        //Einrasten des Sliders auf Null
+
+        let pointer = canvas.getPointer(o.e);
+        let points = [pointer.x, pointer.y];
+
+
+        if (Math.abs(pointer.y - this.parent.slider[1].top) < snap_radius_slider) {
+            this.set('top' , this.parent.slider[1].top).setCoords();}
+
+        let lastValueSlider = 0.00;
+        let startValueSlider;
+        startValueSlider = this.top - this.parent.slider[1].top ;
+
+        //Die Rapidität wird wie üblich mit theta abgekürzt
+
+        let theta = (startValueSlider - lastValueSlider) / slider_max; // '-' damit der Sektor nach oben verscheert wird
+        this.parent.rapidity = theta;
+
+
+        lorentzTransform(theta, this.parent.trapez);
+
+
+    });
+
+
+    this.slider[0].on('mouseup',function() {
+        this.opacity = 1.0
+        let lastValueSlider = this.top - this.parent.trapez.top;
+        let lastTopTrapez = this.parent.trapez.top;
+        let lastLeftTrapez = this.parent.trapez.left;
+        let lastTopID_text = this.parent.ID_text.top;
+        let lastLeftID_text = this.parent.ID_text.left;
+
+        let start_pos_BL_text_x = this.parent.ID_text.start_pos_BL_text_x;
+        let start_pos_BL_text_y = this.parent.ID_text.start_pos_BL_text_y;
+
+
+        let dist_inv_min_x_new = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
+        let dist_inv_min_y_new = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
+
+        canvas.remove(this.parent.trapez);
+
+
+        canvas.remove(this.parent.ID_text);
+
+
+
+        this.parent.draw(this.parent.trapez.points[0].x, this.parent.trapez.points[0].y, this.parent.trapez.points[1].x, this.parent.trapez.points[1].y, this.parent.trapez.points[2].x, this.parent.trapez.points[2].y, this.parent.trapez.points[3].x, this.parent.trapez.points[3].y);
+
+
+
+        this.parent.trapez.set('left',lastLeftTrapez + dist_inv_min_x_new - hmpfx_alt).setCoords();
+        this.parent.trapez.set('top', lastTopTrapez+dist_inv_min_y_new-hmpfy_alt).setCoords();
+
+        this.parent.ID_text.set('left', lastLeftID_text).setCoords();
+        this.parent.ID_text.set('top', lastTopID_text).setCoords();
+
+        this.parent.ID_text.start_pos_BL_text_x = start_pos_BL_text_x
+        this.parent.ID_text.start_pos_BL_text_y = start_pos_BL_text_y
+
+
+        let trapezTransform = this.parent.trapez.calcTransformMatrix();
+        let invertedtrapezTransform = invert(trapezTransform);
+        let desiredTransform;
+
+        desiredTransform = multiply(invertedtrapezTransform, this.parent.ID_text.calcTransformMatrix());
+        this.parent.ID_text.relationship = desiredTransform;
+
+        for (let ii = 0; ii < this.parent.slider.length; ii++){
+            desiredTransform = multiply(
+                invertedtrapezTransform,
+                this.parent.slider[ii].calcTransformMatrix());
+
+            this.parent.slider[ii].relationship = desiredTransform;
+        }
+
+
+        //updateMinions(this.parent.trapez)
+
+        console.log('rapidity:', this.parent.rapidity);
+
+        if (this.parent.lineSegments.length > 0){
+            for (let ii = 0; ii < this.parent.lineSegments.length; ii++ ){
+                canvas.bringToFront(this.parent.lineSegments[ii]);
+
+            }
+            for (let ii = 0; ii < this.parent.lineSegments.length; ii++){
+                desiredTransform = multiply(
+                    invertedtrapezTransform,
+                    this.parent.lineSegments[ii].calcTransformMatrix());
+
+                this.parent.lineSegments[ii].relationship = desiredTransform;
+
+                if (this.parent.lineSegments[ii].dragPoint !== undefined) {
+                    canvas.bringToFront(this.parent.lineSegments[ii].dragPoint);
+                    desiredTransform = multiply(
+                        invertedtrapezTransform,
+                        this.parent.lineSegments[ii].dragPoint.calcTransformMatrix());
+
+                    this.parent.lineSegments[ii].dragPoint.relationship = desiredTransform;
+                }
+
+            }
+        }
+
+
+
+
+
+    });
+
+
+    this.slider[0].on('deselected', function () {
+        for(let ii = 0; ii < this.parent.slider.length; ii++){
+            this.parent.slider[ii].opacity =0.00;
+        }
+    });
+    this.slider[0].on('selected', function () {
+        for(let ii = 0; ii < this.parent.slider.length; ii++){
+            this.parent.slider[ii].opacity =1.00;
+            //this.parent.slider[0].opacity =0.80;
+        }
+        canvas.bringToFront(this);
+    });
+
+
+
+    //Berechnung der relativen Position von Objekten im lokalen Koordinatensystem der Parentalsektoren
+    //wichtig für updateMinions
+    let trapezTransform = this.trapez.calcTransformMatrix();
+    let invertedtrapezTransform = invert(trapezTransform);
+    let desiredTransform;
+    for (let ii = 0; ii < this.slider.length; ii++){
+        desiredTransform = multiply(
+            invertedtrapezTransform,
+            this.slider[ii].calcTransformMatrix());
+
+        this.slider[ii].relationship = desiredTransform;
+    }
+
+}
+
+function lorentzTransform(theta, trapez) {
+
+
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez)
+    //**** !!!! Beachte, dass 'sector' das übergegebene Trapez ist !!!!
+
+
+    for (let ii=0;ii<4;ii++){
+        trapez.points[ii].x= sec_coords[trapez.parent.ID][ii*2] * Math.cosh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.sinh(theta);
+        trapez.points[ii].y= sec_coords[trapez.parent.ID][ii*2] * Math.sinh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.cosh(theta);
+
+    }
+
+    trapez.parent.ID_text.set('left', trapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(theta) + trapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
+    trapez.parent.ID_text.set('top', trapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(theta) + trapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+
+    if (trapez.parent.lineSegments.length > 0) {
+        for (let ii = 0; ii < trapez.parent.lineSegments.length; ii++) {
+            trapez.parent.lineSegments[ii].set({
+                'x1': trapez.parent.lineSegments[ii].start_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
+                'y1': trapez.parent.lineSegments[ii].start_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
+                'x2': trapez.parent.lineSegments[ii].end_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].end_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
+                'y2': trapez.parent.lineSegments[ii].end_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].end_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
+
+                /*
+                trapez.parent.lineSegments[ii].set({
+                    'x1': (geodesic_start_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
+                    'y1': (geodesic_start_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
+                    'x2': (geodesic_end_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
+                    'y2': (geodesic_end_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
+                */
+            });
+
+            if(trapez.parent.lineSegments[ii].dragPoint !== undefined) {
+                trapez.parent.lineSegments[ii].dragPoint.set('left', trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(theta) + trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
+                trapez.parent.lineSegments[ii].dragPoint.set('top', trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(theta) + trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+            }
+
+        }
+    }
+    canvas.renderAll();
+
+
+}
+
+function setGeodesicMode (){
+    if (geodesicMode === 'normal') {
+        geodesicMode = 'lightLike';
+        console.log(geodesicMode)
+    }else {
+        geodesicMode = 'normal';
+        console.log(geodesicMode)
+    }
 }
 
 function geodesicToStartCalc(){
@@ -2946,11 +3507,20 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
     let transformMatrix = trapezToGetGlobalCoords.calcTransformMatrix('True');
     let globalCoords = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-    for (let ii = 0; ii < 4; ii++) {
-        globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2 ;
-        globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2 ;
-        globalCoords[ii] = fabric.util.transformPoint(globalCoords[ii], transformMatrix);
+    if (turnLorentzTransformOn == "1"){
+        for (let ii = 0; ii < 4; ii++) {
+            globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2 - trapezToGetGlobalCoords.x_offset;
+            globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2 - trapezToGetGlobalCoords.y_offset;
+            globalCoords[ii] = fabric.util.transformPoint(globalCoords[ii], transformMatrix);
+        }
+    }else{
+        for (let ii = 0; ii < 4; ii++) {
+            globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2 ;
+            globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2 ;
+            globalCoords[ii] = fabric.util.transformPoint(globalCoords[ii], transformMatrix);
+        }
     }
+
 
     return globalCoords
 }
@@ -3163,6 +3733,55 @@ function resetSectors() {
     canvas.renderAll();
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
+
+        if (turnLorentzTransformOn == "1"){
+            if (sectors[rr].trapez.left != sec_posx[rr] || sectors[rr].trapez.top != sec_posy[rr] || sectors[rr].rapidity != 0) {
+                let lastLeft = sectors[rr].trapez.left;
+                let lastTop = sectors[rr].trapez.top;
+
+                let dist_inv_min_x_new = Math.min(sectors[rr].trapez.points[0].x, sectors[rr].trapez.points[1].x, sectors[rr].trapez.points[2].x, sectors[rr].trapez.points[3].x);
+                let dist_inv_min_y_new = Math.max(sectors[rr].trapez.points[0].y, sectors[rr].trapez.points[1].y, sectors[rr].trapez.points[2].y, sectors[rr].trapez.points[3].y);
+
+                lorentzTransform(0, sectors[rr].trapez);
+
+                sectors[rr].slider[0].top = sectors[rr].slider[1].top;
+
+                canvas.remove(sectors[rr].trapez);
+
+
+                canvas.remove(sectors[rr].ID_text);
+
+                sectors[rr].draw(sectors[rr].trapez.points[0].x, sectors[rr].trapez.points[0].y, sectors[rr].trapez.points[1].x, sectors[rr].trapez.points[1].y, sectors[rr].trapez.points[2].x, sectors[rr].trapez.points[2].y, sectors[rr].trapez.points[3].x, sectors[rr].trapez.points[3].y);
+
+                sectors[rr].trapez.set('left', lastLeft - dist_inv_min_x_new).setCoords();
+                sectors[rr].trapez.set('top', lastTop - dist_inv_min_y_new + sec_coords[rr][5]).setCoords();
+
+                sectors[rr].ID_text.set('left', lastLeft - dist_inv_min_x_new + 90).setCoords();
+                sectors[rr].ID_text.set('top', lastTop - dist_inv_min_y_new + sec_coords[rr][5] - 50).setCoords();
+
+                for (let ss = 0; ss < sectors[rr].slider.length; ss++) {
+                    sectors[rr].slider[ss].relationship = getRelationship(sectors[rr].slider[ss], sectors[rr].ID);
+                }
+
+                if (sectors[rr].lineSegments.length > 0) {
+                    for (let ss = 0; ss < sectors[rr].lineSegments.length; ss++) {
+                        canvas.bringToFront(sectors[rr].lineSegments[ss]);
+
+                    }
+                    for (let ss = 0; ss < sectors[rr].lineSegments.length; ss++) {
+                        sectors[rr].lineSegments[ss].relationship = getRelationship(sectors[rr].lineSegments[ss], sectors[rr].ID);
+
+                        if (sectors[rr].lineSegments[ss].dragPoint !== undefined) {
+                            canvas.bringToFront(sectors[rr].lineSegments[ss].dragPoint)
+
+                            sectors[rr].lineSegments[ss].dragPoint.relationship = getRelationship(sectors[rr].lineSegments[ss].dragPoint, sectors[rr].ID);
+                        }
+
+                    }
+                }
+                sectors[rr].rapidity = 0;
+            }
+        }
 
         sectors[rr].trapez.left = sec_posx[rr] + window.innerWidth/2;
         sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2;
@@ -3482,8 +4101,15 @@ function Sector() {
     this.fill;
     this.sector_type;
 
-    this.init = initializeSectors; // das Objekt Sektor bekommt die Methode 'initializeSectors' mitgegeben, keine Klammern
+    this.draw = drawSector; // das Objekt Sektor bekommt die Methode 'drawSectors' mitgegeben, keine Klammern
 
+    if (turnLorentzTransformOn == "1"){
+        this.slider;
+        this.rapidity = 0;
+        this.draw_slider = drawSlider;
+        let dist_inv_min_x_old;
+        let dist_inv_min_y;
+    }
 
     this.lineSegments = [];
     this.markCircles = [];
@@ -4022,10 +4648,7 @@ function isItTimeToSnap(trapez) {
                 if (dist_1a < snap_radius_sectors && dist_2b < snap_radius_sectors) {
                     snapInitialSectorToTargetSector(trapez.parent.ID, potentialSnappingPartnerID)
                 }
-            }
-
-            if (textured !== "1"){
-
+            }else{
                 if (distance(point_1_2_mid, point_a_b_mid) <= snap_radius_sectors || distanceMidPoints <= snappingToChosenDistance * trapez.aussenkreisradius ) {
 
                     for (let jj = 0; jj < 4; jj++) {
@@ -4038,9 +4661,109 @@ function isItTimeToSnap(trapez) {
 
                     sectorToSnap = potentialSnappingPartnerID;
 
-                    rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID)
+                    if (turnLorentzTransformOn == "1"){
 
-                    return
+                        let rapidity_before = trapez.parent.rapidity;
+
+                        let rapid_base;
+                        if (Math.abs(sec_coords[trapez.parent.ID][(ii*2) % 8] - sec_coords[trapez.parent.ID][(ii*2+2) % 8]) > epsilon) {
+                            rapid_base = Math.atanh((sec_coords[trapez.parent.ID][(ii * 2 + 1) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 3) % 8]) / (sec_coords[trapez.parent.ID][(ii * 2) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 2) % 8]));
+                        } else {rapid_base = 0}
+
+                        let rapid_target;
+                        if (Math.abs(point_a.x - point_b.x) > epsilon ){
+                            if (ii == 0 || ii == 2){
+                                rapid_target = Math.atanh((point_a.y - point_b.y) / (point_a.x - point_b.x))
+                            }else {
+                                rapid_target = Math.atanh( (point_a.x - point_b.x) / (point_a.y - point_b.y))
+                            }
+                        } else {rapid_target = 0}
+
+                        let rapid_sum = - rapid_base + rapid_target;
+
+                        /*
+                        let point_1_untransf = new fabric.Point(sec_coords[trapez.parent.ID][(ii * 2 + 1) % 8], sec_coords[trapez.parent.ID][(ii * 2) % 8])
+                        let point_2_untransf = new fabric.Point(sec_coords[trapez.parent.ID][(ii * 2 + 3) % 8], sec_coords[trapez.parent.ID][(ii * 2 + 2) % 8])
+
+                        let length_ausgang = distance(point_1_untransf, point_2_untransf);
+                        let length_target = distance(point_a, point_b);
+                        let rapid_sum;
+                        if (ii == 0 || ii == 2) {
+                            rapid_sum = Math.log(length_ausgang / length_target);
+                        }else{
+                            rapid_sum = - Math.log(length_ausgang / length_target);
+                        }
+                        */
+
+
+                        //Anpassung des Sliders an die neue rapidity (Beachte, dass hier die relationship verändert wird, Bezug ist der Mittelpunkt der Sliderlinie)
+                        trapez.parent.slider[0].relationship[5] = trapez.parent.slider[1].relationship[5] + rapid_sum * slider_max;
+
+                        trapez.parent.rapidity = rapid_sum;
+
+                        // console.log('rapid_base:', rapid_base);
+                        // console.log('rapid_target:', rapid_target);
+                        // console.log('rapid_sum:', rapid_sum);
+
+                        lorentzTransform(rapid_sum, trapez);
+
+                        let rapidity_after = trapez.parent.rapidity;
+
+                        if(Math.abs(rapidity_before - rapidity_after)>epsilon ) {
+                            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez)
+
+                            let midpoint_boundingbox_before_global = new fabric.Point(trapez.left + trapez.width/2 , trapez.top - trapez.height/2 );
+
+                            trapez.parent.ID_text.set('left', trapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(rapid_sum) + trapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
+                            trapez.parent.ID_text.set('top', trapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(rapid_sum) + trapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
+
+                            trapez.parent.ID_text.relationship[4] = trapez.parent.ID_text.left - midpoint_boundingbox_before_global.x -1;
+                            trapez.parent.ID_text.relationship[5] = trapez.parent.ID_text.top - midpoint_boundingbox_before_global.y +1;
+
+                            for (let jj = 0; jj < trapez.parent.lineSegments.length; jj++) {
+                                let geodesic_start_point_calc = new fabric.Point(
+                                    trapez.parent.lineSegments[jj].start_point_BL.x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                                    trapez.parent.lineSegments[jj].start_point_BL.x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+                                );
+                                let geodesic_end_point_calc = new fabric.Point(
+                                    trapez.parent.lineSegments[jj].end_point_BL.x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].end_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                                    trapez.parent.lineSegments[jj].end_point_BL.x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].end_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+                                );
+
+                                let geodesic_transformed_mid_point = new fabric.Point(
+                                    geodesic_start_point_calc.x + (geodesic_end_point_calc.x - geodesic_start_point_calc.x) * 0.5,
+                                    geodesic_start_point_calc.y + (geodesic_end_point_calc.y - geodesic_start_point_calc.y) * 0.5,
+                                );
+
+                                if (trapez.parent.lineSegments[jj].dragPoint !== undefined) {
+
+                                    dragPoint_transformed_mid_point = new fabric.Point(
+                                        trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                                        trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+                                    );
+
+                                    trapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
+                                    trapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
+
+                                }
+
+                                trapez.parent.lineSegments[jj].relationship[4] = geodesic_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
+
+                                trapez.parent.lineSegments[jj].relationship[5] =  geodesic_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
+
+
+                            }
+
+                        }
+
+                        return
+                    }else{
+
+                        rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID)
+
+                        return
+                    }
+
                 }else {
 
                     sectorToSnap = -1;
@@ -4053,6 +4776,8 @@ function isItTimeToSnap(trapez) {
                     }
                 }
             }
+
+
         }
     }
 }
@@ -4066,9 +4791,15 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
         sectors[targetSectorID].trapez.fill = sec_fill[sectors[targetSectorID].ID];
     }
 
-    rotateSectorToAlignAngle(initialSectorID, targetSectorID);
+    if (turnLorentzTransformOn == "1"){
 
-    translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+        translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+
+    }else{
+        rotateSectorToAlignAngle(initialSectorID, targetSectorID);
+
+        translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+    }
 
     updateMinions(sectors[initialSectorID].trapez)
 
@@ -4117,10 +4848,33 @@ function startGeodesics(){
         let stackidx = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
         canvas.insertAt(lineSegment, stackidx);
 
+        geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+        geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+
+        lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, lineSegment.parentSector.trapez)
+        lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, lineSegment.parentSector.trapez)
+
         drawDragPoint(lineSegment.ID[0])
 
     }
 
+}
+
+function getPointCoordsBeforeLorentztransform (point, trapezToGetCoordsBL){
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapezToGetCoordsBL)
+    let theta_of_this_sector =  trapezToGetCoordsBL.parent.rapidity
+
+    let point_AL_x = point.x - trapezPointsAsGlobalCoords[3].x;
+    let point_AL_y = point.y - trapezPointsAsGlobalCoords[3].y;
+
+    let point_BL_x = point_AL_x * Math.cosh(-theta_of_this_sector) + point_AL_y * Math.sinh(-theta_of_this_sector);
+    let point_BL_y = point_AL_x * Math.sinh(-theta_of_this_sector) + point_AL_y * Math.cosh(-theta_of_this_sector);
+
+    let point_BL = new fabric.Point(point_BL_x, point_BL_y)
+
+    return point_BL
 }
 
 function startMarks() {
@@ -4218,7 +4972,6 @@ function startMarks() {
 }
 
 function startTexts() {
-
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
         let sec = sectors[textStartParentSector[ii][0]];
 
@@ -4515,6 +5268,35 @@ function updateMinions(boss) {
         }
     }
 
+    if (turnLorentzTransformOn === "1"){
+        for (let ii = 0; ii < boss.parent.slider.length; ii++){
+            let slider_move = boss.parent.slider[ii];
+            if (slider_move.relationship) {
+                slider_move.bringToFront();
+                let relationship = slider_move.relationship;
+                let newTransform = multiply(
+                    boss.calcTransformMatrix(),
+                    relationship
+                );
+                let options;
+                options = fabric.util.qrDecompose(newTransform);
+                slider_move.set({
+                    flipX: false,
+                    flipY: false,
+                });
+                slider_move.setPositionByOrigin(
+                    {x: options.translateX, y: options.translateY},
+                    'center',
+                    'center'
+                );
+                slider_move.set(options);
+                slider_move.setCoords();
+            }
+
+        }
+    }
+
+
     for (let ii = 0; ii < boss.parent.lineSegments.length; ii++) {
         let segment = boss.parent.lineSegments[ii];
         if (segment.relationship) {
@@ -4646,6 +5428,11 @@ function updateMinions(boss) {
         boss.parent.ID_text.setCoords();
     }
 
+
+    if (turnLorentzTransformOn == "1"){
+        canvas.bringToFront(boss.parent.slider[0])
+    }
+
 }
 
 
@@ -4657,111 +5444,120 @@ function updateMinions(boss) {
 // Für Programmierung sec.name = ii, ansonsten sec.name = sec_name[ii], wenn keine (für Bilder) sec.name = "";
 
 
+function init() {
+    for (let ii = 0; ii < sec_name.length; ii++) {
+        let sec = new Sector();
+        sec.name = ii;
 
-for (let ii = 0; ii < sec_name.length; ii ++){
-    let sec = new Sector();
-    //sec.name = ii;
-    sec.name = sec_name[ii];
-    //sec.name = "";
-    sec.ID = sec_ID[ii];
-    sec.sector_type = sec_type[ii];
-    sec.fontSize = sec_fontSize[ii];
-    sec.pos_x = sec_posx[ii] + window.innerWidth/2;
-    sec.pos_y = sec_posy[ii] + (window.innerHeight - window.innerHeight*0.08)/2;
-    sec.sector_height = sec_height[ii];
-    sec.sector_bottom = sec_bottom[ii];
-    sec.sector_top = sec_top[ii];
-    sec.sector_angle = sec_angle[ii];
-    sec.offset_x = sec_offset[ii];
-    sec.sector_width = sec_width[ii];
-    sec.neighbourhood = [sec_neighbour_top[ii],sec_neighbour_right[ii],sec_neighbour_bottom[ii],sec_neighbour_left[ii]];
+        //sec.name = sec_name[ii];
+        //sec.name = "";
+        sec.ID = sec_ID[ii];
+        sec.sector_type = sec_type[ii];
+        sec.fontSize = sec_fontSize[ii];
+        sec.pos_x = sec_posx[ii] + window.innerWidth / 2;
+        sec.pos_y = sec_posy[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2;
+        sec.sector_height = sec_height[ii];
+        sec.sector_width = sec_width[ii];
+        if (turnLorentzTransformOn !== "1") {
+            sec.sector_bottom = sec_bottom[ii];
+            sec.sector_top = sec_top[ii];
+            sec.sector_angle = sec_angle[ii];
+            sec.offset_x = sec_offset[ii];
+        } else {
+            sec.sector_angle = 0
+            sec.sec_diff_edges = Math.max(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]) - Math.min(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]);
 
-
-
-
-
-    if (textured !== "1") {
-        sec.fill = sec_fill[ii];
-    }
-    sec.init();
-    sectors.push(sec);
-
-    if (textured == "1") {
-        //----------------Nur wichtig, wenn Textur. Beachte, dass .fill in Overlap angepasst werden muss-------
-        let panels =
-
-            [
-                'panel-5.3.png',
-                'panel-5.4.png',
-                'panel-5.5.png',
-                'panel-6.3.png',
-                'panel-6.4.png',
-                'panel-6.5.png',
-                'panel-7.3.png',
-                'panel-7.4.png',
-                'panel-7.5.png'
-            ];
-        if (textureColored == "1") {
-            panels =
-                [
-                    'panel-7.3.jpg',
-                    'panel-7.4.jpg',
-                    'panel-7.5.jpg',
-                    'panel-8.3.jpg',
-                    'panel-8.4.jpg',
-                    'panel-8.5.jpg',
-                    'panel-9.3.jpg',
-                    'panel-9.4.jpg',
-                    'panel-9.5.jpg'
-                ];
         }
 
+        sec.neighbourhood = [sec_neighbour_top[ii], sec_neighbour_right[ii], sec_neighbour_bottom[ii], sec_neighbour_left[ii]];
 
-/*
-            fabric.util.loadImage(panels[ii], function (img) {
+        if (textured !== "1") {
+            sec.fill = sec_fill[ii];
+        }
+        sec.draw(sec_coords[ii][0], sec_coords[ii][1], sec_coords[ii][2], sec_coords[ii][3], sec_coords[ii][4], sec_coords[ii][5], sec_coords[ii][6], sec_coords[ii][7]);
+
+        if (turnLorentzTransformOn == "1") {
+            sec.draw_slider(sec.pos_x - 40, sec.pos_y - 20);
+        }
+
+        sectors.push(sec);
+
+        if (textured == "1") {
+            //----------------Nur wichtig, wenn Textur. Beachte, dass .fill in Overlap angepasst werden muss-------
+            let panels =
+
+                [
+                    'panel-5.3.png',
+                    'panel-5.4.png',
+                    'panel-5.5.png',
+                    'panel-6.3.png',
+                    'panel-6.4.png',
+                    'panel-6.5.png',
+                    'panel-7.3.png',
+                    'panel-7.4.png',
+                    'panel-7.5.png'
+                ];
+            if (textureColored == "1") {
+                panels =
+                    [
+                        'panel-7.3.jpg',
+                        'panel-7.4.jpg',
+                        'panel-7.5.jpg',
+                        'panel-8.3.jpg',
+                        'panel-8.4.jpg',
+                        'panel-8.5.jpg',
+                        'panel-9.3.jpg',
+                        'panel-9.4.jpg',
+                        'panel-9.5.jpg'
+                    ];
+            }
+
+
+            /*
+                        fabric.util.loadImage(panels[ii], function (img) {
+
+                            img.scaleToWidth(sec_width[ii] + 4);
+
+                            sec.trapez.set('fill', new fabric.Pattern({
+                                source: img,
+                                repeat: 'no-repeat'
+                            }));
+                        })
+            */
+
+
+            fabric.Image.fromURL(panels[ii], function (img) {
 
                 img.scaleToWidth(sec_width[ii] + 4);
 
-                sec.trapez.set('fill', new fabric.Pattern({
-                    source: img,
+                let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
+                patternSourceCanvas.add(img);
+
+                patternSourceCanvas.setDimensions({
+                    width: img.getScaledWidth(),
+                    height: img.getScaledHeight(),
+
+                });
+
+                patternSourceCanvas.renderAll();
+
+                //patternSourceCanvas.getElement() fixed das Problem mit der neuen Version
+                let pattern = new fabric.Pattern({
+                    source: patternSourceCanvas.getElement(),
                     repeat: 'no-repeat'
-                }));
-            })
-*/
+                });
 
-
-        fabric.Image.fromURL(panels[ii], function (img) {
-
-            img.scaleToWidth(sec_width[ii] + 4);
-
-            let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
-            patternSourceCanvas.add(img);
-
-            patternSourceCanvas.setDimensions({
-                width: img.getScaledWidth(),
-                height: img.getScaledHeight(),
+                sec.trapez.set('fill', pattern)
+                canvas.renderAll();
 
             });
+            //--------------------------------------------------------------------
+        }
 
-            patternSourceCanvas.renderAll();
-
-            //patternSourceCanvas.getElement() fixed das Problem mit der neuen Version
-            let pattern = new fabric.Pattern({
-                source: patternSourceCanvas.getElement(),
-                repeat: 'no-repeat'
-            });
-
-            sec.trapez.set('fill', pattern)
-            canvas.renderAll();
-
-        });
-        //--------------------------------------------------------------------
     }
-
 }
 
-
-
+init();
 
 fitResponsiveCanvas();
 
@@ -4773,7 +5569,7 @@ if (buildStartMarks == "1"){startMarks();}
 
 if (showVerticesOn == "1"){drawVertices();}
 
-startTexts();
+//startTexts();
 
 toolChange(selectedTool);
 

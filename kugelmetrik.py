@@ -82,7 +82,7 @@ def main():
         "let mark_colors = ['grey', 'grey', 'grey'];")
     file.write("\n")
 
-    variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
+    variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = zeilenanzahl * spaltenanzahl
 
@@ -114,6 +114,15 @@ def main():
             sectorValues[sectorDict["sec_width"]][jj + ii * (zeileende - zeilestart)] = sector_width
             sector_y_dist = sector_height + sectorabstand_y
             sectorValues[sectorDict["sec_offset"]][jj + ii * (zeileende - zeilestart)] = offset
+            sectorValues[sectorDict["sec_coords"]][jj + ii * (zeileende - zeilestart)] = ([-min(0, offset),
+                                                                                  0,
+                                                                                  sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - min(0, offset),
+                                                                                  0,
+                                                                                  sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] + max(0, offset),
+                                                                                  sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)],
+                                                                                  max(0, offset),
+                                                                                  sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
+
             sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - spaltenanzahl * 0.5 + 0.5) * (sectorabstand_x+maxSecBreite) + (maxSecBreite - sector_width)/2
             sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = (zeile - (zeilenanzahl+0.5)) * sector_y_dist -100
             sectorValues[sectorDict["sec_angle"]][jj + ii * (zeileende - zeilestart)] = 0

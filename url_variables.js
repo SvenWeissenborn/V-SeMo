@@ -33,7 +33,8 @@ let showChangeDirection = getUrlVars()["showChangeDirection"];
 let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 //setPositionAndAngleRandomly=1& um die Startposition und den Startwinkel der Sektoren zufaellig einzurichten
 let setPositionAndAngleRandomly = getUrlVars()["setPositionAndAngleRandomly"];
-
+//turnLorentzTransformOn=1& um lorentzTransform einzuschalten
+let turnLorentzTransformOn = getUrlVars()["turnLorentzTransformOn"];
 
 //autoSetOnDraw=1& um das automatische Zusammensetzen der Sektoren beim Zeichnen einer Linie zu aktivieren
 //noch zu entwickeln
