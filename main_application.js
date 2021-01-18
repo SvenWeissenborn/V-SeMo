@@ -1850,149 +1850,145 @@ function continueGeodesic(geodesicToContinue) {
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
             }
 
-                for (lauf = 0; lauf < 100; lauf++) {
+            for (lauf = 0; lauf < 100; lauf++) {
 
-                    if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
+                if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
 
-                        drawDragPoint(geodesicToContinue);
+                    drawDragPoint(geodesicToContinue);
 
-                        break;
-                    }
-
-                    console.log('nachbar im Lauf:', neighbourSector)
-                    console.log(kantenParameter)
-
-                    let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
-
-                    //Übergangspunkte übernehmen
-                    xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
-                    xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
-                    yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
-                    yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
-
-                    dxt12_uebergang = xt2_uebergang - xt1_uebergang;
-                    dyt12_uebergang = yt2_uebergang - yt1_uebergang;
-
-                    x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
-                    y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
-
-                    //Übergangsrichtung ermitteln
-
-                    if (turnLorentzTransformOn == "1"){
-                        let rapid_base;
-                        if (Math.abs(xt1 - xt2) > epsilon) {
-                            if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
-                                rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
-                            }else {
-                                rapid_base = Math.atanh( (xt2 - xt1) / (yt2 - yt1 ) )
-                            }
-                        } else {rapid_base = 0}
-
-                        let rapid_target;
-
-                        if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon ){
-                            if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
-                                rapid_target = Math.atanh((yt2_uebergang - yt1_uebergang) / (xt2_uebergang - xt1_uebergang))
-                            }else {
-                                rapid_target = Math.atanh( (xt2_uebergang - xt1_uebergang) / (yt2_uebergang - yt1_uebergang))
-                            }
-                        } else {rapid_target = 0}
-
-                        let rapid_sum = rapid_base - rapid_target;
-
-                        dxg_tmp = dxg;
-                        dyg_tmp = dyg;
-
-                        if (geodesics[geodesicToContinue].operational !== false) {
-                            dxg = Math.cosh(-rapid_sum) * dxg_tmp + Math.sinh(-rapid_sum) * dyg_tmp;
-                            dyg = Math.sinh(-rapid_sum) * dxg_tmp + Math.cosh(-rapid_sum) * dyg_tmp;
-                        }else{
-                            console.log('test')
-                            dxg = Math.cosh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.sinh(-sectors[neighbourSector].rapidity) * dyg_tmp;
-                            dyg = Math.sinh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.cosh(-sectors[neighbourSector].rapidity) * dyg_tmp;
-                        }
-                    }else{
-                        dxg  = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
-                        dyg  = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
-                        console.log(slopeAngle)
-                    }
-
-                    console.log('dxg:', dxg)
-                    console.log('dyg:', dyg)
-
-                    //Schnittpunkte mit den neuen Sektorkanten ermitteln
-
-                    kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
-
-                    alpha_2 = kantenParameter[0];
-                    lambda = kantenParameter[1];
-                    kantenIndex = kantenParameter[2];
-
-                    xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
-                    xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
-                    yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
-                    yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
-
-                    dxt12 = xt2 - xt1;
-                    dyt12 = yt2 - yt1;
-
-                    let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
-                        strokeWidth: geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].strokeWidth ,
-                        fill: geodesics[geodesicToContinue][0].fill,
-                        stroke: geodesics[geodesicToContinue][0].stroke,
-                        originX: 'center',
-                        originY: 'center',
-                        perPixelTargetFind: true,
-                        objectCaching: false,
-                        hasBorders: false,
-                        hasControls: false,
-                        evented: false,
-                        selectable: false,
-                    });
-
-                    lineSegmentContinue.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
-                    lineSegmentContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
-
-                    lineSegmentContinue.relationship = getRelationship(lineSegmentContinue, neighbourSector)
-
-                    sectors[lineSegmentContinue.parentSector[0]].lineSegments.push(lineSegmentContinue);
-
-
-                    let stackIdx = 0;
-
-                    if(canvas.getObjects().indexOf(sectors[neighbourSector].ID_text) > stackIdx) {
-                        stackIdx = canvas.getObjects().indexOf(sectors[neighbourSector].ID_text)
-                    }
-
-                    canvas.insertAt(lineSegmentContinue,stackIdx);
-                    geodesics[geodesicToContinue].push(lineSegmentContinue);
-                    immediatehistory.push(lineSegmentContinue.ID);
-
-                    if (turnLorentzTransformOn == "1"){
-                        geodesic_start_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x1, lineSegmentContinue.calcLinePoints().y1);
-                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegmentContinue.calcTransformMatrix());
-                        geodesic_end_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x2, lineSegmentContinue.calcLinePoints().y2);
-                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegmentContinue.calcTransformMatrix());
-
-                        lineSegmentContinue.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[neighbourSector].trapez);
-                        lineSegmentContinue.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[neighbourSector].trapez);
-                    }
-
-                    if (turnLorentzTransformOn !== "1"){
-                        slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
-                    }
-
-
-
-                    neighbourSector = sectors[lineSegmentContinue.parentSector[0]].neighbourhood[kantenIndex];
-
-
-                    alpha = alpha_2
+                    break;
                 }
 
-            //}
+                console.log('nachbar im Lauf:', neighbourSector)
+                console.log(kantenParameter)
+
+                let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
+
+                //Übergangspunkte übernehmen
+                xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
+                yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
+
+                dxt12_uebergang = xt2_uebergang - xt1_uebergang;
+                dyt12_uebergang = yt2_uebergang - yt1_uebergang;
+
+                x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
+                y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
+
+                //Übergangsrichtung ermitteln
+
+                if (turnLorentzTransformOn == "1"){
+                    let rapid_base;
+                    if (Math.abs(xt1 - xt2) > epsilon) {
+                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                            rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
+                        }else {
+                            rapid_base = Math.atanh( (xt2 - xt1) / (yt2 - yt1 ) )
+                        }
+                    } else {rapid_base = 0}
+
+                    let rapid_target;
+
+                    if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon ){
+                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                            rapid_target = Math.atanh((yt2_uebergang - yt1_uebergang) / (xt2_uebergang - xt1_uebergang))
+                        }else {
+                            rapid_target = Math.atanh( (xt2_uebergang - xt1_uebergang) / (yt2_uebergang - yt1_uebergang))
+                        }
+                    } else {rapid_target = 0}
+
+                    let rapid_sum = rapid_base - rapid_target;
+
+                    dxg_tmp = dxg;
+                    dyg_tmp = dyg;
+
+                    if (geodesics[geodesicToContinue].operational !== false) {
+                        dxg = Math.cosh(-rapid_sum) * dxg_tmp + Math.sinh(-rapid_sum) * dyg_tmp;
+                        dyg = Math.sinh(-rapid_sum) * dxg_tmp + Math.cosh(-rapid_sum) * dyg_tmp;
+                    }else{
+                        console.log('test')
+                        dxg = Math.cosh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.sinh(-sectors[neighbourSector].rapidity) * dyg_tmp;
+                        dyg = Math.sinh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.cosh(-sectors[neighbourSector].rapidity) * dyg_tmp;
+                    }
+                }else{
+                    dxg  = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
+                    dyg  = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
+                    console.log(slopeAngle)
+                }
+
+                console.log('dxg:', dxg)
+                console.log('dyg:', dyg)
+
+                //Schnittpunkte mit den neuen Sektorkanten ermitteln
+
+                kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
+
+                alpha_2 = kantenParameter[0];
+                lambda = kantenParameter[1];
+                kantenIndex = kantenParameter[2];
+
+                xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
+                xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+                yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
+                yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
+
+                dxt12 = xt2 - xt1;
+                dyt12 = yt2 - yt1;
+
+                let lineSegmentContinue = new fabric.Line([x_kante_uebergang, y_kante_uebergang, xt1 + alpha_2 * dxt12, yt1 + alpha_2 * dyt12], {
+                    strokeWidth: geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].strokeWidth ,
+                    fill: geodesics[geodesicToContinue][0].fill,
+                    stroke: geodesics[geodesicToContinue][0].stroke,
+                    originX: 'center',
+                    originY: 'center',
+                    perPixelTargetFind: true,
+                    objectCaching: false,
+                    hasBorders: false,
+                    hasControls: false,
+                    evented: false,
+                    selectable: false,
+                });
+
+                lineSegmentContinue.ID = [geodesicToContinue, geodesics[geodesicToContinue].length];
+                lineSegmentContinue.parentSector = [neighbourSector, sectors[neighbourSector].lineSegments.length];
+
+                lineSegmentContinue.relationship = getRelationship(lineSegmentContinue, neighbourSector)
+
+                sectors[lineSegmentContinue.parentSector[0]].lineSegments.push(lineSegmentContinue);
 
 
+                let stackIdx = 0;
+
+                if(canvas.getObjects().indexOf(sectors[neighbourSector].ID_text) > stackIdx) {
+                    stackIdx = canvas.getObjects().indexOf(sectors[neighbourSector].ID_text)
+                }
+
+                canvas.insertAt(lineSegmentContinue,stackIdx);
+                geodesics[geodesicToContinue].push(lineSegmentContinue);
+                immediatehistory.push(lineSegmentContinue.ID);
+
+                if (turnLorentzTransformOn == "1"){
+                    geodesic_start_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x1, lineSegmentContinue.calcLinePoints().y1);
+                    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegmentContinue.calcTransformMatrix());
+                    geodesic_end_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x2, lineSegmentContinue.calcLinePoints().y2);
+                    geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegmentContinue.calcTransformMatrix());
+
+                    lineSegmentContinue.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[neighbourSector].trapez);
+                    lineSegmentContinue.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[neighbourSector].trapez);
+                }
+
+                if (turnLorentzTransformOn !== "1"){
+                    slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+                }
+
+
+
+                neighbourSector = sectors[lineSegmentContinue.parentSector[0]].neighbourhood[kantenIndex];
+
+
+                alpha = alpha_2
+            }
         }
 
     }
@@ -2283,7 +2279,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             stroke: sectorEdgeColor,
             perPixelTargetFind: true,
             hasControls: true,
-            hasBorders: false,
+            hasBorders: true,
             objectCaching: false,
             lockMovementX: false,
             lockMovementY: false,
@@ -2434,7 +2430,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         if (turnLorentzTransformOn == "1"){
 
             rapidity_before_something = this.parent.rapidity
-            console.log('rapidity before down:', rapidity_before_something)
+
             dist_inv_min_x_old = Math.min(this.points[0].x, this.points[1].x, this.points[2].x, this.points[3].x);
             dist_inv_max_y_old = Math.max(this.points[0].y, this.points[1].y, this.points[2].y, this.points[3].y);
         }
@@ -2555,11 +2551,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     this.trapez.on('mouseup', function (o) {
 
         if (turnLorentzTransformOn == "1"){
-            console.log('rapidity before up:', rapidity_before_something)
 
             let rapidity_after_something = this.parent.rapidity
-
-            console.log('rapidity after up:', rapidity_after_something)
 
             //Der Sektor muss reinitialisiert werden, wenn die Maus losgelassen wird, jedoch nur, wenn sich an den Rapiditäten etwas getan hat.
             //Sonst wird die Boundingbox nicht aktualisiert
@@ -4261,7 +4254,6 @@ function setSectors(chosenGeodesicToSetSectors) {
     let dxt12;
     let dyt12;
 
-    let slopeAngle;
 
     kantenindex = -1;
 
@@ -4294,21 +4286,24 @@ function setSectors(chosenGeodesicToSetSectors) {
 
             let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez);
 
+            //Bestimmen der Kantenparameter des InitialSektors
             let kantenParameter = getKantenParameter(geodesics[chosenGeodesicToSetSectors][0].parentSector[0], xg1, yg1, dxg, dyg)
 
             let alpha = kantenParameter[0];
             let lambda = kantenParameter[1];
             let kantenIndex = kantenParameter[2];
 
+            //Bestimmen der Kantepunkte des InitialSektors, die die Geodäte schneiden würde (relevant für die Steigungsberechnung für Rapidity)
+
             xt1 = trapezPointsAsGlobalCoords[kantenIndex].x;
             xt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
             yt1 = trapezPointsAsGlobalCoords[kantenIndex].y;
             yt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
 
-            dxt12 = xt2 - xt1;
-            dyt12 = yt2 - yt1;
-
             let rapid_sum;
+
+            //der statische Sektor ist der InitialSektor
+            //der Nachbarsektor ergibt sich aus Nachbarschaftsbeziehung des InitalSektors unter Eingabe des vorher bestimmten KantenIndexes
 
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
@@ -4317,10 +4312,6 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                 //Fortsetzung im nächsten Sektor
 
-                if (turnLorentzTransformOn !== "1"){
-                    slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
-                }
-
                 for (lauf = 0; lauf < 100; lauf++) {
 
                     if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
@@ -4328,11 +4319,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                         break
                     }
 
-                    console.log('nachbar im Lauf:', neighbourSector)
-
                     removeSnapEdges(staticSector)
-
-
 
                     //drawOrientationCirc('blue', x_kante_uebergang, y_kante_uebergang)
 
@@ -4351,8 +4338,6 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                         x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
                         y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
-                        dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
-                        dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
 
                         let rapid_base;
 
@@ -4366,6 +4351,8 @@ function setSectors(chosenGeodesicToSetSectors) {
                             rapid_base = 0
                         }
 
+                        console.log('rapid_base:', rapid_base)
+
                         let rapid_target;
 
                         if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon) {
@@ -4378,96 +4365,41 @@ function setSectors(chosenGeodesicToSetSectors) {
                             rapid_target = 0
                         }
 
+                        console.log('rapid_target:', rapid_target)
+
                         rapid_sum = rapid_base - rapid_target;
+
+                        console.log('rapid_sum:', rapid_sum)
 
                         sectors[neighbourSector].rapidity += rapid_sum;
 
-                        lorentzTransform(sectors[neighbourSector].rapidity, sectors[neighbourSector].trapez);
+                        lorentzTransformAndReinitialiseSector(neighbourSector, rapid_sum)
 
-                        //-----------------------------------------------
-                        let lastLeft = sectors[neighbourSector].trapez.left;
-                        let lastTop = sectors[neighbourSector].trapez.top;
+                        neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
-                        let dist_inv_min_x_new = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
-                        let dist_inv_min_y_new = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
+                        //Übergangspunkte übernehmen
+                        xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                        xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                        yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
+                        yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
 
+                        dxt12_uebergang = xt2_uebergang - xt1_uebergang;
+                        dyt12_uebergang = yt2_uebergang - yt1_uebergang;
 
-                        canvas.remove(sectors[neighbourSector].trapez);
+                        x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
+                        y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
 
-                        canvas.remove(sectors[neighbourSector].ID_text);
-
-
-                        sectors[neighbourSector].draw(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].x, sectors[neighbourSector].trapez.points[3].y);
-
-                        canvas.setActiveObject(sectors[neighbourSector].trapez);
-
-                        sectors[neighbourSector].trapez.set('left', lastLeft + dist_inv_min_x_new - dist_inv_min_x_old).setCoords();
-                        sectors[neighbourSector].trapez.set('top', lastTop + dist_inv_min_y_new - dist_inv_max_y_old).setCoords();
-
-                        sectors[neighbourSector].ID_text.set('left', lastLeft + dist_inv_min_x_new - dist_inv_min_x_old + 90).setCoords();
-                        sectors[neighbourSector].ID_text.set('top', lastTop + dist_inv_min_y_new - dist_inv_max_y_old - 50).setCoords();
-
-
-                        let trapezTransform = sectors[neighbourSector].trapez.calcTransformMatrix();
-                        let invertedtrapezTransform = invert(trapezTransform);
-
-                        for (let ii = 0; ii < sectors[neighbourSector].slider.length; ii++) {
-                            desiredTransform = multiply(
-                                invertedtrapezTransform,
-                                sectors[neighbourSector].slider[ii].calcTransformMatrix());
-
-                            sectors[neighbourSector].slider[ii].relationship = desiredTransform;
-                        }
-
-                        sectors[neighbourSector].trapez.parent.slider[0].relationship[5] = sectors[neighbourSector].trapez.parent.slider[1].relationship[5] + rapid_sum * slider_max;
-
-
-                        if (sectors[neighbourSector].lineSegments.length > 0) {
-                            for (let ii = 0; ii < sectors[neighbourSector].lineSegments.length; ii++) {
-                                canvas.bringToFront(sectors[neighbourSector].lineSegments[ii]);
-
-                            }
-                            for (let ii = 0; ii < sectors[neighbourSector].lineSegments.length; ii++) {
-                                desiredTransform = multiply(
-                                    invertedtrapezTransform,
-                                    sectors[neighbourSector].lineSegments[ii].calcTransformMatrix());
-
-                                sectors[neighbourSector].lineSegments[ii].relationship = desiredTransform;
-
-                                if (sectors[neighbourSector].lineSegments[ii].dragPoint !== undefined) {
-                                    canvas.bringToFront(sectors[neighbourSector].lineSegments[ii].dragPoint)
-                                    desiredTransform = multiply(
-                                        invertedtrapezTransform,
-                                        sectors[neighbourSector].lineSegments[ii].dragPoint.calcTransformMatrix());
-
-                                    sectors[neighbourSector].lineSegments[ii].dragPoint.relationship = desiredTransform;
-                                }
-
-
-                            }
-                        }
+                        //sectors[neighbourSector].trapez.set('left', lastLeft + dist_inv_min_x_new - dist_inv_min_x_old).setCoords();
+                        //sectors[neighbourSector].trapez.set('top', lastTop + dist_inv_min_y_new - dist_inv_max_y_old).setCoords();
 
                         //-----------------------------------------------
 
                         translateInitialSectorToTargetSector(neighbourSector, staticSector);
 
-                        neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
-
-                        //Übergangspunkte übernehmen
-                        xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
-                        xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
-                        yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
-                        yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
-
-                        dxt12_uebergang = xt2_uebergang - xt1_uebergang;
-                        dyt12_uebergang = yt2_uebergang - yt1_uebergang;
-
-                        x_kante_uebergang = xt2_uebergang - alpha * dxt12_uebergang;
-                        y_kante_uebergang = yt2_uebergang - alpha * dyt12_uebergang;
-
-                        canvas.add(new fabric.Circle({ radius: 5, originX: 'center', originY: 'center', fill: '#f55', top: y_kante_uebergang, left: x_kante_uebergang }));
-
                     }else{
+
+                        //Heransnappen des NachbarSektors an den statischen Sektor (dies ist nur im ersten Durchlauf der InitialSektor)
+
                         rotateSectorToAlignAngle(neighbourSector, staticSector);
 
                         translateInitialSectorToTargetSector(neighbourSector, staticSector);
@@ -4484,61 +4416,44 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     //Übergangsrichtung ermitteln
 
-                    if (turnLorentzTransformOn == "1"){
 
-                        dxg_tmp = dxg;
-                        dyg_tmp = dyg;
 
-                        dxg = Math.cosh(rapid_sum) * dxg_tmp + Math.sinh(rapid_sum) * dyg_tmp;
-                        dyg = Math.sinh(rapid_sum) * dxg_tmp + Math.cosh(rapid_sum) * dyg_tmp;
+                    neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
-                    }else {
+                    //Übergangspunkte übernehmen
+                    xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                    xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                    yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
+                    yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
 
-                        neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
+                    dxt12_uebergang = xt2_uebergang - xt1_uebergang;
+                    dyt12_uebergang = yt2_uebergang - yt1_uebergang;
 
-                        //Übergangspunkte übernehmen
-                        xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
-                        xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
-                        yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
-                        yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
-
-                        dxt12_uebergang = xt2_uebergang - xt1_uebergang;
-                        dyt12_uebergang = yt2_uebergang - yt1_uebergang;
-
-                        x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
-                        y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
-
-                        dxg = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
-                        dyg = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
-
-                    }
-
-                    console.log('dxg:', dxg)
-                    console.log('dyg:', dyg)
+                    x_kante_uebergang = xt1_uebergang + alpha * dxt12_uebergang;
+                    y_kante_uebergang = yt1_uebergang + alpha * dyt12_uebergang;
 
                     kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
-                    console.log(kantenParameter)
 
                     kantenIndex = kantenParameter[2]
 
-                    if (turnLorentzTransformOn !== "1"){
-                        xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
-                        xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
-                        yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
-                        yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
+                    neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
-                        dxt12 = xt2 - xt1;
-                        dyt12 = yt2 - yt1;
+                    xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
+                    xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+                    yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
+                    yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
 
-                        slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+                    dxt12 = xt2 - xt1;
+                    dyt12 = yt2 - yt1;
 
-                    }
 
                     staticSector = neighbourSector;
 
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
                     alpha = kantenParameter[0];
+
+                    console.log(kantenIndex)
 
                 }
 
@@ -4547,6 +4462,70 @@ function setSectors(chosenGeodesicToSetSectors) {
 
         }
 
+    }
+}
+
+function lorentzTransformAndReinitialiseSector(initialSectorID, rapid_sum){
+    let dist_inv_min_x_old = Math.min(sectors[initialSectorID].trapez.points[0].x, sectors[initialSectorID].trapez.points[1].x, sectors[initialSectorID].trapez.points[2].x, sectors[initialSectorID].trapez.points[3].x);
+    let dist_inv_max_y_old = Math.max(sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].y);
+
+
+    sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + rapid_sum * slider_max;
+
+    updateMinions(sectors[initialSectorID].trapez)
+
+    lorentzTransform(sectors[initialSectorID].rapidity, sectors[initialSectorID].trapez);
+
+    changeRelationShipAfterTransform(sectors[initialSectorID].trapez, rapid_sum)
+
+    let lastTopTrapez = sectors[initialSectorID].trapez.top;
+    let lastLeftTrapez = sectors[initialSectorID].trapez.left;
+    let lastTopID_text = sectors[initialSectorID].ID_text.top;
+    let lastLeftID_text = sectors[initialSectorID].ID_text.left;
+
+    let start_pos_BL_text_x = sectors[initialSectorID].ID_text.start_pos_BL_text_x;
+    let start_pos_BL_text_y = sectors[initialSectorID].ID_text.start_pos_BL_text_y;
+
+    let dist_inv_min_x_new = Math.min(sectors[initialSectorID].trapez.points[0].x, sectors[initialSectorID].trapez.points[1].x, sectors[initialSectorID].trapez.points[2].x, sectors[initialSectorID].trapez.points[3].x);
+    let dist_inv_min_y_new = Math.max(sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].y);
+
+
+    canvas.remove(sectors[initialSectorID].trapez);
+
+    canvas.remove(sectors[initialSectorID].ID_text);
+
+    sectors[initialSectorID].draw(sectors[initialSectorID].trapez.points[0].x, sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].x, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].x, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].x, sectors[initialSectorID].trapez.points[3].y);
+
+    sectors[initialSectorID].trapez.set('left', lastLeftTrapez + dist_inv_min_x_new - dist_inv_min_x_old).setCoords();
+    sectors[initialSectorID].trapez.set('top', lastTopTrapez + dist_inv_min_y_new - dist_inv_max_y_old).setCoords();
+
+    sectors[initialSectorID].ID_text.set('left', lastLeftID_text).setCoords();
+    sectors[initialSectorID].ID_text.set('top', lastTopID_text).setCoords();
+
+    sectors[initialSectorID].ID_text.start_pos_BL_text_x = start_pos_BL_text_x;
+    sectors[initialSectorID].ID_text.start_pos_BL_text_y = start_pos_BL_text_y;
+
+    sectors[initialSectorID].ID_text.relationship = getRelationship(sectors[initialSectorID].ID_text, sectors[initialSectorID].ID)
+
+/*
+    for (let ii = 0; ii < sectors[initialSectorID].slider.length; ii++) {
+        sectors[initialSectorID].slider[ii].relationship = getRelationship(sectors[initialSectorID].slider[ii], sectors[initialSectorID].ID)
+    }
+*/
+
+    if (sectors[initialSectorID].lineSegments.length > 0) {
+        for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
+            canvas.bringToFront(sectors[initialSectorID].lineSegments[ii]);
+        }
+
+        for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
+            sectors[initialSectorID].lineSegments[ii].relationship = getRelationship(sectors[initialSectorID].lineSegments[ii], sectors[initialSectorID].ID);
+
+            if (sectors[initialSectorID].lineSegments[ii].dragPoint !== undefined) {
+                canvas.bringToFront(sectors[initialSectorID].lineSegments[ii].dragPoint);
+                sectors[initialSectorID].lineSegments[ii].dragPoint.relationship = getRelationship(sectors[initialSectorID].lineSegments[ii].dragPoint, sectors[initialSectorID].ID);
+            }
+        }
     }
 }
 
@@ -4853,6 +4832,7 @@ function isItTimeToSnap(trapez) {
                         //Anpassung des Sliders an die neue rapidity (Beachte, dass hier die relationship verändert wird, Bezug ist der Mittelpunkt der Sliderlinie)
                         trapez.parent.slider[0].relationship[5] = trapez.parent.slider[1].relationship[5] + rapid_sum * slider_max;
 
+
                         trapez.parent.rapidity = rapid_sum;
 
                         // console.log('rapid_base:', rapid_base);
@@ -4863,52 +4843,14 @@ function isItTimeToSnap(trapez) {
 
                         let rapidity_after = trapez.parent.rapidity;
 
+
                         if(Math.abs(rapidity_before - rapidity_after)>epsilon ) {
-                            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez)
 
-                            let midpoint_boundingbox_before_global = new fabric.Point(trapez.left + trapez.width/2 , trapez.top - trapez.height/2 );
-
-                            trapez.parent.ID_text.set('left', trapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(rapid_sum) + trapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
-                            trapez.parent.ID_text.set('top', trapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(rapid_sum) + trapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
-
-                            trapez.parent.ID_text.relationship[4] = trapez.parent.ID_text.left - midpoint_boundingbox_before_global.x -1;
-                            trapez.parent.ID_text.relationship[5] = trapez.parent.ID_text.top - midpoint_boundingbox_before_global.y +1;
-
-                            for (let jj = 0; jj < trapez.parent.lineSegments.length; jj++) {
-                                let geodesic_start_point_calc = new fabric.Point(
-                                    trapez.parent.lineSegments[jj].start_point_BL.x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
-                                    trapez.parent.lineSegments[jj].start_point_BL.x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
-                                );
-                                let geodesic_end_point_calc = new fabric.Point(
-                                    trapez.parent.lineSegments[jj].end_point_BL.x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].end_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
-                                    trapez.parent.lineSegments[jj].end_point_BL.x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].end_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
-                                );
-
-                                let geodesic_transformed_mid_point = new fabric.Point(
-                                    geodesic_start_point_calc.x + (geodesic_end_point_calc.x - geodesic_start_point_calc.x) * 0.5,
-                                    geodesic_start_point_calc.y + (geodesic_end_point_calc.y - geodesic_start_point_calc.y) * 0.5,
-                                );
-
-                                if (trapez.parent.lineSegments[jj].dragPoint !== undefined) {
-
-                                    dragPoint_transformed_mid_point = new fabric.Point(
-                                        trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(rapid_sum) + trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
-                                        trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(rapid_sum) + trapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
-                                    );
-
-                                    trapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
-                                    trapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
-
-                                }
-
-                                trapez.parent.lineSegments[jj].relationship[4] = geodesic_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
-
-                                trapez.parent.lineSegments[jj].relationship[5] =  geodesic_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
-
-
-                            }
+                            changeRelationShipAfterTransform(trapez, rapid_sum)
 
                         }
+
+
 
                         return
                     }else{
@@ -4936,7 +4878,51 @@ function isItTimeToSnap(trapez) {
     }
 }
 
+function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(initialSectorTrapez)
 
+    let midpoint_boundingbox_before_global = new fabric.Point(initialSectorTrapez.left + initialSectorTrapez.width/2 , initialSectorTrapez.top - initialSectorTrapez.height/2 );
+
+    initialSectorTrapez.parent.ID_text.set('left', initialSectorTrapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
+    initialSectorTrapez.parent.ID_text.set('top', initialSectorTrapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
+
+    initialSectorTrapez.parent.ID_text.relationship[4] = initialSectorTrapez.parent.ID_text.left - midpoint_boundingbox_before_global.x -1;
+    initialSectorTrapez.parent.ID_text.relationship[5] = initialSectorTrapez.parent.ID_text.top - midpoint_boundingbox_before_global.y +1;
+
+    for (let jj = 0; jj < initialSectorTrapez.parent.lineSegments.length; jj++) {
+        let geodesic_start_point_calc = new fabric.Point(
+            initialSectorTrapez.parent.lineSegments[jj].start_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+            initialSectorTrapez.parent.lineSegments[jj].start_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+        );
+        let geodesic_end_point_calc = new fabric.Point(
+            initialSectorTrapez.parent.lineSegments[jj].end_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].end_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+            initialSectorTrapez.parent.lineSegments[jj].end_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].end_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+        );
+
+        let geodesic_transformed_mid_point = new fabric.Point(
+            geodesic_start_point_calc.x + (geodesic_end_point_calc.x - geodesic_start_point_calc.x) * 0.5,
+            geodesic_start_point_calc.y + (geodesic_end_point_calc.y - geodesic_start_point_calc.y) * 0.5,
+        );
+
+        if (initialSectorTrapez.parent.lineSegments[jj].dragPoint !== undefined) {
+
+            dragPoint_transformed_mid_point = new fabric.Point(
+                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+            );
+
+            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
+            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
+
+        }
+
+        initialSectorTrapez.parent.lineSegments[jj].relationship[4] = geodesic_transformed_mid_point.x - midpoint_boundingbox_before_global.x -0.5;
+
+        initialSectorTrapez.parent.lineSegments[jj].relationship[5] =  geodesic_transformed_mid_point.y - midpoint_boundingbox_before_global.y +0.5;
+
+
+    }
+}
 
 
 function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
