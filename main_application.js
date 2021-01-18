@@ -1747,7 +1747,6 @@ function getKantenParameter(SectorID, xg1, yg1, dxg, dyg){
     }
 
     let kantenParameter = [alpha, lambda, kantenIndex]
-    console.log(kantenParameter)
     return kantenParameter
 }
 
@@ -4254,13 +4253,11 @@ function setSectors(chosenGeodesicToSetSectors) {
 
     //resetSectors();
 
-    //Idee: Cursor über Geodätenende bewegen: Ähnlich zur automatischen Vervollständigung soll die Geodäte von Sektor zu Sektor verlaufen
+    //Idee: Ähnlich zur automatischen Vervollständigung soll die Geodäte von Sektor zu Sektor verlaufen
     //dabei sollen die entsprechenden Kanten ermittelt werden. An diesen Kanten sollen die Sektoren anschließend zusammenschnappen
 
-    let lambda;
     let alpha = 0.0;
     let kantenIndex = -1;
-    let geodesicsIndex = -1;
 
     let xt1;
     let xt2;
@@ -4272,15 +4269,9 @@ function setSectors(chosenGeodesicToSetSectors) {
     let dxt12;
     let dyt12;
 
-    let slopeGeodesic;
-    let slopeTrapez;
     let slopeAngle;
 
-    let nextGeodesic_x;
-    let nextGeodesic_y;
 
-    let point_1_local;
-    let point_2_local;
 
 
     kantenindex = -1;
@@ -4314,12 +4305,10 @@ function setSectors(chosenGeodesicToSetSectors) {
 
             let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez);
 
-            console.log(geodesics[chosenGeodesicToSetSectors][0].parentSector[0])
-
-            console.log(xg1, yg1, xg2, yg2)
             let kantenParameter = getKantenParameter(geodesics[chosenGeodesicToSetSectors][0].parentSector[0], xg1, yg1, dxg, dyg)
 
-            kantenIndex = kantenParameter[2]
+            kantenIndex = kantenParameter[2];
+            alpha = kantenParameter[0];
 
             xt1 = trapezPointsAsGlobalCoords[kantenIndex].x;
             xt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
@@ -4330,59 +4319,14 @@ function setSectors(chosenGeodesicToSetSectors) {
             dyt12 = yt2 - yt1;
 
 
-            /*
-            for (let kk = 0; kk < 4; kk++) {
-
-                xt1 = trapezPointsAsGlobalCoords[kk].x;
-                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-                yt1 = trapezPointsAsGlobalCoords[kk].y;
-                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
-
-                let dxg_tmp = xg2 - xg1;
-                let dyg_tmp = yg2 - yg1;
-
-                dxg = dxg_tmp * 0.1;
-                dyg = dyg_tmp * 0.1;
-
-                dxt12 = xt2 - xt1;
-                dyt12 = yt2 - yt1;
-
-                slopeGeodesic = dyg / dxg;
-                slopeTrapez = dyt12 / dxt12;
-
-
-                if (Math.abs(dxg) > epsilon) {
-                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-                }
-
-                else {
-                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
-                }
-
-
-                if (lambda > epsilon) {
-                    if (alpha >= 0.0 && alpha <= 1.0) {
-                        kantenIndex = kk;
-                        break;
-                    }
-                }
-
-            }
-             */
-
-
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
-
 
             if (kantenIndex >= -1) {
 
                 //Fortsetzung im nächsten Sektor
 
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
-
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
@@ -4393,8 +4337,15 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     removeSnapEdges(staticSector)
 
+                    rotateSectorToAlignAngle(neighbourSector, staticSector);
 
-                    //Punkte des Nachbarsektors ermitteln
+                    translateInitialSectorToTargetSector(neighbourSector, staticSector);
+
+                    changeSnapStatus(staticSector);
+                    changeSnapStatus(neighbourSector);
+
+                    drawSnapEdges(staticSector);
+                    drawSnapEdges(neighbourSector);
 
                     let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
@@ -4412,74 +4363,30 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     //Übergangsrichtung ermitteln
 
-                    dxg = nextGeodesic_x = -dxt12_uebergang * Math.cos(-slopeAngle) + dyt12_uebergang * Math.sin(-slopeAngle);
-                    dyg = nextGeodesic_y = -dxt12_uebergang * Math.sin(-slopeAngle) - dyt12_uebergang * Math.cos(-slopeAngle);
-
-                    rotateSectorToAlignAngle(neighbourSector, staticSector);
-
-                    translateInitialSectorToTargetSector(neighbourSector, staticSector);
-
-
+                    dxg = -dxt12_uebergang * Math.cos(-slopeAngle) + dyt12_uebergang * Math.sin(-slopeAngle);
+                    dyg = -dxt12_uebergang * Math.sin(-slopeAngle) - dyt12_uebergang * Math.cos(-slopeAngle);
 
                     //Schnittpunkte mit den neuen Sektorkanten ermitteln
 
+                    kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
 
-                    for (let kk = 0; kk < 4; kk++) {
+                    kantenIndex = kantenParameter[2]
 
-                        xt1 = neighbourTrapezPointsAsGlobalCoords[kk].x;
-                        xt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-                        yt1 = neighbourTrapezPointsAsGlobalCoords[kk].y;
-                        yt2 = neighbourTrapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+                    xt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].x;
+                    xt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+                    yt1 = neighbourTrapezPointsAsGlobalCoords[kantenIndex].y;
+                    yt2 = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
 
-                        dxt12 = xt2 - xt1;
-                        dyt12 = yt2 - yt1;
-
-                        kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
-
-                        kantenIndex = kantenParameter[2]
-
-                        /*
-                        if (dxg > epsilon) {
-                            alpha_2 = (y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                            lambda_2 = (xt1 + ((y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - x_kante_uebergang) / dxg;
-                        }
-
-                        else {
-                            alpha_2 = (x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                            lambda_2 = (yt1 + ((x_kante_uebergang - xt1 + (dxg / dyg) * (yt1 - y_kante_uebergang)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - y_kante_uebergang) / dyg;
-                        }
-
-
-                        if (lambda_2 > epsilon) {
-                            if (alpha_2 >= 0.0 && alpha_2 <= 1.0) {
-                                kantenIndex = kk;
-                                break;
-                            }
-                        }
-
-                         */
-                    }
+                    dxt12 = xt2 - xt1;
+                    dyt12 = yt2 - yt1;
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
 
-                    let neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
-
-                    xt1 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[kantenIndex].x;
-                    xt2 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[(kantenIndex + 1) % 4].x;
-                    yt1 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[kantenIndex].y;
-                    yt2 = neighbourTrapezPointsAsGlobalCoordsAfterRotateAndTranslate[(kantenIndex + 1) % 4].y;
-
-                    changeSnapStatus(staticSector);
-                    changeSnapStatus(neighbourSector);
-
-                    drawSnapEdges(staticSector);
-                    drawSnapEdges(neighbourSector);
-
                     staticSector = neighbourSector;
+
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
-
-                    alpha = kantenParameter[1];
+                    alpha = kantenParameter[0];
 
                 }
 
