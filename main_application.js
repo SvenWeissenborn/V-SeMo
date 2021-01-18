@@ -1747,6 +1747,7 @@ function getKantenParameter(SectorID, xg1, yg1, dxg, dyg){
     }
 
     let kantenParameter = [alpha, lambda, kantenIndex]
+    console.log(kantenParameter)
     return kantenParameter
 }
 
@@ -1812,6 +1813,7 @@ function continueGeodesic(geodesicToContinue) {
 
             let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez);
 
+            console.log('hier')
             let kantenParameter = getKantenParameter(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0], xg1, yg1, dxg, dyg)
 
             let alpha = kantenParameter[0];
@@ -1843,9 +1845,19 @@ function continueGeodesic(geodesicToContinue) {
             geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].setCoords();
 
 
+            if (turnLorentzTransformOn == "1"){
+                geodesic_start_point = new fabric.Point(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().x1, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().y1);
+                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
+                geodesic_end_point = new fabric.Point(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().x2, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().y2);
+                geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
 
-            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].relationship = getRelationship(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1],
-                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]);
+                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez)
+                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez)
+
+
+            }
+
+            geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].relationship = getRelationship(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1], geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]);
 
 
                 //Fortsetzung im nächsten Sektor
@@ -1879,11 +1891,50 @@ function continueGeodesic(geodesicToContinue) {
 
                     //Übergangsrichtung ermitteln
 
-                    dxg = nextGeodesic_x = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
-                    dyg = nextGeodesic_y = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
+                    if (turnLorentzTransformOn == "1"){
+                        let rapid_base;
+                        if (Math.abs(xt1 - xt2) > epsilon) {
+                            if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                                rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
+                            }else {
+                                rapid_base = Math.atanh( (xt2 - xt1) / (yt2 - yt1 ) )
+                            }
+                        } else {rapid_base = 0}
+
+                        let rapid_target;
+
+                        if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon ){
+                            if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                                rapid_target = Math.atanh((yt2_uebergang - yt1_uebergang) / (xt2_uebergang - xt1_uebergang))
+                            }else {
+                                rapid_target = Math.atanh( (xt2_uebergang - xt1_uebergang) / (yt2_uebergang - yt1_uebergang))
+                            }
+                        } else {rapid_target = 0}
+
+                        let rapid_sum = rapid_base - rapid_target;
+
+                        dxg_tmp = dxg;
+                        dyg_tmp = dyg;
+
+                        if (geodesics[geodesicToContinue].operational !== false) {
+                            dxg = Math.cosh(-rapid_sum) * dxg_tmp + Math.sinh(-rapid_sum) * dyg_tmp;
+                            dyg = Math.sinh(-rapid_sum) * dxg_tmp + Math.cosh(-rapid_sum) * dyg_tmp;
+                        }else{
+                            console.log('test')
+                            dxg = Math.cosh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.sinh(-sectors[neighbourSector].rapidity) * dyg_tmp;
+                            dyg = Math.sinh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.cosh(-sectors[neighbourSector].rapidity) * dyg_tmp;
+                        }
+                    }else{
+                        dxg = nextGeodesic_x = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
+                        dyg = nextGeodesic_y = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
+                    }
+
+
 
                     //Schnittpunkte mit den neuen Sektorkanten ermitteln
 
+                    console.log('hier 2')
+                    console.log(neighbourSector)
                     kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
 
                     alpha_2 = kantenParameter[0];
@@ -1930,7 +1981,20 @@ function continueGeodesic(geodesicToContinue) {
                     geodesics[geodesicToContinue].push(lineSegmentContinue);
                     immediatehistory.push(lineSegmentContinue.ID);
 
-                    slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+                    if (turnLorentzTransformOn == "1"){
+                        geodesic_start_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x1, lineSegmentContinue.calcLinePoints().y1);
+                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegmentContinue.calcTransformMatrix());
+                        geodesic_end_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x2, lineSegmentContinue.calcLinePoints().y2);
+                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegmentContinue.calcTransformMatrix());
+
+                        lineSegmentContinue.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[neighbourSector].trapez);
+                        lineSegmentContinue.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[neighbourSector].trapez);
+                    }
+
+                    if (turnLorentzTransformOn !== "1"){
+                        slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
+                    }
+
 
 
                     neighbourSector = sectors[lineSegmentContinue.parentSector[0]].neighbourhood[kantenIndex];
@@ -4240,10 +4304,33 @@ function setSectors(chosenGeodesicToSetSectors) {
             let xg1 = geodesic_start_point.x;
             let yg1 = geodesic_start_point.y;
 
+            let dxg_tmp = xg2 - xg1;
+            let dyg_tmp = yg2 - yg1;
+
+            dxg = dxg_tmp * 0.1;
+            dyg = dyg_tmp * 0.1;
+
             //Umrechnung der lokalen in globale Koordinaten
 
             let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].trapez);
 
+            console.log(geodesics[chosenGeodesicToSetSectors][0].parentSector[0])
+
+            console.log(xg1, yg1, xg2, yg2)
+            let kantenParameter = getKantenParameter(geodesics[chosenGeodesicToSetSectors][0].parentSector[0], xg1, yg1, dxg, dyg)
+
+            kantenIndex = kantenParameter[2]
+
+            xt1 = trapezPointsAsGlobalCoords[kantenIndex].x;
+            xt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].x;
+            yt1 = trapezPointsAsGlobalCoords[kantenIndex].y;
+            yt2 = trapezPointsAsGlobalCoords[(kantenIndex + 1) % 4].y;
+
+            dxt12 = xt2 - xt1;
+            dyt12 = yt2 - yt1;
+
+
+            /*
             for (let kk = 0; kk < 4; kk++) {
 
                 xt1 = trapezPointsAsGlobalCoords[kk].x;
@@ -4283,12 +4370,14 @@ function setSectors(chosenGeodesicToSetSectors) {
                 }
 
             }
+             */
+
 
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
 
 
-            if (kantenIndex >= 0) {
+            if (kantenIndex >= -1) {
 
                 //Fortsetzung im nächsten Sektor
 
@@ -4345,7 +4434,11 @@ function setSectors(chosenGeodesicToSetSectors) {
                         dxt12 = xt2 - xt1;
                         dyt12 = yt2 - yt1;
 
+                        kantenParameter = getKantenParameter(neighbourSector, x_kante_uebergang, y_kante_uebergang, dxg, dyg)
 
+                        kantenIndex = kantenParameter[2]
+
+                        /*
                         if (dxg > epsilon) {
                             alpha_2 = (y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg));
                             lambda_2 = (xt1 + ((y_kante_uebergang - yt1 + (dyg / dxg) * (xt1 - x_kante_uebergang)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - x_kante_uebergang) / dxg;
@@ -4363,6 +4456,8 @@ function setSectors(chosenGeodesicToSetSectors) {
                                 break;
                             }
                         }
+
+                         */
                     }
 
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
@@ -4384,7 +4479,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                     neighbourSector = sectors[neighbourSector].neighbourhood[kantenIndex];
 
 
-                    alpha = alpha_2;
+                    alpha = kantenParameter[1];
 
                 }
 
