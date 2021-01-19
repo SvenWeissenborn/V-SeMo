@@ -4470,13 +4470,11 @@ function lorentzTransformAndReinitialiseSector(initialSectorID, rapid_sum){
     let dist_inv_max_y_old = Math.max(sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].y);
 
 
-    sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + rapid_sum * slider_max;
-
-    updateMinions(sectors[initialSectorID].trapez)
+    //updateMinions(sectors[initialSectorID].trapez)
 
     lorentzTransform(sectors[initialSectorID].rapidity, sectors[initialSectorID].trapez);
 
-    changeRelationShipAfterTransform(sectors[initialSectorID].trapez, rapid_sum)
+    //changeRelationShipAfterTransform(sectors[initialSectorID].trapez, rapid_sum);
 
     let lastTopTrapez = sectors[initialSectorID].trapez.top;
     let lastLeftTrapez = sectors[initialSectorID].trapez.left;
@@ -4507,11 +4505,13 @@ function lorentzTransformAndReinitialiseSector(initialSectorID, rapid_sum){
 
     sectors[initialSectorID].ID_text.relationship = getRelationship(sectors[initialSectorID].ID_text, sectors[initialSectorID].ID)
 
-/*
+
     for (let ii = 0; ii < sectors[initialSectorID].slider.length; ii++) {
         sectors[initialSectorID].slider[ii].relationship = getRelationship(sectors[initialSectorID].slider[ii], sectors[initialSectorID].ID)
     }
-*/
+
+    sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + rapid_sum * slider_max;
+
 
     if (sectors[initialSectorID].lineSegments.length > 0) {
         for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
@@ -4855,7 +4855,7 @@ function isItTimeToSnap(trapez) {
                         return
                     }else{
 
-                        rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID)
+                        rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID);
 
                         return
                     }
