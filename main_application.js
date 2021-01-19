@@ -4765,7 +4765,7 @@ function isItTimeToSnap(trapez) {
 
             //---Falls die Textur eingeschaltet ist, wird Snapping direkt ausgeführt werden
             //---Es erfolgt keine Auswahl des Snappingpartners
-            if (textured == "1"){
+            if (textured == "1"){startGeodesic
                 if(distanceMidPoints <= trapez.aussenkreisradius + sectors[potentialSnappingPartnerID].trapez.aussenkreisradius) {
 
                     dist_1a = distance(point_1, point_a);
@@ -4957,7 +4957,7 @@ function startGeodesics(){
     for (let ii = 0; ii < startSectors.length; ii++) {
 
         let sec = sectors[startSectors[ii]];
-
+        console.log(sec.ID)
         let lineSegment = new fabric.Line([x_Start[ii] + window.innerWidth / 2, y_Start[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2, x_End[ii] + window.innerWidth / 2, y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2], {
             strokeWidth: startStrokeWidth[ii],
             fill: startFill[ii],
@@ -4972,6 +4972,7 @@ function startGeodesics(){
             selectable: false,
         });
         lineSegment.parentSector = startParentSector[ii];
+        console.log(lineSegment.parentSector)
         lineSegment.ID = startLineID[ii];
         let trapezTransform = sec.trapez.calcTransformMatrix();
         let invertedtrapezTransform = invert(trapezTransform);
@@ -4988,13 +4989,16 @@ function startGeodesics(){
         let stackidx = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
         canvas.insertAt(lineSegment, stackidx);
 
-        geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
-        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
-        geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
-        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+        if (turnLorentzTransformOn == "1"){
+            geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+            geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
 
-        lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, lineSegment.parentSector.trapez)
-        lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, lineSegment.parentSector.trapez)
+            lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[lineSegment.parentSector[0]].trapez)
+            lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[lineSegment.parentSector[0]].trapez)
+
+        }
 
         drawDragPoint(lineSegment.ID[0])
 
@@ -5587,10 +5591,9 @@ function updateMinions(boss) {
 function init() {
     for (let ii = 0; ii < sec_name.length; ii++) {
         let sec = new Sector();
-        sec.name = ii;
-
+        //sec.name = ii;
         //sec.name = sec_name[ii];
-        //sec.name = "";
+        sec.name = "";
         sec.ID = sec_ID[ii];
         sec.sector_type = sec_type[ii];
         sec.fontSize = sec_fontSize[ii];

@@ -2,14 +2,14 @@ import io
 import math
 
 
-zeilenanzahl = 5
+zeilenanzahl = 8
 spaltenanzahl = 2
 
 radius = 120
 delta_r = 1.25
 delta_t = 1.25
-sectorabstand_x = 50
-sectorabstand_y = 50
+sectorabstand_x = 0
+sectorabstand_y = 30
 
 fontSize = 15
 
@@ -21,15 +21,15 @@ start_y = 150
 #startGeodesicsVersatz_x: Versatz entlang der Raumachse (wenn startGeodesicsVersatz_y = 0)
 #startGeodesicsVersatz_y: Versatz entlang der Zeitachse (wenn startGeodesicsVersatz_x = 0)
 
-startGeodesicsAngle = [180]
+startGeodesicsSectors = [15, 15]
 
-startGeodesicsSectors = [4]
+startGeodesicsAngle = [180, 180]
 
-startGeodesicsVersatz_x = [0.8]
+startGeodesicsVersatz_x = [1/6 + 0.01, 5/6 + 0.01]
 
 startGeodesicsVersatz_y = [0, 0]
 
-startGeodesicsOperational = ['true']
+startGeodesicsOperational = ['true', 'true']
 
 def main():
 
@@ -146,23 +146,25 @@ def main():
 
     lengthStartGeodesics = 40
 
-    variablenamesGeodesics = ["x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke","startParentSector", "startLineID", "startGeodesicOperational"]
+    variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke","startParentSector", "startLineID", "startGeodesicOperational"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
 
-    geodesicValues = [[[] for ii in range(len(startGeodesicsAngle))] for jj in range(len(variablenamesGeodesics))]
+    geodesicValues = [[[] for ii in range(len(startGeodesicsSectors))] for jj in range(len(variablenamesGeodesics))]
 
-    for startGeodesic in range(0, len(startGeodesicsAngle)):
+    for startGeodesic in range(0, len(startGeodesicsSectors)):
         print(startGeodesic)
+        geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
+
         offset_y = (sectorValues[sectorDict["sec_timeEdgeLeft"]][startGeodesicsSectors[startGeodesic]] - sectorValues[sectorDict["sec_timeEdgeRight"]][startGeodesicsSectors[startGeodesic]]) / 2
 
-        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + startGeodesicsVersatz_x[startGeodesic] * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + startGeodesicsVersatz_x[startGeodesic] * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]
 
         if (offset_y < 0.0):
             geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + offset_y - startGeodesicsVersatz_y[startGeodesic] - offset_y * startGeodesicsVersatz_x[startGeodesic]
         else:
             geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] - startGeodesicsVersatz_y[startGeodesic] - offset_y * startGeodesicsVersatz_x[startGeodesic]
 
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + math.sin(startGeodesicsAngle[startGeodesic] * math.pi / 180) * lengthStartGeodesics + startGeodesicsVersatz_x[startGeodesic] * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + math.sin(startGeodesicsAngle[startGeodesic] * math.pi / 180) * lengthStartGeodesics + startGeodesicsVersatz_x[startGeodesic] * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]
         if (offset_y < 0.0):
             geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + math.cos(startGeodesicsAngle[startGeodesic] * math.pi / 180) * lengthStartGeodesics + offset_y - startGeodesicsVersatz_y[startGeodesic] - offset_y * startGeodesicsVersatz_x[startGeodesic]
         else:
