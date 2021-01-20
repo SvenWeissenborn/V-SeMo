@@ -21,13 +21,13 @@ start_y = 150
 #startGeodesicsVersatz_x: Versatz entlang der Raumachse (wenn startGeodesicsVersatz_y = 0)
 #startGeodesicsVersatz_y: Versatz entlang der Zeitachse (wenn startGeodesicsVersatz_x = 0)
 
-startGeodesicsSectors = [15, 15]
+startGeodesicsSectors = [7, 7]
 
-startGeodesicsAngle = [180, 180]
+startGeodesicsAngle = [135, 135]
 
-startGeodesicsVersatz_x = [1/6 + 0.01, 5/6 + 0.01]
+startGeodesicsVersatz_x = [0, 0]
 
-startGeodesicsVersatz_y = [0, 0]
+startGeodesicsVersatz_y = [10, 40]
 
 startGeodesicsOperational = ['true', 'true']
 

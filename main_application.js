@@ -775,13 +775,7 @@ canvas.on('mouse:up', function(opt) {
                     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
                     if (turnLorentzTransformOn == "1"){
-                        geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
-                        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
-                        geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
-                        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
-
-                        lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[lineSegment.parentSector[0]].trapez)
-                        lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[lineSegment.parentSector[0]].trapez)
+                        getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
                     }
 
 
@@ -1089,6 +1083,14 @@ let geodreieckIsClicked = false;
 let geodreieck;
 let geodreieckScale = 0.12;
 
+let geodreieckSnapAngle;
+
+if (turnLorentzTransformOn == "1"){
+    geodreieckSnapAngle = 15
+}else{
+    geodreieckSnapAngle = 0.1
+}
+
 fabric.Image.fromURL('geodreieck.png', function(img) {
     geodreieck = img.set({
         opacity: 1,
@@ -1127,7 +1129,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
         br: false,
     });
 
-    geodreieck.snapAngle = 0.1;
+    geodreieck.snapAngle = geodreieckSnapAngle;
 
     geodreieck.on('moving',function(){geodreieckRotate(this); geodreieckMove(this)});
     geodreieck.on('rotating',function(){geodreieckRotate(this); geodreieckMove(this)});
@@ -1830,14 +1832,8 @@ function continueGeodesic(geodesicToContinue) {
 
 
             if (turnLorentzTransformOn == "1"){
-                geodesic_start_point = new fabric.Point(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().x1, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().y1);
-                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
-                geodesic_end_point = new fabric.Point(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().x2, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcLinePoints().y2);
-                geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].calcTransformMatrix());
 
-                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez)
-                geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1].parentSector[0]].trapez)
-
+                getStartAndEndPointCoordsBeforeLorentztransform(geodesics[geodesicToContinue][geodesics[geodesicToContinue].length - 1])
 
             }
 
@@ -1969,13 +1965,7 @@ function continueGeodesic(geodesicToContinue) {
                 immediatehistory.push(lineSegmentContinue.ID);
 
                 if (turnLorentzTransformOn == "1"){
-                    geodesic_start_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x1, lineSegmentContinue.calcLinePoints().y1);
-                    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegmentContinue.calcTransformMatrix());
-                    geodesic_end_point = new fabric.Point(lineSegmentContinue.calcLinePoints().x2, lineSegmentContinue.calcLinePoints().y2);
-                    geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegmentContinue.calcTransformMatrix());
-
-                    lineSegmentContinue.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[neighbourSector].trapez);
-                    lineSegmentContinue.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[neighbourSector].trapez);
+                    getStartAndEndPointCoordsBeforeLorentztransform(lineSegmentContinue)
                 }
 
                 if (turnLorentzTransformOn !== "1"){
@@ -2420,6 +2410,9 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
 
     let rapidity_before_something;
+    let rapidity_after_something;
+    let dist_inv_min_x_old;
+    let dist_inv_max_y_old;
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
@@ -2552,7 +2545,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         if (turnLorentzTransformOn == "1"){
 
-            let rapidity_after_something = this.parent.rapidity
+            rapidity_after_something = this.parent.rapidity
 
             //Der Sektor muss reinitialisiert werden, wenn die Maus losgelassen wird, jedoch nur, wenn sich an den Rapiditäten etwas getan hat.
             //Sonst wird die Boundingbox nicht aktualisiert
@@ -2561,55 +2554,9 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             //Hierzu zählen das Setzen der entsprechenden Snap-Edges und das zurücksetzen der Färbung auf den Grundzustand
 
             if (Math.abs(rapidity_after_something - rapidity_before_something) > epsilon) {
-                let lastTopTrapez = this.parent.trapez.top;
-                let lastLeftTrapez = this.parent.trapez.left;
-                let lastTopID_text = this.parent.ID_text.top;
-                let lastLeftID_text = this.parent.ID_text.left;
 
-                let start_pos_BL_text_x = this.parent.ID_text.start_pos_BL_text_x;
-                let start_pos_BL_text_y = this.parent.ID_text.start_pos_BL_text_y;
+                reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, this.parent.ID)
 
-                let dist_inv_min_x_new = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
-                let dist_inv_min_y_new = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
-
-
-                canvas.remove(this.parent.trapez);
-
-                canvas.remove(this.parent.ID_text);
-
-                this.parent.draw(this.parent.trapez.points[0].x, this.parent.trapez.points[0].y, this.parent.trapez.points[1].x, this.parent.trapez.points[1].y, this.parent.trapez.points[2].x, this.parent.trapez.points[2].y, this.parent.trapez.points[3].x, this.parent.trapez.points[3].y);
-
-                canvas.setActiveObject(this.parent.trapez);
-
-                this.parent.trapez.set('left', lastLeftTrapez + dist_inv_min_x_new - dist_inv_min_x_old).setCoords();
-                this.parent.trapez.set('top', lastTopTrapez + dist_inv_min_y_new - dist_inv_max_y_old).setCoords();
-
-                this.parent.ID_text.set('left', lastLeftID_text).setCoords();
-                this.parent.ID_text.set('top', lastTopID_text).setCoords();
-
-                this.parent.ID_text.start_pos_BL_text_x = start_pos_BL_text_x;
-                this.parent.ID_text.start_pos_BL_text_y = start_pos_BL_text_y;
-
-                this.parent.ID_text.relationship = getRelationship(this.parent.ID_text, this.parent.ID)
-
-                for (let ii = 0; ii < this.parent.slider.length; ii++) {
-                    this.parent.slider[ii].relationship = getRelationship(this.parent.slider[ii], this.parent.ID)
-                }
-
-                if (this.parent.lineSegments.length > 0) {
-                    for (let ii = 0; ii < this.parent.lineSegments.length; ii++) {
-                        canvas.bringToFront(this.parent.lineSegments[ii]);
-                    }
-
-                    for (let ii = 0; ii < this.parent.lineSegments.length; ii++) {
-                        this.parent.lineSegments[ii].relationship = getRelationship(this.parent.lineSegments[ii], this.parent.ID);
-
-                        if (this.parent.lineSegments[ii].dragPoint !== undefined) {
-                            canvas.bringToFront(this.parent.lineSegments[ii].dragPoint);
-                            this.parent.lineSegments[ii].dragPoint.relationship = getRelationship(this.parent.lineSegments[ii].dragPoint, this.parent.ID);
-                        }
-                    }
-                }
             }
         }
 
@@ -2878,59 +2825,24 @@ function drawSlider(pos_x, pos_y) {
     */
 
 
-    let hmpfx_alt;
-    let hmpfy_alt;
+    let dist_inv_min_x_old;
+    let dist_inv_max_y_old;
 
 
 
     this.slider[0].on('mousedown', function(o) {
 
         this.opacity = 0.8
-        hmpfx_alt = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
-        hmpfy_alt = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
+        dist_inv_min_x_old = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
+        dist_inv_max_y_old = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
 
-        if(this.parent.lineSegments.length > 0) {
-            geodesic_start_point = new fabric.Point(this.parent.lineSegments[0].calcLinePoints().x1, this.parent.lineSegments[0].calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, this.parent.lineSegments[0].calcTransformMatrix());
-            geodesic_end_point = new fabric.Point(this.parent.lineSegments[0].calcLinePoints().x2, this.parent.lineSegments[0].calcLinePoints().y2);
-            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, this.parent.lineSegments[0].calcTransformMatrix());
-        }
     });
 
     //Wird der Regler bewegt, so passiert die Transformation
     this.slider[0].on('moving', function(o) {
 
-        for (let ii = 0; ii < 4; ii++) {
-
-            let sec_idx = this.parent.neighbourhood[ii];
-
-            if (this.parent.snapEdges[ii] !== undefined) {
-
-                canvas.remove(this.parent.snapEdges[ii]);
-                this.parent.snapEdges[ii] = [];
-            }
-
-            if (sec_idx > -1) {
-
-                if (sectors[sec_idx].snapEdges[(ii + 2) % 4] !== undefined) {
-
-                    canvas.remove(sectors[sec_idx].snapEdges[(ii + 2) % 4]);
-                    sectors[sec_idx].snapEdges[(ii + 2) % 4] = [];
-                }
-            }
-            if (sec_idx > -1) {
-                for (let jj = 0; jj < 4; jj++) {
-                    if (sectors[sec_idx].neighbourhood[jj] === this.parent.ID) {
-
-                        sectors[sec_idx].snapStatus[jj] = 0;
-
-                    }
-                }
-                this.parent.snapStatus[ii] = 0;
-            }
-        }
-
-        console.log(this.parent.snapStatus)
+        removeSnapEdges(this.parent.ID)
+        changeSnapStatus(this.parent.ID)
 
         if(this.top > this.parent.slider[1].top + slider_max){
             this.set('top' , this.parent.slider[1].top + slider_max).setCoords();
@@ -2943,8 +2855,6 @@ function drawSlider(pos_x, pos_y) {
         //Einrasten des Sliders auf Null
 
         let pointer = canvas.getPointer(o.e);
-        let points = [pointer.x, pointer.y];
-
 
         if (Math.abs(pointer.y - this.parent.slider[1].top) < snap_radius_slider) {
             this.set('top' , this.parent.slider[1].top).setCoords();}
@@ -2967,87 +2877,8 @@ function drawSlider(pos_x, pos_y) {
 
     this.slider[0].on('mouseup',function() {
         this.opacity = 1.0
-        let lastValueSlider = this.top - this.parent.trapez.top;
-        let lastTopTrapez = this.parent.trapez.top;
-        let lastLeftTrapez = this.parent.trapez.left;
-        let lastTopID_text = this.parent.ID_text.top;
-        let lastLeftID_text = this.parent.ID_text.left;
 
-        let start_pos_BL_text_x = this.parent.ID_text.start_pos_BL_text_x;
-        let start_pos_BL_text_y = this.parent.ID_text.start_pos_BL_text_y;
-
-
-        let dist_inv_min_x_new = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
-        let dist_inv_min_y_new = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
-
-        canvas.remove(this.parent.trapez);
-
-
-        canvas.remove(this.parent.ID_text);
-
-
-
-        this.parent.draw(this.parent.trapez.points[0].x, this.parent.trapez.points[0].y, this.parent.trapez.points[1].x, this.parent.trapez.points[1].y, this.parent.trapez.points[2].x, this.parent.trapez.points[2].y, this.parent.trapez.points[3].x, this.parent.trapez.points[3].y);
-
-
-
-        this.parent.trapez.set('left',lastLeftTrapez + dist_inv_min_x_new - hmpfx_alt).setCoords();
-        this.parent.trapez.set('top', lastTopTrapez+dist_inv_min_y_new-hmpfy_alt).setCoords();
-
-        this.parent.ID_text.set('left', lastLeftID_text).setCoords();
-        this.parent.ID_text.set('top', lastTopID_text).setCoords();
-
-        this.parent.ID_text.start_pos_BL_text_x = start_pos_BL_text_x
-        this.parent.ID_text.start_pos_BL_text_y = start_pos_BL_text_y
-
-
-        let trapezTransform = this.parent.trapez.calcTransformMatrix();
-        let invertedtrapezTransform = invert(trapezTransform);
-        let desiredTransform;
-
-        desiredTransform = multiply(invertedtrapezTransform, this.parent.ID_text.calcTransformMatrix());
-        this.parent.ID_text.relationship = desiredTransform;
-
-        for (let ii = 0; ii < this.parent.slider.length; ii++){
-            desiredTransform = multiply(
-                invertedtrapezTransform,
-                this.parent.slider[ii].calcTransformMatrix());
-
-            this.parent.slider[ii].relationship = desiredTransform;
-        }
-
-
-        //updateMinions(this.parent.trapez)
-
-        console.log('rapidity:', this.parent.rapidity);
-
-        if (this.parent.lineSegments.length > 0){
-            for (let ii = 0; ii < this.parent.lineSegments.length; ii++ ){
-                canvas.bringToFront(this.parent.lineSegments[ii]);
-
-            }
-            for (let ii = 0; ii < this.parent.lineSegments.length; ii++){
-                desiredTransform = multiply(
-                    invertedtrapezTransform,
-                    this.parent.lineSegments[ii].calcTransformMatrix());
-
-                this.parent.lineSegments[ii].relationship = desiredTransform;
-
-                if (this.parent.lineSegments[ii].dragPoint !== undefined) {
-                    canvas.bringToFront(this.parent.lineSegments[ii].dragPoint);
-                    desiredTransform = multiply(
-                        invertedtrapezTransform,
-                        this.parent.lineSegments[ii].dragPoint.calcTransformMatrix());
-
-                    this.parent.lineSegments[ii].dragPoint.relationship = desiredTransform;
-                }
-
-            }
-        }
-
-
-
-
+        reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, this.parent.ID)
 
     });
 
@@ -4151,8 +3982,6 @@ function Sector() {
         this.slider;
         this.rapidity = 0;
         this.draw_slider = drawSlider;
-        let dist_inv_min_x_old;
-        let dist_inv_min_y;
     }
 
     this.lineSegments = [];
@@ -4373,7 +4202,12 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                         sectors[neighbourSector].rapidity += rapid_sum;
 
-                        lorentzTransformAndReinitialiseSector(neighbourSector, rapid_sum)
+                        let dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
+                        let dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
+
+                        lorentzTransform(rapid_sum, sectors[neighbourSector].trapez)
+
+                        reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, neighbourSector)
 
                         neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
@@ -4465,16 +4299,8 @@ function setSectors(chosenGeodesicToSetSectors) {
     }
 }
 
-function lorentzTransformAndReinitialiseSector(initialSectorID, rapid_sum){
-    let dist_inv_min_x_old = Math.min(sectors[initialSectorID].trapez.points[0].x, sectors[initialSectorID].trapez.points[1].x, sectors[initialSectorID].trapez.points[2].x, sectors[initialSectorID].trapez.points[3].x);
-    let dist_inv_max_y_old = Math.max(sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].y);
+function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSectorID){
 
-
-    //updateMinions(sectors[initialSectorID].trapez)
-
-    lorentzTransform(sectors[initialSectorID].rapidity, sectors[initialSectorID].trapez);
-
-    //changeRelationShipAfterTransform(sectors[initialSectorID].trapez, rapid_sum);
 
     let lastTopTrapez = sectors[initialSectorID].trapez.top;
     let lastLeftTrapez = sectors[initialSectorID].trapez.left;
@@ -4510,8 +4336,7 @@ function lorentzTransformAndReinitialiseSector(initialSectorID, rapid_sum){
         sectors[initialSectorID].slider[ii].relationship = getRelationship(sectors[initialSectorID].slider[ii], sectors[initialSectorID].ID)
     }
 
-    sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + rapid_sum * slider_max;
-
+    sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + sectors[initialSectorID].rapidity * slider_max;
 
     if (sectors[initialSectorID].lineSegments.length > 0) {
         for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
@@ -4974,14 +4799,7 @@ function startGeodesics(){
         lineSegment.parentSector = startParentSector[ii];
         console.log(lineSegment.parentSector)
         lineSegment.ID = startLineID[ii];
-        let trapezTransform = sec.trapez.calcTransformMatrix();
-        let invertedtrapezTransform = invert(trapezTransform);
-        let desiredTransform = multiply(
-            invertedtrapezTransform,
-            lineSegment.calcTransformMatrix());
 
-
-        lineSegment.relationship = desiredTransform;
         lineSegment.relationship = getRelationship(lineSegment, sec.ID);
 
         sec.lineSegments.push(lineSegment);
@@ -4990,13 +4808,14 @@ function startGeodesics(){
         canvas.insertAt(lineSegment, stackidx);
 
         if (turnLorentzTransformOn == "1"){
-            geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
-            geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
-            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
 
-            lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[lineSegment.parentSector[0]].trapez)
-            lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[lineSegment.parentSector[0]].trapez)
+
+            getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
+
+            geodesics[ii].operational = startGeodesicOperational[ii];
+            if (geodesics[ii].operational === false){
+                continueGeodesic(ii)
+            }
 
         }
 
@@ -5007,6 +4826,7 @@ function startGeodesics(){
 }
 
 function getPointCoordsBeforeLorentztransform (point, trapezToGetCoordsBL){
+
     let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapezToGetCoordsBL)
     let theta_of_this_sector =  trapezToGetCoordsBL.parent.rapidity
 
@@ -5019,6 +4839,16 @@ function getPointCoordsBeforeLorentztransform (point, trapezToGetCoordsBL){
     let point_BL = new fabric.Point(point_BL_x, point_BL_y)
 
     return point_BL
+}
+
+function getStartAndEndPointCoordsBeforeLorentztransform (lineSegment){
+    geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+    geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+    geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+
+    lineSegment.start_point_BL = getPointCoordsBeforeLorentztransform(geodesic_start_point, sectors[lineSegment.parentSector[0]].trapez)
+    lineSegment.end_point_BL = getPointCoordsBeforeLorentztransform(geodesic_end_point, sectors[lineSegment.parentSector[0]].trapez)
 }
 
 function startMarks() {
