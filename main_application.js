@@ -4780,9 +4780,6 @@ function startMarks() {
             padding: 10
         });
 
-
-
-
         mark.parentSector = markStartParentSector[ii];
 
         mark.relationship = getRelationship(mark, sec.ID)

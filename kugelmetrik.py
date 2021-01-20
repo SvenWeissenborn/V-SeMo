@@ -34,16 +34,16 @@ startGeodesicsLength = [100, 100]
 startGeodesicsOperational = ['true', 'true']
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = []
-startMarksRadius = []
-startMarksOffset_x = []
-startMarksOffset_y = []
+startMarksSectors = [2, 3, 8]
+startMarksRadius = [5, 5, 5]
+startMarksOffset_x = [0.5, 0.5, 0.5]
+startMarksOffset_y = [0.5, 0.5, 0.5]
 
 #Parameter fuer die Starttexte
-startTextsSectors = [2]
-startTextContent = ['P1']
-startTextsOffset_x = [0.3]
-startTextsOffset_y = [0.3]
+startTextsSectors = [2, 3, 8]
+startTextContent = ['M1', 'M2', 'M3']
+startTextsOffset_x = [0.4, 0.4, 0.6]
+startTextsOffset_y = [0.4, 0.6, 0.4]
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
 
@@ -265,19 +265,19 @@ def main():
 
     for startMark in range(0, len(startMarksSectors)):
 
-        sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startMark]]
+        sector_angle = sectorValues[sectorDict["sec_angle"]][startMarksSectors[startMark]]
 
-        sector_width = sectorValues[sectorDict["sec_height"]][startTextsSectors[startMark]]
+        sector_width = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
 
-        sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startMark]]
+        sector_height = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
 
-        sector_center_x = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startMark]]
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
 
-        sector_center_y = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startMark]]
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]]
 
-        markStart_x_tmp = sector_center_x - sector_width / 2 + startTextsOffset_x[startMark] * sector_width
+        markStart_x_tmp = sector_center_x - sector_width / 2 + startMarksOffset_x[startMark] * sector_width
 
-        markStart_y_tmp = sector_center_y + sector_height / 2 - startTextsOffset_y[startMark] * sector_height
+        markStart_y_tmp = sector_center_y + sector_height / 2 - startMarksOffset_y[startMark] * sector_height
 
         markStartPoint = rotationAroundPoint(markStart_x_tmp, markStart_y_tmp, sector_angle, sector_center_x, sector_center_y)
 
