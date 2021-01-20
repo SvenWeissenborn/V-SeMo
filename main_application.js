@@ -4848,6 +4848,7 @@ function startMarks() {
 
 function startTexts() {
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
+        console.log(textStartParentSector)
         let sec = sectors[textStartParentSector[ii][0]];
 
         let text = new fabric.Text("" + (textStartContent[ii]), {
@@ -5440,6 +5441,8 @@ positionSectors();
 if (buildStartGeodesics == "1"){startGeodesics();}
 
 if (buildStartMarks == "1"){startMarks();}
+
+if (buildStartTexts == "1"){startTexts();}
 
 if (showVerticesOn == "1"){drawVertices();}
 

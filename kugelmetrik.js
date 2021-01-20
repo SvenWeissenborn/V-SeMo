@@ -1,19 +1,22 @@
 /*
 ------Parameter-------
-nSektorzeilenVonKugel: 9
-nSektorspaltenVonKugel: 18
-zeilenanzahl: 3
-spaltenanzahl: 3
-radius_sphere: 500
-sectorabstand_x: 30
-sectorabstand_y: 30
+nSectorRowsFromSphere: 9
+nSectorColumnsFromSphere: 18
+radius: 500
+nRowsInModel: 3
+nColumnsInModel: 3
+sectorDistance_x: 30
+sectorDistance_y: 30
 fontSize: 15
 startGeodesicsSectors: [2, 2]
-startMarksSectors: [2, 3, 8]
+startMarksSectors: []
 startMarkRadius: [5, 5, 5]
-startTextsSectors: []
-startTextContent: ['P1', 'P2']
-text_dist_from_mid_y: [0.5, -0.9]
+startMarksSectors: []
+startMarkRadius: [5, 5, 5]
+startTextsSectors: [2]
+startTextContent: ['P1']
+textDistFromMid_x: [0.5]
+textDistFromMid_y: [0.5]
 ----------------------
 */
 
@@ -38,27 +41,27 @@ sec_posx= [ -201.88137789230134, -201.88137789230134, -201.88137789230134, 0.0, 
 sec_posy= [ -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 startSectors= [ 2, 2, ];
-x_Start= [ -271.8813778923013, -220.31696452461094, ];
-y_Start= [ 196.3372559067418, 283.44967454232244, ];
-x_End= [ -221.88137789230134, -170.31696452461094, ];
-y_End= [ 156.3372559067418, 243.44967454232244, ];
+x_Start= [ -271.57131280076584, -219.30386161941746, ];
+y_Start= [ 223.75973963385795, 276.0271908152063, ];
+x_End= [ -200.86063468211108, -148.5931835007627, ];
+y_End= [ 153.04906151520322, 205.31651269655157, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [2,0], [2,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ -201.88137789230134, 0.0, 201.88137789230134, ];
-markStart_y= [ 206.3372559067418, -202.1124186355806, 206.3372559067418, ];
-markStartStrokeWidth= [ 2, 2, 2, ];
-markStartRadius= [ 5, 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartParentSector= [ [2,0], [3,0], [8,0], ];
-markStartID= [ [0,1], [1,1], [2,1], ];
-textStart_x= [ ];
-textStart_y= [ ];
-textStartContent= [ ];
-textStartFontSize= [ ];
-textStartParentSector= [ ];
-textStartID= [ ];
-textStartAngle= [ ];
+markStart_x= [ ];
+markStart_y= [ ];
+markStartStrokeWidth= [ ];
+markStartRadius= [ ];
+markStartFill= [ ];
+markStartStroke= [ ];
+markStartParentSector= [ ];
+markStartID= [ ];
+textStart_x= [ -236.7263453465336, ];
+textStart_y= [ 241.1822233609741, ];
+textStartContent= [ 'P1', ];
+textStartFontSize= [ 15, ];
+textStartParentSector= [ [2,0], ];
+textStartID= [ [0], ];
+textStartAngle= [ 0, ];

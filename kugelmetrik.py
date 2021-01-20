@@ -1,73 +1,105 @@
 import io
 import math
 
-nSektorzeilenVonKugel = 9
-nSektorspaltenVonKugel = 18
-zeilenanzahl = 3
-spaltenanzahl = 3
-radius_sphere = 500
-sectorabstand_x = 30
-sectorabstand_y = 30
+# Einteilung der Kugeloberfläche
+nSectorRowsFromSphere = 9
+nSectorColumnsFromSphere = 18
 
+#Eigenschaften des Ausgangsobjekts
+radius = 500
+
+#Eigenschaften des Sektormodells
+nRowsInModel = 3
+nColumnsInModel = 3
+
+#Abstaende der Sektoren zueinander
+sectorDistance_x = 30
+sectorDistance_y = 30
+
+#Schriftgroesse im Modell
 fontSize = 15
 
-anzahlStartGeodesics = 2
-
+#Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [2, 2]
+#Winkel in Grad
+startGeodesicsAngle = [45, 45]
+#Startpunkt der Geodaete liegt in der unteren linken Ecke
+#Versatz Anteilig der Sektorbreite
+startGeodesicsOffset_x = [0.1, 0.4]
+#Versatz Anteilig der Sektorhoehe
+startGeodesicsOffset_y = [0.4, 0.1]
+#Laenge der Geodaete in Pixel
+startGeodesicsLength = [100, 100]
+#operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
+startGeodesicsOperational = ['true', 'true']
 
-startMarksSectors = [2, 3, 8]
-startMarkRadius = [5, 5, 5]
-mark_dist_from_mid_x = [0, 0, 0]
-mark_dist_from_mid_y = [0, 0, 0]
+#Parameter fuer die Startmarkierungen
+startMarksSectors = []
+startMarksRadius = []
+startMarksOffset_x = []
+startMarksOffset_y = []
 
-startTextsSectors = []
-startTextContent = ['P1', 'P2']
-text_dist_from_mid_y = [0.5, -0.9]
+#Parameter fuer die Starttexte
+startTextsSectors = [2]
+startTextContent = ['P1']
+startTextsOffset_x = [0.3]
+startTextsOffset_y = [0.3]
+
+def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
+
+    rotatedPoint_x = sector_center_x + (point_x_tmp - sector_center_x) * math.cos(sector_angle * math.pi / 180) - (point_y_tmp - sector_center_y) * math.sin(sector_angle * math.pi / 180)
+
+    rotatedPoint_y = sector_center_y + (point_x_tmp - sector_center_x) * math.sin(sector_angle * math.pi / 180) + (point_y_tmp - sector_center_y) * math.cos(sector_angle * math.pi / 180)
+
+    rotatedPoint = [rotatedPoint_x, rotatedPoint_y]
+
+    return rotatedPoint
 
 def main():
 
 
+    dtheta = (math.pi/nSectorRowsFromSphere)
+    dphi = (2*math.pi/nSectorColumnsFromSphere)
 
-    dtheta = (math.pi/nSektorzeilenVonKugel)
-    dphi = (2*math.pi/nSektorspaltenVonKugel)
-    maxSecBreite = radius_sphere * dphi * math.sin(dtheta * math.floor(nSektorzeilenVonKugel/2))
+    maxSecBreite = radius * dphi * math.sin(dtheta * math.floor(nSectorRowsFromSphere/2))
 
-    if (zeilenanzahl > nSektorzeilenVonKugel):
-        print("Achtung zeilenanzahl ist größer als nSektorzeilenVonKugel")
+    if (nRowsInModel > nSectorRowsFromSphere):
+        print("Achtung nRowsInModel ist größer als nSectorRowsFromSphere")
         return -1
 
-    if (spaltenanzahl > nSektorspaltenVonKugel):
-        print("Achtung spaltenanzahl ist größer als nSektorspaltenVonKugel")
+    if (nColumnsInModel > nSectorColumnsFromSphere):
+        print("Achtung nColumnsInModel ist größer als nSectorColumnsFromSphere")
         return -2
 
-    if (nSektorzeilenVonKugel % 2 != zeilenanzahl % 2):
-        print("Achtung nSektorZeilenVonKugel und zeilenanzahl müssen gerade oder ungerade sein")
+    if (nSectorRowsFromSphere % 2 != nRowsInModel % 2):
+        print("Achtung nSectorRowsFromSphere und nRowsInModel müssen gerade oder ungerade sein")
         return -3
 
 
-    sector_y_dist = 0.0
-
-    zeilestart = math.floor((nSektorzeilenVonKugel-zeilenanzahl)/2)
-    zeileende = nSektorzeilenVonKugel-round((nSektorzeilenVonKugel-zeilenanzahl)/2)
+    zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
+    zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
     file = io.open("kugelmetrik.js",'w')
 
     file.write( "/*" +"\n"
-                "------Parameter-------" +"\n"
-                "nSektorzeilenVonKugel: " + str(nSektorzeilenVonKugel) +"\n"
-                "nSektorspaltenVonKugel: " + str(nSektorspaltenVonKugel) +"\n"
-                "zeilenanzahl: " + str(zeilenanzahl) +"\n"
-                "spaltenanzahl: " + str(spaltenanzahl) + "\n"
-                "radius_sphere: " + str(radius_sphere) + "\n"                                                        
-                "sectorabstand_x: " + str(sectorabstand_x) +"\n"
-                "sectorabstand_y: " + str(sectorabstand_y) + "\n"
+                "------Parameter-------" + "\n"
+                "nSectorRowsFromSphere: " + str(nSectorRowsFromSphere) + "\n"
+                "nSectorColumnsFromSphere: " + str(nSectorColumnsFromSphere) + "\n"
+                "radius: " + str(radius) + "\n"
+                "nRowsInModel: " + str(nRowsInModel) + "\n"
+                "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
+                "sectorDistance_x: " + str(sectorDistance_x) + "\n"
+                "sectorDistance_y: " + str(sectorDistance_y) + "\n"
                 "fontSize: " + str(fontSize) + "\n"
-                "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"                               
+                "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
+                "startMarksSectors: " + str(startMarksSectors) + "\n"
+                "startMarkRadius: " + str(startMarkRadius) + "\n"                                                         
                 "startMarksSectors: " + str(startMarksSectors) + "\n"
                 "startMarkRadius: " + str(startMarkRadius) + "\n"
                 "startTextsSectors: " + str(startTextsSectors) + "\n"
                 "startTextContent: " + str(startTextContent) + "\n"
-                "text_dist_from_mid_y: " + str(text_dist_from_mid_y) + "\n"
+                "textDistFromMid_x: " + str(textDistFromMid_x) + "\n"
+                "textDistFromMid_y: " + str(textDistFromMid_y) + "\n"
                 "----------------------"
                 + "\n"
                   "*/"
@@ -84,7 +116,7 @@ def main():
 
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
-    anzahlDerSektoren = zeilenanzahl * spaltenanzahl
+    anzahlDerSektoren = nRowsInModel * nColumnsInModel
 
 
 
@@ -104,52 +136,63 @@ def main():
         sectorValues[sectorDict["sec_fontSize"]][id] = fontSize
 
     for zeile in range(zeilestart, zeileende):
-        for ii in range(0,spaltenanzahl):
-            sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] = radius_sphere*math.sin((zeile) * dtheta) * dphi
-            sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] = radius_sphere * math.sin((zeile +1) * dtheta) * dphi
-            offset = (sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)])/2
-            sector_width = max(sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)],sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)])
-            sector_height = math.sqrt(math.pow(radius_sphere, 2) * math.pow(dtheta, 2) - math.pow(offset, 2))
-            sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)] = sector_height
-            sectorValues[sectorDict["sec_width"]][jj + ii * (zeileende - zeilestart)] = sector_width
-            sector_y_dist = sector_height + sectorabstand_y
-            sectorValues[sectorDict["sec_offset"]][jj + ii * (zeileende - zeilestart)] = offset
-            sectorValues[sectorDict["sec_coords"]][jj + ii * (zeileende - zeilestart)] = ([-min(0, offset),
-                                                                                  0,
-                                                                                  sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - min(0, offset),
-                                                                                  0,
-                                                                                  sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] + max(0, offset),
-                                                                                  sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)],
-                                                                                  max(0, offset),
-                                                                                  sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
+        for ii in range(0,nColumnsInModel):
+            sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] = radius*math.sin((zeile) * dtheta) * dphi
 
-            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - spaltenanzahl * 0.5 + 0.5) * (sectorabstand_x+maxSecBreite) + (maxSecBreite - sector_width)/2
-            sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = (zeile - (zeilenanzahl+0.5)) * sector_y_dist -100
+            sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] = radius * math.sin((zeile +1) * dtheta) * dphi
+
+            offset = (sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)])/2
+
+            sector_width = max(sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)],sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)])
+
+            sector_height = math.sqrt(math.pow(radius, 2) * math.pow(dtheta, 2) - math.pow(offset, 2))
+
+            sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)] = sector_height
+
+            sectorValues[sectorDict["sec_width"]][jj + ii * (zeileende - zeilestart)] = sector_width
+
+            sector_y_dist = sector_height + sectorDistance_y
+
+            sectorValues[sectorDict["sec_offset"]][jj + ii * (zeileende - zeilestart)] = offset
+
+            sectorValues[sectorDict["sec_coords"]][jj + ii * (zeileende - zeilestart)] = ([-min(0, offset),
+                                                                                          0,
+                                                                                          sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - min(0, offset),
+                                                                                          0,
+                                                                                          sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] + max(0, offset),
+                                                                                          sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)],
+                                                                                          max(0, offset),
+                                                                                          sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
+
+            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - nColumnsInModel * 0.5 + 0.5) * (sectorDistance_x + maxSecBreite) + (maxSecBreite - sector_width) / 2
+
+            sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = (zeile - (nRowsInModel + 0.5)) * sector_y_dist - 100
+
             sectorValues[sectorDict["sec_angle"]][jj + ii * (zeileende - zeilestart)] = 0
 
-            if (zeile == round((nSektorzeilenVonKugel-zeilenanzahl) / 2)):
+            if (zeile == round((nSectorRowsFromSphere-nRowsInModel) / 2)):
                 sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + zeilenanzahl * ii - round((nSektorzeilenVonKugel-zeilenanzahl) / 2)-1
+                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) - 1
 
-            if (ii == (spaltenanzahl-1)):
+            if (ii == (nColumnsInModel-1)):
                 sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + zeilenanzahl * ii - round((nSektorzeilenVonKugel-zeilenanzahl) / 2) + zeilenanzahl
+                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) + nRowsInModel
 
-            if (zeile == (nSektorzeilenVonKugel-round((nSektorzeilenVonKugel-zeilenanzahl) / 2))-1):
+            if (zeile == (nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel) / 2))-1):
                 sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + zeilenanzahl * ii - round((nSektorzeilenVonKugel-zeilenanzahl) / 2) +1
+                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) +1
 
             if (ii == 0):
                 sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + zeilenanzahl * ii - round((nSektorzeilenVonKugel-zeilenanzahl) / 2) - zeilenanzahl
+                sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) - nRowsInModel
 
 
 
-        jj=jj+1
+        jj = jj + 1
 
 
     for ii in range(0,len(variablenamesSectors)):
@@ -167,16 +210,45 @@ def main():
 
     for startGeodesic in range(0, len(startGeodesicsSectors)):
         geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
-        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]] - 70
-        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]] -10
-        geodesicValues[geodesicDict["x_End"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + 0.3 * startGeodesic * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]   -  20
-        geodesicValues[geodesicDict["y_End"]][startGeodesic] = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]] + 0.5 * startGeodesic * sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]] -  50
+
+        sector_angle = sectorValues[sectorDict["sec_angle"]][startGeodesicsSectors[startGeodesic]]
+
+        sector_width = sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+
+        sector_height = sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]]
+
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][startGeodesicsSectors[startGeodesic]]
+
+        geodesicStart_x_tmp = sector_center_x - sector_width / 2 + startGeodesicsOffset_x[startGeodesic] * sector_width
+
+        geodesicStart_y_tmp = sector_center_y + sector_height / 2 - startGeodesicsOffset_y[startGeodesic] * sector_height
+
+        geodesicEnd_x_tmp = geodesicStart_x_tmp + math.cos( - startGeodesicsAngle[startGeodesic] * math.pi / 180) * startGeodesicsLength[startGeodesic]
+
+        geodesicEnd_y_tmp = geodesicStart_y_tmp + math.sin( - startGeodesicsAngle[startGeodesic] * math.pi / 180) * startGeodesicsLength[startGeodesic]
+
+        geodesicStartPoint = rotationAroundPoint(geodesicStart_x_tmp, geodesicStart_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        geodesicEndPoint = rotationAroundPoint(geodesicEnd_x_tmp, geodesicEnd_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        geodesicValues[geodesicDict["x_Start"]][startGeodesic] = geodesicStartPoint[0]
+
+        geodesicValues[geodesicDict["y_Start"]][startGeodesic] = geodesicStartPoint[1]
+
+        geodesicValues[geodesicDict["x_End"]][startGeodesic] = geodesicEndPoint[0]
+
+        geodesicValues[geodesicDict["y_End"]][startGeodesic] = geodesicEndPoint[1]
 
         geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "["+str(startGeodesicsSectors[startGeodesic])+","+str(startGeodesic)+"]"
+
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "["+str(startGeodesic)+","+str(1)+"]"
+
         geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = 2
 
         geodesicValues[geodesicDict["startFill"]][startGeodesic] = "line_colors["+str(startGeodesic)+"]"
+
         geodesicValues[geodesicDict["startStroke"]][startGeodesic] = "line_colors["+str(startGeodesic)+"]"
 
     for ii in range(0, len(variablenamesGeodesics)):
@@ -185,15 +257,33 @@ def main():
             file.write(str(geodesicValues[ii][jj]) + ', ')
         file.write("];\n")
 
-    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill",
-                          "markStartStroke", "markStartParentSector", "markStartID"]
+    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill", "markStartStroke", "markStartParentSector", "markStartID"]
+
     markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
 
     markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
 
     for startMark in range(0, len(startMarksSectors)):
-        markValues[markDict["markStart_x"]][startMark] = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_width"]][startMarksSectors[startMark]] * mark_dist_from_mid_x[startMark]
-        markValues[markDict["markStart_y"]][startMark] = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]] + sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]] * mark_dist_from_mid_y[startMark]
+
+        sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startMark]]
+
+        sector_width = sectorValues[sectorDict["sec_height"]][startTextsSectors[startMark]]
+
+        sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startMark]]
+
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startMark]]
+
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startMark]]
+
+        markStart_x_tmp = sector_center_x - sector_width / 2 + startTextsOffset_x[startMark] * sector_width
+
+        markStart_y_tmp = sector_center_y + sector_height / 2 - startTextsOffset_y[startMark] * sector_height
+
+        markStartPoint = rotationAroundPoint(markStart_x_tmp, markStart_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        markValues[markDict["markStart_x"]][startMark] = markStartPoint[0]
+
+        markValues[markDict["markStart_y"]][startMark] = markStartPoint[1]
 
         markNumberInSector = 0
 
@@ -205,10 +295,15 @@ def main():
 
 
         markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(markNumberInSector) + "]"
+
         markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
+
         markValues[markDict["markStartStrokeWidth"]][startMark] = 2
-        markValues[markDict["markStartRadius"]][startMark] = startMarkRadius[startMark]
+
+        markValues[markDict["markStartRadius"]][startMark] = startMarksRadius[startMark]
+
         markValues[markDict["markStartFill"]][startMark] = "mark_colors[" + str(startMark) + "]"
+
         markValues[markDict["markStartStroke"]][startMark] = "mark_colors[" + str(startMark) + "]"
 
     for ii in range(0, len(variablenamesMarks)):
@@ -218,16 +313,32 @@ def main():
         file.write("];\n")
 
     variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textStartFontSize", "textStartParentSector", "textStartID", "textStartAngle"]
+
     textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
 
     textValues = [[[] for ii in range(len(startTextsSectors))] for jj in range(len(variablenamesTexts))]
 
     for startText in range(0, len(startTextsSectors)):
 
-        sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
         sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startText]]
-        textValues[textDict["textStart_x"]][startText] = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]] - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.sin(sector_angle * 0.5 * math.pi / 180) * math.cos(sector_angle * 0.5 * math.pi / 180)
-        textValues[textDict["textStart_y"]][startText] = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]] + sector_height / 2 * text_dist_from_mid_y[startText] - 0.000001 - 2 * (sector_height / 2 * text_dist_from_mid_y[startText]) * math.pow(math.sin(sector_angle * 0.5 * math.pi / 180), 2) + 15
+
+        sector_width = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
+
+        sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
+
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][startTextsSectors[startText]]
+
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][startTextsSectors[startText]]
+
+        textStart_x_tmp = sector_center_x - sector_width / 2 + startTextsOffset_x[startText] * sector_width
+
+        textStart_y_tmp = sector_center_y + sector_height / 2 - startTextsOffset_y[startText] * sector_height
+
+        textStartPoint = rotationAroundPoint(textStart_x_tmp, textStart_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        textValues[textDict["textStart_x"]][startText] = textStartPoint[0]
+
+        textValues[textDict["textStart_y"]][startText] = textStartPoint[1]
 
         textNumberInSector = 0
 
@@ -238,9 +349,13 @@ def main():
                         textNumberInSector += 1
 
         textValues[textDict["textStartParentSector"]][startText] = "[" + str(startTextsSectors[startText]) + "," + str(textNumberInSector) + "]"
+
         textValues[textDict["textStartID"]][startText] = "[" + str(startText) + "]"
+
         textValues[textDict["textStartFontSize"]][startText] = 15
+
         textValues[textDict["textStartContent"]][startText] = "'" + startTextContent[startText] + "'"
+
         textValues[textDict["textStartAngle"]][startText] = 0
 
     for ii in range(0, len(variablenamesTexts)):

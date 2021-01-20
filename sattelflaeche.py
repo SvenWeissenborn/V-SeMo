@@ -1,25 +1,38 @@
 import io
-import numpy as np
 import math
 
+#Eigenschaften des Ausgangsobjekts
+radius = 500
 
+#Eigenschaften des Sektormodells
 zeilenanzahl = 3
 spaltenanzahl = 3
-radius = 500
+
+#Abstaende der Sektoren zueinander
 sectorabstand_x = 100
 sectorabstand_y = 30
 
+#Schriftgroesse im Modell
 fontSize = 15
 
+#Parameter fuer die Startgeodaeten
 anzahlStartGeodesics = 2
-
 startGeodesicsSectors = [2, 2]
+startGeodesicsAngle = []
+startGeodesicsVersatz_x = []
+startGeodesicsVersatz_y = []
+startGeodesicsOperational = ['true', 'true']
 
+#Parameter fuer die Startmarkierungen
 startMarksSectors = []
 startMarkRadius = [3]
+mark_dist_from_mid_x = [0, 0, 0]
+mark_dist_from_mid_y = [0, 0, 0]
 
+#Parameter fuer die Starttexte
 startTextsSectors = []
 startTextContent = ['P1', 'P2']
+text_dist_from_mid_x = [0.5, -0.9]
 text_dist_from_mid_y = [0.5, -0.9]
 
 def main():
@@ -31,13 +44,8 @@ def main():
 
 
 
-
-
-    sector_y_dist = 0.0
-
-
-
     file = io.open("sattelflaeche.js",'w')
+
     file.write( "/*" +"\n"
                 "------Parameter-------" +"\n"
                 "zeilenanzahl: " + str(zeilenanzahl) +"\n"
@@ -75,7 +83,6 @@ def main():
     maxsectorheight = radius * math.pi/9
 
 
-    #sectorValues = np.zeros((len(variablenamesSectors),anzahlDerSektoren))
     sectorValues = [[[] for ii in range(anzahlDerSektoren)] for jj in range(len(variablenamesSectors))]
 
 
