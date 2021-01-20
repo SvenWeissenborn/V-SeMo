@@ -451,46 +451,8 @@ canvas.on('mouse:move', function (o) {
 
 let pausePanning = false;
 
-/*
-canvas.on({
-    'touch:gesture': function(e) {
-        if (pausePanning == false && e.e.touches && e.e.touches.length == 2) {
-            //pausePanning = true;
-            var point = new fabric.Point
-
-
-
-
-
-
-
-(e.self.x, e.self.y);
-            if (e.self.state == "start") {
-                zoomStartScale = canvas.getZoom();
-            }
-            var delta = zoomStartScale * e.self.scale;
-            canvas.zoomToPoint(point, delta);
-            pausePanning = false;
-        }
-        let zoom = canvas.getZoom();
-        for (let ii = geodesics.length - 1; ii >= 0; ii--) {
-            geodesics[ii][geodesics[ii].length -1 ].dragPoint.padding = dragPointPadding * 1 / zoom;
-
-            //IDEE: Größe des dragPoint in Abhängigkeit des Zooms setzen
-            //geodesics[ii][geodesics[ii].length-1].dragPoint.radius = 10 * 1/zoom;
-        }
-    },lambdas.push(1.0);
-    'object:selected': function() {
-        pausePanning = true;
-    },
-    'selection:cleared': function() {
-        pausePanning = false;
-    },
-});
-*/
-
 //var el = document.getElementById("canvas-wrap");
-var ham = new Hammer(canvas.upperCanvasEl, {
+let ham = new Hammer(canvas.upperCanvasEl, {
     domEvents: true
 });
 
@@ -529,6 +491,12 @@ ham.on('pinchstart', function (ev) {
         sectors[ii].trapez.lockRotation = true;
     }
 
+    geodreieck.selectable = false;
+    geodreieck.lockMovementX = true;
+    geodreieck.lockMovementY = true;
+    geodreieck.lockRotation = true;
+
+
 
 });
 
@@ -555,6 +523,11 @@ ham.on('pinchend', function (ev) {
         sectors[ii].trapez.lockMovementY = false;
         sectors[ii].trapez.lockRotation = false;
     }
+    geodreieck.selectable = true;
+    geodreieck.lockMovementX = false;
+    geodreieck.lockMovementY = false;
+    geodreieck.lockRotation = false;
+
     canvas.renderAll()
 });
 
@@ -2579,78 +2552,6 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 overlapControll(sectors[ii].trapez)
             }
         }
-
-
-        /*
-
-            //WICHTIG: Dieser Teil wird erst ausgelöst wenn die Maustaste losgelassen wird,
-            //da sonst die Snapkanten bereits beim ransnappen erscheinen
-
-            for (let ii = 0; ii < 4; ii++) {
-
-                if (this.parent.neighbourhood[ii] > -1) {
-
-                    let sec_idx = this.parent.neighbourhood[ii];
-
-                    if (this.parent.snapEdges[ii] !== 0) {
-
-                        let edgeToRemove = this.parent.snapEdges[ii];
-                        canvas.remove(edgeToRemove);
-                        this.parent.snapEdges[ii] = [0];
-                    }
-
-                    if (this.parent.snapStatus[ii] !== 0) {
-
-
-                        //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
-                        for (let jj = 0; jj < sectors[sec_idx].lineSegments.length; jj++) {
-                            if (sectors[sec_idx].lineSegments[jj].dragPoint !== undefined) {
-                                canvas.bringToFront(sectors[sec_idx].lineSegments[jj].dragPoint)
-                            }
-                        }
-
-                        transformMatrix = this.calcTransformMatrix();
-                        //point_1/2 gehören zum bewegten Trapez
-                        point_1_local = new fabric.Point(this.points[ii].x - this.width / 2,
-                            this.points[ii].y - this.height / 2);
-
-                        point_2_local = new fabric.Point(this.points[(ii + 1) % 4].x - this.width / 2,
-                            this.points[(ii + 1) % 4].y - this.height / 2);
-
-                        point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
-
-                        point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
-
-
-                        let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
-
-                        let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
-                            strokeWidth: 1,
-                            fill: edgeColor,
-                            stroke: edgeColor,
-                            originX: 'center',
-                            originY: 'center',
-                            perPixelTargetFind: true,
-                            objectCaching: false,
-                            hasBorders: false,
-                            hasControls: false,
-                            evented: false,
-                            selectable: false,
-                        });
-
-                        edge.ID = ii;
-
-                        canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
-
-                        //edge.bringToFront();
-                        this.parent.snapEdges[ii] = edge;
-                    }
-
-                }
-
-            }
-            */
-
 
 
 
@@ -5422,8 +5323,8 @@ function init() {
     for (let ii = 0; ii < sec_name.length; ii++) {
         let sec = new Sector();
         //sec.name = ii;
-        //sec.name = sec_name[ii];
-        sec.name = "";
+        sec.name = sec_name[ii];
+        //sec.name = "";
         sec.ID = sec_ID[ii];
         sec.sector_type = sec_type[ii];
         sec.fontSize = sec_fontSize[ii];
