@@ -10,13 +10,13 @@ sectorDistance_y: 30
 fontSize: 15
 startGeodesicsSectors: [2, 2]
 startMarksSectors: [2, 3, 8]
-startMarkRadius: [5, 5, 5]
-startMarksSectors: [2, 3, 8]
-startMarkRadius: [5, 5, 5]
+startMarksRadius: [5, 5, 5]
+startMarksOffset_x: [0.5, 0.5, 0.5]
+startMarksOffset_y: [0.5, 0.5, 0.5]
 startTextsSectors: [2, 3, 8]
 startTextContent: ['M1', 'M2', 'M3']
-textDistFromMid_x: [0.5]
-textDistFromMid_y: [0.5]
+startTextsOffset_x: [0.4, 0.4, 0.6]
+startTextsOffset_y: [0.4, 0.6, 0.4]
 ----------------------
 */
 
@@ -41,16 +41,16 @@ sec_posx= [ -201.88137789230134, -201.88137789230134, -201.88137789230134, 0.0, 
 sec_posy= [ -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 startSectors= [ 2, 2, ];
-x_Start= [ -271.57131280076584, -219.30386161941746, ];
+x_Start= [ -270.6339290492219, -219.06951568153147, ];
 y_Start= [ 223.75973963385795, 276.0271908152063, ];
-x_End= [ -200.86063468211108, -148.5931835007627, ];
+x_End= [ -199.92325093056712, -148.35883756287672, ];
 y_End= [ 153.04906151520322, 205.31651269655157, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [2,0], [2,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ -201.88137789230134, 0.0, 201.88137789230134, ];
+markStart_x= [ -201.88137789230137, 0.0, 201.88137789230134, ];
 markStart_y= [ 206.33725590674183, -202.1124186355806, 206.33725590674183, ];
 markStartStrokeWidth= [ 2, 2, 2, ];
 markStartRadius= [ 5, 5, 5, ];
@@ -58,7 +58,7 @@ markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
 markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
 markStartParentSector= [ [2,0], [3,0], [8,0], ];
 markStartID= [ [0,1], [1,1], [2,1], ];
-textStart_x= [ -219.30386161941746, -17.422483727116116, 219.30386161941746, ];
+textStart_x= [ -219.06951568153147, -17.188137789230126, 219.06951568153147, ];
 textStart_y= [ 223.75973963385795, -219.53490236269673, 223.75973963385795, ];
 textStartContent= [ 'M1', 'M2', 'M3', ];
 textStartFontSize= [ 15, 15, 15, ];

@@ -61,7 +61,7 @@ def main():
     dtheta = (math.pi/nSectorRowsFromSphere)
     dphi = (2*math.pi/nSectorColumnsFromSphere)
 
-    maxSecBreite = radius * dphi * math.sin(dtheta * math.floor(nSectorRowsFromSphere/2))
+    maxSectorWidth = radius * dphi * math.sin(dtheta * math.floor(nSectorRowsFromSphere/2))
 
     if (nRowsInModel > nSectorRowsFromSphere):
         print("Achtung nRowsInModel ist größer als nSectorRowsFromSphere")
@@ -93,13 +93,13 @@ def main():
                 "fontSize: " + str(fontSize) + "\n"
                 "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
                 "startMarksSectors: " + str(startMarksSectors) + "\n"
-                "startMarkRadius: " + str(startMarkRadius) + "\n"                                                         
-                "startMarksSectors: " + str(startMarksSectors) + "\n"
-                "startMarkRadius: " + str(startMarkRadius) + "\n"
+                "startMarksRadius: " + str(startMarksRadius) + "\n"
+                "startMarksOffset_x: " + str(startMarksOffset_x) + "\n"
+                "startMarksOffset_y: " + str(startMarksOffset_y) + "\n"                                               
                 "startTextsSectors: " + str(startTextsSectors) + "\n"
                 "startTextContent: " + str(startTextContent) + "\n"
-                "textDistFromMid_x: " + str(textDistFromMid_x) + "\n"
-                "textDistFromMid_y: " + str(textDistFromMid_y) + "\n"
+                "startTextsOffset_x: " + str(startTextsOffset_x) + "\n"
+                "startTextsOffset_y: " + str(startTextsOffset_y) + "\n"
                 "----------------------"
                 + "\n"
                   "*/"
@@ -116,9 +116,8 @@ def main():
 
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
+
     anzahlDerSektoren = nRowsInModel * nColumnsInModel
-
-
 
     #sectorValues = np.zeros((len(variablenamesSectors),anzahlDerSektoren))
     sectorValues = [[[] for ii in range(anzahlDerSektoren)] for jj in range(len(variablenamesSectors))]
@@ -164,7 +163,7 @@ def main():
                                                                                           max(0, offset),
                                                                                           sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
 
-            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - nColumnsInModel * 0.5 + 0.5) * (sectorDistance_x + maxSecBreite) + (maxSecBreite - sector_width) / 2
+            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - nColumnsInModel * 0.5 + 0.5) * (sectorDistance_x + maxSectorWidth) + (maxSectorWidth - sector_width) / 2
 
             sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = (zeile - (nRowsInModel + 0.5)) * sector_y_dist - 100
 
@@ -190,18 +189,13 @@ def main():
             else:
                 sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) - nRowsInModel
 
-
-
         jj = jj + 1
-
 
     for ii in range(0,len(variablenamesSectors)):
         file.write(variablenamesSectors[ii]+"= [ ")
         for jj in range(0,anzahlDerSektoren):
             file.write(str( sectorValues[ii][jj])+', ')
         file.write("];\n")
-
-
 
     variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke", "startParentSector", "startLineID"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
@@ -213,7 +207,7 @@ def main():
 
         sector_angle = sectorValues[sectorDict["sec_angle"]][startGeodesicsSectors[startGeodesic]]
 
-        sector_width = sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
+        sector_width = sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]
 
         sector_height = sectorValues[sectorDict["sec_height"]][startGeodesicsSectors[startGeodesic]]
 
@@ -251,6 +245,7 @@ def main():
 
         geodesicValues[geodesicDict["startStroke"]][startGeodesic] = "line_colors["+str(startGeodesic)+"]"
 
+
     for ii in range(0, len(variablenamesGeodesics)):
         file.write(variablenamesGeodesics[ii] + "= [ ")
         for jj in range(0, len(startGeodesicsSectors)):
@@ -267,7 +262,7 @@ def main():
 
         sector_angle = sectorValues[sectorDict["sec_angle"]][startMarksSectors[startMark]]
 
-        sector_width = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
+        sector_width = sectorValues[sectorDict["sec_width"]][startMarksSectors[startMark]]
 
         sector_height = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
 
@@ -322,7 +317,7 @@ def main():
 
         sector_angle = sectorValues[sectorDict["sec_angle"]][startTextsSectors[startText]]
 
-        sector_width = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
+        sector_width = sectorValues[sectorDict["sec_width"]][startTextsSectors[startText]]
 
         sector_height = sectorValues[sectorDict["sec_height"]][startTextsSectors[startText]]
 
