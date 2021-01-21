@@ -16,6 +16,11 @@ nColumnsInModel = 3
 sectorDistance_x = 30
 sectorDistance_y = 30
 
+#Kameraeinstellungen
+startZoom = 1.0
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
+
 #Schriftgroesse im Modell
 fontSize = 15
 
@@ -90,6 +95,9 @@ def main():
                 "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
                 "sectorDistance_x: " + str(sectorDistance_x) + "\n"
                 "sectorDistance_y: " + str(sectorDistance_y) + "\n"
+                "startZoom =" + str(startZoom) + "\n"
+                "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+                "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
                 "fontSize: " + str(fontSize) + "\n"
                 "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
                 "startMarksSectors: " + str(startMarksSectors) + "\n"
@@ -107,6 +115,14 @@ def main():
 
     file.write("\n")
     file.write("\n")
+
+    file.write(
+        "startZoom =" + str(startZoom) + "\n"
+        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
+    )
+    file.write("\n")
+
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")

@@ -1,7 +1,6 @@
 import io
-import numpy as np
 import math
-import string
+
 
 nSektorzeilenVonRing = 11
 nSektorspaltenVonRing = 12
@@ -11,6 +10,11 @@ dradius = (0.4) * schwarzschildradius
 
 fontSizeStern = 8
 fontSizeAussenraum = 15
+
+#Kameraeinstellungen
+startZoom = 1.0
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
 
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = []
@@ -66,6 +70,9 @@ def main():
             "nSektorspaltenVonRing: " + str(nSektorspaltenVonRing) +"\n"
             "schwarzschildradius: " + str(schwarzschildradius) +"\n"
             "dradius: " + str(dradius) + "\n"
+            "startZoom =" + str(startZoom) + "\n"
+            "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+            "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
             "fontSizeStern: " + str(fontSizeStern) + "\n"    
             "fontSizeStern: " + str(fontSizeAussenraum) + "\n" 
             "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
@@ -84,6 +91,14 @@ def main():
 
     file.write("\n")
     file.write("\n")
+
+    file.write(
+        "startZoom =" + str(startZoom) + "\n"
+        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
+    )
+    file.write("\n")
+
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")

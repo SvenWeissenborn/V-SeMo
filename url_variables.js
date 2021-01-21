@@ -37,6 +37,8 @@ let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 let setPositionAndAngleRandomly = getUrlVars()["setPositionAndAngleRandomly"];
 //turnLorentzTransformOn=1& um lorentzTransform einzuschalten
 let turnLorentzTransformOn = getUrlVars()["turnLorentzTransformOn"];
+//goThroughStar=1& um lorentzTransform einzuschalten
+let goThroughStar = getUrlVars()["goThroughStar"];
 
 //autoSetOnDraw=1& um das automatische Zusammensetzen der Sektoren beim Zeichnen einer Linie zu aktivieren
 //noch zu entwickeln

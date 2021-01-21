@@ -12,6 +12,11 @@ nColumnsInModel = 3
 sectorDistance_x = 100
 sectorDistance_y = 30
 
+#Kameraeinstellungen
+startZoom = 1.5
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
+
 #Schriftgroesse im Modell
 fontSize = 15
 
@@ -62,6 +67,13 @@ def main():
 
     file = io.open("sattelflaeche.js",'w')
 
+    file.write(
+        "startZoom =" + str(startZoom) + "\n"
+        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
+    )
+    file.write("\n")
+
     file.write( "/*" +"\n"
 "------Parameter-------" + "\n"
                 "radius: " + str(radius) + "\n"
@@ -69,6 +81,9 @@ def main():
                 "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
                 "sectorDistance_x: " + str(sectorDistance_x) + "\n"
                 "sectorDistance_y: " + str(sectorDistance_y) + "\n"
+                "startZoom =" + str(startZoom) + "\n"
+                "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+                "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
                 "fontSize: " + str(fontSize) + "\n"
                 "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
                 "startMarksSectors: " + str(startMarksSectors) + "\n"

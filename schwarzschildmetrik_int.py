@@ -12,6 +12,11 @@ schwarzschildradius = 60
 dr = 1.25
 dradius = dr * schwarzschildradius
 
+#Kameraeinstellungen
+startZoom = 1.0
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
+
 fontSize = 15
 
 # Parameter fuer die Startgeodaeten
@@ -64,6 +69,13 @@ def main():
     #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
 
+    file.write(
+        "startZoom =" + str(startZoom) + "\n"
+        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
+    )
+    file.write("\n")
+
     file.write( "/*" +"\n"
                 "------Parameter-------" +"\n"
                 "nSektorzeilenVonRing: " + str(nSektorzeilenVonRing) +"\n"
@@ -72,6 +84,9 @@ def main():
                 "nSektorzeilenVonRingEuklid: " + str(nSektorzeilenVonRingEuklid) +"\n"
                 "schwarzschildradius: " + str(schwarzschildradius) +"\n"
                 "dradius: " + str(dr) + " * " +str(schwarzschildradius) + "\n"
+                "startZoom =" + str(startZoom) + "\n"
+                "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+                "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
                 "fontSize: " + str(fontSize) + "\n"                                                        
                 "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
                 "startMarksSectors: " + str(startMarksSectors) + "\n"

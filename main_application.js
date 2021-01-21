@@ -1821,11 +1821,15 @@ function continueGeodesic(geodesicToContinue) {
 
             for (lauf = 0; lauf < 100; lauf++) {
 
-                if (neighbourSector === -1  || sectors[neighbourSector].fill === '#e2e2e2') {
-
+                if (neighbourSector === -1) {
                     drawDragPoint(geodesicToContinue);
-
-                    break;
+                    break
+                }
+                if (goThroughStar !== "1"){
+                    if (sectors[neighbourSector].fill === '#e2e2e2') {
+                        drawDragPoint(geodesicToContinue);
+                        break
+                    }
                 }
 
                 console.log('nachbar im Lauf:', neighbourSector)
@@ -2156,6 +2160,8 @@ function fitResponsiveCanvas() {
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
     canvas_side_tools_right.setZoom(scaleRatio);
+
+    setZoomPan()
 
     if (!document.fullscreenElement) {
         if (fullscreen == undefined || exitFullscreen == undefined){
@@ -3511,7 +3517,8 @@ function resetSectors() {
         removeSnapEdges(sectors[rr].ID);
 
         if (turnLorentzTransformOn == "1"){
-            if (sectors[rr].trapez.left != sec_posx[rr] || sectors[rr].trapez.top != sec_posy[rr] || sectors[rr].rapidity != 0) {
+            if (Math.abs(sectors[rr].trapez.left - sec_posx[rr] + window.innerWidth/2) < epsilon || Math.abs(sectors[rr].trapez.top - sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2) < epsilon|| sectors[rr].rapidity !== 0) {
+                console.log(rr)
                 let lastLeft = sectors[rr].trapez.left;
                 let lastTop = sectors[rr].trapez.top;
 
@@ -3579,10 +3586,10 @@ function resetSectors() {
     canvas.renderAll();
 }
 
-function resetZoomPan(){
-    canvas.setZoom( scaleRatio);
-    canvas.viewportTransform[4]= 0;
-    canvas.viewportTransform[5]= 0;
+function setZoomPan(){
+    canvas.setZoom( startZoom);
+    canvas.viewportTransform[4]= startViewportTransform_4;
+    canvas.viewportTransform[5]= startViewportTransform_5;
 }
 
 //reset Zoom and Pan
@@ -3864,9 +3871,9 @@ function setSectorsToCenter(){
 function Sector() {
     this.trapez; //Anlegen der Variablen trapez, undefiniert, um mehr als eines anlegen zu können
 
-    this.sector_top ;
-    this.sector_bottom;
-    this.offset_x;
+    //this.sector_top ;
+    //this.sector_bottom;
+    //this.offset_x;
     this.pos_x;
     this.pos_y;
     this.sector_height;
@@ -4038,15 +4045,21 @@ function setSectors(chosenGeodesicToSetSectors) {
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
 
-
+            console.log('----------------------------------')
 
                 //Fortsetzung im nächsten Sektor
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
-                    if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
-
+                    if (neighbourSector === -1) {
+                        drawDragPoint(chosenGeodesicToSetSectors);
                         break
+                    }
+                    if (goThroughStar !== "1"){
+                        if (sectors[neighbourSector].fill === '#e2e2e2') {
+                            drawDragPoint(chosenGeodesicToSetSectors);
+                            break
+                        }
                     }
 
                     removeSnapEdges(staticSector)
@@ -4102,11 +4115,12 @@ function setSectors(chosenGeodesicToSetSectors) {
                         console.log('rapid_sum:', rapid_sum)
 
                         sectors[neighbourSector].rapidity += rapid_sum;
+                        console.log(sectors[neighbourSector].rapidity)
 
                         let dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
                         let dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
 
-                        lorentzTransform(rapid_sum, sectors[neighbourSector].trapez)
+                        lorentzTransform(sectors[neighbourSector].rapidity, sectors[neighbourSector].trapez)
 
                         reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, neighbourSector)
 
@@ -5320,8 +5334,8 @@ function updateMinions(boss) {
 function init() {
     for (let ii = 0; ii < sec_name.length; ii++) {
         let sec = new Sector();
-        //sec.name = ii;
-        sec.name = sec_name[ii];
+        sec.name = ii;
+        //sec.name = sec_name[ii];
         //sec.name = "";
         sec.ID = sec_ID[ii];
         sec.sector_type = sec_type[ii];
@@ -5331,10 +5345,10 @@ function init() {
         sec.sector_height = sec_height[ii];
         sec.sector_width = sec_width[ii];
         if (turnLorentzTransformOn !== "1") {
-            sec.sector_bottom = sec_bottom[ii];
-            sec.sector_top = sec_top[ii];
+            //sec.sector_bottom = sec_bottom[ii];
+            //sec.sector_top = sec_top[ii];
             sec.sector_angle = sec_angle[ii];
-            sec.offset_x = sec_offset[ii];
+            //sec.offset_x = sec_offset[ii];
         } else {
             sec.sector_angle = 0
             sec.sec_diff_edges = Math.max(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]) - Math.min(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]);

@@ -2,39 +2,43 @@ import io
 import math
 
 
-zeilenanzahl = 8
-spaltenanzahl = 2
+zeilenanzahl = 40
+spaltenanzahl = 8
+
+anzahlSektorenDesSterns = 6
 
 radius = 120
-delta_r = 1.25
-delta_t = 1.25
-sectorabstand_x = 0
-sectorabstand_y = 30
+delta_r = (2/3)
+delta_t = 1
+sectorabstand_x = 20
+sectorabstand_y = 20
 
 fontSize = 15
 
-start_x = 150
-start_y = 150
+start_x = 300
+start_y = 100
 
-#Kameraeinstellungen
-startZoom = 1.5
-startViewportTransform_4 = 0
-startViewportTransform_5 = 0
+startZoom = 0.65
+startViewportTransform_4 = -100
+startViewportTransform_5 = -2200
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
-#startGeodesicsVersatz_x: Versatz entlang der Raumachse (wenn startGeodesicsVersatz_y = 0)
-#startGeodesicsVersatz_y: Versatz entlang der Zeitachse (wenn startGeodesicsVersatz_x = 0)
+#startGeodesicsVersatz_x: Versatz in % entlang der Raumachse (wenn startGeodesicsVersatz_y = 0)
+#startGeodesicsVersatz_y: Versatz in px entlang der Zeitachse (wenn startGeodesicsVersatz_x = 0)
 
-startGeodesicsSectors = [7, 7]
+startGeodesicsAngle = [180]
 
-startGeodesicsAngle = [135, 135]
+#WICHTIG, wenn in einem Sektor mehrere Geodäten starten sollen, so müssen sie in startGeodesicsSectors direkt auf einander folgen
 
-startGeodesicsVersatz_x = [0, 0]
+startGeodesicsSectors = [  7 * zeilenanzahl -1]
 
-startGeodesicsVersatz_y = [10, 40]
 
-startGeodesicsOperational = ['true', 'true']
+startGeodesicsVersatz_x = [0.2]
+
+startGeodesicsVersatz_y = [0]
+
+startGeodesicsOperational = ['true']
 
 def main():
 
@@ -42,7 +46,7 @@ def main():
 
 
 
-    file = io.open("schwarzschild_rz.js",'w')
+    file = io.open("neutronenstern_schwarzschild_mix_sym_roehre.js",'w')
 
     file.write(
         "startZoom =" + str(startZoom) + "\n"
@@ -52,7 +56,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+        "line_colors = [ 'orange', 'blue', 'black', 'green', 'black', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]
@@ -72,8 +76,8 @@ def main():
     for zeile in range(0, zeilenanzahl):
 
         for ii in range(0, spaltenanzahl):
-            print("zeile", zeile)
-            print("Sektor", zeile + ii * zeilenanzahl)
+            #print("zeile", zeile)
+            #print("Sektor", zeile + ii * zeilenanzahl)
 
             #Für die x-Position des Sektors wird die Sektorhöhe des alten Sektors verwendet.
             #Für die y-Position des Sektors wird die Hälfte der Differenz der zeitartigen Sektorkanten benötigt.
@@ -86,13 +90,36 @@ def main():
 
             sectorValues[sectorDict["sec_angle"]][zeile + ii * zeilenanzahl] = 0
 
-            timeEdgeLeft = math.sqrt(1 - (1 / ((ii + 1) * delta_r))) * delta_t * radius
+            if(ii < (spaltenanzahl/2 - anzahlSektorenDesSterns/2)):
 
-            timeEdgeRight = math.sqrt(1 - (1 / ((ii + 2) * delta_r))) * delta_t * radius
+                timeEdgeLeft = math.sqrt(1 - (1 / (abs(ii - (spaltenanzahl / 2)) * delta_r))) * delta_t * radius
+                #print(1 - (1 / ((ii - (spaltenanzahl / 2)) * delta_r)))
 
-            spaceEdge =  math.sqrt(1 / ( 1 - (1 / (((( ii + 1 ) + ( ii + 2 )) / 2) * delta_r)))) * delta_r * radius
+                timeEdgeRight = math.sqrt(1 - (1 / (abs(ii - (spaltenanzahl / 2) + 1) * delta_r))) * delta_t * radius
 
-            sectorValues[sectorDict["sec_fill"]][zeile + ii * zeilenanzahl] = "'white'"
+                spaceEdge = math.sqrt(1 / (1 - (1 / (abs(ii - (spaltenanzahl / 2) + 0.5) * delta_r)))) * delta_r * radius
+
+                sectorValues[sectorDict["sec_fill"]][zeile + ii * zeilenanzahl] = "'white'"
+            else:
+                if (ii < (spaltenanzahl / 2 + anzahlSektorenDesSterns / 2)):
+                    timeEdgeLeft = 0.5 * ( (3 / math.sqrt(2)) - math.sqrt(1 - (1 / 8) * math.pow(delta_r * abs(ii - (spaltenanzahl / 2)), 2)) ) * delta_t * radius
+
+                    timeEdgeRight = 0.5 * ( (3 / math.sqrt(2)) - math.sqrt(1 - (1 / 8) * math.pow(delta_r * abs(ii - (spaltenanzahl / 2) + 1), 2)) ) * delta_t * radius
+
+                    spaceEdge =  math.sqrt(1 / ( 1 - (1 / 8) * math.pow(delta_r * abs(ii - (spaltenanzahl / 2) + 0.5),2))) * delta_r * radius
+
+                    sectorValues[sectorDict["sec_fill"]][zeile + ii * zeilenanzahl] = "'#e2e2e2'"
+
+                else:
+                    timeEdgeLeft = math.sqrt(1 - (1 / (abs(ii - (spaltenanzahl / 2)) * delta_r))) * delta_t * radius
+
+                    timeEdgeRight = math.sqrt(1 - (1 / (abs(ii - (spaltenanzahl / 2) + 1) * delta_r))) * delta_t * radius
+
+                    spaceEdge = math.sqrt(1 / (1 - (1 / (abs(ii - (spaltenanzahl / 2) + 0.5) * delta_r)))) * delta_r * radius
+
+                    sectorValues[sectorDict["sec_fill"]][zeile + ii * zeilenanzahl] = "'white'"
+
+
 
             offset_y = (timeEdgeRight - timeEdgeLeft) / 2
 
@@ -103,6 +130,7 @@ def main():
             sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + ii * zeilenanzahl] = timeEdgeLeft
             sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + ii * zeilenanzahl] = timeEdgeRight
             sectorValues[sectorDict["spaceEdge"]][zeile + ii * zeilenanzahl] = spaceEdge
+
 
             sectorValues[sectorDict["sec_coords"]][zeile + ii * zeilenanzahl] = ([0,
                                                                                - timeEdgeLeft,
@@ -137,15 +165,30 @@ def main():
             print("nachbar_links", sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * zeilenanzahl])
 
             if (zeile == 0):
-                if (ii == 0):
+                if ((ii - spaltenanzahl/2) == -(spaltenanzahl/2)):
                     sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = start_y
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] + offset_y
+                    if ((ii - spaltenanzahl/2) < 0):
+                        sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] - ((sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + (ii -1) * zeilenanzahl] - sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + (ii -1) * zeilenanzahl]) / 2)
+                    else:
+                        if (ii - spaltenanzahl/2) == 0:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl]
+                        else:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] + offset_y
             else:
                 if (ii == 0):
                     sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = start_y + zeile * (timeEdgeRight + sectorabstand_y)
+
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] + offset_y
+                    if ((ii - spaltenanzahl / 2) < 0):
+                        sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] - ((sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + (ii - 1) * zeilenanzahl] - sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + (ii - 1) * zeilenanzahl]) / 2)
+                    else:
+                        if (ii - spaltenanzahl/2) == 0:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl]
+                        else:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * zeilenanzahl] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * zeilenanzahl] + offset_y
+
+
 
 
     for ii in range(0,len(variablenamesSectors)):
@@ -159,12 +202,11 @@ def main():
     variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke","startParentSector", "startLineID", "startGeodesicOperational"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
 
-    geodesicValues = [[[] for ii in range(len(startGeodesicsSectors))] for jj in range(len(variablenamesGeodesics))]
+    geodesicValues = [[[] for ii in range(len(startGeodesicsAngle))] for jj in range(len(variablenamesGeodesics))]
 
-    for startGeodesic in range(0, len(startGeodesicsSectors)):
+    for startGeodesic in range(0, len(startGeodesicsAngle)):
         print(startGeodesic)
         geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
-
         offset_y = (sectorValues[sectorDict["sec_timeEdgeLeft"]][startGeodesicsSectors[startGeodesic]] - sectorValues[sectorDict["sec_timeEdgeRight"]][startGeodesicsSectors[startGeodesic]]) / 2
 
         geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + startGeodesicsVersatz_x[startGeodesic] * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]

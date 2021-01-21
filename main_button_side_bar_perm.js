@@ -1590,7 +1590,7 @@ fabric.Image.fromURL('zoomReset.png', function(img) {
 
     zoomReset.on('mouseup', function (o) {
         zoomReset.set('shadow', new fabric.Shadow(shadowOff));
-        resetZoomPan();
+        setZoomPan();
         canvas_side_tools_right.renderAll()
     });
 
