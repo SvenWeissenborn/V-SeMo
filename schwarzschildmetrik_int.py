@@ -22,10 +22,10 @@ fontSize = 15
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [29, 29]
 # Winkel in Grad
-startGeodesicsAngle = [-120, -120]
+startGeodesicsAngle = [-120, -74]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.4, 0.72]
+startGeodesicsOffset_x = [0.5, 0.5]
 # Versatz Anteilig der Sektorhoehe
 startGeodesicsOffset_y = [0.7, 0.7]
 # Laenge der Geodaete in Pixel
@@ -65,7 +65,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_parallel.js",'w')
+    file = io.open("schwarzschildmetrik_zwei_signale.js",'w')
     #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
 
