@@ -4505,7 +4505,7 @@ function isItTimeToSnap(trapez) {
 
             //---Falls die Textur eingeschaltet ist, wird Snapping direkt ausgeführt werden
             //---Es erfolgt keine Auswahl des Snappingpartners
-            if (textured == "1"){startGeodesic
+            if (textured == "1"){
                 if(distanceMidPoints <= trapez.aussenkreisradius + sectors[potentialSnappingPartnerID].trapez.aussenkreisradius) {
 
                     dist_1a = distance(point_1, point_a);
@@ -5334,8 +5334,8 @@ function updateMinions(boss) {
 function init() {
     for (let ii = 0; ii < sec_name.length; ii++) {
         let sec = new Sector();
-        sec.name = ii;
-        //sec.name = sec_name[ii];
+        //sec.name = ii;
+        sec.name = sec_name[ii];
         //sec.name = "";
         sec.ID = sec_ID[ii];
         sec.sector_type = sec_type[ii];
