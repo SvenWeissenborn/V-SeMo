@@ -105,7 +105,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey'];")
+        "let mark_colors = ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
@@ -120,7 +120,10 @@ def main():
 
 
     for id in range(0, anzahlDerSektoren):
-        sectorValues[sectorDict["sec_name"]][id] = id + 1
+        if (id == 5 or id == 8 ):
+            sectorValues[sectorDict["sec_name"]][id] = "'" + str(id + 1)+"." "'"
+        else:
+            sectorValues[sectorDict["sec_name"]][id] = id + 1
         sectorValues[sectorDict["sec_ID"]][id] = id
         sectorValues[sectorDict["sec_fill"]][id] = "'white'"
         sectorValues[sectorDict["sec_fontSize"]][id] = fontSize
