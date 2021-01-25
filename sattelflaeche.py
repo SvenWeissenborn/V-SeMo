@@ -23,14 +23,14 @@ fontSize = 15
 #Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [2, 2]
 #Winkel in Grad
-startGeodesicsAngle = [45, 45]
+startGeodesicsAngle = [39, 39]
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.1, 0.4]
+startGeodesicsOffset_x = [0.145, 0.42]
 #Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.4, 0.1]
+startGeodesicsOffset_y = [0.56, 0.06]
 #Laenge der Geodaete in Pixel
-startGeodesicsLength = [100, 100]
+startGeodesicsLength = [70, 70]
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = ['true', 'true']
 

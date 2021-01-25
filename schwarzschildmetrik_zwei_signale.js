@@ -15,14 +15,14 @@ startViewportTransform_4 =0
 startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: [29, 29]
-startMarksSectors: [2, 3, 8]
-startMarksRadius: [5, 5, 5]
-startMarksOffset_x: [0.5, 0.5, 0.5]
-startMarksOffset_y: [0.5, 0.5, 0.5]
-startTextsSectors: [2, 3, 8]
-startTextContent: ['M1', 'M2', 'M3']
-startTextsOffset_x: [0.4, 0.4, 0.6]
-startTextsOffset_y: [0.4, 0.6, 0.4]
+startMarksSectors: []
+startMarksRadius: []
+startMarksOffset_x: []
+startMarksOffset_y: []
+startTextsSectors: []
+startTextContent: []
+startTextsOffset_x: []
+startTextsOffset_y: []
 ----------------------
 */
 
@@ -49,25 +49,25 @@ sec_angle= [ 0.0, 0.0, 0.0, 29.999999999999996, 29.999999999999996, 29.999999999
 startSectors= [ 29, 29, ];
 x_Start= [ -426.46984365853945, -426.46984365853945, ];
 y_Start= [ 1.3518465820620339e-13, 1.3518465820620339e-13, ];
-x_End= [ -383.1685734693175, -378.40675886162353, ];
-y_End= [ 25.000000000000128, -13.781867790849832, ];
+x_End= [ -379.485212619244, -383.1685734693175, ];
+y_End= [ -17.101007166283342, 25.000000000000128, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [29,0], [29,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ 0.0, 81.00007962336856, 354.92075591382684, ];
-markStart_y= [ -409.82718793566676, -140.29625332479893, -204.91359396783346, ];
-markStartStrokeWidth= [ 2, 2, 2, ];
-markStartRadius= [ 5, 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartParentSector= [ [2,0], [3,0], [8,0], ];
-markStartID= [ [0,1], [1,1], [2,1], ];
-textStart_x= [ -15.707963267948962, 79.89834793216396, 355.5682562265783, ];
-textStart_y= [ -401.50586007423044, -154.0959613272727, -187.14943480535868, ];
-textStartContent= [ 'M1', 'M2', 'M3', ];
-textStartFontSize= [ 15, 15, 15, ];
-textStartParentSector= [ [2,0], [3,1], [8,0], ];
-textStartID= [ [0], [1], [2], ];
-textStartAngle= [ 0, 0, 0, ];
+markStart_x= [ ];
+markStart_y= [ ];
+markStartStrokeWidth= [ ];
+markStartRadius= [ ];
+markStartFill= [ ];
+markStartStroke= [ ];
+markStartParentSector= [ ];
+markStartID= [ ];
+textStart_x= [ ];
+textStart_y= [ ];
+textStartContent= [ ];
+textStartFontSize= [ ];
+textStartParentSector= [ ];
+textStartID= [ ];
+textStartAngle= [ ];

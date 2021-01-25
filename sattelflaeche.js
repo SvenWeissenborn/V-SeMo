@@ -1,3 +1,7 @@
+startZoom =1.5
+startViewportTransform_4 =0
+startViewportTransform_5 =0
+
 /*
 ------Parameter-------
 radius: 500
@@ -5,6 +9,9 @@ nRowsInModel: 3
 nColumnsInModel: 3
 sectorDistance_x: 100
 sectorDistance_y: 30
+startZoom =1.5
+startViewportTransform_4 =0
+startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: [2, 2]
 startMarksSectors: [2, 3, 8]
@@ -39,10 +46,10 @@ sec_posx= [ -229.00912960195936, -229.00912960195936, -229.00912960195936, 0.0, 
 sec_posy= [ -204.53292519943295, 0.0, 204.53292519943295, -204.53292519943295, 0.0, 204.53292519943295, -204.53292519943295, 0.0, 204.53292519943295, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 startSectors= [ 2, 2, ];
-x_Start= [ -299.8883170140595, -246.7289264549844, ];
-y_Start= [ 221.95211297953534, 274.2096763198425, ];
-x_End= [ -229.17763889540475, -176.01824833632963, ];
-y_End= [ 151.2414348608806, 203.49899820118776, ];
+x_Start= [ -291.91440843019825, -243.18496708437937, ];
+y_Start= [ 194.08141253137148, 281.1773514318835, ];
+x_End= [ -237.51419112821029, -188.7847497823914, ];
+y_End= [ 150.02898515788286, 237.12492405839487, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
