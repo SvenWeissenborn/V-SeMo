@@ -2227,7 +2227,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         lockRotationToSet = false;
     }
 
-    if (textured == "0" ){sectorEdgeColor = 'black'} else{sectorEdgeColor = '#666'}
+    if (textured == "0" ){sectorEdgeColor = '#666'} else{sectorEdgeColor = '#666'}
 
     this.trapez = new fabric.Polygon //Anlegen des Polygons (noch nicht geaddet), unter 'trapez' abgespeichert
     (
