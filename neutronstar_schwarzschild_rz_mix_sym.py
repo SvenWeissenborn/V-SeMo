@@ -3,7 +3,7 @@ import math
 
 
 nRowsInModel = 40
-nColumnsInModel = 8
+nColumnsInModel = 24
 
 nColumnsOfStar = 6
 
@@ -19,30 +19,30 @@ start_x = 300
 start_y = 100
 
 startZoom = 0.65
-startViewportTransform_4 = -300
-startViewportTransform_5 = -2100
+startViewportTransform_4 = -1300
+startViewportTransform_5 = -2800
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
 #startGeodesicsOffset_x: Versatz in % entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz in px entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsAngle = [180]
+startGeodesicsAngle = [180, 180, 135, 135]
 
 #WICHTIG, wenn in einem Sektor mehrere Geodäten starten sollen, so müssen sie in startGeodesicsSectors direkt auf einander folgen
 
-startGeodesicsSectors = [8 * nRowsInModel -1]
+startGeodesicsSectors = [639, 959, 639, 639]
 
 
-startGeodesicsOffset_x = [0.8]
+startGeodesicsOffset_x = [0.05, 0.9, 0.05, 0.05]
 
-startGeodesicsOffset_y = [0]
+startGeodesicsOffset_y = [0, 0, 30, 57]
 
-startGeodesicsOperational = ['true']
+startGeodesicsOperational = ['false', 'false', 'true', 'true']
 
 def main():
 
-    file = io.open("neutronenstern_schwarzschild_mix_sym_roehre.js",'w')
+    file = io.open("neutronstar_schwarzschild_rz_mix_sym_lander.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -77,7 +77,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "line_colors = [ 'black', 'blue', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
+        "line_colors = [ 'grey', 'black', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]

@@ -545,11 +545,13 @@ canvas.on('mouse:wheel', function(opt) {
     opt.e.preventDefault();
     opt.e.stopPropagation();
 
+    /*
     for (let ii = geodesics.length - 1; ii >= 0; ii--) {
         if(geodesics[ii][geodesics[ii].length-1] !== undefined) {
             geodesics[ii][geodesics[ii].length - 1].dragPoint.padding = dragPointPadding * 1 / zoom;
         }
     }
+    */
 });
 
 canvas.on('mouse:down', function(opt) {
@@ -1054,14 +1056,20 @@ fabric.Image.fromURL(instructional_overlay_language, function(img) {
 //-----------------Geodreieck--------------------------------
 let geodreieckIsClicked = false;
 let geodreieck;
-let geodreieckScale = 0.12;
 
+
+let geodreieckStartAngle;
 let geodreieckSnapAngle;
+let geodreieckScale;
 
 if (turnLorentzTransformOn == "1"){
     geodreieckSnapAngle = 15
+    geodreieckStartAngle = 90
+    geodreieckScale = 0.0585
 }else{
     geodreieckSnapAngle = 0.1
+    geodreieckStartAngle = 0
+    geodreieckScale = 0.12
 }
 
 fabric.Image.fromURL('geodreieck.png', function(img) {
@@ -1075,7 +1083,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
         hasControls: true,
         transparentCorners: true,
         cornerSize: 40,
-        angle: 0,
+        angle: geodreieckStartAngle,
         evented: true,
         selectable: true,
         centeredRotation: false,
@@ -2040,7 +2048,7 @@ function drawDragPoint(geodesicToGivePoint) {
         fill: lineSegment.fill,
         perPixelTargetFind: false,
         hasBorders: false,
-        padding: 10,
+        padding: 5,
         objectCaching: false,
         selectable: false,
         lockMovementX: true,

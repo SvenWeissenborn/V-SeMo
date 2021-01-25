@@ -258,12 +258,12 @@ let shadowOff = {
 }
 
 let back_language;
-if(language == "german"){
+if(language !== "english"){
     back_language = 'german.html'
-}
-if(language == "english"){
+}else{
     back_language = 'english.html'
 }
+
 
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
