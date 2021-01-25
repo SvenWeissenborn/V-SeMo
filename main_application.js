@@ -1142,7 +1142,11 @@ let edgeColor
 //let edgeColor = '#FFFFFF';
 
 if (textured == "1"){
-    edgeColor = '#ccc';
+    if (textureColored == "1"){
+        edgeColor = '';
+    }else {
+        edgeColor = '#ccc';
+    }
 }else{
     edgeColor = '#FFFFFF';
 }
@@ -5433,8 +5437,8 @@ function init() {
 
 
             fabric.Image.fromURL(panels[ii], function (img) {
-
-                img.scaleToWidth(sec_width[ii] + 4);
+                console.log(sec_width)
+                img.scaleToWidth(sec_width[ii]+ 4);
 
                 let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
                 patternSourceCanvas.add(img);
@@ -5452,6 +5456,8 @@ function init() {
                     source: patternSourceCanvas.getElement(),
                     repeat: 'no-repeat'
                 });
+
+                pattern.offsetX = - 2
 
                 sec.trapez.set('fill', pattern)
                 canvas.renderAll();
