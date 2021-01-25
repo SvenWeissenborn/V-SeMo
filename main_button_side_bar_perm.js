@@ -24,7 +24,7 @@ let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 25;
 
 let dist_to_top_delete_whole_button_number = 6;
-if (showAreaSector == "1"){
+if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_delete_whole_button_number += 1;
 }
 
@@ -33,12 +33,12 @@ if (showVerticesOn == "1"){
 }
 
 let dist_to_top_verticesOn_button_number = 6;
-if (showAreaSector == "1"){
+if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_verticesOn_button_number += 1;
 }
 
 let dist_to_top_set_sectors_button_number = 7;
-if (showAreaSector == "1"){
+if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_set_sectors_button_number += 1;
 }
 if (showVerticesOn == "1"){
@@ -742,7 +742,7 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 }
 
 let areaSectorOpacity = 0
-if (showAreaSector == "1") {
+if (showAreaSector == "globe" || showAreaSector == "earth") {
     areaSectorOpacity = 1 ;
 }
 
@@ -789,7 +789,7 @@ infoboxArea = new fabric.Rect({
     left: 140 * screenFactor,
     top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
     opacity: 0,
-    width: 110 * screenFactor,
+    width: 120 * screenFactor,
     height: 50 * screenFactor,
     stroke: '#575656',
     fill: 'white',
@@ -884,7 +884,7 @@ infoboxDeficitAngle = new fabric.Rect({
     left: 140 * screenFactor,
     top: dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist),
     opacity: 0,
-    width: 110 * screenFactor,
+    width: 120 * screenFactor,
     height: 50 * screenFactor,
     stroke: '#575656',
     fill: 'white',

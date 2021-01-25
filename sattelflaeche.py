@@ -13,7 +13,7 @@ sectorDistance_x = 100
 sectorDistance_y = 30
 
 #Kameraeinstellungen
-startZoom = 1.5
+startZoom = 1.0
 startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 

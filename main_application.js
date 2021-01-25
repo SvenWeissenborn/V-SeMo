@@ -1200,7 +1200,7 @@ function calcSectorArea() {
 
 function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
     if (sectorAreaInfoboxVisibleToSet == true) {
-        canvas_side_bar_perm.setWidth(200 * scaleRatio);
+        canvas_side_bar_perm.setWidth(220 * scaleRatio);
         infoboxArea.opacity = 1;
         infoboxAreaText.opacity = 1;
     }
@@ -1246,7 +1246,7 @@ function showVertices(toShowVertices){
 
 function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){
     if (deficitAngleInfoboxVisibleToSet == true) {
-        canvas_side_bar_perm.setWidth(200 * scaleRatio);
+        canvas_side_bar_perm.setWidth(220 * scaleRatio);
         infoboxDeficitAngle.opacity = 1;
         infoboxDeficitAngleText.opacity = 1;
     }
@@ -2562,15 +2562,35 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
 
         if (toCalcSectorArea == true & selectedTool == 'grab'){
-            let sectorArea = 0.5 * (this.parent.sector_top * 0.03 + this.parent.sector_bottom * 0.03) * this.parent.sector_height * 0.03 ;
-            let sectorArea4Dec = sectorArea.toFixed(4)
-            let infoboxAreaTextByLanguageOnClick = "Sektorfläche:";
-            if (language == "english"){
-                infoboxAreaTextByLanguageOnClick = "sector area:"
-            }
-            infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick+"\n"+ sectorArea4Dec.toString() +" " + "cm²")
 
-            canvas_side_bar_perm.renderAll()
+            if (showAreaSector == "earth") {
+                let sectorTop = distance(this.points[0], this.points[1]) * 12.742
+                let sectorBottom = distance(this.points[2], this.points[3]) * 12.742
+
+                let sectorArea = 0.5 * (sectorTop + sectorBottom) * this.parent.sector_height * 12.742;
+                let sectorArea4Dec = sectorArea.toFixed(1)
+                let infoboxAreaTextByLanguageOnClick = "Sektorfläche:";
+                if (language == "english") {
+                    infoboxAreaTextByLanguageOnClick = "sector area:"
+                }
+                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "km²")
+
+                canvas_side_bar_perm.renderAll()
+            }
+            if (showAreaSector == "globe"){
+                let sectorTop = distance(this.points[0], this.points[1]) * 0.03
+                let sectorBottom = distance(this.points[2], this.points[3]) * 0.03
+
+                let sectorArea = 0.5 * (sectorTop + sectorBottom) * this.parent.sector_height * 0.03;
+                let sectorArea4Dec = sectorArea.toFixed(4)
+                let infoboxAreaTextByLanguageOnClick = "Sektorfläche:";
+                if (language == "english") {
+                    infoboxAreaTextByLanguageOnClick = "sector area:"
+                }
+                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²")
+
+                canvas_side_bar_perm.renderAll()
+            }
 
         };
 

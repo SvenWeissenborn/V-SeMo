@@ -1,4 +1,4 @@
-startZoom =1.5
+startZoom =1.0
 startViewportTransform_4 =0
 startViewportTransform_5 =0
 
@@ -9,7 +9,7 @@ nRowsInModel: 3
 nColumnsInModel: 3
 sectorDistance_x: 100
 sectorDistance_y: 30
-startZoom =1.5
+startZoom =1.0
 startViewportTransform_4 =0
 startViewportTransform_5 =0
 fontSize: 15
