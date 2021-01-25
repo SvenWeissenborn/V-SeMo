@@ -12,7 +12,7 @@ fontSizeStern = 8
 fontSizeAussenraum = 15
 
 #Kameraeinstellungen
-startZoom = 1.0
+startZoom = 1
 startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 

@@ -2,49 +2,54 @@ import io
 import math
 
 
-nRowsInModel = 8
-nColumnsInModel = 2
+nRowsInModel = 40
+nColumnsInModel = 8
+
+nColumnsOfStar = 6
 
 radius = 120
-delta_r = 1.25
-delta_t = 1.25
+delta_r = (2/3)
+delta_t = 1
 sectorDistance_x = 20
-sectorDistance_y = 30
+sectorDistance_y = 20
 
 fontSize = 15
 
-start_x = 150
-start_y = 150
+start_x = 300
+start_y = 100
 
-#Kameraeinstellungen
-startZoom = 0.8
-startViewportTransform_4 = -200
-startViewportTransform_5 = -350
+startZoom = 0.65
+startViewportTransform_4 = -300
+startViewportTransform_5 = -2100
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
-#startGeodesicsOffset_x: Versatz entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
-#startGeodesicsOffset_y: Versatz entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
+#startGeodesicsOffset_x: Versatz in % entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
+#startGeodesicsOffset_y: Versatz in px entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsSectors = [7, 7]
+startGeodesicsAngle = [180]
 
-startGeodesicsAngle = [135, 135]
+#WICHTIG, wenn in einem Sektor mehrere Geodäten starten sollen, so müssen sie in startGeodesicsSectors direkt auf einander folgen
 
-startGeodesicsOffset_x = [0, 0]
+startGeodesicsSectors = [8 * nRowsInModel -1]
 
-startGeodesicsOffset_y = [10, 40]
 
-startGeodesicsOperational = ['true', 'true']
+startGeodesicsOffset_x = [0.8]
+
+startGeodesicsOffset_y = [0]
+
+startGeodesicsOperational = ['true']
 
 def main():
 
-    file = io.open("schwarzschild_rz_redshift.js",'w')
+    file = io.open("neutronenstern_schwarzschild_mix_sym_roehre.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
                 "radius: " + str(radius) + "\n"
                 "nRowsInModel: " + str(nRowsInModel) + "\n"
-                "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
+                "nColumnsInModel: " + str(nColumnsInModel) + "\n"
+                "nColumnsOfStar: " + str(nColumnsOfStar) + "\n"                                                
                 "sectorDistance_x: " + str(sectorDistance_x) + "\n"
                 "sectorDistance_y: " + str(sectorDistance_y) + "\n"
                 "startZoom =" + str(startZoom) + "\n"
@@ -72,7 +77,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+        "line_colors = [ 'black', 'blue', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]
@@ -92,8 +97,8 @@ def main():
     for zeile in range(0, nRowsInModel):
 
         for ii in range(0, nColumnsInModel):
-            print("zeile", zeile)
-            print("Sektor", zeile + ii * nRowsInModel)
+            #print("zeile", zeile)
+            #print("Sektor", zeile + ii * nRowsInModel)
 
             #Für die x-Position des Sektors wird die Sektorhöhe des alten Sektors verwendet.
             #Für die y-Position des Sektors wird die Hälfte der Differenz der zeitartigen Sektorkanten benötigt.
@@ -106,13 +111,36 @@ def main():
 
             sectorValues[sectorDict["sec_angle"]][zeile + ii * nRowsInModel] = 0
 
-            timeEdgeLeft = math.sqrt(1 - (1 / ((ii + 1) * delta_r))) * delta_t * radius
+            if(ii < (nColumnsInModel/2 - nColumnsOfStar/2)):
 
-            timeEdgeRight = math.sqrt(1 - (1 / ((ii + 2) * delta_r))) * delta_t * radius
+                timeEdgeLeft = math.sqrt(1 - (1 / (abs(ii - (nColumnsInModel / 2)) * delta_r))) * delta_t * radius
+                #print(1 - (1 / ((ii - (nColumnsInModel / 2)) * delta_r)))
 
-            spaceEdge =  math.sqrt(1 / ( 1 - (1 / (((( ii + 1 ) + ( ii + 2 )) / 2) * delta_r)))) * delta_r * radius
+                timeEdgeRight = math.sqrt(1 - (1 / (abs(ii - (nColumnsInModel / 2) + 1) * delta_r))) * delta_t * radius
 
-            sectorValues[sectorDict["sec_fill"]][zeile + ii * nRowsInModel] = "'white'"
+                spaceEdge = math.sqrt(1 / (1 - (1 / (abs(ii - (nColumnsInModel / 2) + 0.5) * delta_r)))) * delta_r * radius
+
+                sectorValues[sectorDict["sec_fill"]][zeile + ii * nRowsInModel] = "'white'"
+            else:
+                if (ii < (nColumnsInModel / 2 + nColumnsOfStar / 2)):
+                    timeEdgeLeft = 0.5 * ( (3 / math.sqrt(2)) - math.sqrt(1 - (1 / 8) * math.pow(delta_r * abs(ii - (nColumnsInModel / 2)), 2)) ) * delta_t * radius
+
+                    timeEdgeRight = 0.5 * ( (3 / math.sqrt(2)) - math.sqrt(1 - (1 / 8) * math.pow(delta_r * abs(ii - (nColumnsInModel / 2) + 1), 2)) ) * delta_t * radius
+
+                    spaceEdge =  math.sqrt(1 / ( 1 - (1 / 8) * math.pow(delta_r * abs(ii - (nColumnsInModel / 2) + 0.5),2))) * delta_r * radius
+
+                    sectorValues[sectorDict["sec_fill"]][zeile + ii * nRowsInModel] = "'#e2e2e2'"
+
+                else:
+                    timeEdgeLeft = math.sqrt(1 - (1 / (abs(ii - (nColumnsInModel / 2)) * delta_r))) * delta_t * radius
+
+                    timeEdgeRight = math.sqrt(1 - (1 / (abs(ii - (nColumnsInModel / 2) + 1) * delta_r))) * delta_t * radius
+
+                    spaceEdge = math.sqrt(1 / (1 - (1 / (abs(ii - (nColumnsInModel / 2) + 0.5) * delta_r)))) * delta_r * radius
+
+                    sectorValues[sectorDict["sec_fill"]][zeile + ii * nRowsInModel] = "'white'"
+
+
 
             offset_y = (timeEdgeRight - timeEdgeLeft) / 2
 
@@ -123,6 +151,7 @@ def main():
             sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + ii * nRowsInModel] = timeEdgeLeft
             sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + ii * nRowsInModel] = timeEdgeRight
             sectorValues[sectorDict["spaceEdge"]][zeile + ii * nRowsInModel] = spaceEdge
+
 
             sectorValues[sectorDict["sec_coords"]][zeile + ii * nRowsInModel] = ([0,
                                                                                - timeEdgeLeft,
@@ -157,15 +186,30 @@ def main():
             print("nachbar_links", sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel])
 
             if (zeile == 0):
-                if (ii == 0):
+                if ((ii - nColumnsInModel/2) == -(nColumnsInModel/2)):
                     sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+                    if ((ii - nColumnsInModel/2) < 0):
+                        sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] - ((sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + (ii -1) * nRowsInModel] - sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + (ii -1) * nRowsInModel]) / 2)
+                    else:
+                        if (ii - nColumnsInModel/2) == 0:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel]
+                        else:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
             else:
                 if (ii == 0):
                     sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y + zeile * (timeEdgeRight + sectorDistance_y)
+
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+                    if ((ii - nColumnsInModel / 2) < 0):
+                        sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] - ((sectorValues[sectorDict["sec_timeEdgeLeft"]][zeile + (ii - 1) * nRowsInModel] - sectorValues[sectorDict["sec_timeEdgeRight"]][zeile + (ii - 1) * nRowsInModel]) / 2)
+                    else:
+                        if (ii - nColumnsInModel/2) == 0:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel]
+                        else:
+                            sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+
+
 
 
     for ii in range(0,len(variablenamesSectors)):
@@ -179,12 +223,11 @@ def main():
     variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke","startParentSector", "startLineID", "startGeodesicOperational"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))
 
-    geodesicValues = [[[] for ii in range(len(startGeodesicsSectors))] for jj in range(len(variablenamesGeodesics))]
+    geodesicValues = [[[] for ii in range(len(startGeodesicsAngle))] for jj in range(len(variablenamesGeodesics))]
 
-    for startGeodesic in range(0, len(startGeodesicsSectors)):
+    for startGeodesic in range(0, len(startGeodesicsAngle)):
         print(startGeodesic)
         geodesicValues[geodesicDict["startSectors"]][startGeodesic] = startGeodesicsSectors[startGeodesic]
-
         offset_y = (sectorValues[sectorDict["sec_timeEdgeLeft"]][startGeodesicsSectors[startGeodesic]] - sectorValues[sectorDict["sec_timeEdgeRight"]][startGeodesicsSectors[startGeodesic]]) / 2
 
         geodesicValues[geodesicDict["x_Start"]][startGeodesic] = sectorValues[sectorDict["sec_posx"]][startGeodesicsSectors[startGeodesic]] + startGeodesicsOffset_x[startGeodesic] * sectorValues[sectorDict["sec_width"]][startGeodesicsSectors[startGeodesic]]

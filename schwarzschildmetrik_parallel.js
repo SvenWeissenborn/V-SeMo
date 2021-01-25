@@ -1,4 +1,4 @@
-startZoom =1.0
+startZoom =1
 startViewportTransform_4 =0
 startViewportTransform_5 =0
 
@@ -10,11 +10,16 @@ nSektorzeilenVonRingSchwarzschild: 3
 nSektorzeilenVonRingEuklid: 0
 schwarzschildradius: 60
 dradius: 1.25 * 60
-startZoom =1.0
+startZoom =1
 startViewportTransform_4 =0
 startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: [29, 29]
+startGeodesicsAngle: [-112, -112]
+startGeodesicsOffset_x: [0.5, 0.7]
+startGeodesicsOffset_y: [1, 1]
+startGeodesicsLength: [50, 50]
+startGeodesicsOperational: ['true', 'true']
 startMarksSectors: []
 startMarksRadius: []
 startMarksOffset_x: []

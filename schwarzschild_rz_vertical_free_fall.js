@@ -1,6 +1,25 @@
-startZoom =1.5
-startViewportTransform_4 =0
-startViewportTransform_5 =0
+/*
+------Parameter-------
+radius: 120
+nRowsInModel: 8
+nColumnsInModel: 2
+sectorDistance_x: 20
+sectorDistance_y: 30
+startZoom =0.8
+startViewportTransform_4 =-200
+startViewportTransform_5 =-350
+fontSize: 15
+startGeodesicsSectors: [7]
+startGeodesicsAngle: [150]
+startGeodesicsOffset_x: [0.3]
+startGeodesicsOffset_y: [10]
+startGeodesicsOperational: ['true']
+----------------------
+*/
+
+startZoom =0.8
+startViewportTransform_4 =-200
+startViewportTransform_5 =-350
 
 line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 sec_name= [ 'A8', 'A7', 'A6', 'A5', 'A4', 'A3', 'A2', 'A1', 'B8', 'B7', 'B6', 'B5', 'B4', 'B3', 'B2', 'B1', ];
@@ -18,17 +37,17 @@ sec_neighbour_top= [ -1, 0, 1, 2, 3, 4, 5, 6, -1, 8, 9, 10, 11, 12, 13, 14, ];
 sec_neighbour_right= [ 8, 9, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, ];
 sec_neighbour_bottom= [ 1, 2, 3, 4, 5, 6, 7, -1, 9, 10, 11, 12, 13, 14, 15, -1, ];
 sec_neighbour_left= [ -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, ];
-sec_posx= [ 150, 150, 150, 150, 150, 150, 150, 150, 370.9460825569346, 370.9460825569346, 370.9460825569346, 370.9460825569346, 370.9460825569346, 370.9460825569346, 370.9460825569346, 370.9460825569346, ];
+sec_posx= [ 150, 150, 150, 150, 150, 150, 150, 150, 390.9460825569346, 390.9460825569346, 390.9460825569346, 390.9460825569346, 390.9460825569346, 390.9460825569346, 390.9460825569346, 390.9460825569346, ];
 sec_posy= [ 150, 296.1895003862225, 442.379000772445, 588.5685011586675, 734.75800154489, 880.9475019311126, 1027.137002317335, 1173.3265027035575, 156.13141270021438, 302.3209130864369, 448.51041347265937, 594.6999138588818, 740.8894142451044, 887.0789146313269, 1033.2684150175494, 1179.457915403772, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-startSectors= [ 7, 7, ];
-x_Start= [ 150.0, 150.0, ];
-y_Start= [ 1138.7727721729432, 1108.7727721729432, ];
-x_End= [ 178.2842712474619, 178.2842712474619, ];
-y_End= [ 1110.4885009254813, 1080.4885009254813, ];
-startStrokeWidth= [ 2, 2, ];
-startFill= [ line_colors[0], line_colors[1], ];
-startStroke= [ line_colors[0], line_colors[1], ];
-startParentSector= [ [7,0], [7,1], ];
-startLineID= [ [0,1], [1,1], ];
-startGeodesicOperational= [ true, true, ];
+startSectors= [ 7, ];
+x_Start= [ 216.28382476708038, ];
+y_Start= [ 1146.1388913321275, ];
+x_End= [ 236.28382476708038, ];
+y_End= [ 1111.49787518075, ];
+startStrokeWidth= [ 2, ];
+startFill= [ line_colors[0], ];
+startStroke= [ line_colors[0], ];
+startParentSector= [ [7,0], ];
+startLineID= [ [0,1], ];
+startGeodesicOperational= [ true, ];

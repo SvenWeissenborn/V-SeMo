@@ -13,7 +13,7 @@ dr = 1.25
 dradius = dr * schwarzschildradius
 
 #Kameraeinstellungen
-startZoom = 1.0
+startZoom = 1
 startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 
@@ -22,12 +22,12 @@ fontSize = 15
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [29, 29]
 # Winkel in Grad
-startGeodesicsAngle = [-70, -120]
+startGeodesicsAngle = [-112, -112]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.5, 0.5]
+startGeodesicsOffset_x = [0.5, 0.7]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.7, 0.7]
+startGeodesicsOffset_y = [1, 1]
 # Laenge der Geodaete in Pixel
 startGeodesicsLength = [50, 50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
@@ -65,7 +65,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_zwei_signale.js",'w')
+    file = io.open("schwarzschildmetrik_parallel.js",'w')
     #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
 
@@ -89,6 +89,11 @@ def main():
                 "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
                 "fontSize: " + str(fontSize) + "\n"                                                        
                 "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
+                "startGeodesicsAngle: " + str(startGeodesicsAngle) + "\n"    
+                "startGeodesicsOffset_x: " + str(startGeodesicsOffset_x) + "\n"
+                "startGeodesicsOffset_y: " + str(startGeodesicsOffset_y) + "\n"  
+                "startGeodesicsLength: " + str(startGeodesicsLength) + "\n"   
+                "startGeodesicsOperational: " + str(startGeodesicsOperational) + "\n"                                                         
                 "startMarksSectors: " + str(startMarksSectors) + "\n"
                 "startMarksRadius: " + str(startMarksRadius) + "\n"
                 "startMarksOffset_x: " + str(startMarksOffset_x) + "\n"

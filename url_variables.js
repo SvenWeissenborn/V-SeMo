@@ -23,7 +23,7 @@ let textured = getUrlVars()["textured"];
 let textureColored = getUrlVars()["textureColored"];
 //showAutoSet=1& um den Button fuer das automatische Zusammensetzen entlang einer Geodaete einzuschalten
 let showAutoSet = getUrlVars()["showAutoSet"];
-//showAreaSector=1& um den Button fuer die Sektorflaeche anzuzeigen
+//showAreaSector=globe& oder showAreaSector=earth& um den Button fuer die Sektorflaeche anzuzeigen
 let showAreaSector = getUrlVars()["showAreaSector"];
 //showVerticesOn=1& um den Button fuer die Vertices der Sektoren anzuzeigen
 let showVerticesOn = getUrlVars()["showVerticesOn"];
