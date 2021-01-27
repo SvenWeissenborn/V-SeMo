@@ -260,8 +260,10 @@ let shadowOff = {
 let back_language;
 if(language !== "english"){
     back_language = 'german.html'
+    help_language = 'help_de.html'
 }else{
     back_language = 'english.html'
+    help_language = 'help_en.html'
 }
 
 
@@ -1626,11 +1628,18 @@ fabric.Image.fromURL('help.png', function(img) {
 
     help.on('mouseup', function (o) {
         help.set('shadow', new fabric.Shadow(shadowOff));
+        window.open(help_language, '_blank');
+        canvas_side_tools_right.renderAll();
+    });
+
+    /*
+    help.on('mouseup', function (o) {
+        help.set('shadow', new fabric.Shadow(shadowOff));
         addInstructionalOverlay(true);
         exitHelp.opacity = 1.0;
         canvas_side_tools_right.renderAll();
     });
-
+    */
     canvas_side_tools_right.add(help);
 
 });

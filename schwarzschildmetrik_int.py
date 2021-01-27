@@ -2,11 +2,11 @@ import io
 import math
 
 
-nSektorzeilenVonRing = 3
+nSektorzeilenVonRing = 15
 nSektorspaltenVonRing = 12
 
 nSektorzeilenVonRingSchwarzschild = 3
-nSektorzeilenVonRingEuklid = 0
+nSektorzeilenVonRingEuklid = 3
 
 schwarzschildradius = 60
 dr = 1.25
@@ -20,18 +20,18 @@ startViewportTransform_5 = 0
 fontSize = 15
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [29, 29]
+startGeodesicsSectors = []
 # Winkel in Grad
-startGeodesicsAngle = [-112, -112]
+startGeodesicsAngle = []
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.5, 0.7]
+startGeodesicsOffset_x = []
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [1, 1]
+startGeodesicsOffset_y = []
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = [50, 50]
+startGeodesicsLength = []
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = ['true', 'true']
+startGeodesicsOperational = []
 
 # Parameter fuer die Startmarkierungen
 startMarksSectors = []
@@ -65,7 +65,7 @@ def main():
 
 
 
-    file = io.open("schwarzschildmetrik_parallel.js",'w')
+    file = io.open("schwarzschildmetrik_big_model.js",'w')
     #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
 
@@ -137,11 +137,17 @@ def main():
                 wichtungsfaktorTop = 0.0
                 wichtungsfaktorRadial = 0.0
             elif(ringzeile < nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
-                wichtungsfaktorBottom = (ringzeile - nSektorzeilenVonRingSchwarzschild) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
+                if(ringzeile == nSektorzeilenVonRingSchwarzschild):
+                    wichtungsfaktorBottom = 0.0
+                else:
+                    wichtungsfaktorBottom = (ringzeile - 1 - nSektorzeilenVonRingSchwarzschild) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
                 wichtungsfaktorTop = (ringzeile - nSektorzeilenVonRingEuklid) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
                 wichtungsfaktorRadial = (ringzeile - nSektorzeilenVonRingEuklid) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild -1 + nSektorzeilenVonRingEuklid))
             elif(ringzeile >= nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
-                wichtungsfaktorBottom = 1.0
+                if (ringzeile == nSektorzeilenVonRing - nSektorzeilenVonRingEuklid):
+                    wichtungsfaktorBottom = (ringzeile - 1 - nSektorzeilenVonRingSchwarzschild) * 1 / (nSektorzeilenVonRing - (nSektorzeilenVonRingSchwarzschild + nSektorzeilenVonRingEuklid))
+                else:
+                    wichtungsfaktorBottom = 1.0
                 wichtungsfaktorTop = 1.0
                 wichtungsfaktorRadial = 1.0
 
