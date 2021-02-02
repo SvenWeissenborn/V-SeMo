@@ -620,7 +620,7 @@ canvas.on('mouse:up', function(opt) {
     if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
         return;
     }
-    let immediatehistory =[];
+    let immediatehistory =[0];
     let color;
 
     if( lineContinueAt !== -1){
@@ -765,12 +765,13 @@ canvas.on('mouse:up', function(opt) {
 
                     immediatehistory.push(lineSegment.ID);
 
+
                 }else{
 
                     break
                 }
 
-                pointIsInSector = false
+                pointIsInSector = false;
 
 
 
@@ -796,16 +797,20 @@ canvas.on('mouse:up', function(opt) {
                                     }
                 */
 
-                history.push(immediatehistory);
-            }
 
+            }
 
 
             linestart_x = lineend_x;
             linestart_y = lineend_y;
         }
-        if(lineSegment=== undefined){
-            lineSegment= geodesics[lineContinueAt][geodesics[lineContinueAt].length-1];
+
+        history.push(immediatehistory);
+
+
+
+        if(lineSegment === undefined){
+            lineSegment = geodesics[lineContinueAt][geodesics[lineContinueAt].length-1];
         }
 
 
@@ -1750,7 +1755,7 @@ function continueGeodesic(geodesicToContinue) {
 
     let slopeAngle;
 
-    let immediatehistory =[];
+    let immediatehistory =[0];
 
     kantenindex = -1;
 
@@ -1844,8 +1849,6 @@ function continueGeodesic(geodesicToContinue) {
                     }
                 }
 
-                console.log('nachbar im Lauf:', neighbourSector)
-                console.log(kantenParameter)
 
                 let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
@@ -1892,18 +1895,16 @@ function continueGeodesic(geodesicToContinue) {
                         dxg = Math.cosh(-rapid_sum) * dxg_tmp + Math.sinh(-rapid_sum) * dyg_tmp;
                         dyg = Math.sinh(-rapid_sum) * dxg_tmp + Math.cosh(-rapid_sum) * dyg_tmp;
                     }else{
-                        console.log('test')
+
                         dxg = Math.cosh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.sinh(-sectors[neighbourSector].rapidity) * dyg_tmp;
                         dyg = Math.sinh(-sectors[neighbourSector].rapidity) * dxg_tmp + Math.cosh(-sectors[neighbourSector].rapidity) * dyg_tmp;
                     }
                 }else{
                     dxg  = dxt12_uebergang * Math.cos(-slopeAngle) - dyt12_uebergang * Math.sin(-slopeAngle);
                     dyg  = dxt12_uebergang * Math.sin(-slopeAngle) + dyt12_uebergang * Math.cos(-slopeAngle);
-                    console.log(slopeAngle)
+
                 }
 
-                console.log('dxg:', dxg)
-                console.log('dyg:', dyg)
 
                 //Schnittpunkte mit den neuen Sektorkanten ermitteln
 
@@ -1973,6 +1974,8 @@ function continueGeodesic(geodesicToContinue) {
     }
 
     history.push(immediatehistory);
+
+
 }
 
 function deleteWholeGeodesic(geodesicToDelete) {
@@ -2405,11 +2408,14 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     let dist_inv_min_x_old;
     let dist_inv_max_y_old;
 
+    let immediatehistory = [1];
+    let sectorParameterOnMousedown = [];
+    let sectorParameterOnMouseup = [];
+
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
         showGeodesicButtons(false);
-
 
         if (turnLorentzTransformOn == "1"){
 
@@ -2528,6 +2534,16 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 }
                 */
         }
+
+
+        if (turnLorentzTransformOn === "1"){
+            sectorParameterOnMousedown = [this.parent.ID, this.left, this.top, this.angle, this.parent.rapidity]
+        } else{
+            sectorParameterOnMousedown = [this.parent.ID, this.left, this.top, this.angle];
+
+        }
+
+
     });
 
 
@@ -2605,6 +2621,37 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             }
 
         };
+
+        if (turnLorentzTransformOn == "1"){
+            sectorParameterOnMouseup = [this.parent.ID, this.left, this.top, this.angle, this.parent.rapidity];
+        } else{
+            sectorParameterOnMouseup = [this.parent.ID, this.left, this.top, this.angle];
+        }
+
+        if (sectorParameterOnMousedown.length > 0){
+            if (sectorParameterOnMousedown[0] === sectorParameterOnMouseup[0]){
+                if (turnLorentzTransformOn == "1") {
+                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] | sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
+
+                        immediatehistory.push(sectorParameterOnMousedown);
+                        sectorParameterOnMousedown = []
+                        history.push(immediatehistory);
+
+                        immediatehistory = [1]
+                    }
+                }else{
+                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3]){
+
+                        immediatehistory.push(sectorParameterOnMousedown);
+                        sectorParameterOnMousedown = []
+                        history.push(immediatehistory);
+
+                        immediatehistory = [1]
+                    }
+                }
+
+            }
+        }
 
 
     });
@@ -2767,11 +2814,15 @@ function drawSlider(pos_x, pos_y) {
     let dist_inv_min_x_old;
     let dist_inv_max_y_old;
 
-
+    let immediatehistory = [1];
+    let sectorParameterOnMousedown = [];
+    let sectorParameterOnMouseup = [];
 
     this.slider[0].on('mousedown', function(o) {
 
-        this.opacity = 0.8
+        sectorParameterOnMousedown = [this.parent.ID, this.parent.trapez.left, this.parent.trapez.top, this.parent.trapez.angle, this.parent.rapidity]
+
+        this.opacity = 0.8;
         dist_inv_min_x_old = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
         dist_inv_max_y_old = Math.max(this.parent.trapez.points[0].y, this.parent.trapez.points[1].y, this.parent.trapez.points[2].y, this.parent.trapez.points[3].y);
 
@@ -2780,8 +2831,8 @@ function drawSlider(pos_x, pos_y) {
     //Wird der Regler bewegt, so passiert die Transformation
     this.slider[0].on('moving', function(o) {
 
-        removeSnapEdges(this.parent.ID)
-        changeSnapStatus(this.parent.ID)
+        removeSnapEdges(this.parent.ID);
+        changeSnapStatus(this.parent.ID);
 
         if(this.top > this.parent.slider[1].top + slider_max){
             this.set('top' , this.parent.slider[1].top + slider_max).setCoords();
@@ -2816,6 +2867,22 @@ function drawSlider(pos_x, pos_y) {
 
     this.slider[0].on('mouseup',function() {
         this.opacity = 1.0
+
+
+        sectorParameterOnMouseup = [this.parent.ID, this.parent.trapez.left, this.parent.trapez.top, this.parent.trapez.angle, this.parent.rapidity];
+
+
+        if (sectorParameterOnMousedown.length > 0){
+
+            if (sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
+
+                immediatehistory.push(sectorParameterOnMousedown);
+                sectorParameterOnMousedown = [];
+                history.push(immediatehistory);
+
+                immediatehistory = [1]
+            }
+        }
 
         reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, this.parent.ID)
 
@@ -2900,10 +2967,10 @@ function lorentzTransform(theta, trapez) {
 function setGeodesicMode (){
     if (geodesicMode === 'normal') {
         geodesicMode = 'lightLike';
-        console.log(geodesicMode)
+
     }else {
         geodesicMode = 'normal';
-        console.log(geodesicMode)
+
     }
 }
 
@@ -3215,7 +3282,7 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
         let lambdas = [0.0]
         for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
             lambdaToPush = schnittpunktsparameters[ii][0]
-            //console.log(lambdaToPush)
+
             lambdas.push(lambdaToPush)
         }
         lambdas.push(1.0)
@@ -3545,12 +3612,21 @@ function resetSectors() {
 
     canvas.discardActiveObject();
     canvas.renderAll();
+
+    let immediatehistory = [1];
+
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
 
+        if (turnLorentzTransformOn === "1"){
+            immediatehistory.push([sectors[rr].ID, sectors[rr].trapez.left, sectors[rr].trapez.top, sectors[rr].trapez.angle, sectors[rr].rapidity])
+        } else{
+            immediatehistory.push([sectors[rr].ID, sectors[rr].trapez.left, sectors[rr].trapez.top, sectors[rr].trapez.angle])
+        }
+
         if (turnLorentzTransformOn == "1"){
             if (Math.abs(sectors[rr].trapez.left - sec_posx[rr] + window.innerWidth/2) < epsilon || Math.abs(sectors[rr].trapez.top - sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2) < epsilon|| sectors[rr].rapidity !== 0) {
-                console.log(rr)
+
                 let lastLeft = sectors[rr].trapez.left;
                 let lastTop = sectors[rr].trapez.top;
 
@@ -3562,7 +3638,6 @@ function resetSectors() {
                 sectors[rr].slider[0].top = sectors[rr].slider[1].top;
 
                 canvas.remove(sectors[rr].trapez);
-
 
                 canvas.remove(sectors[rr].ID_text);
 
@@ -3608,6 +3683,9 @@ function resetSectors() {
 
 
     }
+
+    history.push(immediatehistory)
+
     for (let rr = 0; rr < sectors.length; rr++){
         changeSnapStatus(sectors[rr].ID)
         if (turnOverlapControllOn == "1"){
@@ -3999,7 +4077,6 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
 
 function setSectors(chosenGeodesicToSetSectors) {
 
-    console.log('setze!')
 
     if (chosenGeodesicToSetSectors == -1){
         return
@@ -4077,7 +4154,7 @@ function setSectors(chosenGeodesicToSetSectors) {
             let staticSector = geodesics[chosenGeodesicToSetSectors][0].parentSector[0];
             let neighbourSector = sectors[geodesics[chosenGeodesicToSetSectors][0].parentSector[0]].neighbourhood[kantenIndex];
 
-            console.log('----------------------------------')
+            let immediatehistory =[1]
 
                 //Fortsetzung im nächsten Sektor
 
@@ -4094,7 +4171,14 @@ function setSectors(chosenGeodesicToSetSectors) {
                         }
                     }
 
-                    removeSnapEdges(staticSector)
+                    if (turnLorentzTransformOn === "1"){
+                        immediatehistory.push([sectors[neighbourSector].ID, sectors[neighbourSector].trapez.left, sectors[neighbourSector].trapez.top, sectors[neighbourSector].trapez.angle, sectors[neighbourSector].rapidity])
+
+                    } else{
+                        immediatehistory.push([sectors[neighbourSector].ID, sectors[neighbourSector].trapez.left, sectors[neighbourSector].trapez.top, sectors[neighbourSector].trapez.angle])
+                    }
+
+                    removeSnapEdges(staticSector);
 
                     //drawOrientationCirc('blue', x_kante_uebergang, y_kante_uebergang)
 
@@ -4126,7 +4210,7 @@ function setSectors(chosenGeodesicToSetSectors) {
                             rapid_base = 0
                         }
 
-                        console.log('rapid_base:', rapid_base)
+
 
                         let rapid_target;
 
@@ -4140,14 +4224,14 @@ function setSectors(chosenGeodesicToSetSectors) {
                             rapid_target = 0
                         }
 
-                        console.log('rapid_target:', rapid_target)
+
 
                         rapid_sum = rapid_base - rapid_target;
 
-                        console.log('rapid_sum:', rapid_sum)
+
 
                         sectors[neighbourSector].rapidity += rapid_sum;
-                        console.log(sectors[neighbourSector].rapidity)
+
 
                         let dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
                         let dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
@@ -4234,11 +4318,11 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                     alpha = kantenParameter[0];
 
-                    console.log(kantenIndex)
+
 
                 }
 
-
+                history.push(immediatehistory)
 
 
         }
@@ -4276,7 +4360,7 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
     sectors[initialSectorID].ID_text.start_pos_BL_text_x = start_pos_BL_text_x;
     sectors[initialSectorID].ID_text.start_pos_BL_text_y = start_pos_BL_text_y;
 
-    sectors[initialSectorID].ID_text.relationship = getRelationship(sectors[initialSectorID].ID_text, sectors[initialSectorID].ID)
+    sectors[initialSectorID].ID_text.relationship = getRelationship(sectors[initialSectorID].ID_text, sectors[initialSectorID].ID);
 
 
     for (let ii = 0; ii < sectors[initialSectorID].slider.length; ii++) {
@@ -4604,12 +4688,8 @@ function isItTimeToSnap(trapez) {
                         //Anpassung des Sliders an die neue rapidity (Beachte, dass hier die relationship verändert wird, Bezug ist der Mittelpunkt der Sliderlinie)
                         trapez.parent.slider[0].relationship[5] = trapez.parent.slider[1].relationship[5] + rapid_sum * slider_max;
 
-
                         trapez.parent.rapidity = rapid_sum;
 
-                        // console.log('rapid_base:', rapid_base);
-                        // console.log('rapid_target:', rapid_target);
-                        // console.log('rapid_sum:', rapid_sum);
 
                         lorentzTransform(rapid_sum, trapez);
 
@@ -4729,7 +4809,7 @@ function startGeodesics(){
     for (let ii = 0; ii < startSectors.length; ii++) {
 
         let sec = sectors[startSectors[ii]];
-        console.log(sec.ID)
+
         let lineSegment = new fabric.Line([x_Start[ii] + window.innerWidth / 2, y_Start[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2, x_End[ii] + window.innerWidth / 2, y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2], {
             strokeWidth: startStrokeWidth[ii],
             fill: startFill[ii],
@@ -4744,7 +4824,7 @@ function startGeodesics(){
             selectable: false,
         });
         lineSegment.parentSector = startParentSector[ii];
-        console.log(lineSegment.parentSector)
+
         lineSegment.ID = startLineID[ii];
 
         lineSegment.relationship = getRelationship(lineSegment, sec.ID);
@@ -4891,7 +4971,7 @@ function startMarks() {
 
 function startTexts() {
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
-        console.log(textStartParentSector)
+
         let sec = sectors[textStartParentSector[ii][0]];
 
         let text = new fabric.Text("" + (textStartContent[ii]), {
@@ -5116,36 +5196,69 @@ function toolChange(argument) {
 
 //Zuletzt gesetzte Linie wird gelöscht
 function undoLastLine(){
-    if (history.length<= 0){return}
+    if (history.length <= 0){return}
     let immediatehistory = history.pop();
 
-    for (let jj = 0; jj < immediatehistory.length; jj++) {
-        let lineID = immediatehistory[immediatehistory.length - 1 - jj];
-        let lineSegment = geodesics[lineID[0]][lineID[1]];
+    if (immediatehistory[0] === 0) {
 
-        if(geodesics[lineID[0]][geodesics[lineID[0]].length-1].dragPoint!==undefined){
-            canvas.remove(geodesics[lineID[0]][geodesics[lineID[0]].length-1].dragPoint);
-            delete geodesics[lineID[0]][geodesics[lineID[0]].length-1].dragPoint;
+        for (let jj = 1; jj < immediatehistory.length; jj++) {
+            let lineID = immediatehistory[immediatehistory.length - jj];
+
+            let lineSegment = geodesics[lineID[0]][lineID[1]];
+
+            if (geodesics[lineID[0]][geodesics[lineID[0]].length - 1].dragPoint !== undefined) {
+                canvas.remove(geodesics[lineID[0]][geodesics[lineID[0]].length - 1].dragPoint);
+                delete geodesics[lineID[0]][geodesics[lineID[0]].length - 1].dragPoint;
+
+            }
+
+            if (typeof(lineSegment) !== 'undefined') {
+                let secID = lineSegment.parentSector;
+                if (secID[0] >= 0) {
+                    sectors[secID[0]].lineSegments.splice(secID[1], 1);
+                }
+                geodesics[lineID[0]].splice(lineID[1], 1);
+                if (lineID[1] === 0) {
+                    geodesics[lineID[0]] = [];
+                }
+                canvas.remove(lineSegment);
+            }
+            lineSegment = geodesics[lineID[0]][geodesics[lineID[0]].length - 1];
+
+            drawDragPoint(lineID[0])
 
         }
-
-        if(typeof(lineSegment)!=='undefined') {
-            let secID = lineSegment.parentSector;
-            if (secID[0] >= 0) {
-                sectors[secID[0]].lineSegments.splice(secID[1], 1);
-            }
-            geodesics[lineID[0]].splice(lineID[1], 1);
-            if (lineID[1] === 0) {
-                geodesics[lineID[0]] = [];
-            }
-            canvas.remove(lineSegment);
-        }
-        lineSegment = geodesics[lineID[0]][geodesics[lineID[0]].length-1];
-
-        drawDragPoint(lineID[0])
-
+        //if (history.length<= 0){removeLines()}
     }
-    //if (history.length<= 0){removeLines()}
+    if (immediatehistory[0] === 1) {
+        for (let jj = 1; jj < immediatehistory.length; jj++) {
+            let sectorID = immediatehistory[immediatehistory.length - jj][0];
+            let rapidityBefore = immediatehistory[immediatehistory.length - jj][4];
+
+            removeSnapEdges(sectorID);
+
+            if (turnLorentzTransformOn == "1") {
+
+                let dist_inv_min_x_old = Math.min(sectors[sectorID].trapez.points[0].x, sectors[sectorID].trapez.points[1].x, sectors[sectorID].trapez.points[2].x, sectors[sectorID].trapez.points[3].x);
+                let dist_inv_max_y_old = Math.max(sectors[sectorID].trapez.points[0].y, sectors[sectorID].trapez.points[1].y, sectors[sectorID].trapez.points[2].y, sectors[sectorID].trapez.points[3].y);
+
+                sectors[sectorID].slider[0].top = sectors[sectorID].slider[1].top + rapidityBefore * slider_max;
+                sectors[sectorID].slider[0].relationship = getRelationship(sectors[sectorID].slider[0], sectorID);
+
+                lorentzTransform(rapidityBefore, sectors[sectorID].trapez);
+                sectors[sectorID].rapidity = rapidityBefore;
+                reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, sectorID)
+            }
+
+            sectors[sectorID].trapez.set('left', immediatehistory[immediatehistory.length - jj][1]);
+            sectors[sectorID].trapez.set('top', immediatehistory[immediatehistory.length - jj][2]);
+            sectors[sectorID].trapez.set('angle', immediatehistory[immediatehistory.length - jj][3]);
+            updateMinions(sectors[sectorID].trapez);
+            changeSnapStatus(sectorID);
+            drawSnapEdges(sectorID)
+
+        }
+    }
 
     canvas.renderAll();
 }
@@ -5445,7 +5558,7 @@ function init() {
 
 
             fabric.Image.fromURL(panels[ii], function (img) {
-                console.log(sec_width)
+
                 img.scaleToWidth(sec_width[ii]+ 4);
 
                 let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
