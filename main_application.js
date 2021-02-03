@@ -824,11 +824,9 @@ canvas.on('mouse:up', function(opt) {
 
         drawDragPoint(lineSegment.ID[0]);
         chosenGeodesicGlobalID = lineSegment.ID[0];
-
-        canvas.renderAll();
-        toolChange('grab')
     }
-
+    canvas.renderAll();
+    toolChange('grab')
 });
 
 
@@ -1981,13 +1979,7 @@ function continueGeodesic(geodesicToContinue) {
 function deleteWholeGeodesic(geodesicToDelete) {
     for (let ii = geodesics[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
-
-
-
-
         let entryToSplice_tmp = sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1]
-
-
 
         sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments.splice(sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1], 1)
 
@@ -2167,6 +2159,9 @@ function fitResponsiveCanvas() {
     canvas_side_tools_right.setWidth(300 * scaleRatio);
     canvas_side_tools_right.setHeight(80 * scaleRatio);
 
+    canvas_exercise_box.setWidth(330 * scaleRatio);
+    canvas_exercise_box.setHeight(150 * scaleRatio);
+
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
 
@@ -2175,6 +2170,7 @@ function fitResponsiveCanvas() {
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
     canvas_side_tools_right.setZoom(scaleRatio);
+    canvas_exercise_box.setZoom(scaleRatio);
 
     setZoomPan()
 

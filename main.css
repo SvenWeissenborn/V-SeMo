@@ -35,6 +35,14 @@ html, body {
     bottom: 0px;
 }
 
+#container_exercise_box{
+    border: 2px solid #575656;
+    z-index: 1;
+    right: 10px;
+    top: 10px;
+    opacity:0.9;
+}
+
 #container_side_bar_perm_right_top{
     z-index: 1;
 }

@@ -21,6 +21,8 @@ let buildStartTexts = getUrlVars()["buildStartTexts"];
 let textured = getUrlVars()["textured"];
 //textureColored=1& um die Texturen der Erdkarte farbig darzustellen (beachte, dass es dann Nordafrika ist)
 let textureColored = getUrlVars()["textureColored"];
+//showExerciseBox=1& um den Button fuer das automatische Zusammensetzen entlang einer Geodaete einzuschalten
+let showExerciseBox = getUrlVars()["showExerciseBox"];
 //showAutoSet=1& um den Button fuer das automatische Zusammensetzen entlang einer Geodaete einzuschalten
 let showAutoSet = getUrlVars()["showAutoSet"];
 //showAreaSector=globe& oder showAreaSector=earth& um den Button fuer die Sektorflaeche anzuzeigen
