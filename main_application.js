@@ -668,17 +668,19 @@ canvas.on('mouse:up', function(opt) {
         let lambdas = [0];
 
         if (schnittpunktsparameters.length > 0){
-            lambdas.push(schnittpunktsparameters[0][0])
-
+            //lambdas.push(schnittpunktsparameters[0][0])
+            console.log(schnittpunktsparameters)
             for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
 
                 if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0){
+                    console.log('hier 1')
                     lambdas.push(schnittpunktsparameters[ii][0])
                     if (ii == schnittpunktsparameters.length - 1) {
 
                         lambdas.push(1.0);
                     }
                 }else{
+                    console.log('hier 2')
                     lambdas.push(schnittpunktsparameters[ii][0])
                     break
                 }
@@ -695,112 +697,34 @@ canvas.on('mouse:up', function(opt) {
         let lineend_x;
         let lineend_y;
 
-        let pointIsInSector = false;
 
+        let lineSegment
         let geodesic = [];
-        let lineSegment;
 
-        for(let ii = 1; ii < lambdas.length; ii++) {
+        console.log(lambdas)
+
+        for (let ii = 1; ii < lambdas.length; ii++) {
 
             lineend_x = xg1 + lambdas[ii] * (xg2 - xg1);
             lineend_y = yg1 + lambdas[ii] * (yg2 - yg1);
 
             if(Math.abs(lineend_x - linestart_x) > epsilon || Math.abs(lineend_y - linestart_y) > epsilon) {
-                let stackIdx = 0;
-                for (let jj = sectors.length -1; jj >= 0; jj--){
-                    let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
-                    pointIsInSector = pointIsInSector || sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment);
+                lineSegment = drawLineSegment(color, linestart_x, linestart_y, lineend_x, lineend_y)
 
-                    if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)){
-
-                        if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
-
-                            lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
-                                strokeWidth: lineStrokeWidthWhenSelected ,
-                                fill: color,
-                                stroke: color,
-                                originX: 'center',
-                                originY: 'center',
-                                perPixelTargetFind: true,
-                                objectCaching: false,
-                                hasBorders: false,
-                                hasControls: false,
-                                evented: true,
-                                selectable: false,
-                            });
-
-                            if (lineContinueAt !== -1) {
-                                lineSegment.ID = [lineContinueAt, geodesics[lineContinueAt].length]
-                            }else{
-                                lineSegment.ID = [geodesics.length, geodesic.length];
-                            }
-
-
-
-                            stackIdx = canvas.getObjects().indexOf(sectors[jj].ID_text);
-                            lineSegment.parentSector = [jj, sectors[jj].lineSegments.length];
-                        }
-
-                    }
-                }
-                if (pointIsInSector === true) {
-
-                    lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
-
-                    sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
-
-                    if (turnLorentzTransformOn == "1"){
-                        getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
-                    }
-
-
-//                        let stackIndex = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
-
-                    canvas.insertAt(lineSegment, stackIdx);
-                    if (lineContinueAt !== -1) {
-                        geodesics[lineContinueAt].push(lineSegment)
-                    } else {
-                        geodesic.push(lineSegment);
-                    }
-
-                    immediatehistory.push(lineSegment.ID);
-
-
-                }else{
-
-                    break
+                if (lineContinueAt !== -1) {
+                    lineSegment.ID = [lineContinueAt, geodesics[lineContinueAt].length]
+                } else {
+                    lineSegment.ID = [geodesics.length, geodesic.length];
                 }
 
-                pointIsInSector = false;
-
-
-
-                /*
-                if (lineEndIsOverCanvas === false) {
-                    lineContinueAt = -1;
-                    return
+                if (lineContinueAt !== -1) {
+                    geodesics[lineContinueAt].push(lineSegment)
+                } else {
+                    geodesic.push(lineSegment);
                 }
-                */
-                /*
-                                    //Wenn Liniensegment nicht auf Trapez
-                                    if(typeof(lineSegment.parentSector)==='undefined'){
-                                        canvas.add(lineSegment);
-                                        lineSegment.sendToBack();
-                                        lineSegment.opacity = 0.5;
-                                        lineSegment.parentSector = [-1,-1];
-                                        lineSegment.relationship = [];
 
-
-                                    }else{
-
-
-                                    }
-                */
-
-
+                immediatehistory.push(lineSegment.ID);
             }
-
-
             linestart_x = lineend_x;
             linestart_y = lineend_y;
         }
@@ -816,19 +740,89 @@ canvas.on('mouse:up', function(opt) {
 
         if (lineContinueAt === -1){
             geodesics.push(geodesic)
-        }else {
-            // canvas.remove(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint);
         }
+
+        console.log(geodesics[0])
 
         lineContinueAt = -1;
 
         drawDragPoint(lineSegment.ID[0]);
         chosenGeodesicGlobalID = lineSegment.ID[0];
     }
+
+    console.log(geodesics[0])
+
     canvas.renderAll();
     toolChange('grab')
 });
 
+function drawLineSegment(color, linestart_x, linestart_y, lineend_x, lineend_y){
+
+
+        let stackIdx = 0;
+        for (let jj = sectors.length -1; jj >= 0; jj--){
+            let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
+
+            if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)){
+
+                if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
+
+                    lineSegment = new fabric.Line([linestart_x, linestart_y, lineend_x, lineend_y], {
+                        strokeWidth: lineStrokeWidthWhenSelected ,
+                        fill: color,
+                        stroke: color,
+                        originX: 'center',
+                        originY: 'center',
+                        perPixelTargetFind: true,
+                        objectCaching: false,
+                        hasBorders: false,
+                        hasControls: false,
+                        evented: true,
+                        selectable: false,
+                    });
+
+                    stackIdx = canvas.getObjects().indexOf(sectors[jj].ID_text);
+                    lineSegment.parentSector = [jj, sectors[jj].lineSegments.length];
+                }
+
+                lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
+
+                sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
+
+                if (turnLorentzTransformOn == "1"){
+                    getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
+                }
+
+                canvas.insertAt(lineSegment, stackIdx);
+
+            }
+        }
+
+
+        /*
+        if (lineEndIsOverCanvas === false) {
+            lineContinueAt = -1;
+            return
+        }
+        */
+        /*
+                            //Wenn Liniensegment nicht auf Trapez
+                            if(typeof(lineSegment.parentSector)==='undefined'){
+                                canvas.add(lineSegment);
+                                lineSegment.sendToBack();
+                                lineSegment.opacity = 0.5;
+                                lineSegment.parentSector = [-1,-1];
+                                lineSegment.relationship = [];
+
+
+                            }else{
+
+
+                            }
+        */
+
+    return lineSegment
+}
 
 //Abbrechen einer Linie
 window.addEventListener('keydown',function(event){
@@ -1977,6 +1971,9 @@ function continueGeodesic(geodesicToContinue) {
 }
 
 function deleteWholeGeodesic(geodesicToDelete) {
+
+    let immediatehistory = [2, geodesicToDelete];
+
     for (let ii = geodesics[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
         let entryToSplice_tmp = sectors[geodesics[geodesicToDelete][ii].parentSector[0]].lineSegments[geodesics[geodesicToDelete][ii].parentSector[1]].parentSector[1]
@@ -2002,10 +1999,31 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
         }
 
+        console.log(lineSegment)
+
+        let geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+        geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+
+        let xg1 = geodesic_start_point.x;
+        let yg1 = geodesic_start_point.y;
+
+        let geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+        geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+
+        let xg2 = geodesic_end_point.x;
+        let yg2 = geodesic_end_point.y;
+
+        lineSegmentParameter = [lineSegment.fill, xg1, yg1, xg2, yg2]
+
+        immediatehistory.push(lineSegmentParameter);
+
         canvas.remove(lineSegment)
 
     }
 
+    console.log(immediatehistory)
+    history.push(immediatehistory)
+    chosenGeodesicGlobalID = - 1
     geodesics[geodesicToDelete] = [];
     //toolChange('delete_whole');
     toolChange('grab');
@@ -2017,6 +2035,8 @@ function distance(punkt1, punkt2) {
 }
 
 function drawDragPoint(geodesicToGivePoint) {
+    console.log(geodesics)
+    console.log(geodesics[geodesicToGivePoint])
     if (geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length-1] == undefined){
         return
     }
@@ -2024,7 +2044,7 @@ function drawDragPoint(geodesicToGivePoint) {
         canvas.remove(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint);
         delete geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1].dragPoint;
     }
-
+    console.log(geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1])
     let lineSegment = geodesics[geodesicToGivePoint][geodesics[geodesicToGivePoint].length - 1]
 
     let geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
@@ -2159,8 +2179,11 @@ function fitResponsiveCanvas() {
     canvas_side_tools_right.setWidth(300 * scaleRatio);
     canvas_side_tools_right.setHeight(80 * scaleRatio);
 
-    canvas_exercise_box.setWidth(330 * scaleRatio);
-    canvas_exercise_box.setHeight(150 * scaleRatio);
+    if (showExerciseBox == "1"){
+        canvas_exercise_box.setWidth(330 * scaleRatio);
+        canvas_exercise_box.setHeight(150 * scaleRatio);
+    }
+
 
     canvas.setWidth(containerSize.width * 1);
     canvas.setHeight(containerSize.height * 1);
@@ -2170,8 +2193,9 @@ function fitResponsiveCanvas() {
     canvas.setZoom(scaleRatio);
     canvas_side_bar_perm.setZoom(scaleRatio);
     canvas_side_tools_right.setZoom(scaleRatio);
-    canvas_exercise_box.setZoom(scaleRatio);
-
+    if (showExerciseBox == "1") {
+        canvas_exercise_box.setZoom(scaleRatio);
+    }
     setZoomPan()
 
     if (!document.fullscreenElement) {
@@ -2238,7 +2262,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         lockRotationToSet = false;
     }
 
-    if (textured == "0" ){sectorEdgeColor = '#666'} else{sectorEdgeColor = '#666'}
+    if (textured !== "1" ){sectorEdgeColor = '#666'} else{sectorEdgeColor = '#666'}
 
     this.trapez = new fabric.Polygon //Anlegen des Polygons (noch nicht geaddet), unter 'trapez' abgespeichert
     (
@@ -2532,13 +2556,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         }
 
 
-        if (turnLorentzTransformOn === "1"){
-            sectorParameterOnMousedown = [this.parent.ID, this.left, this.top, this.angle, this.parent.rapidity]
-        } else{
-            sectorParameterOnMousedown = [this.parent.ID, this.left, this.top, this.angle];
-
-        }
-
+        sectorParameterOnMousedown = getSectorParameterOnMousedown(this.parent.ID)
 
     });
 
@@ -2618,16 +2636,13 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         };
 
-        if (turnLorentzTransformOn == "1"){
-            sectorParameterOnMouseup = [this.parent.ID, this.left, this.top, this.angle, this.parent.rapidity];
-        } else{
-            sectorParameterOnMouseup = [this.parent.ID, this.left, this.top, this.angle];
-        }
+        sectorParameterOnMouseup = getSectorParameterOnMouseup(this.parent.ID)
+
 
         if (sectorParameterOnMousedown.length > 0){
             if (sectorParameterOnMousedown[0] === sectorParameterOnMouseup[0]){
                 if (turnLorentzTransformOn == "1") {
-                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] | sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
+                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] | sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4] | sectorParameterOnMousedown[5] !== sectorParameterOnMouseup[5]){
 
                         immediatehistory.push(sectorParameterOnMousedown);
                         sectorParameterOnMousedown = []
@@ -2636,7 +2651,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         immediatehistory = [1]
                     }
                 }else{
-                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3]){
+                    if (sectorParameterOnMousedown[1] !== sectorParameterOnMouseup[1] | sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] | sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] | sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
 
                         immediatehistory.push(sectorParameterOnMousedown);
                         sectorParameterOnMousedown = []
@@ -2655,6 +2670,28 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
     canvas.add(this.trapez);
     canvas.add(this.ID_text);
+}
+
+function getSectorParameterOnMousedown(initialSectorID){
+    let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
+    if (turnLorentzTransformOn === "1"){
+        sectorParameterOnMousedown = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle, sectors[initialSectorID].rapidity]
+    } else{
+        sectorParameterOnMousedown = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle];
+
+    }
+    return sectorParameterOnMousedown
+}
+
+function getSectorParameterOnMouseup(initialSectorID){
+    let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
+    if (turnLorentzTransformOn === "1"){
+        sectorParameterOnMouseup = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle, sectors[initialSectorID].rapidity]
+    } else{
+        sectorParameterOnMouseup = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle];
+
+    }
+    return sectorParameterOnMouseup
 }
 
 let slider_max = 100;
@@ -2816,7 +2853,7 @@ function drawSlider(pos_x, pos_y) {
 
     this.slider[0].on('mousedown', function(o) {
 
-        sectorParameterOnMousedown = [this.parent.ID, this.parent.trapez.left, this.parent.trapez.top, this.parent.trapez.angle, this.parent.rapidity]
+        sectorParameterOnMousedown = getSectorParameterOnMousedown(this.parent.ID)
 
         this.opacity = 0.8;
         dist_inv_min_x_old = Math.min(this.parent.trapez.points[0].x, this.parent.trapez.points[1].x, this.parent.trapez.points[2].x, this.parent.trapez.points[3].x);
@@ -2865,12 +2902,12 @@ function drawSlider(pos_x, pos_y) {
         this.opacity = 1.0
 
 
-        sectorParameterOnMouseup = [this.parent.ID, this.parent.trapez.left, this.parent.trapez.top, this.parent.trapez.angle, this.parent.rapidity];
+        sectorParameterOnMouseup = getSectorParameterOnMouseup(this.parent.ID)
 
 
         if (sectorParameterOnMousedown.length > 0){
 
-            if (sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
+            if (sectorParameterOnMousedown[5] !== sectorParameterOnMouseup[5]){
 
                 immediatehistory.push(sectorParameterOnMousedown);
                 sectorParameterOnMousedown = [];
@@ -3303,6 +3340,7 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
 
     }
+
     return schnittpunktsparameters;
 }
 
@@ -5195,9 +5233,13 @@ function undoLastLine(){
     if (history.length <= 0){return}
     let immediatehistory = history.pop();
 
+    console.log(history)
+    console.log(immediatehistory)
+
     if (immediatehistory[0] === 0) {
 
         for (let jj = 1; jj < immediatehistory.length; jj++) {
+
             let lineID = immediatehistory[immediatehistory.length - jj];
 
             let lineSegment = geodesics[lineID[0]][lineID[1]];
@@ -5229,7 +5271,8 @@ function undoLastLine(){
     if (immediatehistory[0] === 1) {
         for (let jj = 1; jj < immediatehistory.length; jj++) {
             let sectorID = immediatehistory[immediatehistory.length - jj][0];
-            let rapidityBefore = immediatehistory[immediatehistory.length - jj][4];
+            let sectorStackID = immediatehistory[immediatehistory.length - jj][1];
+            let rapidityBefore = immediatehistory[immediatehistory.length - jj][5];
 
             removeSnapEdges(sectorID);
 
@@ -5246,17 +5289,85 @@ function undoLastLine(){
                 reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, sectorID)
             }
 
-            sectors[sectorID].trapez.set('left', immediatehistory[immediatehistory.length - jj][1]);
-            sectors[sectorID].trapez.set('top', immediatehistory[immediatehistory.length - jj][2]);
-            sectors[sectorID].trapez.set('angle', immediatehistory[immediatehistory.length - jj][3]);
+
+            sectors[sectorID].trapez.set('left', immediatehistory[immediatehistory.length - jj][2]);
+            sectors[sectorID].trapez.set('top', immediatehistory[immediatehistory.length - jj][3]);
+            sectors[sectorID].trapez.set('angle', immediatehistory[immediatehistory.length - jj][4]);
             updateMinions(sectors[sectorID].trapez);
             changeSnapStatus(sectorID);
             drawSnapEdges(sectorID)
-
+            canvas.moveTo(sectors[sectorID].trapez, sectorStackID)
+            moveMinionsToStack(sectorID, sectorStackID)
+            console.log(canvas.getObjects().indexOf(sectors[sectorID].trapez))
+            console.log(canvas.getObjects().indexOf(sectors[sectorID].ID_text))
         }
     }
 
+    if (immediatehistory[0] === 2) {
+        let geodesic = [];
+
+        for (let jj = immediatehistory.length - 1; jj > 1; jj--) {
+            let lineSegment;
+
+            let lineSegmentParameter = immediatehistory[jj];
+            console.log(immediatehistory)
+            lineSegment = drawLineSegment(lineSegmentParameter[0], lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4])
+            console.log(lineSegmentParameter)
+            console.log(geodesics)
+
+
+            lineSegment.ID = [immediatehistory[1], geodesic.length];
+            geodesic.push(lineSegment);
+            }
+        for (let jj = 0; jj < geodesic.length; jj++){
+            geodesics[immediatehistory[1]].push(geodesic[jj])
+        }
+
+        console.log(geodesics)
+        drawDragPoint(geodesic[geodesic.length - 1].ID[0]);
+
+        }
+
     canvas.renderAll();
+}
+
+function moveMinionsToStack(initialSectorID, sectorStackID){
+    let addToStack = 1
+    for (let ii = 0; ii < sectors[initialSectorID].markCircles.length; ii++) {
+        let markPoint = sectors[initialSectorID].markCircles[ii];
+        canvas.moveTo(markPoint, sectorStackID + addToStack)
+        addToStack += 1
+    }
+    if (turnLorentzTransformOn === "1") {
+        for (let ii = 0; ii < sectors[initialSectorID].slider.length; ii++) {
+            let slider_move = sectors[initialSectorID].slider[ii];
+            canvas.moveTo(slider_move, sectorStackID + addToStack)
+            addToStack += 1
+        }
+    }
+    for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
+        let segment = sectors[initialSectorID].lineSegments[ii];
+        canvas.moveTo(segment, sectorStackID + addToStack)
+        addToStack += 1
+        if(segment.dragPoint !== undefined) {
+            let object = segment.dragPoint;
+            canvas.moveTo(object, sectorStackID + addToStack)
+            addToStack += 1
+        }
+    }
+    for (let ii = 0; ii < sectors[initialSectorID].texts.length; ii++) {
+        let text = sectors[initialSectorID].texts[ii];
+        canvas.moveTo(text, sectorStackID + addToStack)
+        addToStack += 1
+    }
+    for (let ii = 0; ii < sectors[initialSectorID].cornerArcs.length; ii++) {
+        let cornerArc = sectors[initialSectorID].cornerArcs[ii];
+        canvas.moveTo(cornerArc, sectorStackID + addToStack)
+        addToStack += 1
+    }
+    if (sectors[initialSectorID].ID_text.relationship) {
+        canvas.moveTo(sectors[initialSectorID].ID_text, sectorStackID + addToStack)
+    }
 }
 
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
