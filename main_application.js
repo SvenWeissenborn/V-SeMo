@@ -673,14 +673,12 @@ canvas.on('mouse:up', function(opt) {
             for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
 
                 if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0){
-                    console.log('hier 1')
                     lambdas.push(schnittpunktsparameters[ii][0])
                     if (ii == schnittpunktsparameters.length - 1) {
 
                         lambdas.push(1.0);
                     }
                 }else{
-                    console.log('hier 2')
                     lambdas.push(schnittpunktsparameters[ii][0])
                     break
                 }
@@ -758,7 +756,7 @@ canvas.on('mouse:up', function(opt) {
 
 function drawLineSegment(color, linestart_x, linestart_y, lineend_x, lineend_y){
 
-
+        let lineSegment
         let stackIdx = 0;
         for (let jj = sectors.length -1; jj >= 0; jj--){
             let mittelpunktlineSegment = new fabric.Point(linestart_x+(lineend_x - linestart_x)/2,linestart_y+ (lineend_y - linestart_y)/2);
@@ -783,21 +781,21 @@ function drawLineSegment(color, linestart_x, linestart_y, lineend_x, lineend_y){
 
                     stackIdx = canvas.getObjects().indexOf(sectors[jj].ID_text);
                     lineSegment.parentSector = [jj, sectors[jj].lineSegments.length];
+
+
+                    lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
+
+                    sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
+
+                    if (turnLorentzTransformOn == "1"){
+                        getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
+                    }
                 }
-
-                lineSegment.relationship = getRelationship(lineSegment, lineSegment.parentSector[0]);
-
-                sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
-
-                if (turnLorentzTransformOn == "1"){
-                    getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
-                }
-
-                canvas.insertAt(lineSegment, stackIdx);
 
             }
         }
 
+    canvas.insertAt(lineSegment, stackIdx);
 
         /*
         if (lineEndIsOverCanvas === false) {
