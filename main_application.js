@@ -3650,11 +3650,9 @@ function resetSectors() {
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
 
-        if (turnLorentzTransformOn === "1"){
-            immediatehistory.push([sectors[rr].ID, sectors[rr].trapez.left, sectors[rr].trapez.top, sectors[rr].trapez.angle, sectors[rr].rapidity])
-        } else{
-            immediatehistory.push([sectors[rr].ID, sectors[rr].trapez.left, sectors[rr].trapez.top, sectors[rr].trapez.angle])
-        }
+        sectorParameterOnMousedown = getSectorParameterOnMousedown(sectors[rr].ID)
+        immediatehistory.push(sectorParameterOnMousedown)
+
 
         if (turnLorentzTransformOn == "1"){
             if (Math.abs(sectors[rr].trapez.left - sec_posx[rr] + window.innerWidth/2) < epsilon || Math.abs(sectors[rr].trapez.top - sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2) < epsilon|| sectors[rr].rapidity !== 0) {
@@ -4203,12 +4201,8 @@ function setSectors(chosenGeodesicToSetSectors) {
                         }
                     }
 
-                    if (turnLorentzTransformOn === "1"){
-                        immediatehistory.push([sectors[neighbourSector].ID, sectors[neighbourSector].trapez.left, sectors[neighbourSector].trapez.top, sectors[neighbourSector].trapez.angle, sectors[neighbourSector].rapidity])
-
-                    } else{
-                        immediatehistory.push([sectors[neighbourSector].ID, sectors[neighbourSector].trapez.left, sectors[neighbourSector].trapez.top, sectors[neighbourSector].trapez.angle])
-                    }
+                    sectorParameterOnMousedown = getSectorParameterOnMousedown(sectors[neighbourSector].ID)
+                    immediatehistory.push(sectorParameterOnMousedown)
 
                     removeSnapEdges(staticSector);
 
