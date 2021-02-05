@@ -1173,6 +1173,8 @@ let scaleRatio;
 
 let snap_radius_slider = 10 * scaleFacotor;
 
+let startOpacity = 0.9
+
 let sectors = [];
 
 let markPoints = [];
@@ -1834,7 +1836,7 @@ function continueGeodesic(geodesicToContinue) {
 
             for (lauf = 0; lauf < 100; lauf++) {
 
-                if (neighbourSectorID === -1) {
+                if (neighbourSectorID === -1 || sectors[neighbourSectorID].trapez.opacity !== startOpacity) {
                     drawDragPoint(geodesicToContinue);
                     break
                 }
@@ -2280,7 +2282,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             lockScalingY: true,
             lockRotation: lockRotationToSet,
             cornerSize: 30,
-            opacity: 0.9,
+            opacity: startOpacity,
 
         });
 
@@ -4181,7 +4183,7 @@ function setSectors(chosenGeodesicToSetSectors) {
 
                 for (lauf = 0; lauf < 100; lauf++) {
 
-                    if (neighbourSector === -1) {
+                    if (neighbourSector === -1 || sectors[neighbourSector].trapez.opacity !== startOpacity) {
                         drawDragPoint(chosenGeodesicToSetSectors);
                         break
                     }
@@ -4619,7 +4621,8 @@ function isItTimeToSnap(trapez) {
     for (let ii = 0; ii < 4; ii++){
         let potentialSnappingPartnerID = trapez.parent.neighbourhood[ii];
 
-        if(potentialSnappingPartnerID > -1) {
+        if(potentialSnappingPartnerID > -1 && sectors[potentialSnappingPartnerID].trapez.opacity == startOpacity) {
+
             midpointpotentialSnappingPartnerID = new fabric.Point(sectors[potentialSnappingPartnerID].trapez.left, sectors[potentialSnappingPartnerID].trapez.top);
             distanceMidPoints = distance(midpointSectorMoved, midpointpotentialSnappingPartnerID);
 

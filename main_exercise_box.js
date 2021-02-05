@@ -3,7 +3,9 @@ let canvas_exercise_box = new fabric.Canvas('canvas_exercise_box',{preserveObjec
 canvas_exercise_box.selection = false;
 canvas_exercise_box.selection = false;
 
-let pageNumber = 0;
+let currentSlideNumber = 0;
+let currentSlide;
+
 
 if (showExerciseBox == "1"){
     container_exercise_box.style.display = "block";
@@ -11,7 +13,9 @@ if (showExerciseBox == "1"){
     container_exercise_box.style.display = "none";
 }
 
-let exerciseText
+
+let exerciseText;
+
 exerciseText = new fabric.Text("Text", {
     opacity: 1,
     fontSize: 16 * screenFactor,
@@ -22,7 +26,7 @@ exerciseText = new fabric.Text("Text", {
     originY: 'top',
     left: 10,
     top: 10,
-    text: exerciseContent[pageNumber][0],
+    text: 'text',
     fill: '#575656',
     objectCaching: false,
     hasBorders: false,
@@ -32,7 +36,9 @@ exerciseText = new fabric.Text("Text", {
 });
 canvas_exercise_box.add(exerciseText);
 
-let forward
+
+let forward;
+
 forward = new fabric.Triangle({
     width: 30,
     height: 20,
@@ -54,28 +60,20 @@ forward = new fabric.Triangle({
 });
 
 forward.on('mouseup', function (o) {
-    pageNumber += 1;
-    exerciseText.set('text', exerciseContent[pageNumber][0])
-    for (let ii = 0; ii < exerciseContent[pageNumber][1].length; ii++){
-        setSectorsVisible(exerciseContent[pageNumber][1][ii])
-    }
-    if (pageNumber === 0){
-        backward.opacity = 0;
-    }else{
-        backward.opacity = 1;
-    }
-    if (pageNumber === exerciseContent.length-1){
-        forward.opacity = 0;
-    }else{
-        forward.opacity = 1;
-    }
-    canvas.renderAll()
-    canvas_exercise_box.renderAll()
+
+    currentSlideNumber += 1;
+
+    showNextSlide();
+
+    canvas.discardActiveObject().renderAll();
 
 });
-canvas_exercise_box.add(forward)
 
-let backward
+
+canvas_exercise_box.add(forward);
+
+let backward;
+
 backward = new fabric.Triangle({
     width: 30,
     height: 20,
@@ -96,53 +94,161 @@ backward = new fabric.Triangle({
     opacity: 0,
 
 });
-backward.on('mouseup', function (o) {
-    pageNumber -= 1;
-    exerciseText.set('text', exerciseContent[pageNumber][0])
-    /*
-    for (let ii = 0; ii < exerciseContent[pageNumber+1][1].length; ii++){
-        setSectorsUnvisible(exerciseContent[pageNumber+1][1][ii])
-    }
-    */
 
-    if (pageNumber === 0){
+backward.on('mouseup', function (o) {
+
+    currentSlideNumber -= 1;
+
+    showNextSlide()
+
+    canvas.discardActiveObject().renderAll();
+
+});
+
+canvas_exercise_box.add(backward);
+
+
+function showNextSlide() {
+
+    currentSlide = slideContent[currentSlideNumber];
+
+    console.log(currentSlide);
+
+    if (currentSlideNumber <= 1){
         backward.opacity = 0;
     }else{
         backward.opacity = 1;
     }
-    if (pageNumber === exerciseContent.length-1){
+    if (currentSlideNumber === slideContent.length-1){
         forward.opacity = 0;
     }else{
         forward.opacity = 1;
     }
 
-    canvas.renderAll()
+    setText();
+
+    setSectorsVisible();
+
+    setSectorsUnvisible();
+
+    setGeodesicsVisible();
+
+    setGeodesicsUnvisible();
+
+    canvas.renderAll();
+
     canvas_exercise_box.renderAll()
 
-});
-
-function setSectorsVisible(sectorsID){
-    sectors[sectorsID].trapez.opacity = 1;
-    sectors[sectorsID].ID_text.opacity = 1;
 }
 
-function setSectorsUnvisible(sectorsID){
-    sectors[sectorsID].trapez.opacity = 0;
-    sectors[sectorsID].ID_text.opacity = 0;
+function setText(){
+
+    if (currentSlide.text !== undefined) {
+        exerciseText.set('text', currentSlide.text)
+    }
 }
+
+function setSectorsVisible(){
+
+    if (currentSlide.sectorsToShow !== undefined){
+
+        let sectorsID;
+
+        for (let ii = 0; ii < currentSlide.sectorsToShow.length; ii++){
+
+            sectorsID = currentSlide.sectorsToShow[ii];
+
+            sectors[sectorsID].trapez.opacity = startOpacity;
+
+            sectors[sectorsID].ID_text.opacity = startOpacity;
+        }
+    }
+
+}
+
+function setSectorsUnvisible(){
+
+    if (currentSlide.sectorsToHide !== undefined){
+
+        let sectorsID;
+
+        for (let ii = 0; ii < currentSlide.sectorsToHide.length; ii++){
+
+            sectorsID = currentSlide.sectorsToHide[ii];
+
+            sectors[sectorsID].trapez.opacity = 0;
+
+            sectors[sectorsID].ID_text.opacity = 0;
+        }
+    }
+
+}
+
+function setGeodesicsVisible(){
+
+    if (buildStartGeodesics !== "1"){
+        return
+    }
+
+    if (currentSlide.geodesicsToShow !== undefined){
+
+        let geodesicID;
+
+        for (let ii = 0; ii < currentSlide.geodesicsToShow.length; ii++){
+
+            geodesicID = currentSlide.geodesicsToShow[ii];
+
+            for (let jj = 0; jj < geodesics[geodesicID].length; jj++){
+
+                if (geodesics[geodesicID][jj].dragPoint !== undefined){
+                    geodesics[geodesicID][jj].dragPoint.opacity = 1;
+                    geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = false;
+                }
+
+                geodesics[geodesicID][jj].opacity = 1;
+            }
+        }
+    }
+
+}
+
+function setGeodesicsUnvisible(){
+
+    if (buildStartGeodesics !== "1"){
+        return
+    }
+
+    if (currentSlide.geodesicsToHide !== undefined){
+
+        let geodesicID;
+
+        for (let ii = 0; ii < currentSlide.geodesicsToHide.length; ii++){
+
+            geodesicID = currentSlide.geodesicsToHide[ii];
+
+            for (let jj = 0; jj < geodesics[geodesicID].length; jj++){
+
+                if (geodesics[geodesicID][jj].dragPoint !== undefined){
+                    geodesics[geodesicID][jj].dragPoint.opacity = 0;
+                    geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = true;
+                }
+
+                geodesics[geodesicID][jj].opacity = 0;
+            }
+        }
+    }
+
+}
+
 
 if (showExerciseBox == "1"){
-    window.onload = function (){
-        for (let ii = 0; ii < sectors.length; ii++){
-            setSectorsUnvisible(ii)
-        }
-        for (let ii = 0; ii < exerciseContent[pageNumber][1].length; ii++){
-            setSectorsVisible(exerciseContent[pageNumber][1][ii])
-        }
-        canvas.renderAll()
+
+    window.onload = function () {
+
+        showNextSlide()
+
     }
 }
 
 
 
-canvas_exercise_box.add(backward)
