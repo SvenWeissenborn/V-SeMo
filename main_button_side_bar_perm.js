@@ -461,7 +461,7 @@ fabric.Image.fromURL('undo.png', function(img) {
 
     undo.on('mouseup', function (o) {
         undo.set('shadow', new fabric.Shadow(shadowOff));
-        undoLastLine();
+        undoLastAction();
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toolChange('grab');
@@ -957,8 +957,11 @@ fabric.Image.fromURL('delete.png', function(img) {
         delete_whole.set('shadow', new fabric.Shadow(shadowOff));
         deleteWholeGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
-        arrowheadline = -1;
+
         moveDirectionButtons(false);
+
+        chosenGeodesicGlobalID = - 1
+        showGeodesicButtons(false)
     });
     canvas_side_bar_perm.add(delete_whole);
 });
