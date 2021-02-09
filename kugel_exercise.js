@@ -55,7 +55,7 @@ let slideContent = [
 
     {
         id: 5,
-        text: 'Wir setzen mal die Sektoren 3 und 6 zusammen.',
+        text: 'Setze doch mal die Sektoren 3 und 6 zusammen.',
         slideCondition: [['snappedSectors', [2, 5]]],
     },
 
