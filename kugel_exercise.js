@@ -28,8 +28,8 @@ let slideContent = [
     {
         id: 0,
         text: 'Willkommen zu der Vorstellung einer Tutorial-Funktion für ViSeMo.',
-        sectorsToShow: [1, 2, 4, 5],
-        sectorsToHide: [0, 3, 6, 7, 8],
+        sectorsToShow: [2, 5],
+        sectorsToHide: [0, 1, 3, 4, 6, 7, 8],
         geodesicsToHide: [0, 1],
         marksToHide: [0, 1, 2, 3],
         textsToHide: [0, 1, 2, 3],
