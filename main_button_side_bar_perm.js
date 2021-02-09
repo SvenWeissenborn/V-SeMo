@@ -23,7 +23,7 @@ let buttondist = 25;
 let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 25;
 
-let dist_to_top_delete_whole_button_number = 6;
+let dist_to_top_delete_whole_button_number = 5;
 if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_delete_whole_button_number += 1;
 }
@@ -32,12 +32,12 @@ if (showVerticesOn == "1"){
     dist_to_top_delete_whole_button_number += 1;
 }
 
-let dist_to_top_verticesOn_button_number = 6;
+let dist_to_top_verticesOn_button_number = 5;
 if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_verticesOn_button_number += 1;
 }
 
-let dist_to_top_set_sectors_button_number = 7;
+let dist_to_top_set_sectors_button_number = 6;
 if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_set_sectors_button_number += 1;
 }
@@ -267,6 +267,7 @@ if(language !== "english"){
 }
 
 
+/*
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
         left: 51.5,
@@ -314,12 +315,12 @@ window.addEventListener('keydown',function(event){
     }
 
 });
-
+*/
 
 fabric.Image.fromURL('restart.png', function(img) {
     let restart = img.set({
         left: 51.5 ,
-        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 0 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -358,10 +359,12 @@ fabric.Image.fromURL('restart.png', function(img) {
     canvas_side_bar_perm.add(restart);
 });
 
+
+
 fabric.Image.fromURL('reset.png', function(img) {
     let reset = img.set({
         left: 51.5,
-        top: dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
+        top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -399,6 +402,7 @@ fabric.Image.fromURL('reset.png', function(img) {
     });
     canvas_side_bar_perm.add(reset);
 });
+
 
 /*
 fabric.Image.fromURL('grab.png', function(img) {
@@ -476,7 +480,7 @@ let add;
 fabric.Image.fromURL('add.png', function(img) {
      add = img.set({
         left: 51.5,
-        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -521,7 +525,7 @@ let add_dark;
 fabric.Image.fromURL('add_dark.png', function(img) {
     add_dark = img.set({
         left: 51.5,
-        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -591,7 +595,7 @@ function addGeodreieck(geodreieckToAdd){
 fabric.Image.fromURL('button_dreieck.png', function(img) {
     button_dreieck = img.set({
         left: 51.5,
-        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -633,7 +637,7 @@ let button_dreieck_empty;
 fabric.Image.fromURL('button_dreieck_empty.png', function(img) {
     button_dreieck_empty = img.set({
         left: 51.5,
-        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 4 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -752,7 +756,7 @@ let area_sector
 fabric.Image.fromURL('area_sector.png', function(img) {
     area_sector = img.set({
         left: 51.5,
-        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: areaSectorOpacity,
         originX: "center",
         originY: "top",
@@ -789,7 +793,7 @@ fabric.Image.fromURL('area_sector.png', function(img) {
 let infoboxArea;
 infoboxArea = new fabric.Rect({
     left: 140 * screenFactor,
-    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+    top: dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist),
     opacity: 0,
     width: 120 * screenFactor,
     height: 50 * screenFactor,
@@ -822,7 +826,7 @@ infoboxAreaText = new fabric.Text("Text", {
     originX: 'center',
     originY: 'center',
     left: 140 * screenFactor,
-    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
+    top: dist_to_top + 5 * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
     text: infoboxAreaTextByLanguage,
     fill: '#575656',
     objectCaching: false,
@@ -960,7 +964,7 @@ fabric.Image.fromURL('delete.png', function(img) {
 
         moveDirectionButtons(false);
 
-        chosenGeodesicGlobalID = - 1
+        chosenGeodesicGlobalID = - 1;
         showGeodesicButtons(false)
     });
     canvas_side_bar_perm.add(delete_whole);
@@ -995,7 +999,7 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 
     set_sectors.on('mouseup', function (o) {
         set_sectors.set('shadow', new fabric.Shadow(shadowOff));
-        setSectors(chosenGeodesicGlobalID);
+        autoSetSectorsAlongGeodesic(chosenGeodesicGlobalID);
         toolChange('grab');
         arrowheadline = -1;
         moveDirectionButtons(false);

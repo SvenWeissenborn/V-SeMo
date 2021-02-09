@@ -16,7 +16,8 @@ if (showExerciseBox == "1"){
 
 let exerciseText;
 
-exerciseText = new fabric.Text("Text", {
+exerciseText = new fabric.Textbox("Text", {
+    width: 300,
     opacity: 1,
     fontSize: 16 * screenFactor,
     fontFamily: 'arial',
@@ -61,6 +62,25 @@ forward = new fabric.Triangle({
 
 forward.on('mouseup', function (o) {
 
+    /* für ein sehr restriktives Verhalten:
+    if (currentSlide.slideCondition !== undefined){
+        if (checkSlideCondition()){
+            currentSlideNumber += 1;
+
+            showNextSlide();
+        }else{
+            if (currentSlide.textIfSlideConditionIsNotFulfilled !== undefined) {
+                exerciseText.set('text', currentSlide.textIfSlideConditionIsNotFulfilled)
+                canvas_exercise_box.renderAll()
+            }
+        }
+    } else{
+        currentSlideNumber += 1;
+
+        showNextSlide();
+    }
+    */
+
     currentSlideNumber += 1;
 
     showNextSlide();
@@ -99,7 +119,7 @@ backward.on('mouseup', function (o) {
 
     currentSlideNumber -= 1;
 
-    showNextSlide()
+    showNextSlide();
 
     canvas.discardActiveObject().renderAll();
 
@@ -135,6 +155,20 @@ function showNextSlide() {
 
     setGeodesicsUnvisible();
 
+    setMarksVisible();
+
+    setMarksUnvisible();
+
+    setTextsVisible();
+
+    setTextsUnvisible();
+
+    autoCompleteStartGeodesics();
+
+    autoSetSectorsAlongStartGeodesics();
+
+    sectorsToSnapTogether();
+
     canvas.renderAll();
 
     canvas_exercise_box.renderAll()
@@ -158,9 +192,12 @@ function setSectorsVisible(){
 
             sectorsID = currentSlide.sectorsToShow[ii];
 
-            sectors[sectorsID].trapez.opacity = startOpacity;
+            if (sectors[sectorsID] !== undefined) {
 
-            sectors[sectorsID].ID_text.opacity = startOpacity;
+                sectors[sectorsID].trapez.opacity = startOpacity;
+
+                sectors[sectorsID].ID_text.opacity = startOpacity;
+            }else {console.log('Sector', sectorsID, 'does not exist')}
         }
     }
 
@@ -176,9 +213,12 @@ function setSectorsUnvisible(){
 
             sectorsID = currentSlide.sectorsToHide[ii];
 
-            sectors[sectorsID].trapez.opacity = 0;
+            if (sectors[sectorsID] !== undefined) {
 
-            sectors[sectorsID].ID_text.opacity = 0;
+                sectors[sectorsID].trapez.opacity = 0;
+
+                sectors[sectorsID].ID_text.opacity = 0;
+            }else {console.log('Sector', sectorsID, 'does not exist')}
         }
     }
 
@@ -205,7 +245,10 @@ function setGeodesicsVisible(){
                     geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = false;
                 }
 
-                geodesics[geodesicID][jj].opacity = 1;
+                if (geodesics[geodesicID][jj] !== undefined){
+                    geodesics[geodesicID][jj].opacity = 1;
+                }else {console.log('Geodesic', geodesicID, 'does not exist')}
+
             }
         }
     }
@@ -233,13 +276,215 @@ function setGeodesicsUnvisible(){
                     geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = true;
                 }
 
-                geodesics[geodesicID][jj].opacity = 0;
+                if (geodesics[geodesicID][jj] !== undefined){
+                    geodesics[geodesicID][jj].opacity = 0;
+                }else {console.log('Geodesic', geodesicID, 'does not exist')}
+
             }
         }
     }
 
 }
 
+function setMarksVisible(){
+
+    if (buildStartMarks !== "1"){
+        return
+    }
+
+    if (currentSlide.marksToShow !== undefined){
+
+        let markID;
+
+        for (let ii = 0; ii < currentSlide.marksToShow.length; ii++){
+
+            markID = currentSlide.marksToShow[ii];
+
+            if (markPoints[markID] !== undefined){
+                markPoints[markID].opacity = 1;
+                markPoints[markID].perPixelTargetFind = false;
+            }else {console.log('MarkPoint', markID, 'does not exist')}
+
+        }
+    }
+
+}
+
+function setMarksUnvisible(){
+
+    if (buildStartMarks !== "1"){
+        return
+    }
+
+    if (currentSlide.marksToHide !== undefined){
+
+        let markID;
+
+        for (let ii = 0; ii < currentSlide.marksToHide.length; ii++){
+
+            markID = currentSlide.marksToHide[ii];
+
+
+
+            if (markPoints[markID] !== undefined){
+                markPoints[markID].opacity = 0;
+                markPoints[markID].perPixelTargetFind = false;
+            }else {console.log('MarkPoint', markID, 'does not exist')}
+
+        }
+    }
+
+}
+
+function setTextsVisible(){
+
+    if (buildStartTexts !== "1"){
+        return
+    }
+
+    if (currentSlide.textsToShow !== undefined){
+
+        let markID;
+
+        for (let ii = 0; ii < currentSlide.textsToShow.length; ii++){
+
+            textID = currentSlide.textsToShow[ii];
+
+            if (texts[textID] !== undefined){
+                texts[textID].opacity = 1;
+            }else {console.log('Text', textID, 'does not exist')}
+
+        }
+    }
+
+}
+
+function setTextsUnvisible(){
+
+    if (buildStartTexts !== "1"){
+        return
+    }
+
+    if (currentSlide.textsToHide !== undefined){
+
+        let textID;
+
+        for (let ii = 0; ii < currentSlide.textsToHide.length; ii++){
+
+            textID = currentSlide.textsToHide[ii];
+
+
+
+            if (texts[textID] !== undefined){
+                texts[textID].opacity = 0;
+            }else {console.log('Text', textID, 'does not exist')}
+
+        }
+    }
+
+}
+
+function autoCompleteStartGeodesics(){
+
+    if (buildStartGeodesics !== "1"){
+        return
+    }
+
+    if (currentSlide.geodesicsToComplete !== undefined){
+
+        let geodesicID;
+
+        for (let ii = 0; ii < currentSlide.geodesicsToComplete.length; ii++){
+
+            geodesicID = currentSlide.geodesicsToComplete[ii];
+
+            continueGeodesic(geodesicID)
+        }
+    }
+
+}
+
+function autoSetSectorsAlongStartGeodesics(){
+
+    if (buildStartGeodesics !== "1"){
+        return
+    }
+
+    if (currentSlide.geodesicsToAutoSetAlong !== undefined){
+
+        let geodesicID;
+
+        for (let ii = 0; ii < currentSlide.geodesicsToAutoSetAlong.length; ii++){
+
+            geodesicID = currentSlide.geodesicsToAutoSetAlong[ii];
+
+            autoSetSectorsAlongGeodesic(geodesicID)
+        }
+    }
+
+}
+
+function sectorsToSnapTogether(){
+
+    if (currentSlide.sectorsToSnapTogether !== undefined){
+
+        let initialSectorID;
+        let targetSectorID;
+
+        for (let ii = 0; ii < currentSlide.sectorsToSnapTogether.length; ii++){
+
+            initialSectorID = currentSlide.sectorsToSnapTogether[ii][0];
+            targetSectorID = currentSlide.sectorsToSnapTogether[ii][1];
+
+            removeSnapEdges(initialSectorID);
+            //removeSnapEdges(targetSectorID);
+            snapInitialSectorToTargetSector(initialSectorID, targetSectorID);
+            drawSnapEdges(initialSectorID);
+            //drawSnapEdges(targetSectorID);
+
+
+        }
+    }
+
+}
+
+function checkSlideCondition() {
+
+    if (currentSlide.slideCondition !== undefined){
+        let conditionIsFulfilled = false;
+        for (let ii = 0; ii < currentSlide.slideCondition.length; ii++){
+
+            if (currentSlide.slideCondition[ii][0] == 'snappedSectors'){
+
+                let sectorPairIsSnapped = false;
+
+                let firstSectorID = currentSlide.slideCondition[ii][1][0];
+                let secondSectorID = currentSlide.slideCondition[ii][1][1];
+
+                for (let jj = 0; jj < 4; jj++){
+                    if (sectors[firstSectorID].neighbourhood[jj] == secondSectorID) {
+
+                        if (sectors[firstSectorID].snapStatus[jj] !== 0){
+                            sectorPairIsSnapped = true;
+
+                        }
+                    }
+                }
+
+                if (sectorPairIsSnapped == true){
+                    conditionIsFulfilled = true
+                }
+            }
+
+        }
+        if (conditionIsFulfilled){
+            currentSlideNumber += 1;
+
+            showNextSlide();
+        }
+    }
+
+}
 
 if (showExerciseBox == "1"){
 

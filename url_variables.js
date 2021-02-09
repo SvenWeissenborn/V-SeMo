@@ -27,6 +27,8 @@ let showExerciseBox = getUrlVars()["showExerciseBox"];
 let showAutoSet = getUrlVars()["showAutoSet"];
 //showAreaSector=globe& oder showAreaSector=earth& um den Button fuer die Sektorflaeche anzuzeigen
 let showAreaSector = getUrlVars()["showAreaSector"];
+//sectorIDText=programID& oder sectorIDText=off& um den Button fuer die Sektorflaeche anzuzeigen
+let sectorIDText = getUrlVars()["sectorIDText"];
 //showVerticesOn=1& um den Button fuer die Vertices der Sektoren anzuzeigen
 let showVerticesOn = getUrlVars()["showVerticesOn"];
 //showAutoComplete=1& um den Button fuer die automatische Vervollstaendigung anzuzeigen

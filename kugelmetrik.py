@@ -18,8 +18,8 @@ sectorDistance_y = 30
 
 #Kameraeinstellungen
 startZoom = 1.0
-startViewportTransform_4 = 0
-startViewportTransform_5 = 0
+startViewportTransform_4 = 100
+startViewportTransform_5 = -100
 
 #Schriftgroesse im Modell
 fontSize = 15
@@ -39,16 +39,16 @@ startGeodesicsLength = [80, 80]
 startGeodesicsOperational = ['true', 'true']
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [2, 3, 8]
-startMarksRadius = [5, 5, 5]
-startMarksOffset_x = [0.5, 0.5, 0.5]
-startMarksOffset_y = [0.5, 0.5, 0.5]
+startMarksSectors = [2, 1, 4, 5]
+startMarksRadius = [5, 5, 5, 5]
+startMarksOffset_x = [0.8, 0.2, 0.3, 0.3]
+startMarksOffset_y = [0.2, 0.4, 0.6, 0.8]
 
 #Parameter fuer die Starttexte
-startTextsSectors = [2, 3, 8]
-startTextContent = ['M1', 'M2', 'M3']
-startTextsOffset_x = [0.4, 0.4, 0.6]
-startTextsOffset_y = [0.4, 0.6, 0.4]
+startTextsSectors = [2, 1, 4, 5]
+startTextContent = ['P1', 'P2', 'P3', 'P4']
+startTextsOffset_x = [0.85, 0.25, 0.25, 0.4]
+startTextsOffset_y = [0.1, 0.5, 0.7, 0.7]
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
 
@@ -84,7 +84,7 @@ def main():
     zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
     zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
-    file = io.open("kugelmetrik.js",'w')
+    file = io.open("kugelmetrik_tutorial.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -132,7 +132,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey', 'grey', 'grey'];")
+        "let mark_colors = ['grey', 'grey', 'grey', 'grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
