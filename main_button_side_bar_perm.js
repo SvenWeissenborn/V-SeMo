@@ -508,6 +508,7 @@ fabric.Image.fromURL('add.png', function(img) {
         changeGeodesicWidth(2);
         showGeodesicButtons(false);
         toolChange('paint');
+        lineTypeToDraw = 'geodesic'
         geodreieck.selectable = false;
         //add.opacity = 0;
         //add_dark.opacity = 1;

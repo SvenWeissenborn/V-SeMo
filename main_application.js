@@ -104,6 +104,26 @@ let actualSector;
             - ob Linien auf dem Hintergrund statt einem Sektor verlaufen -> visuelles Signal (rote Linie)
   */
 
+function startRecording(o){
+    let pathCoord;
+    canvas.on('mouse:move', recordMoment);
+    canvas.on("mouse:up", stopRecording);
+
+    function recordMoment(o){
+        let pointer = canvas.getPointer(o.e);
+
+    }
+    function stopRecording(){
+        if (drawPolyLine){
+            drawPolyLine = !drawPolyLine
+
+            console.log(polyline)
+
+        }
+        canvas.off('mouse:move', recordMoment);
+        canvas.off("mouse:up", stopRecording);
+    }
+}
 
 canvas.on('mouse:move', function (o) {
 
@@ -130,93 +150,105 @@ canvas.on('mouse:move', function (o) {
 
     pointer = canvas.getPointer(o.e);
 
-    if(lineContinueAt !== -1){
-        let segment_end_point = new fabric.Point(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().x2,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().y2);
-        segment_end_point = fabric.util.transformPoint(segment_end_point,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcTransformMatrix() );
+    if (lineTypeToDraw == 'geodesic') {
+        if (lineContinueAt !== -1) {
+            let segment_end_point = new fabric.Point(geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcLinePoints().x2, geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcLinePoints().y2);
+            segment_end_point = fabric.util.transformPoint(segment_end_point, geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcTransformMatrix());
 
-        let segment_start_point = new fabric.Point(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().x1,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcLinePoints().y1);
-        segment_start_point = fabric.util.transformPoint(segment_start_point,geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].calcTransformMatrix() );
+            let segment_start_point = new fabric.Point(geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcLinePoints().x1, geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcLinePoints().y1);
+            segment_start_point = fabric.util.transformPoint(segment_start_point, geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].calcTransformMatrix());
 
-        if(Math.abs(segment_end_point.x - segment_start_point.x) > Math.abs(segment_end_point.y - segment_start_point.y)) {
-            let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
-            let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
+            if (Math.abs(segment_end_point.x - segment_start_point.x) > Math.abs(segment_end_point.y - segment_start_point.y)) {
+                let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
+                let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
 
-            //Richtung der restlichen Geodäte
-            if (Math.abs(alpha - beta) <= Math.PI / 36) {
-                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
-            } else {
+                //Richtung der restlichen Geodäte
+                if (Math.abs(alpha - beta) <= Math.PI / 36) {
+                    line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
+                } else {
 
-                //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+                    //Wenn der Der Geodreieck-Empty-Button sichtbar ist
 
-                if (geodesicToGeodreieckCalc()){
-                    geodesicToGeodreieck();
+                    if (geodesicToGeodreieckCalc()) {
+                        geodesicToGeodreieck();
+                    } else if (geodesicToStartCalc()) {
+                        geodesicToStart();
+
+                    } else {
+                        let geodesicNearToMark = geodesicToMarkCalc();
+
+                        if (geodesicNearToMark[0]) {
+                            geodesicToMark(geodesicNearToMark[1]);
+                        } else {
+
+                            //Linienende sitzt am Cursor
+                            line.set({x2: pointer.x, y2: pointer.y})
+                        }
+                    }
+                    ;
                 }
-                else if (geodesicToStartCalc()){
-                    geodesicToStart();
+            } else {
+                let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
+                let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
+                if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
+                    line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
+                } else {
 
-                }else {
+                    //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+
+                    if (geodesicToGeodreieckCalc()) {
+                        geodesicToGeodreieck();
+                    } else if (geodesicToStartCalc()) {
+                        geodesicToStart();
+
+                    } else {
+                        let geodesicNearToMark = geodesicToMarkCalc();
+
+                        if (geodesicNearToMark[0]) {
+                            geodesicToMark(geodesicNearToMark[1]);
+                        } else {
+
+                            //Linienende sitzt am Cursor
+                            line.set({x2: pointer.x, y2: pointer.y})
+                        }
+                    }
+                    ;
+                }
+
+            }
+        } else {
+            if (selectedTool == 'paint' || startAtMarkPoint !== -1) {
+
+                //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
+
+                if (geodesicToGeodreieckCalc()) {
+                    geodesicToGeodreieck();
+                } else {
                     let geodesicNearToMark = geodesicToMarkCalc();
 
                     if (geodesicNearToMark[0]) {
                         geodesicToMark(geodesicNearToMark[1]);
-                    } else{
+                    } else {
 
                         //Linienende sitzt am Cursor
                         line.set({x2: pointer.x, y2: pointer.y})
                     }
-                };
-            }
-        }else {
-            let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
-            let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
-            if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
-                line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
-            } else {
-
-                //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-
-                if (geodesicToGeodreieckCalc()){
-                        geodesicToGeodreieck();
-                    }
-                else if (geodesicToStartCalc()){
-                    geodesicToStart();
-
-                }else {
-                    let geodesicNearToMark = geodesicToMarkCalc();
-
-                    if (geodesicNearToMark[0]) {
-                        geodesicToMark(geodesicNearToMark[1]);
-                    } else{
-
-                    //Linienende sitzt am Cursor
-                    line.set({x2: pointer.x, y2: pointer.y})
-                    }
-                };
-            }
-
-        }
-    }else {
-        if(selectedTool == 'paint' || startAtMarkPoint !== -1) {
-
-            //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
-
-            if (geodesicToGeodreieckCalc()){
-                geodesicToGeodreieck();
-            } else {
-                let geodesicNearToMark = geodesicToMarkCalc();
-
-                if (geodesicNearToMark[0]) {
-                    geodesicToMark(geodesicNearToMark[1]);
-                } else{
-
-                    //Linienende sitzt am Cursor
-                    line.set({x2: pointer.x, y2: pointer.y})
                 }
-            };
+                ;
+            }
         }
+
     }
 
-    if(selectedTool == 'paint' || lineContinueAt !== -1) {
+    if (lineTypeToDraw == 'geodesic') {
+        console.log(pointer)
+        pathCoord = {x: pointer.x, y: pointer.y};
+        polyline.points.push(pathCoord)
+        pathCoords.push(pathCoord)
+        canvas.renderAll();
+    }
+
+    if (selectedTool == 'paint' || lineContinueAt !== -1) {
         //Prüfen ob die Linie über einen verbotenen Bereich verläuft
         let xg1 = line.x1;
         let xg2 = line.x2;
@@ -226,10 +258,9 @@ canvas.on('mouse:move', function (o) {
         canvas.renderAll();
         let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
         let lambdas = [];
-        for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
+        for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
             lambdas.push(schnittpunktsparameters[ii][0])
         }
-
 
 
         //let lineOverTheseSectors = schnittpunktsparameter[1];
@@ -237,8 +268,8 @@ canvas.on('mouse:move', function (o) {
         line.stroke = color;
         line.fill = color;
 
-        for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
-            if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0){
+        for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+            if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
                 line.stroke = 'red';
                 line.fill = 'red';
             }
@@ -260,8 +291,8 @@ canvas.on('mouse:move', function (o) {
                 let dxg_tmp = xg2 - xg1;
                 let dyg_tmp = yg2 - yg1;
 
-                dxg = dxg_tmp ;
-                dyg = dyg_tmp ;
+                dxg = dxg_tmp;
+                dyg = dyg_tmp;
 
                 dxt12 = xt2 - xt1;
                 dyt12 = yt2 - yt1;
@@ -273,9 +304,7 @@ canvas.on('mouse:move', function (o) {
                 if (dxg > epsilon) {
                     alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
                     lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-                }
-
-                else {
+                } else {
                     alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
                     lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                 }
@@ -378,7 +407,7 @@ canvas.on('mouse:move', function (o) {
 
             sectors[neighbourSector].trapez.setCoords();
 
-            if (textured == "1"){
+            if (textured == "1") {
                 snapping(sectors[neighbourSector].trapez);
             } else {
                 snappingToChosen(sectors[neighbourSector].trapez, staticSector);
@@ -390,7 +419,6 @@ canvas.on('mouse:move', function (o) {
 
 
                 if (sectors[staticSector].snapStatus[kk] !== 0) {
-
 
 
                     transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
@@ -437,7 +465,6 @@ canvas.on('mouse:move', function (o) {
                 }
 
 
-
             }
 
             line.bringToFront()
@@ -445,6 +472,7 @@ canvas.on('mouse:move', function (o) {
 
         canvas.renderAll();
     }
+
 });
 
 //Zoomoptionen
@@ -617,148 +645,169 @@ canvas.on('mouse:up', function(opt) {
     var zoom = canvas.getZoom();
     canvas.setZoom(zoom);
 
-    if(selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1  ) {
+    if (selectedTool !== 'paint' && selectedTool !== 'mark' && lineContinueAt == -1) {
         return;
     }
-    let immediatehistory =[0];
-    let color;
-    let lineStrokeWidth;
+    if (lineTypeToDraw == 'geodesic'){
+        let immediatehistory = [0];
+        let color;
+        let lineStrokeWidth;
 
-    if( lineContinueAt !== -1){
-        color = geodesics[lineContinueAt][0].fill;
-        lineStrokeWidth = geodesics[lineContinueAt][0].strokeWidth;
+        if (lineContinueAt !== -1) {
+            color = geodesics[lineContinueAt][0].fill;
+            lineStrokeWidth = geodesics[lineContinueAt][0].strokeWidth;
 
-        //startsector beweglich machen
-        let idx = geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].parentSector;
-        sectors[idx[0]].trapez.lockMovementX = false;
-        sectors[idx[0]].trapez.lockMovementY = false;
-        sectors[idx[0]].trapez.evented = true;
-        sectors[idx[0]].trapez.hasControls = true;
-        sectors[idx[0]].trapez.hoverCursor = 'grabbing';
+            //startsector beweglich machen
+            let idx = geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].parentSector;
+            sectors[idx[0]].trapez.lockMovementX = false;
+            sectors[idx[0]].trapez.lockMovementY = false;
+            sectors[idx[0]].trapez.evented = true;
+            sectors[idx[0]].trapez.hasControls = true;
+            sectors[idx[0]].trapez.hoverCursor = 'grabbing';
 
 
-    }else {
-        color = line_colors[geodesics.length % line_colors.length];
-        lineStrokeWidth = lineStrokeWidthWhenSelected;
-    }
+        } else {
+            color = line_colors[geodesics.length % line_colors.length];
+            lineStrokeWidth = lineStrokeWidthWhenSelected;
+        }
 
-    if(isLineStarted) {
+        if (isLineStarted) {
 
-        isLineStarted = false;
-        startAtMarkPoint = -1;
-        line.setCoords(); //Alle Änderungen der Member sollen übernommen werden
-        canvas.renderAll();
-        xg1 = line.x1;
-        xg2 = line.x2;
-        yg1 = line.y1;
-        yg2 = line.y2;
-        let zoom = canvas.getZoom();
+            isLineStarted = false;
+            startAtMarkPoint = -1;
+            line.setCoords(); //Alle Änderungen der Member sollen übernommen werden
+            canvas.renderAll();
+            xg1 = line.x1;
+            xg2 = line.x2;
+            yg1 = line.y1;
+            yg2 = line.y2;
+            let zoom = canvas.getZoom();
 
-        if(distance(new fabric.Point(xg1, yg1),new fabric.Point(xg2, yg2)) < abortlength){
+            if (distance(new fabric.Point(xg1, yg1), new fabric.Point(xg2, yg2)) < abortlength) {
+                canvas.remove(line);
+                lineContinueAt = -1;
+                return;
+            }
+            if (lineContinueAt !== -1) {
+                canvas.remove(geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].dragPoint);
+                delete geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1].dragPoint;
+            }
+            //Splitting der Linie in Liniensegmente an den Sektorkanten
+
+            let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
+
+            let lambdas = [0];
+
+            if (schnittpunktsparameters.length > 0) {
+                //lambdas.push(schnittpunktsparameters[0][0])
+
+                for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+
+                    if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0) {
+                        lambdas.push(schnittpunktsparameters[ii][0])
+                        if (ii == schnittpunktsparameters.length - 1) {
+
+                            lambdas.push(1.0);
+                        }
+                    } else {
+                        lambdas.push(schnittpunktsparameters[ii][0])
+                        break
+                    }
+                }
+            } else {
+
+                lambdas.push(1.0);
+            }
+
             canvas.remove(line);
+            let lineStart_x = line.x1;
+            let lineStart_y = line.y1;
+
+            let lineEnd_x;
+            let lineEnd_y;
+
+
+            let lineSegment
+            let geodesic = [];
+            let parentSectorID;
+
+            for (let ii = 1; ii < lambdas.length; ii++) {
+
+                lineEnd_x = xg1 + lambdas[ii] * (xg2 - xg1);
+                lineEnd_y = yg1 + lambdas[ii] * (yg2 - yg1);
+
+                for (let jj = sectors.length - 1; jj >= 0; jj--) {
+                    let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
+                    let stackIdx = -1;
+                    if (sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)) {
+                        if (canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
+                            parentSectorID = jj
+                        }
+                    }
+                }
+
+                if (Math.abs(lineEnd_x - lineStart_x) > epsilon || Math.abs(lineEnd_y - lineStart_y) > epsilon) {
+                    lineSegment = drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
+
+                    if (lineContinueAt !== -1) {
+                        lineSegment.ID = [lineContinueAt, geodesics[lineContinueAt].length]
+                    } else {
+                        lineSegment.ID = [geodesics.length, geodesic.length];
+                    }
+
+                    if (lineContinueAt !== -1) {
+                        geodesics[lineContinueAt].push(lineSegment)
+                    } else {
+                        geodesic.push(lineSegment);
+                    }
+
+                    immediatehistory.push(lineSegment.ID);
+                }
+                lineStart_x = lineEnd_x;
+                lineStart_y = lineEnd_y;
+            }
+
+            history.push(immediatehistory);
+
+
+            if (lineSegment === undefined) {
+                lineSegment = geodesics[lineContinueAt][geodesics[lineContinueAt].length - 1];
+            }
+
+
+            if (lineContinueAt === -1) {
+                geodesics.push(geodesic)
+            }
+
             lineContinueAt = -1;
-            return;
-        }
-        if(lineContinueAt!==-1){
-            canvas.remove(geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint);
-            delete geodesics[lineContinueAt][geodesics[lineContinueAt].length-1].dragPoint;
-        }
-        //Splitting der Linie in Liniensegmente an den Sektorkanten
 
-        let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
-
-        let lambdas = [0];
-
-        if (schnittpunktsparameters.length > 0){
-            //lambdas.push(schnittpunktsparameters[0][0])
-
-            for (let ii = 0; ii < schnittpunktsparameters.length; ii++){
-
-                if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] !== 0){
-                    lambdas.push(schnittpunktsparameters[ii][0])
-                    if (ii == schnittpunktsparameters.length - 1) {
-
-                        lambdas.push(1.0);
-                    }
-                }else{
-                    lambdas.push(schnittpunktsparameters[ii][0])
-                    break
-                }
-            }
-        }else{
-
-            lambdas.push(1.0);
+            drawDragPoint(lineSegment.ID[0]);
+            chosenGeodesicGlobalID = lineSegment.ID[0];
         }
 
-        canvas.remove(line);
-        let lineStart_x = line.x1;
-        let lineStart_y = line.y1;
+        canvas.renderAll();
+        toolChange('grab')
 
-        let lineEnd_x;
-        let lineEnd_y;
-
-
-        let lineSegment
-        let geodesic = [];
-        let parentSectorID;
-
-        for (let ii = 1; ii < lambdas.length; ii++) {
-
-            lineEnd_x = xg1 + lambdas[ii] * (xg2 - xg1);
-            lineEnd_y = yg1 + lambdas[ii] * (yg2 - yg1);
-
-            for (let jj = sectors.length -1; jj >= 0; jj--) {
-                let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
-                let stackIdx = -1;
-                if(sectorContainsPoint(sectors[jj].trapez, mittelpunktlineSegment)) {
-                    if(canvas.getObjects().indexOf(sectors[jj].ID_text) > stackIdx) {
-                        parentSectorID = jj
-                    }
-                }
-            }
-
-            if(Math.abs(lineEnd_x - lineStart_x) > epsilon || Math.abs(lineEnd_y - lineStart_y) > epsilon) {
-                lineSegment = drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
-
-                if (lineContinueAt !== -1) {
-                    lineSegment.ID = [lineContinueAt, geodesics[lineContinueAt].length]
-                } else {
-                    lineSegment.ID = [geodesics.length, geodesic.length];
-                }
-
-                if (lineContinueAt !== -1) {
-                    geodesics[lineContinueAt].push(lineSegment)
-                } else {
-                    geodesic.push(lineSegment);
-                }
-
-                immediatehistory.push(lineSegment.ID);
-            }
-            lineStart_x = lineEnd_x;
-            lineStart_y = lineEnd_y;
-        }
-
-        history.push(immediatehistory);
-
-
-
-        if(lineSegment === undefined){
-            lineSegment = geodesics[lineContinueAt][geodesics[lineContinueAt].length-1];
-        }
-
-
-        if (lineContinueAt === -1){
-            geodesics.push(geodesic)
-        }
-
-        lineContinueAt = -1;
-
-        drawDragPoint(lineSegment.ID[0]);
-        chosenGeodesicGlobalID = lineSegment.ID[0];
     }
 
-    canvas.renderAll();
-    toolChange('grab')
+    if (lineTypeToDraw == 'freeLine'){
+        canvas.remove(polyline)
+        polyline = new fabric.Polyline(pathCoords,
+            {
+                stroke: 'black',
+                fill: '',
+                strokeWidth: 2,
+                //perPixelTargetFind: true,
+                objectCaching: false,
+                hasBorders: false,
+                hasControls: false,
+                evented: false,
+                selectable: false,
+            }
+        );
+        pathCoords = [];
+        canvas.add(polyline)
+    }
 });
 
 function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y){
@@ -893,6 +942,25 @@ window.addEventListener('keydown',function(event){
 
     }
 });
+
+let drawPolyLine = false
+window.addEventListener('keydown',function(event){
+    if(event.key === 'd'){
+        toolChange('paint')
+        lineTypeToDraw = 'freeLine'
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'w'){
+        console.log(freeDrawings)
+    }
+});
+let polyline;
+let pathCoords = [];
+
+
+
 
 //Sektoren passend zusammensetzen
 window.addEventListener('keydown',function(event){
@@ -2238,6 +2306,8 @@ function renderIcon(ctx, left, top, styleOverride, fabricObject) {
 }
 //-----------------------------------------------------------------------------
 
+let lineTypeToDraw;
+
 //Selbst definierte Trapez-Konstruktor-Funktion
 //Erstellen der Sektorflächen
 function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
@@ -2477,25 +2547,46 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         startStrokeWidth[0] = 2
                     }
 
-                    line = new fabric.Line(points, {
-                        strokeWidth: startStrokeWidth[0],
-                        stroke: color,
-                        fill: color,
-                        originX: 'center',
-                        originY: 'center',
-                        perPixelTargetFind: true,
-                        objectCaching: false,
-                        hasBorders: false,
-                        hasControls: false,
-                        evented: true
-                    });
+                    if (lineTypeToDraw == 'geodesic'){
+                        line = new fabric.Line(points, {
+                            strokeWidth: startStrokeWidth[0],
+                            stroke: color,
+                            fill: color,
+                            originX: 'center',
+                            originY: 'center',
+                            perPixelTargetFind: true,
+                            objectCaching: false,
+                            hasBorders: false,
+                            hasControls: false,
+                            evented: true
+                        });
 
-                    canvas.add(line);
+                        canvas.add(line);
 
-                    line.bringToFront();
+                        line.bringToFront();
 
-                    canvas.renderAll();
+                        canvas.renderAll();
+                    }
+                    if (lineTypeToDraw == 'freeLine'){
+                        pathCoords = [points];
+                        polyline = new fabric.Polyline(pathCoords, {
+                                stroke: 'black',
+                                fill: '',
+                                strokeWidth: 2,
+                                //perPixelTargetFind: true,
+                                objectCaching: false,
+                                hasBorders: true,
+                                hasControls: true,
+                                evented: true,
+                                selectable: true,
+                            });
+
+                        canvas.add(polyline)
+                        startRecording();
+                    }
+
                 }
+
 /*
                 if (selectedTool == 'mark') {
                     mark = new fabric.Circle({
