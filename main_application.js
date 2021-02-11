@@ -224,8 +224,8 @@ canvas.on('mouse:move', function (o) {
     if (lineTypeToDraw == 'freeLine') {
 
         pathCoord = {x: pointer.x, y: pointer.y};
-        polyline.points.push(pathCoord)
-        console.log(polyline.points)
+        polyline.points.push(pathCoord);
+
         canvas.renderAll();
     }
 
@@ -779,10 +779,8 @@ canvas.on('mouse:up', function(opt) {
 
         canvas.remove(polyline)
 
-        console.log(pathCoords[0])
-        let polylineStartPoint = {x: pathCoords[0][2], y: pathCoords[0][3]}
-        console.log(polylineStartPoint)
-        pathCoords.splice(0, 1, polylineStartPoint)
+
+        pathCoords.splice(1, 1)
         console.log(pathCoords)
 
         polyline = new fabric.Polyline(pathCoords,
@@ -2563,7 +2561,9 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         canvas.renderAll();
                     }
                     if (lineTypeToDraw == 'freeLine'){
-                        pathCoords = [points];
+                        console.log('start:', points);
+                        pathCoords.push({x: points[0], y: points[1]});
+                        pathCoords.push({x: points[2], y: points[3]});
                         polyline = new fabric.Polyline(pathCoords, {
                                 stroke: 'black',
                                 fill: '',
