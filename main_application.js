@@ -104,30 +104,11 @@ let actualSector;
             - ob Linien auf dem Hintergrund statt einem Sektor verlaufen -> visuelles Signal (rote Linie)
   */
 
-function startRecording(o){
-    let pathCoord;
-    canvas.on('mouse:move', recordMoment);
-    canvas.on("mouse:up", stopRecording);
 
-    function recordMoment(o){
-        let pointer = canvas.getPointer(o.e);
-
-    }
-    function stopRecording(){
-        if (drawPolyLine){
-            drawPolyLine = !drawPolyLine
-
-            console.log(polyline)
-
-        }
-        canvas.off('mouse:move', recordMoment);
-        canvas.off("mouse:up", stopRecording);
-    }
-}
 
 canvas.on('mouse:move', function (o) {
 
-    if(selectedTool !== 'paint' && selectedTool !== 'grab') return;
+    if (selectedTool !== 'paint' && selectedTool !== 'grab') return;
 
     let color;
     pointer = canvas.getPointer(o.e);
@@ -135,14 +116,14 @@ canvas.on('mouse:move', function (o) {
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
 
 
-    if (!isLineStarted){
+    if (!isLineStarted) {
         return;
     }
 
-    if( lineContinueAt !== -1){
+    if (lineContinueAt !== -1) {
         color = geodesics[lineContinueAt][0].fill;
-    }else{
-        color = line_colors[geodesics.length%line_colors.length];
+    } else {
+        color = line_colors[geodesics.length % line_colors.length];
     }
 
 
@@ -240,237 +221,240 @@ canvas.on('mouse:move', function (o) {
 
     }
 
-    if (lineTypeToDraw == 'geodesic') {
-        console.log(pointer)
+    if (lineTypeToDraw == 'freeLine') {
+
         pathCoord = {x: pointer.x, y: pointer.y};
         polyline.points.push(pathCoord)
-        pathCoords.push(pathCoord)
+        console.log(polyline.points)
         canvas.renderAll();
     }
 
-    if (selectedTool == 'paint' || lineContinueAt !== -1) {
-        //Prüfen ob die Linie über einen verbotenen Bereich verläuft
-        let xg1 = line.x1;
-        let xg2 = line.x2;
-        let yg1 = line.y1;
-        let yg2 = line.y2;
+    if (lineTypeToDraw == 'geodesic'){
 
-        canvas.renderAll();
-        let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
-        let lambdas = [];
-        for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
-            lambdas.push(schnittpunktsparameters[ii][0])
-        }
+        if (selectedTool == 'paint' || lineContinueAt !== -1) {
+            //Prüfen ob die Linie über einen verbotenen Bereich verläuft
+            let xg1 = line.x1;
+            let xg2 = line.x2;
+            let yg1 = line.y1;
+            let yg2 = line.y2;
 
-
-        //let lineOverTheseSectors = schnittpunktsparameter[1];
-        //let lineOverTheseEdges = schnittpunktsparameter[2];
-        line.stroke = color;
-        line.fill = color;
-
-        for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
-            if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
-                line.stroke = 'red';
-                line.fill = 'red';
+            canvas.renderAll();
+            let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2]);
+            let lambdas = [];
+            for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+                lambdas.push(schnittpunktsparameters[ii][0])
             }
-        }
 
 
-        //TODO autoSetOnDraw muss endlich fertig gestellt werden
-        if (autoSetOnDraw == "1") {
+            //let lineOverTheseSectors = schnittpunktsparameter[1];
+            //let lineOverTheseEdges = schnittpunktsparameter[2];
+            line.stroke = color;
+            line.fill = color;
 
-            let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[actualSector].trapez)
-
-            for (let kk = 0; kk < 4; kk++) {
-
-                xt1 = trapezPointsAsGlobalCoords[kk].x;
-                xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-                yt1 = trapezPointsAsGlobalCoords[kk].y;
-                yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
-
-                let dxg_tmp = xg2 - xg1;
-                let dyg_tmp = yg2 - yg1;
-
-                dxg = dxg_tmp;
-                dyg = dyg_tmp;
-
-                dxt12 = xt2 - xt1;
-                dyt12 = yt2 - yt1;
-
-                slopeGeodesic = dyg / dxg;
-                slopeTrapez = dyt12 / dxt12;
-
-
-                if (dxg > epsilon) {
-                    alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
-                    lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
-                } else {
-                    alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
-                    lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
+            for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+                if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
+                    line.stroke = 'red';
+                    line.fill = 'red';
                 }
-
-                if (lambda > epsilon) {
-                    if (lambda > 0.0 && lambda <= 1.0 && alpha > 0.0 && alpha <= 1.0) {
-
-                        kantenIndex = kk;
-
-                        break;
-                    }
-                }
-
             }
 
 
-            let staticSector = sectors[actualSector].ID;
-            let neighbourSector = sectors[actualSector].neighbourhood[kantenIndex];
+            //TODO autoSetOnDraw muss endlich fertig gestellt werden
+            if (autoSetOnDraw == "1") {
+
+                let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[actualSector].trapez)
+
+                for (let kk = 0; kk < 4; kk++) {
+
+                    xt1 = trapezPointsAsGlobalCoords[kk].x;
+                    xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+                    yt1 = trapezPointsAsGlobalCoords[kk].y;
+                    yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+
+                    let dxg_tmp = xg2 - xg1;
+                    let dyg_tmp = yg2 - yg1;
+
+                    dxg = dxg_tmp;
+                    dyg = dyg_tmp;
+
+                    dxt12 = xt2 - xt1;
+                    dyt12 = yt2 - yt1;
+
+                    slopeGeodesic = dyg / dxg;
+                    slopeTrapez = dyt12 / dxt12;
 
 
-            if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
-
-                return
-            }
-
-            if (textured !== "1") {
-                for (let ll = 0; ll < 4; ll++) {
-
-                    let sec_idx = sectors[staticSector].neighbourhood[ll];
-
-                    if (sectors[staticSector].snapEdges[ll] !== 0) {
-                        let edgeToRemove = sectors[staticSector].snapEdges[ll];
-                        canvas.remove(edgeToRemove);
-                        sectors[staticSector].snapEdges[ll] = [0];
-
+                    if (dxg > epsilon) {
+                        alpha = (yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg));
+                        lambda = (xt1 + ((yg1 - yt1 + (dyg / dxg) * (xt1 - xg1)) / (dyt12 - ((dxt12 * dyg) / dxg))) * dxt12 - xg1) / dxg;
+                    } else {
+                        alpha = (xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg));
+                        lambda = (yt1 + ((xg1 - xt1 + (dxg / dyg) * (yt1 - yg1)) / (dxt12 - ((dyt12 * dxg) / dyg))) * dyt12 - yg1) / dyg;
                     }
 
-                    if (sec_idx > -1) {
+                    if (lambda > epsilon) {
+                        if (lambda > 0.0 && lambda <= 1.0 && alpha > 0.0 && alpha <= 1.0) {
 
-                        if (sectors[sec_idx].snapEdges[(ll + 2) % 4] !== 0) {
-                            let edgeToRemove = sectors[sec_idx].snapEdges[(ll + 2) % 4];
+                            kantenIndex = kk;
+
+                            break;
+                        }
+                    }
+
+                }
+
+
+                let staticSector = sectors[actualSector].ID;
+                let neighbourSector = sectors[actualSector].neighbourhood[kantenIndex];
+
+
+                if (neighbourSector === -1 || sectors[neighbourSector].fill === '#e2e2e2') {
+
+                    return
+                }
+
+                if (textured !== "1") {
+                    for (let ll = 0; ll < 4; ll++) {
+
+                        let sec_idx = sectors[staticSector].neighbourhood[ll];
+
+                        if (sectors[staticSector].snapEdges[ll] !== 0) {
+                            let edgeToRemove = sectors[staticSector].snapEdges[ll];
                             canvas.remove(edgeToRemove);
-                            sectors[sec_idx].snapEdges[(ll + 2) % 4] = [0];
+                            sectors[staticSector].snapEdges[ll] = [0];
 
+                        }
+
+                        if (sec_idx > -1) {
+
+                            if (sectors[sec_idx].snapEdges[(ll + 2) % 4] !== 0) {
+                                let edgeToRemove = sectors[sec_idx].snapEdges[(ll + 2) % 4];
+                                canvas.remove(edgeToRemove);
+                                sectors[sec_idx].snapEdges[(ll + 2) % 4] = [0];
+
+                            }
                         }
                     }
                 }
-            }
-            //Punkte des Nachbarsektors ermitteln
-            let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
+                //Punkte des Nachbarsektors ermitteln
+                let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
 
-            //Übergangspunkte übernehmen
-            xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
-            xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
-            yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
-            yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
+                //Übergangspunkte übernehmen
+                xt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].x;
+                xt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].x;
+                yt1_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 2) % 4].y;
+                yt2_uebergang = neighbourTrapezPointsAsGlobalCoords[(kantenIndex + 3) % 4].y;
 
 
-            point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
-            point_2 = new fabric.Point(xt2_uebergang, yt2_uebergang);
-            point_a = new fabric.Point(xt2, yt2);
-            point_b = new fabric.Point(xt1, yt1);
+                point_1 = new fabric.Point(xt1_uebergang, yt1_uebergang);
+                point_2 = new fabric.Point(xt2_uebergang, yt2_uebergang);
+                point_a = new fabric.Point(xt2, yt2);
+                point_b = new fabric.Point(xt1, yt1);
 
-            dist_1a = distance(point_1, point_a);
-            dist_2b = distance(point_2, point_b);
-
-
-            // Steigung der Kante des ruhenden/ausgehenden Sektors im lokalen Koordinatensysten
-            dxs_tmp = sectors[staticSector].trapez.points[kantenIndex].x - sectors[staticSector].trapez.points[(kantenIndex + 1) % 4].x
-            dys_tmp = sectors[staticSector].trapez.points[kantenIndex].y - sectors[staticSector].trapez.points[(kantenIndex + 1) % 4].y
-            if (Math.abs(dys_tmp) > epsilon) {
-                gamma_static = Math.atan(dxs_tmp / dys_tmp);
-            } else {
-                gamma_static = 0.0
-            }
-            dxs_tmp = sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x
-            dys_tmp = sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y
-            if (Math.abs(dys_tmp) > epsilon) {
-                gamma_neighbour = Math.atan(dxs_tmp / dys_tmp);
-            } else {
-                gamma_neighbour = 0.0
-            }
+                dist_1a = distance(point_1, point_a);
+                dist_2b = distance(point_2, point_b);
 
 
-            sectors[neighbourSector].trapez.angle = sectors[staticSector].trapez.angle - gamma_static / Math.PI * 180 + gamma_neighbour / Math.PI * 180;
-            sectors[neighbourSector].trapez.setCoords();
-
-            transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
-
-            point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
-                sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
-            point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
-
-            sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
-            sectors[neighbourSector].trapez.top += point_a.y - point_1.y;
-
-
-            updateMinions(sectors[neighbourSector].trapez);
-
-            sectors[neighbourSector].trapez.setCoords();
-
-            if (textured == "1") {
-                snapping(sectors[neighbourSector].trapez);
-            } else {
-                snappingToChosen(sectors[neighbourSector].trapez, staticSector);
-            }
-
-            for (let kk = 0; kk < 4; kk++) {
-
-                let sec_idx = sectors[staticSector].neighbourhood[kk];
-
-
-                if (sectors[staticSector].snapStatus[kk] !== 0) {
-
-
-                    transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
-                    //point_1/2 gehören zum bewegten Trapez
-                    point_1_local = new fabric.Point(sectors[staticSector].trapez.points[kk].x - sectors[staticSector].trapez.width / 2,
-                        sectors[staticSector].trapez.points[kk].y - sectors[staticSector].trapez.height / 2);
-
-                    point_2_local = new fabric.Point(sectors[staticSector].trapez.points[(kk + 1) % 4].x - sectors[staticSector].trapez.width / 2,
-                        sectors[staticSector].trapez.points[(kk + 1) % 4].y - sectors[staticSector].trapez.height / 2);
-
-                    point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
-
-                    point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
-
-                    let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
-
-                    let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
-                        strokeWidth: 1,
-                        fill: edgeColor,
-                        stroke: edgeColor,
-                        originX: 'center',
-                        originY: 'center',
-                        perPixelTargetFind: true,
-                        objectCaching: false,
-                        hasBorders: false,
-                        hasControls: false,
-                        evented: false,
-                        selectable: false,
-                    });
-
-                    edge.ID = kk;
-
-                    canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
-
-                    edge.bringToFront();
-                    sectors[staticSector].snapEdges[kk] = edge;
-
-                    //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
-                    for (let ll = 0; ll < sectors[sec_idx].lineSegments.length; ll++) {
-                        if (sectors[sec_idx].lineSegments[ll].dragPoint !== undefined) {
-                            canvas.bringToFront(sectors[sec_idx].lineSegments[ll].dragPoint)
-                        }
-                    }
+                // Steigung der Kante des ruhenden/ausgehenden Sektors im lokalen Koordinatensysten
+                dxs_tmp = sectors[staticSector].trapez.points[kantenIndex].x - sectors[staticSector].trapez.points[(kantenIndex + 1) % 4].x
+                dys_tmp = sectors[staticSector].trapez.points[kantenIndex].y - sectors[staticSector].trapez.points[(kantenIndex + 1) % 4].y
+                if (Math.abs(dys_tmp) > epsilon) {
+                    gamma_static = Math.atan(dxs_tmp / dys_tmp);
+                } else {
+                    gamma_static = 0.0
+                }
+                dxs_tmp = sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].x
+                dys_tmp = sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.points[(kantenIndex + 3) % 4].y
+                if (Math.abs(dys_tmp) > epsilon) {
+                    gamma_neighbour = Math.atan(dxs_tmp / dys_tmp);
+                } else {
+                    gamma_neighbour = 0.0
                 }
 
 
+                sectors[neighbourSector].trapez.angle = sectors[staticSector].trapez.angle - gamma_static / Math.PI * 180 + gamma_neighbour / Math.PI * 180;
+                sectors[neighbourSector].trapez.setCoords();
+
+                transformMatrix = sectors[neighbourSector].trapez.calcTransformMatrix();
+
+                point_1_local = new fabric.Point(sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].x - sectors[neighbourSector].trapez.width / 2,
+                    sectors[neighbourSector].trapez.points[(kantenIndex + 2) % 4].y - sectors[neighbourSector].trapez.height / 2);
+                point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+
+                sectors[neighbourSector].trapez.left += point_a.x - point_1.x;
+                sectors[neighbourSector].trapez.top += point_a.y - point_1.y;
+
+
+                updateMinions(sectors[neighbourSector].trapez);
+
+                sectors[neighbourSector].trapez.setCoords();
+
+                if (textured == "1") {
+                    snapping(sectors[neighbourSector].trapez);
+                } else {
+                    snappingToChosen(sectors[neighbourSector].trapez, staticSector);
+                }
+
+                for (let kk = 0; kk < 4; kk++) {
+
+                    let sec_idx = sectors[staticSector].neighbourhood[kk];
+
+
+                    if (sectors[staticSector].snapStatus[kk] !== 0) {
+
+
+                        transformMatrix = sectors[staticSector].trapez.calcTransformMatrix();
+                        //point_1/2 gehören zum bewegten Trapez
+                        point_1_local = new fabric.Point(sectors[staticSector].trapez.points[kk].x - sectors[staticSector].trapez.width / 2,
+                            sectors[staticSector].trapez.points[kk].y - sectors[staticSector].trapez.height / 2);
+
+                        point_2_local = new fabric.Point(sectors[staticSector].trapez.points[(kk + 1) % 4].x - sectors[staticSector].trapez.width / 2,
+                            sectors[staticSector].trapez.points[(kk + 1) % 4].y - sectors[staticSector].trapez.height / 2);
+
+                        point_1 = fabric.util.transformPoint(point_1_local, transformMatrix);
+
+                        point_2 = fabric.util.transformPoint(point_2_local, transformMatrix);
+
+                        let stack_idx_of_clicked_sector = canvas.getObjects().indexOf(this);
+
+                        let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
+                            strokeWidth: 1,
+                            fill: edgeColor,
+                            stroke: edgeColor,
+                            originX: 'center',
+                            originY: 'center',
+                            perPixelTargetFind: true,
+                            objectCaching: false,
+                            hasBorders: false,
+                            hasControls: false,
+                            evented: false,
+                            selectable: false,
+                        });
+
+                        edge.ID = kk;
+
+                        canvas.insertAt(edge, stack_idx_of_clicked_sector + 1);
+
+                        edge.bringToFront();
+                        sectors[staticSector].snapEdges[kk] = edge;
+
+                        //-----------IDEE UM DIE DRAGPOINTS NACH VORNE ZU HOLEN------------------
+                        for (let ll = 0; ll < sectors[sec_idx].lineSegments.length; ll++) {
+                            if (sectors[sec_idx].lineSegments[ll].dragPoint !== undefined) {
+                                canvas.bringToFront(sectors[sec_idx].lineSegments[ll].dragPoint)
+                            }
+                        }
+                    }
+
+
+                }
+
+                line.bringToFront()
             }
 
-            line.bringToFront()
+            canvas.renderAll();
         }
-
-        canvas.renderAll();
     }
 
 });
@@ -791,7 +775,16 @@ canvas.on('mouse:up', function(opt) {
     }
 
     if (lineTypeToDraw == 'freeLine'){
+        isLineStarted = false
+
         canvas.remove(polyline)
+
+        console.log(pathCoords[0])
+        let polylineStartPoint = {x: pathCoords[0][2], y: pathCoords[0][3]}
+        console.log(polylineStartPoint)
+        pathCoords.splice(0, 1, polylineStartPoint)
+        console.log(pathCoords)
+
         polyline = new fabric.Polyline(pathCoords,
             {
                 stroke: 'black',
@@ -807,6 +800,8 @@ canvas.on('mouse:up', function(opt) {
         );
         pathCoords = [];
         canvas.add(polyline)
+        canvas.renderAll();
+        toolChange('grab')
     }
 });
 
@@ -2575,14 +2570,17 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                 strokeWidth: 2,
                                 //perPixelTargetFind: true,
                                 objectCaching: false,
-                                hasBorders: true,
-                                hasControls: true,
-                                evented: true,
-                                selectable: true,
+                                hasBorders: false,
+                                hasControls: false,
+                                evented: false,
+                                selectable: false,
                             });
 
                         canvas.add(polyline)
-                        startRecording();
+
+                        polyline.bringToFront();
+
+                        canvas.renderAll();
                     }
 
                 }
