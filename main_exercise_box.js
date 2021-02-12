@@ -238,15 +238,15 @@ function setGeodesicsVisible(){
 
             geodesicID = currentSlide.geodesicsToShow[ii];
 
-            for (let jj = 0; jj < geodesics[geodesicID].length; jj++){
+            for (let jj = 0; jj < lines[geodesicID].length; jj++){
 
-                if (geodesics[geodesicID][jj].dragPoint !== undefined){
-                    geodesics[geodesicID][jj].dragPoint.opacity = 1;
-                    geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = false;
+                if (lines[geodesicID][jj].dragPoint !== undefined){
+                    lines[geodesicID][jj].dragPoint.opacity = 1;
+                    lines[geodesicID][jj].dragPoint.perPixelTargetFind = false;
                 }
 
-                if (geodesics[geodesicID][jj] !== undefined){
-                    geodesics[geodesicID][jj].opacity = 1;
+                if (lines[geodesicID][jj] !== undefined){
+                    lines[geodesicID][jj].opacity = 1;
                 }else {console.log('Geodesic', geodesicID, 'does not exist')}
 
             }
@@ -269,15 +269,15 @@ function setGeodesicsUnvisible(){
 
             geodesicID = currentSlide.geodesicsToHide[ii];
 
-            for (let jj = 0; jj < geodesics[geodesicID].length; jj++){
+            for (let jj = 0; jj < lines[geodesicID].length; jj++){
 
-                if (geodesics[geodesicID][jj].dragPoint !== undefined){
-                    geodesics[geodesicID][jj].dragPoint.opacity = 0;
-                    geodesics[geodesicID][jj].dragPoint.perPixelTargetFind = true;
+                if (lines[geodesicID][jj].dragPoint !== undefined){
+                    lines[geodesicID][jj].dragPoint.opacity = 0;
+                    lines[geodesicID][jj].dragPoint.perPixelTargetFind = true;
                 }
 
-                if (geodesics[geodesicID][jj] !== undefined){
-                    geodesics[geodesicID][jj].opacity = 0;
+                if (lines[geodesicID][jj] !== undefined){
+                    lines[geodesicID][jj].opacity = 0;
                 }else {console.log('Geodesic', geodesicID, 'does not exist')}
 
             }

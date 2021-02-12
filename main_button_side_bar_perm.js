@@ -60,11 +60,11 @@ if (showAutoComplete == "1"){
 }
 
 function changeGeodesicWidth(targetWidth){
-    chosenGeodesicGlobalID = -1;
-    for (let ii = 0; ii < geodesics.length; ii++) {
+    chosenLineGlobalID = -1;
+    for (let ii = 0; ii < lines.length; ii++) {
 
-        for (let jj = 0; jj < geodesics[ii].length; jj++) {
-            geodesics[ii][jj].strokeWidth = 2;
+        for (let jj = 0; jj < lines[ii].length; jj++) {
+            lines[ii][jj].strokeWidth = 2;
         }
     }
 }
@@ -960,12 +960,12 @@ fabric.Image.fromURL('delete.png', function(img) {
 
     delete_whole.on('mouseup', function (o) {
         delete_whole.set('shadow', new fabric.Shadow(shadowOff));
-        deleteWholeGeodesic(chosenGeodesicGlobalID);
+        deleteWholeGeodesic(chosenLineGlobalID);
         toolChange('grab');
 
         moveDirectionButtons(false);
 
-        chosenGeodesicGlobalID = - 1;
+        chosenLineGlobalID = - 1;
         showGeodesicButtons(false)
     });
     canvas_side_bar_perm.add(delete_whole);
@@ -1000,7 +1000,7 @@ fabric.Image.fromURL('set_sectors.png', function(img) {
 
     set_sectors.on('mouseup', function (o) {
         set_sectors.set('shadow', new fabric.Shadow(shadowOff));
-        autoSetSectorsAlongGeodesic(chosenGeodesicGlobalID);
+        autoSetSectorsAlongGeodesic(chosenLineGlobalID);
         toolChange('grab');
         arrowheadline = -1;
         moveDirectionButtons(false);
@@ -1128,8 +1128,8 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
 
         change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOn));
 
-        changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
+        changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenLineGlobalID);
+        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenLineGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -1138,14 +1138,14 @@ fabric.Image.fromURL('button_change_direction_counterclock_high.png', function(i
     change_direction_counterclock_high.on('mouseout', function () {
         change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
     });
 
     change_direction_counterclock_high.on('mouseup', function () {
         change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
     });
 
@@ -1172,8 +1172,8 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
 
     change_direction_clockwise_high.on('mousedown', function (event) {
         change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOn));
-        changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180, chosenGeodesicGlobalID);}, 151.5);
+        changeDirectionAndContinue('clockwise', Math.PI/180, chosenLineGlobalID);
+        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180, chosenLineGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -1182,14 +1182,14 @@ fabric.Image.fromURL('button_change_direction_clockwise_high.png', function(img)
     change_direction_clockwise_high.on('mouseout', function () {
         change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_high.on('mouseup', function () {
         change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
     });
 
@@ -1215,8 +1215,8 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
 
     change_direction_counterclock_low.on('mousedown', function (event) {
         change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOn));
-        changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1 , chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
+        changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1 , chosenLineGlobalID);
+        timeout = setInterval(function (event){changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1, chosenLineGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -1225,14 +1225,14 @@ fabric.Image.fromURL('button_change_direction_counterclock_low.png', function(im
     change_direction_counterclock_low.on('mouseout', function () {
         change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab')
     });
 
     change_direction_counterclock_low.on('mouseup', function () {
         change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
     });
 
@@ -1259,8 +1259,8 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
 
     change_direction_clockwise_low.on('mousedown', function (event) {
         change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOn));
-        changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);
-        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenGeodesicGlobalID);}, 151.5);
+        changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenLineGlobalID);
+        timeout = setInterval(function (event){changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenLineGlobalID);}, 151.5);
         toolChange('grab');
         arrowheadline = -1;
         return false;
@@ -1269,14 +1269,14 @@ fabric.Image.fromURL('button_change_direction_clockwise_low.png', function(img) 
     change_direction_clockwise_low.on('mouseout', function () {
         change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab')
     });
 
     change_direction_clockwise_low.on('mouseup', function () {
         change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOff));
         clearInterval(timeout);
-        drawDragPoint(chosenGeodesicGlobalID);
+        drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
     });
 
@@ -1311,7 +1311,7 @@ fabric.Image.fromURL('autocomplete.png', function(img) {
 
     autocomplete.on('mouseup', function (o) {
         autocomplete.set('shadow', new fabric.Shadow(shadowOff));
-        continueGeodesic(chosenGeodesicGlobalID);
+        continueGeodesic(chosenLineGlobalID);
         toolChange('grab');
 
         moveDirectionButtons(false);
