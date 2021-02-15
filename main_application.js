@@ -6166,15 +6166,15 @@ function init() {
             let panels =
 
                 [
-                    'panel-5.3.png',
-                    'panel-5.4.png',
-                    'panel-5.5.png',
-                    'panel-6.3.png',
-                    'panel-6.4.png',
-                    'panel-6.5.png',
-                    'panel-7.3.png',
-                    'panel-7.4.png',
-                    'panel-7.5.png'
+                    'europe_0.png',
+                    'europe_1.png',
+                    'europe_2.png',
+                    'europe_3.png',
+                    'europe_4.png',
+                    'europe_5.png',
+                    'europe_6.png',
+                    'europe_7.png',
+                    'europe_8.png'
                 ];
             if (textureColored == "1") {
                 panels =
