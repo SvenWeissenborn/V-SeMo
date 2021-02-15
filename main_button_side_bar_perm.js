@@ -711,20 +711,35 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
 
         delete_whole.set('opacity', 1);
 
-        if (showAutoSet == "1") {
-            set_sectors.set('opacity', 1);
+        if (isLineStarted == true) {
+            if (lineTypeToDraw !== "polyline"){
+                if (showAutoSet == "1") {
+                    set_sectors.set('opacity', 1);
+                }
+
+                if (showAutoComplete == "1") {
+                    autocomplete.set('opacity', 1);
+                }
+
+                if (showChangeDirection == "1") {
+                    direction.set('opacity', 1);
+                }
+            }
+        }else{
+            if (lines[chosenLineGlobalID][0].lineType !== "polyline"){
+                if (showAutoSet == "1") {
+                    set_sectors.set('opacity', 1);
+                }
+
+                if (showAutoComplete == "1") {
+                    autocomplete.set('opacity', 1);
+                }
+
+                if (showChangeDirection == "1") {
+                    direction.set('opacity', 1);
+                }
+            }
         }
-
-        if (showAutoComplete == "1") {
-            autocomplete.set('opacity', 1);
-        }
-
-        if (showChangeDirection == "1") {
-            direction.set('opacity', 1);
-        }
-
-
-
 
 
     }else {

@@ -121,7 +121,7 @@ canvas.on('mouse:move', function (o) {
     }
 
     if (lineContinueAt !== -1) {
-        color = lines[lineContinueAt][0].fill;
+        color = lines[lineContinueAt][0].stroke;
     } else {
         color = line_colors[lines.length % line_colors.length];
     }
@@ -724,7 +724,6 @@ canvas.on('mouse:up', function(opt) {
 
                 parentSectorID = getParentSectorOfPoint(mittelpunktlineSegment)
 
-
                 if (Math.abs(lineEnd_x - lineStart_x) > epsilon || Math.abs(lineEnd_y - lineStart_y) > epsilon) {
                     lineSegment = drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
 
@@ -770,7 +769,9 @@ canvas.on('mouse:up', function(opt) {
     }
 
     if (lineTypeToDraw == 'polyline'){
-        let immediatehistory = [4];
+        let immediatehistory = [0];
+        let color;
+        let lineStrokeWidth;
 
         if (lineContinueAt !== -1 && lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0] !== -1) {
             color = lines[lineContinueAt][0].stroke;
@@ -789,6 +790,8 @@ canvas.on('mouse:up', function(opt) {
             color = line_colors[lines.length % line_colors.length];
             lineStrokeWidth = lineStrokeWidthWhenSelected;
         }
+
+        console.log(color)
 
         if (lineContinueAt !== -1) {
             canvas.remove(lines[lineContinueAt][lines[lineContinueAt].length - 1].dragPoint);
@@ -813,18 +816,22 @@ canvas.on('mouse:up', function(opt) {
             let schnittpunktsParameter = getSchnittpunktsparameters(sectors, [pathCoords[ii].x, pathCoords[ii].y, pathCoords[ii + 1].x, pathCoords[ii + 1].y])
             if (schnittpunktsParameter.length > 0){
 
-                for (let jj = 0; jj < schnittpunktsParameter.length; jj++){
+                for (let jj = 0; jj < schnittpunktsParameter.length; jj++) {
                     let lambda = schnittpunktsParameter[jj][0]
                     let cutParameter = [ii, lambda]
                     polylineCutParameter.push(cutParameter)
                 }
 
-                dxg = pathCoords[ii + 1].x - pathCoords[ii].x
-                dyg = pathCoords[ii + 1].y - pathCoords[ii].y
-
-
             }
 
+        }
+
+        if (polylineCutParameter.length > 0){
+            for (let jj = 1; jj < polylineCutParameter.length; jj++) {
+                if (Math.abs(polylineCutParameter[jj - 1][1] - polylineCutParameter[jj][1]) < epsilon) {
+                    polylineCutParameter.splice(jj, 1)
+                }
+            }
         }
 
         let polylineSegment;
@@ -859,7 +866,7 @@ canvas.on('mouse:up', function(opt) {
 
                     //canvas.add(new fabric.Circle({ radius: 5, fill: '#f55', left: polylineSegmentCoords[Math.round(polylineSegmentCoords.length / 2)].x , top: polylineSegmentCoords[Math.round(polylineSegmentCoords.length / 2)].y, originX: 'center', originY: 'center' }));
 
-                    polylineSegment = drawPolylineSegment('red', lineStrokeWidth, parentSectorID, polylineSegmentCoords)
+                    polylineSegment = drawPolylineSegment(color, lineStrokeWidth, parentSectorID, polylineSegmentCoords)
 
                     if (lineContinueAt !== -1) {
                         polylineSegment.ID = [lineContinueAt, lines[lineContinueAt].length]
@@ -900,7 +907,7 @@ canvas.on('mouse:up', function(opt) {
 
                     parentSectorID = getParentSectorOfPoint(pointBetweenPathCoords)
 
-                    polylineSegment = drawPolylineSegment('black', lineStrokeWidth, parentSectorID, polylineSegmentCoords)
+                    polylineSegment = drawPolylineSegment(color, lineStrokeWidth, parentSectorID, polylineSegmentCoords)
 
                     if (lineContinueAt !== -1) {
                         polylineSegment.ID = [lineContinueAt, lines[lineContinueAt].length]
@@ -940,7 +947,7 @@ canvas.on('mouse:up', function(opt) {
 
                     parentSectorID = getParentSectorOfPoint(pointBetweenPathCoords)
 
-                    polylineSegment = drawPolylineSegment('blue', lineStrokeWidth, parentSectorID, polylineSegmentCoords)
+                    polylineSegment = drawPolylineSegment(color, lineStrokeWidth, parentSectorID, polylineSegmentCoords)
 
                     if (lineContinueAt !== -1) {
                         polylineSegment.ID = [lineContinueAt, lines[lineContinueAt].length]
@@ -963,7 +970,7 @@ canvas.on('mouse:up', function(opt) {
 
         }else{
             parentSectorID = getParentSectorOfPoint(pathCoords[Math.round(pathCoords.length / 2)])
-            polylineSegment = drawPolylineSegment('black', lineStrokeWidth, parentSectorID, pathCoords)
+            polylineSegment = drawPolylineSegment(color, lineStrokeWidth, parentSectorID, pathCoords)
 
             if (lineContinueAt !== -1) {
                 polylineSegment.ID = [lineContinueAt, lines[lineContinueAt].length]
@@ -1061,6 +1068,8 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
 
     let polylineSegment;
 
+    console.log(polylineSegmentCoords)
+
     polylineSegment = new fabric.Polyline(polylineSegmentCoords,
         {
             stroke: color,
@@ -1077,7 +1086,7 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
         }
     );
 
-    if (parentSectorID === undefined) {
+    if (parentSectorID === -1 || parentSectorID === undefined ) {
         canvas.add(polylineSegment);
         polylineSegment.opacity = 0.5;
         polylineSegment.parentSector = [-1, -1];
@@ -1086,7 +1095,8 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
 
     }else{
         stackIdx = canvas.getObjects().indexOf(sectors[parentSectorID].ID_text);
-        polylineSegment.parentSector = [parentSectorID, sectors[parentSectorID].polylineSegments.length];
+        polylineSegment.parentSector = [parentSectorID, sectors[parentSectorID].lineSegments.length];
+        console.log(polylineSegment.parentSector)
 
         polylineSegment.relationship = getRelationship(polylineSegment, polylineSegment.parentSector[0]);
 
@@ -2296,7 +2306,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
     
     let immediatehistory = [2, geodesicToDelete];
 
-    console.log(geodesicToDelete)
+    console.log(lines[geodesicToDelete].length)
 
     for (let ii = lines[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
@@ -2326,7 +2336,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
         }
 
-        if (lineSegment.type == 'line'){
+        if (lineSegment.lineType == 'geodesic'){
             let geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
             geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
 
@@ -2339,7 +2349,13 @@ function deleteWholeGeodesic(geodesicToDelete) {
             let xg2 = geodesic_end_point.x;
             let yg2 = geodesic_end_point.y;
 
-            lineSegmentParameter = [lineSegment.fill, lineSegment.strokeWidth, lineSegment.parentSector[0], xg1, yg1, xg2, yg2]
+            lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], xg1, yg1, xg2, yg2]
+
+            immediatehistory.push(lineSegmentParameter);
+        }
+
+        if (lineSegment.lineType == 'polyline'){
+            lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], lineSegment.points]
 
             immediatehistory.push(lineSegmentParameter);
         }
@@ -2881,7 +2897,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         pathCoords.push({x: points[0], y: points[1]});
                         pathCoords.push({x: points[2], y: points[3]});
                         polyline = new fabric.Polyline(pathCoords, {
-                            stroke: 'black',
+                            stroke: color,
                             fill: '',
                             strokeWidth: 2,
                             perPixelTargetFind: true,
@@ -5688,10 +5704,14 @@ function undoLastAction(){
 
             }
 
-            if (typeof(lineSegment) !== 'undefined') {
+            if (typeof(lineSegment) !== undefined) {
                 let secID = lineSegment.parentSector;
+                console.log(lineSegment.parentSector)
                 if (secID[0] >= 0) {
+                    console.log(sectors[secID[0]].lineSegments)
+                    console.log(secID[1], 1)
                     sectors[secID[0]].lineSegments.splice(secID[1], 1);
+                    console.log(sectors[secID[0]].lineSegments)
                 }
                 lines[lineID[0]].splice(lineID[1], 1);
                 if (lineID[1] === 0) {
@@ -5742,23 +5762,34 @@ function undoLastAction(){
     }
 
     if (immediatehistory[0] === 2) {
-        let geodesic = [];
+        let line = [];
 
         for (let jj = immediatehistory.length - 1; jj > 1; jj--) {
             let lineSegment;
 
             let lineSegmentParameter = immediatehistory[jj];
 
-            lineSegment = drawLineSegment(lineSegmentParameter[0], lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4], lineSegmentParameter[5], lineSegmentParameter[6])
+            console.log(immediatehistory)
 
-            lineSegment.ID = [immediatehistory[1], geodesic.length];
-            geodesic.push(lineSegment);
+            if (lineSegmentParameter[0] == 'geodesic'){
+                lineSegment = drawLineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4], lineSegmentParameter[5], lineSegmentParameter[6], lineSegmentParameter[7])
             }
-        for (let jj = 0; jj < geodesic.length; jj++){
-            lines[immediatehistory[1]].push(geodesic[jj])
+
+            if (lineSegmentParameter[0] == 'polyline'){
+                console.log(lineSegmentParameter[4])
+                lineSegment = drawPolylineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4])
+                console.log(lineSegment)
+            }
+
+
+            lineSegment.ID = [immediatehistory[1], line.length];
+            line.push(lineSegment);
+            }
+        for (let jj = 0; jj < line.length; jj++){
+            lines[immediatehistory[1]].push(line[jj])
         }
 
-        drawDragPoint(geodesic[geodesic.length - 1].ID[0]);
+        drawDragPoint(line[line.length - 1].ID[0]);
 
         }
 
@@ -5795,7 +5826,7 @@ function undoLastAction(){
             }
             polylineSegment = lines[polylineID[0]][lines[polylineID[0]].length - 1];
 
-            //drawDragPoint(lineID[0])
+            drawDragPoint(lineID[0])
 
         }
         //if (history.length<= 0){removeLines()}
