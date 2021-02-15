@@ -1062,8 +1062,6 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
 
     let polylineSegment;
 
-    console.log(polylineSegmentCoords)
-
     polylineSegment = new fabric.Polyline(polylineSegmentCoords,
         {
             stroke: color,
@@ -1090,7 +1088,6 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
     }else{
         stackIdx = canvas.getObjects().indexOf(sectors[parentSectorID].ID_text);
         polylineSegment.parentSector = [parentSectorID, sectors[parentSectorID].lineSegments.length];
-        console.log(polylineSegment.parentSector)
 
         polylineSegment.relationship = getRelationship(polylineSegment, polylineSegment.parentSector[0]);
 
@@ -1192,7 +1189,6 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-let drawPolyLine = false
 window.addEventListener('keydown',function(event){
     if(event.key === 'd'){
         toolChange('paint')
@@ -1200,15 +1196,7 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-window.addEventListener('keydown',function(event){
-    if(event.key === 'w'){
-        console.log(freeDrawings)
-    }
-});
-let polyline;
 let pathCoords = [];
-
-
 
 
 //Sektoren passend zusammensetzen
@@ -2349,6 +2337,21 @@ function deleteWholeGeodesic(geodesicToDelete) {
         }
 
         if (lineSegment.lineType == 'polyline'){
+            for (let jj = 0; jj < lineSegment.points.length; jj++){
+
+                let lineSegmentPointUntransformed_x = lineSegment.points[jj].x;
+                let lineSegmentPointUntransformed_y = lineSegment.points[jj].y;
+
+                lineSegmentPointUntransformed_x -= lineSegment.pathOffset.x;
+                lineSegmentPointUntransformed_y -= lineSegment.pathOffset.y;
+
+                lineSegmentPointUntransformed = new fabric.Point(lineSegmentPointUntransformed_x, lineSegmentPointUntransformed_y);
+
+                let lineSegmentPointTransformed = fabric.util.transformPoint(lineSegmentPointUntransformed, lineSegment.calcTransformMatrix());
+
+                lineSegment.points[jj] = lineSegmentPointTransformed;
+            }
+
             lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], lineSegment.points]
 
             immediatehistory.push(lineSegmentParameter);
@@ -2372,8 +2375,6 @@ function distance(punkt1, punkt2) {
 }
 
 function drawDragPoint(lineToGivePoint) {
-
-    console.log(lineToGivePoint)
 
     if (typeof lineToGivePoint === 'undefined' || lineToGivePoint == -1) {
         return;
@@ -2401,6 +2402,7 @@ function drawDragPoint(lineToGivePoint) {
         /*
         ACHTUNG!!!
         Die Punkte der polyline werden in globalen Koordinaten angegeben.
+        Hier funktioniert die Funktion lineSegment.calcLinePoints() nicht.
         Um die aktuelle Position von Punkten im globalen Koordinatensystem zu bekommen,
         kann nicht die selbe Methode wie fuer einfache Linien angewandt werden.
         Loesung:    Punkte der Linie nehmen und davon das .pathOffset abziehen
@@ -2412,9 +2414,6 @@ function drawDragPoint(lineToGivePoint) {
         line_end_point_x -= lines[lineToGivePoint][lines[lineToGivePoint].length - 1].pathOffset.x;
         line_end_point_y -= lines[lineToGivePoint][lines[lineToGivePoint].length - 1].pathOffset.y;
         line_end_point = new fabric.Point(line_end_point_x, line_end_point_y);
-
-        let transformMtarix = lineSegment.calcTransformMatrix();
-        drawOrientationCirc('green', transformMtarix[4], transformMtarix[5]);
 
         line_end_point = fabric.util.transformPoint(line_end_point, lineSegment.calcTransformMatrix());
     }
@@ -5637,10 +5636,22 @@ function toolChange(argument) {
                     geodreieck.selectable = false
                 }
                 if (add !== undefined){
-                    add.opacity = 0;
-                    add_dark.opacity = 1;
-                    add.set('shadow', new fabric.Shadow(shadowOff));
-                    canvas_side_bar_perm.renderAll()
+                    if (lineTypeToDraw == "geodesic"){
+                        add.opacity = 0;
+                        console.log('huhu')
+                        add_dark.opacity = 1;
+                        add.set('shadow', new fabric.Shadow(shadowOff));
+                        canvas_side_bar_perm.renderAll()
+                    }
+
+                }
+                if (add_curved !== undefined){
+                    if (lineTypeToDraw == "polyline") {
+                        add_curved.opacity = 0;
+                        add_dark_curved.opacity = 1;
+                        add_curved.set('shadow', new fabric.Shadow(shadowOff));
+                        canvas_side_bar_perm.renderAll()
+                    }
                 }
 
             } else {
@@ -5651,6 +5662,12 @@ function toolChange(argument) {
                 sectors[ii].trapez.lockMovementY = false;
                 if (geodreieck !== undefined){
                     geodreieck.selectable = true
+                }
+                if (add_dark_curved !== undefined){
+                    add_curved.opacity = 1;
+                    add_dark_curved.opacity = 0;
+                    add_curved.set('shadow', new fabric.Shadow(shadowOff));
+                    canvas_side_bar_perm.renderAll()
                 }
                 if (add_dark !== undefined){
                     add.opacity = 1;
@@ -5700,8 +5717,6 @@ function undoLastAction(){
     if (history.length <= 0){return}
     let immediatehistory = history.pop();
 
-    console.log(immediatehistory)
-
     if (immediatehistory[0] === 0) {
 
         for (let jj = 1; jj < immediatehistory.length; jj++) {
@@ -5718,19 +5733,21 @@ function undoLastAction(){
 
             if (typeof(lineSegment) !== undefined) {
                 let secID = lineSegment.parentSector;
-                console.log(lineSegment.parentSector)
+
                 if (secID[0] >= 0) {
-                    console.log(sectors[secID[0]].lineSegments)
-                    console.log(secID[1], 1)
                     sectors[secID[0]].lineSegments.splice(secID[1], 1);
-                    console.log(sectors[secID[0]].lineSegments)
                 }
+
                 lines[lineID[0]].splice(lineID[1], 1);
+
                 if (lineID[1] === 0) {
                     lines[lineID[0]] = [];
                 }
+
                 canvas.remove(lineSegment);
+
             }
+
             lineSegment = lines[lineID[0]][lines[lineID[0]].length - 1];
 
             drawDragPoint(lineID[0])
@@ -5781,16 +5798,12 @@ function undoLastAction(){
 
             let lineSegmentParameter = immediatehistory[jj];
 
-            console.log(immediatehistory)
-
             if (lineSegmentParameter[0] == 'geodesic'){
                 lineSegment = drawLineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4], lineSegmentParameter[5], lineSegmentParameter[6], lineSegmentParameter[7])
             }
 
             if (lineSegmentParameter[0] == 'polyline'){
-                console.log(lineSegmentParameter[4])
                 lineSegment = drawPolylineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4])
-                console.log(lineSegment)
             }
 
 
@@ -5812,7 +5825,7 @@ function undoLastAction(){
     }
 
     if (immediatehistory[0] === 4) {
-        console.log(immediatehistory)
+
         for (let jj = 1; jj < immediatehistory.length; jj++) {
 
             let polylineID = immediatehistory[immediatehistory.length - jj];
