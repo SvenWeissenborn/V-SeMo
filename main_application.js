@@ -773,25 +773,24 @@ canvas.on('mouse:up', function(opt) {
         let color;
         let lineStrokeWidth;
 
-        if (lineContinueAt !== -1 && lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0] !== -1) {
+        if (lineContinueAt !== -1) {
             color = lines[lineContinueAt][0].stroke;
             lineStrokeWidth = lines[lineContinueAt][0].strokeWidth;
 
-            //startsector beweglich machen
-            let idx = lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector;
-            sectors[idx[0]].trapez.lockMovementX = false;
-            sectors[idx[0]].trapez.lockMovementY = false;
-            sectors[idx[0]].trapez.evented = true;
-            sectors[idx[0]].trapez.hasControls = true;
-            sectors[idx[0]].trapez.hoverCursor = 'grabbing';
-
+            if (lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0] !== -1){
+                //startsector beweglich machen
+                let idx = lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector;
+                sectors[idx[0]].trapez.lockMovementX = false;
+                sectors[idx[0]].trapez.lockMovementY = false;
+                sectors[idx[0]].trapez.evented = true;
+                sectors[idx[0]].trapez.hasControls = true;
+                sectors[idx[0]].trapez.hoverCursor = 'grabbing';
+            }
 
         } else {
             color = line_colors[lines.length % line_colors.length];
             lineStrokeWidth = lineStrokeWidthWhenSelected;
         }
-
-        console.log(color)
 
         if (lineContinueAt !== -1) {
             canvas.remove(lines[lineContinueAt][lines[lineContinueAt].length - 1].dragPoint);
@@ -802,7 +801,6 @@ canvas.on('mouse:up', function(opt) {
 
         canvas.remove(polyline)
 
-
         pathCoords.splice(1, 1)
 
         let polylineSegments = [];
@@ -810,8 +808,6 @@ canvas.on('mouse:up', function(opt) {
         let polylineCutParameter = [];
 
         for (let ii = 0; ii < pathCoords.length - 1; ii ++){
-//            console.log(pathCoords[ii], ' ', pathCoords[ii + 1])
-
 
             let schnittpunktsParameter = getSchnittpunktsparameters(sectors, [pathCoords[ii].x, pathCoords[ii].y, pathCoords[ii + 1].x, pathCoords[ii + 1].y])
             if (schnittpunktsParameter.length > 0){
@@ -837,8 +833,6 @@ canvas.on('mouse:up', function(opt) {
         let polylineSegment;
 
         if (polylineCutParameter.length > 0){
-
-            console.log("polylineCutParameter:", polylineCutParameter)
 
             for (let ii = 0; ii < polylineCutParameter.length + 1; ii++){
                 let polylineSegmentCoords
@@ -2399,10 +2393,30 @@ function drawDragPoint(lineToGivePoint) {
     if(lines[lineToGivePoint][lines[lineToGivePoint].length - 1].lineType == 'geodesic') {
         line_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
         line_end_point = fabric.util.transformPoint(line_end_point, lineSegment.calcTransformMatrix());
+
     }
 
     if (lines[lineToGivePoint][lines[lineToGivePoint].length - 1].lineType == 'polyline') {
-        line_end_point = lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points[lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points.length - 1]
+
+        /*
+        ACHTUNG!!!
+        Die Punkte der polyline werden in globalen Koordinaten angegeben.
+        Um die aktuelle Position von Punkten im globalen Koordinatensystem zu bekommen,
+        kann nicht die selbe Methode wie fuer einfache Linien angewandt werden.
+        Loesung:    Punkte der Linie nehmen und davon das .pathOffset abziehen
+                    anschließend die Transformation wie gewohnt anwenden.
+        */
+
+        line_end_point_x = lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points[lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points.length - 1].x
+        line_end_point_y = lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points[lines[lineToGivePoint][lines[lineToGivePoint].length - 1].points.length - 1].y
+        line_end_point_x -= lines[lineToGivePoint][lines[lineToGivePoint].length - 1].pathOffset.x;
+        line_end_point_y -= lines[lineToGivePoint][lines[lineToGivePoint].length - 1].pathOffset.y;
+        line_end_point = new fabric.Point(line_end_point_x, line_end_point_y);
+
+        let transformMtarix = lineSegment.calcTransformMatrix();
+        drawOrientationCirc('green', transformMtarix[4], transformMtarix[5]);
+
+        line_end_point = fabric.util.transformPoint(line_end_point, lineSegment.calcTransformMatrix());
     }
 
     lineSegment.dragPoint = new fabric.Circle({
@@ -2445,8 +2459,8 @@ function drawDragPoint(lineToGivePoint) {
 
 
         showSectorAreaInfobox(false);
-        showDeficitAngleInfobox(false)
-        showVertices(false)
+        showDeficitAngleInfobox(false);
+        showVertices(false);
 
         chosenLineGlobalID = lineSegment.ID[0];
         showGeodesicButtons(true);
@@ -2503,8 +2517,6 @@ function drawDragPoint(lineToGivePoint) {
 
             lineTypeToDraw = 'polyline';
 
-            console.log(color)
-
             pathCoords.push({x: points[0], y: points[1]});
             pathCoords.push({x: points[2], y: points[3]});
             polyline = new fabric.Polyline(pathCoords, {
@@ -2519,7 +2531,7 @@ function drawDragPoint(lineToGivePoint) {
                 selectable: false,
             });
 
-            canvas.add(polyline)
+            canvas.add(polyline);
 
             polyline.bringToFront();
 
@@ -2602,7 +2614,7 @@ function fitResponsiveCanvas() {
 
 }
 
-let rotateIcon = 'rotate.png'
+let rotateIcon = 'rotate.png';
 let img = document.createElement('img');
 img.src = rotateIcon;
 
@@ -2618,7 +2630,7 @@ fabric.Object.prototype.controls.mtr = new fabric.Control({
     render: renderIcon,
     cornerSize: 40,
     withConnection: true
-})
+});
 
 // here's where the render action for the control is defined
 function renderIcon(ctx, left, top, styleOverride, fabricObject) {
@@ -2771,21 +2783,21 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     }
 
     this.trapez.on('moving',function(){
-        removeSnapEdges(this.parent.ID)
+        removeSnapEdges(this.parent.ID);
         isItTimeToSnap(this);
         updateMinions(this);
         removeDeficitAngleVisualize();
     });
 
     this.trapez.on('rotating',function(){
-        removeSnapEdges(this.parent.ID)
+        removeSnapEdges(this.parent.ID);
         isItTimeToSnap(this);
         updateMinions(this);
         removeDeficitAngleVisualize();
     });
 
     this.trapez.on('modified',function(){
-        removeSnapEdges(this.parent.ID)
+        removeSnapEdges(this.parent.ID);
         isItTimeToSnap(this);
         updateMinions(this);
         removeDeficitAngleVisualize();
@@ -2832,7 +2844,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         if (turnLorentzTransformOn == "1"){
 
-            rapidity_before_something = this.parent.rapidity
+            rapidity_before_something = this.parent.rapidity;
 
             dist_inv_min_x_old = Math.min(this.points[0].x, this.points[1].x, this.points[2].x, this.points[3].x);
             dist_inv_max_y_old = Math.max(this.points[0].y, this.points[1].y, this.points[2].y, this.points[3].y);
@@ -2910,7 +2922,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             selectable: false,
                             });
 
-                        canvas.add(polyline)
+                        canvas.add(polyline);
 
                         polyline.bringToFront();
 
@@ -2986,7 +2998,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         if (turnLorentzTransformOn == "1"){
 
-            rapidity_after_something = this.parent.rapidity
+            rapidity_after_something = this.parent.rapidity;
 
             //Der Sektor muss reinitialisiert werden, wenn die Maus losgelassen wird, jedoch nur, wenn sich an den Rapiditäten etwas getan hat.
             //Sonst wird die Boundingbox nicht aktualisiert
@@ -3026,22 +3038,22 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         if (toCalcSectorArea == true & selectedTool == 'grab'){
 
             if (showAreaSector == "earth") {
-                let sectorTop = distance(this.points[0], this.points[1]) * 12.742
-                let sectorBottom = distance(this.points[2], this.points[3]) * 12.742
+                let sectorTop = distance(this.points[0], this.points[1]) * 12.742;
+                let sectorBottom = distance(this.points[2], this.points[3]) * 12.742;
 
                 let sectorArea = 0.5 * (sectorTop + sectorBottom) * this.parent.sector_height * 12.742;
-                let sectorArea4Dec = sectorArea.toFixed(1)
+                let sectorArea4Dec = sectorArea.toFixed(1);
                 let infoboxAreaTextByLanguageOnClick = "Sektorfläche:";
                 if (language == "english") {
                     infoboxAreaTextByLanguageOnClick = "sector area:"
                 }
-                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "km²")
+                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "km²");
 
                 canvas_side_bar_perm.renderAll()
             }
             if (showAreaSector == "globe"){
-                let sectorTop = distance(this.points[0], this.points[1]) * 0.03
-                let sectorBottom = distance(this.points[2], this.points[3]) * 0.03
+                let sectorTop = distance(this.points[0], this.points[1]) * 0.03;
+                let sectorBottom = distance(this.points[2], this.points[3]) * 0.03;
 
                 let sectorArea = 0.5 * (sectorTop + sectorBottom) * this.parent.sector_height * 0.03;
                 let sectorArea4Dec = sectorArea.toFixed(4)
@@ -3049,21 +3061,21 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 if (language == "english") {
                     infoboxAreaTextByLanguageOnClick = "sector area:"
                 }
-                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²")
+                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
 
                 canvas_side_bar_perm.renderAll()
             }
 
-        };
+        }
 
-        sectorParameterOnMouseup = getSectorParameterOnMouseup(this.parent.ID)
+        sectorParameterOnMouseup = getSectorParameterOnMouseup(this.parent.ID);
 
         if (sectorParameterOnMousedown.length > 0){
             if (sectorParameterOnMousedown[0] === sectorParameterOnMouseup[0]){
                 if (turnLorentzTransformOn == "1") {
                     if (sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] || sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] || sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4] || sectorParameterOnMousedown[5] !== sectorParameterOnMouseup[5]){
                         immediatehistory.push(sectorParameterOnMousedown);
-                        sectorParameterOnMousedown = []
+                        sectorParameterOnMousedown = [];
                         history.push(immediatehistory);
 
                         immediatehistory = [1]
@@ -3071,7 +3083,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 }else{
                     if (sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] || sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] || sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4]){
                         immediatehistory.push(sectorParameterOnMousedown);
-                        sectorParameterOnMousedown = []
+                        sectorParameterOnMousedown = [];
                         history.push(immediatehistory);
 
                         immediatehistory = [1]
