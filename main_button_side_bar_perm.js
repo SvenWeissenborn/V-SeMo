@@ -842,19 +842,22 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
                 }
             }
         }else{
-            if (lines[chosenLineGlobalID][0].lineType !== "polyline"){
-                if (showAutoSet == "1") {
-                    set_sectors.set('opacity', 1);
-                }
+            if (chosenLineGlobalID !== -1){
+                if (lines[chosenLineGlobalID][0].lineType !== "polyline"){
+                    if (showAutoSet == "1") {
+                        set_sectors.set('opacity', 1);
+                    }
 
-                if (showAutoComplete == "1") {
-                    autocomplete.set('opacity', 1);
-                }
+                    if (showAutoComplete == "1") {
+                        autocomplete.set('opacity', 1);
+                    }
 
-                if (showChangeDirection == "1") {
-                    direction.set('opacity', 1);
+                    if (showChangeDirection == "1") {
+                        direction.set('opacity', 1);
+                    }
                 }
             }
+
         }
 
 
