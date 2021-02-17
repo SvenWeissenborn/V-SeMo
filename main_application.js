@@ -2085,8 +2085,6 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
     let immediatehistory = [2, geodesicToDelete];
 
-    console.log(lines[geodesicToDelete].length)
-
     for (let ii = lines[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
         if(lines[geodesicToDelete][ii].parentSector[0] !== -1) {
@@ -5720,7 +5718,6 @@ function toolChange(argument) {
                 if (add !== undefined){
                     if (lineTypeToDraw == "geodesic"){
                         add.opacity = 0;
-                        console.log('huhu')
                         add_dark.opacity = 1;
                         add.set('shadow', new fabric.Shadow(shadowOff));
                         canvas_side_bar_perm.renderAll()
@@ -5728,11 +5725,14 @@ function toolChange(argument) {
 
                 }
                 if (add_curved !== undefined){
-                    if (lineTypeToDraw == "polyline") {
-                        add_curved.opacity = 0;
-                        add_dark_curved.opacity = 1;
-                        add_curved.set('shadow', new fabric.Shadow(shadowOff));
-                        canvas_side_bar_perm.renderAll()
+                    if (showAddCurvedLine == "1"){
+                        console.log('hier')
+                        if (lineTypeToDraw == "polyline") {
+                            add_curved.opacity = 0;
+                            add_dark_curved.opacity = 1;
+                            add_curved.set('shadow', new fabric.Shadow(shadowOff));
+                            canvas_side_bar_perm.renderAll()
+                        }
                     }
                 }
 
@@ -5745,17 +5745,19 @@ function toolChange(argument) {
                 if (geodreieck !== undefined){
                     geodreieck.selectable = true
                 }
-                if (add_dark_curved !== undefined){
-                    add_curved.opacity = 1;
-                    add_dark_curved.opacity = 0;
-                    add_curved.set('shadow', new fabric.Shadow(shadowOff));
-                    canvas_side_bar_perm.renderAll()
-                }
                 if (add_dark !== undefined){
                     add.opacity = 1;
                     add_dark.opacity = 0;
                     add.set('shadow', new fabric.Shadow(shadowOff));
                     canvas_side_bar_perm.renderAll()
+                }
+                if (showAddCurvedLine == "1") {
+                    if (add_dark_curved !== undefined) {
+                        add_curved.opacity = 1;
+                        add_dark_curved.opacity = 0;
+                        add_curved.set('shadow', new fabric.Shadow(shadowOff));
+                        canvas_side_bar_perm.renderAll()
+                    }
                 }
             }
             sectors[ii].trapez.hoverCursor = cursor;
