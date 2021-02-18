@@ -1768,7 +1768,7 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
 
     for (let jj = 0; jj < initialSectorTrapez.parent.lineSegments.length; jj++) {
 
-        if (initialSectorTrapez.parent.lineSegments.lineType == "geodesic") {
+        if (initialSectorTrapez.parent.lineSegments[jj].lineType == "geodesic") {
             let geodesic_start_point_calc = new fabric.Point(
                 initialSectorTrapez.parent.lineSegments[jj].start_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
                 initialSectorTrapez.parent.lineSegments[jj].start_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
@@ -4732,10 +4732,6 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
 
 
     if (sectors[initialSectorID].lineSegments.length > 0) {
-
-        console.log(sectors[initialSectorID].lineSegments[0].width)
-        console.log(sectors[initialSectorID].lineSegments[0].height)
-        console.log(sectors[initialSectorID].lineSegments[0].pathOffset)
 
         for (let ii = 0; ii < sectors[initialSectorID].lineSegments.length; ii++) {
             canvas.bringToFront(sectors[initialSectorID].lineSegments[ii]);
