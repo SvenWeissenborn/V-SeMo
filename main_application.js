@@ -1783,9 +1783,9 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
                 geodesic_start_point_calc.y + (geodesic_end_point_calc.y - geodesic_start_point_calc.y) * 0.5,
             );
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = geodesic_transformed_mid_point.x - midpoint_boundingbox_before_global.x;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = geodesic_transformed_mid_point.x - midpoint_boundingbox_before_global.x - 0.5;
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[5] =  geodesic_transformed_mid_point.y - midpoint_boundingbox_before_global.y;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[5] =  geodesic_transformed_mid_point.y - midpoint_boundingbox_before_global.y + 0.5;
         }
 
 
@@ -1808,8 +1808,8 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
                 initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
             );
 
-            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x;
-            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y;
+            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x - 0.5;
+            initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y + 0.5;
 
         }
     }
@@ -2443,7 +2443,6 @@ function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, li
 
     if (turnLorentzTransformOn == "1"){
         getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
-        console.log(lineSegment.start_point_BL, lineSegment.end_point_BL)
     }
 
 
