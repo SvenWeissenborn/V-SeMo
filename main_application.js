@@ -1794,9 +1794,9 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
             initialSectorTrapez.parent.lineSegments[jj].set('left', initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
             initialSectorTrapez.parent.lineSegments[jj].set('top', initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = initialSectorTrapez.parent.lineSegments[jj].left - midpoint_boundingbox_before_global.x;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = initialSectorTrapez.parent.lineSegments[jj].left - midpoint_boundingbox_before_global.x - 0.5;
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[5] = initialSectorTrapez.parent.lineSegments[jj].top - midpoint_boundingbox_before_global.y ;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[5] = initialSectorTrapez.parent.lineSegments[jj].top - midpoint_boundingbox_before_global.y + 0.5;
 
             console.log(initialSectorTrapez.parent.lineSegments[jj].relationship)
         }
