@@ -5453,6 +5453,8 @@ function startGeodesics(){
 
         lineSegment.ID = startLineID[ii];
 
+        lineSegment.lineType = "geodesic"
+
         lineSegment.relationship = getRelationship(lineSegment, sec.ID);
 
         sec.lineSegments.push(lineSegment);

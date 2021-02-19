@@ -27,80 +27,58 @@
 let slideContent = [
     {
         id: 0,
-        text: 'Willkommen zu der Vorstellung einer Tutorial-Funktion für ViSeMo.',
+        text: 'Willkommen zu der Vorstellung von ViSeMo.',
         sectorsToShow: [2, 5],
         sectorsToHide: [0, 1, 3, 4, 6, 7, 8],
-        geodesicsToHide: [0, 1],
-        marksToHide: [0, 1, 2, 3],
-        textsToHide: [0, 1, 2, 3],
+        marksToHide: [0, 1],
+        textsToHide: [0, 1],
     },
 
     {
         id: 1,
-        text: 'Hier änderte sich nun nur der Text',
+        text: 'Probiere die Funktionen Verschieben und Drehen der Sektoren aus, welche du im Video bereits gesehen hast.',
     },
 
 
     {
-        id: 3,
-        text: 'Wir erweitern das Modell. Setze Sektor 2 an seinen passenden Nachbarn.',
-        sectorsToShow: [1],
-    },
-
-    {
-        id: 4,
-        text: 'Nun fügen wir einen vierten Sektor unserem Modell hinzu. Lege auch ihn an.',
-        sectorsToShow: [4],
-    },
-
-    {
-        id: 5,
-        text: 'Setze doch mal die Sektoren 3 und 6 zusammen.',
+        id: 2,
+        text: 'Setze die beiden Sektoren an den passenden Kanten zusammen, sodass sie aneinander snappen.',
         slideCondition: [['snappedSectors', [2, 5]]],
     },
 
     {
+        id: 3,
+        text: 'Zeichne eine Geodäte auf einen der Sektoren und lösche sie anschließend wieder.',
+    },
+
+    {
+        id: 4,
+        text: 'Zeichne eine Geodäte, welche über beide Sektoren verläuft.',
+    },
+
+    {
         id: 5,
-        text: 'Daraufhin geht hier das Tutorial weiter.',
-    },
-
-
-    {
-        id: 6,
-        text: 'Hier ein Geodätenstück.',
-        geodesicsToShow: [0],
-
+        text: 'Ziehe die Sektoren wieder auseinander und versuche nun eine Geodäte über die Lücke von einem in den anderen Sektor zu zeichnen.',
     },
 
     {
         id: 6,
-        text: 'Wir vervollständigen Sie. Natürlich nur über sichtbare Sektoren.',
-        geodesicsToComplete: [0],
-    },
+        text: 'Setze die Sektoren auf verschiedene Weisen zusammen, sodass unterschiedliche Sektoren miteinander snappen bzw. Lücken bilden.',
+        sectorsToShow: [1, 4],
 
-    {
-        id: 6,
-        text: 'Setzen wir doch mal alle Sektoren entlang dieser Geodäte zusammen.',
-        geodesicsToAutoSetAlong: [0],
     },
 
     {
         id: 7,
-        text: 'Ändern wir doch mal die Snappanordnug.',
-        sectorsToSnapTogether: [[5, 2], [4, 5]],
+        text: 'Zeichne eine Geodäte, die diagonal über das Sektormodell verläuft.',
     },
 
     {
-        id: 7,
-        text: 'Hier erscheint mal ein Markierungspunkt mit einem Text ;-).',
-        marksToShow: [0, 1, 2 , 3],
-        textsToShow: [0, 1, 2 , 3],
-    },
-
-    {
-        id: 7,
-        text: 'Danke für die Aufmerksamkeit!',
-
+        id: 8,
+        text: 'Zeichne eine Geodäte von P1 in Sektor 3 zu P2 in Sektor 7.',
+        sectorsToShow: [0, 3, 6, 7, 8],
+        marksToShow: [0 ,1],
+        textsToShow: [0, 1],
     },
 
 ];

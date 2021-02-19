@@ -25,30 +25,30 @@ startViewportTransform_5 = -100
 fontSize = 15
 
 #Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [2, 2]
+startGeodesicsSectors = []
 #Winkel in Grad
-startGeodesicsAngle = [39, 39]
+startGeodesicsAngle = []
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.1, 0.34]
+startGeodesicsOffset_x = []
 #Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.57, 0.065]
+startGeodesicsOffset_y = []
 #Laenge der Geodaete in Pixel
-startGeodesicsLength = [80, 80]
+startGeodesicsLength = []
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = ['true', 'true']
+startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [2, 1, 4, 5]
-startMarksRadius = [5, 5, 5, 5]
-startMarksOffset_x = [0.8, 0.2, 0.3, 0.3]
-startMarksOffset_y = [0.2, 0.4, 0.6, 0.8]
+startMarksSectors = [2, 6]
+startMarksRadius = [5, 5,]
+startMarksOffset_x = [0.8, 0.2, ]
+startMarksOffset_y = [0.2, 0.4, ]
 
 #Parameter fuer die Starttexte
-startTextsSectors = [2, 1, 4, 5]
-startTextContent = ['P1', 'P2', 'P3', 'P4']
-startTextsOffset_x = [0.85, 0.25, 0.25, 0.4]
-startTextsOffset_y = [0.1, 0.5, 0.7, 0.7]
+startTextsSectors = [2, 6]
+startTextContent = ['P1', 'P2']
+startTextsOffset_x = [0.85, 0.25]
+startTextsOffset_y = [0.1, 0.5]
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
 
