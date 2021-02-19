@@ -6269,6 +6269,10 @@ canvas.renderAll();
 //TODO: Polylines transformen können
 //TODO: Polylines an ungesnappten Sektorkanten abbrechen
 //TODO: Unerlaubtes Zeichnen von Polylines kenntlich machen
+//TODO: Exercise: Event für Drehen und Verschieben
+//TODO: Exercise: Tick-Leiste
+//TODO: Exercise: Linien automatisch löschen
+
 
 //--------------------Ausschuss-----------------------
 
