@@ -895,6 +895,14 @@ canvas.on('mouse:up', function(opt) {
 
                     let pointBetweenPathCoords = new fabric.Point(pointBetweenPathCoords_x, pointBetweenPathCoords_y)
 
+                    //Es kann vorkommen, dass Geodäten an den Kanten abbrechen und das dann zu Stücken führt, die am selben Punkt
+                    //starten und Enden. Das wird hier verhindert
+
+                    if (polylineSegmentCoords.length == 2){
+                        if (Math.abs(polylineSegmentCoords[0].x - polylineSegmentCoords[1].x) < epsilon && Math.abs(polylineSegmentCoords[0].y - polylineSegmentCoords[1].y) < epsilon){
+                            continue
+                        }
+                    }
 
                     parentSectorID = getParentSectorOfPoint(pointBetweenPathCoords)
 
@@ -1829,8 +1837,6 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
             initialSectorTrapez.parent.lineSegments[jj].relationship[4] = initialSectorTrapez.parent.lineSegments[jj].left - midpoint_boundingbox_before_global.x;
 
             initialSectorTrapez.parent.lineSegments[jj].relationship[5] = initialSectorTrapez.parent.lineSegments[jj].top - midpoint_boundingbox_before_global.y + 1;
-
-            console.log(initialSectorTrapez.parent.lineSegments[jj].relationship)
         }
 
         if (initialSectorTrapez.parent.lineSegments[jj].dragPoint !== undefined) {
@@ -2458,10 +2464,10 @@ function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, li
         originY: 'center',
         perPixelTargetFind: true,
         objectCaching: false,
-        hasBorders: true,
+        hasBorders: false,
         hasControls: false,
         evented: true,
-        selectable: true,
+        selectable: false,
     });
 
     stackIdx = canvas.getObjects().indexOf(sectors[parentSectorID].ID_text);
@@ -2560,10 +2566,10 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
             originX: 'center',
             originY: 'center',
             objectCaching: false,
-            hasBorders: true,
+            hasBorders: false,
             hasControls: false,
             evented: false,
-            selectable: true,
+            selectable: false,
         }
     );
 
@@ -2647,7 +2653,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             stroke: sectorEdgeColor,
             perPixelTargetFind: true,
             hasControls: true,
-            hasBorders: true,
+            hasBorders: false,
             objectCaching: false,
             lockMovementX: false,
             lockMovementY: false,
@@ -5771,8 +5777,6 @@ function toolChange(argument) {
                           */
                         lines[chosenLineGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
                     }
-
-                    console.log(lines[chosenLineGlobalID][0].relationship)
 
                     if (selectedTool !== 'delete') {
                         showGeodesicButtons(true);
