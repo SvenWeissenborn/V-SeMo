@@ -3026,6 +3026,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                 canvas_side_bar_perm.renderAll()
             }
+
             if (showAreaSector == "globe"){
                 let sectorTop = distance(this.points[0], this.points[1]) * 0.03;
                 let sectorBottom = distance(this.points[2], this.points[3]) * 0.03;
@@ -3036,8 +3037,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 if (language == "english") {
                     infoboxAreaTextByLanguageOnClick = "sector area:"
                 }
-                infoboxAreaText.set('htmltext', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
-
+                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
+                console
                 canvas_side_bar_perm.renderAll()
             }
 
@@ -3367,7 +3368,7 @@ function drawSnapEdges(initialSectorID) {
                 let strokeDashArray
 
                 if (textured !== "1"){
-                    strokeDashArray = [8, 5]
+                    strokeDashArray = [5, 5]
                 }else{
                     strokeDashArray = [0, 0]
                 }
@@ -3385,6 +3386,7 @@ function drawSnapEdges(initialSectorID) {
                     hasControls: false,
                     evented: false,
                     selectable: false,
+                    opacity: startOpacity,
                 });
 
                 edge.ID = ii;
@@ -4214,8 +4216,8 @@ function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
         }
     }else{
         for (let ii = 0; ii < 4; ii++) {
-            globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2 - trapezToGetGlobalCoords.x_offset ;
-            globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2 - trapezToGetGlobalCoords.y_offset ;
+            globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2; // - trapezToGetGlobalCoords.x_offset ;
+            globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2; // - trapezToGetGlobalCoords.y_offset ;
             globalCoords[ii] = fabric.util.transformPoint(globalCoords[ii], transformMatrix);
         }
     }

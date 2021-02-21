@@ -46,6 +46,12 @@ if (showVerticesOn == "1"){
     dist_to_top_delete_whole_button_number += 1;
 }
 
+let dist_to_top_showArea_button_number = 5;
+
+if (showAddCurvedLine == "1") {
+    dist_to_top_showArea_button_number += 1;
+}
+
 let dist_to_top_verticesOn_button_number = 5;
 
 if (showAddCurvedLine == "1") {
@@ -891,7 +897,7 @@ let area_sector
 fabric.Image.fromURL('area_sector.png', function(img) {
     area_sector = img.set({
         left: 51.5,
-        top:  dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + dist_to_top_showArea_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: areaSectorOpacity,
         originX: "center",
         originY: "top",
@@ -928,7 +934,7 @@ fabric.Image.fromURL('area_sector.png', function(img) {
 let infoboxArea;
 infoboxArea = new fabric.Rect({
     left: 140 * screenFactor,
-    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist),
+    top: dist_to_top + dist_to_top_showArea_button_number * (136 * buttonfactor * screenFactor + buttondist),
     opacity: 0,
     width: 120 * screenFactor,
     height: 50 * screenFactor,
@@ -961,7 +967,7 @@ infoboxAreaText = new fabric.Text("Text", {
     originX: 'center',
     originY: 'center',
     left: 140 * screenFactor,
-    top: dist_to_top + 6 * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
+    top: dist_to_top + dist_to_top_showArea_button_number * (136 * buttonfactor * screenFactor + buttondist) + 25 * screenFactor,
     text: infoboxAreaTextByLanguage,
     fill: '#575656',
     objectCaching: false,
