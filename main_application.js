@@ -223,25 +223,6 @@ canvas.on('mouse:move', function (o) {
 
     }
 
-    if (lineTypeToDraw == 'polyline') {
-
-        if (isLineStarted == true){
-            let geodesicNearToMark = geodesicToMarkCalc();
-
-            if (geodesicNearToMark[0]) {
-                pathCoord = geodesicToMark(geodesicNearToMark[1]);
-            } else {
-                pathCoord = {x: pointer.x, y: pointer.y};
-            }
-
-
-            polyline.points.push(pathCoord);
-
-            canvas.renderAll();
-        }
-
-    }
-
     if (lineTypeToDraw == 'geodesic'){
 
         if (selectedTool == 'paint' || lineContinueAt !== -1) {
@@ -468,6 +449,42 @@ canvas.on('mouse:move', function (o) {
 
             canvas.renderAll();
         }
+    }
+
+    if (lineTypeToDraw == 'polyline') {
+
+        if (isLineStarted == true){
+            let geodesicNearToMark = geodesicToMarkCalc();
+
+            if (geodesicNearToMark[0]) {
+                pathCoord = geodesicToMark(geodesicNearToMark[1]);
+            } else {
+                pathCoord = {x: pointer.x, y: pointer.y};
+            }
+
+            polyline.points.push(pathCoord);
+
+            xp1 = polyline.points[polyline.points.length - 2].x
+            yp1 = polyline.points[polyline.points.length - 2].y
+            xp2 = polyline.points[polyline.points.length - 1].x
+            yp2 = polyline.points[polyline.points.length - 1].y
+
+            let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [xp1, yp1, xp2, yp2]);
+            let lambdas = [];
+            for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+                lambdas.push(schnittpunktsparameters[ii][0])
+            }
+
+            for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+                if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
+                    polyline.stroke = 'red';
+
+                }
+            }
+
+            canvas.renderAll();
+        }
+
     }
 
 });
@@ -831,8 +848,13 @@ canvas.on('mouse:up', function(opt) {
             if (schnittpunktsParameter.length > 0){
 
                 for (let jj = 0; jj < schnittpunktsParameter.length; jj++) {
+
                     let lambda = schnittpunktsParameter[jj][0]
-                    let cutParameter = [ii, lambda]
+                    let necessarySectorsAreSnapped = true
+                    if(sectors[schnittpunktsParameter[jj][1]].snapStatus[schnittpunktsParameter[jj][2]] == 0){
+                        necessarySectorsAreSnapped = false
+                    }
+                    let cutParameter = [ii, lambda, necessarySectorsAreSnapped]
                     polylineCutParameter.push(cutParameter)
                 }
 
@@ -894,6 +916,10 @@ canvas.on('mouse:up', function(opt) {
 
                     immediatehistory.push(polylineSegment.ID);
 
+                    if (polylineCutParameter[ii][2] == false){
+                        break
+                    }
+
                 }
 
                 if(ii > 0 && ii < polylineCutParameter.length){
@@ -935,6 +961,10 @@ canvas.on('mouse:up', function(opt) {
 
                     immediatehistory.push(polylineSegment.ID);
 
+                    if (polylineCutParameter[ii][2] == false){
+                        break
+                    }
+
                 }
 
                 if(ii == polylineCutParameter.length){
@@ -975,7 +1005,9 @@ canvas.on('mouse:up', function(opt) {
 
                     immediatehistory.push(polylineSegment.ID);
 
-
+                    if (polylineCutParameter[ii - 1][2] == false){
+                        break
+                    }
 
                 }
             }
@@ -1794,9 +1826,9 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
             initialSectorTrapez.parent.lineSegments[jj].set('left', initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
             initialSectorTrapez.parent.lineSegments[jj].set('top', initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].polylineMidPoint_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = initialSectorTrapez.parent.lineSegments[jj].left - midpoint_boundingbox_before_global.x - 0.5;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[4] = initialSectorTrapez.parent.lineSegments[jj].left - midpoint_boundingbox_before_global.x;
 
-            initialSectorTrapez.parent.lineSegments[jj].relationship[5] = initialSectorTrapez.parent.lineSegments[jj].top - midpoint_boundingbox_before_global.y + 0.5;
+            initialSectorTrapez.parent.lineSegments[jj].relationship[5] = initialSectorTrapez.parent.lineSegments[jj].top - midpoint_boundingbox_before_global.y + 1;
 
             console.log(initialSectorTrapez.parent.lineSegments[jj].relationship)
         }
@@ -2786,6 +2818,14 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         chosenLineGlobalID = -1;
 
         if(selectedTool !== 'paint' && selectedTool !== 'grab' && selectedTool !== 'mark') return;
+
+        // Mögliche Lösung um die angeklickten Sektoren nach vorne zu holen
+        this.bringToFront()
+        updateMinions(this)
+        drawSnapEdges(this.parent.ID)
+        //----------------
+
+
         let color;
         color = line_colors[lines.length % line_colors.length];
         if (!isLineStarted) {
@@ -2990,7 +3030,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 if (language == "english") {
                     infoboxAreaTextByLanguageOnClick = "sector area:"
                 }
-                infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
+                infoboxAreaText.set('htmltext', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
 
                 canvas_side_bar_perm.renderAll()
             }
