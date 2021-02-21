@@ -6308,8 +6308,7 @@ if (setPositionAndAngleRandomly == "1"){randomPositionAndAngle();}
 
 canvas.renderAll();
 
-
-//TODO: Sektor nach oben holen auf Click
+//----------------------TODOs-------------------------
 //TODO: Sektor nach oben holen beim drüber zeichnen
 //TODO: Werkzeug zum Messen von Linien
 //TODO: Exercise: Event für Drehen und Verschieben
