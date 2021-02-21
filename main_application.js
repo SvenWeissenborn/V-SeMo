@@ -6312,9 +6312,6 @@ canvas.renderAll();
 //TODO: Sektor nach oben holen auf Click
 //TODO: Sektor nach oben holen beim drüber zeichnen
 //TODO: Werkzeug zum Messen von Linien
-//TODO: Polylines transformen können
-//TODO: Polylines an ungesnappten Sektorkanten abbrechen
-//TODO: Unerlaubtes Zeichnen von Polylines kenntlich machen
 //TODO: Exercise: Event für Drehen und Verschieben
 //TODO: Exercise: Tick-Leiste
 //TODO: Exercise: Linien automatisch löschen
