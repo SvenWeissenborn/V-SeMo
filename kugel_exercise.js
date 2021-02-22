@@ -9,6 +9,7 @@
 // marksToShow: [MarkID 1, MarkID 2, ...] Array der zeigenden StartMarks
 // textsToHide: [TextID 1, TextID 2, ...] Array der versteckenden StartTexts
 // textsToShow: [TextID 1, TextID 2, ...] Array der zeigenden StartTexts
+// startToRemoveAllLines: true; um alle Geodaeten zu loeschen. Beachte, dass die History geleert wird
 // geodesicsToAutoSetAlong: [GeodaeteID 1, GeodaeteID 2, ...], Array der Geodaeten, entlang derer die Sektoren zusammengesetzt werden sollen
 // sectorsToSnapTogether: [[SektorIDToSnap, SektorIDZielsektor], [SektorIDToSnap, SektorIDZielsektor], ...],
 // -> Array der Snappartner. Erster Eintrag gilt dem zu bewegenden Sektor der an den Zielsektor sngesnappt wird
@@ -59,6 +60,7 @@ let slideContent = [
     {
         id: 5,
         text: 'Ziehe die Sektoren wieder auseinander und versuche nun eine Geodäte über die Lücke von einem in den anderen Sektor zu zeichnen.',
+        startToRemoveAllLines: true,
     },
 
     {

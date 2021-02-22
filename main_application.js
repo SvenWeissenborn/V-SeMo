@@ -4926,7 +4926,7 @@ function resetSectors() {
     canvas.renderAll();
 }
 
-function removeLines() {
+function resetAppliction() {
     lines = [];
     for( let ii = 0; ii < sectors.length; ii++){
         sectors[ii].lineSegments = [];
@@ -6313,7 +6313,6 @@ canvas.renderAll();
 //TODO: Werkzeug zum Messen von Linien
 //TODO: Exercise: Event für Drehen und Verschieben
 //TODO: Exercise: Tick-Leiste
-//TODO: Exercise: Linien automatisch löschen
 
 
 //--------------------Ausschuss-----------------------

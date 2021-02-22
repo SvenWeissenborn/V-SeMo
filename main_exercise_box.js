@@ -169,6 +169,8 @@ function showNextSlide() {
 
     sectorsToSnapTogether();
 
+    removeAllLines()
+
     canvas.renderAll();
 
     canvas_exercise_box.renderAll()
@@ -446,6 +448,31 @@ function sectorsToSnapTogether(){
         }
     }
 
+}
+
+function removeAllLines(){
+
+    if (currentSlide.startToRemoveAllLines !== undefined) {
+        if (currentSlide.startToRemoveAllLines == true) {
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    let lineSegment = lines[ii][jj]
+
+                    canvas.remove(lineSegment);
+                    delete lineSegment
+
+                    if(lines[ii][lines[ii].length-1].dragPoint!==undefined){
+                        canvas.remove(lines[ii][lines[ii].length-1].dragPoint);
+                        delete lines[ii][lines[ii].length-1].dragPoint;
+
+                    }
+                }
+            }
+
+            lines = [];
+            history = [];
+        }
+    }
 }
 
 function checkSlideCondition() {

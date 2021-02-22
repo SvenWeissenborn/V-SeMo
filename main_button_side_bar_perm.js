@@ -377,7 +377,7 @@ fabric.Image.fromURL('restart.png', function(img) {
     restart.on('mouseup', function (o) {
         restart.set('shadow', new fabric.Shadow(shadowOff));
         showGeodesicButtons(false);
-        removeLines();
+        resetAppliction();
         addGeodreieck(false);
         toCalcSectorArea = false;
         toShowVertices = false;
