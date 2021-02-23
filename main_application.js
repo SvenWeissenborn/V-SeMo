@@ -145,6 +145,10 @@ canvas.on('mouse:move', function (o) {
                 let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
                 let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
 
+                if (alpha - beta >= Math.PI){
+                    beta = - beta
+                }
+
                 //Richtung der restlichen Geodäte
                 if (Math.abs(alpha - beta) <= Math.PI / 36) {
                     line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
@@ -173,6 +177,11 @@ canvas.on('mouse:move', function (o) {
             } else {
                 let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
                 let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
+
+                if (alpha - beta >= Math.PI){
+                    beta = - beta
+                }
+
                 if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
                     line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
                 } else {
@@ -2829,6 +2838,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         this.bringToFront()
         updateMinions(this)
         drawSnapEdges(this.parent.ID)
+        geodreieck.bringToFront();
         //----------------
 
 
@@ -3628,6 +3638,13 @@ function geodesicToGeodreieck(){
 }
 
 function geodesicToGeodreieckCalc(){
+
+
+
+    if(button_dreieck_empty.opacity == 0){
+        return false
+    }
+
     let geodreieckWdithHalf = geodreieck.width / 2 * 0.12;
     let geodreieckHeightHalf = geodreieck.height / 2 * 0.12;
     let geodreieckMidPoint = new fabric.Point(geodreieck.left, geodreieck.top);
