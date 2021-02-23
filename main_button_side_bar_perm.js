@@ -219,7 +219,13 @@ canvas_side_bar_perm.on('mouse:down', function(opt) {
 });
 
 canvas_side_bar_perm.on('mouse:move', function(opt) {
-    if (shiftPressed !== undefined &&  shiftPressed=== true) return;
+
+    if (shiftPressed !== undefined){
+        if (shiftPressed === true){
+            return;
+        }
+    }
+
     if (this.isDragging) {
 
         var e = opt.e;

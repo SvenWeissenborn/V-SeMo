@@ -5966,7 +5966,6 @@ function undoLastAction(){
             drawDragPoint(lineID[0])
 
         }
-        //if (history.length<= 0){removeLines()}
     }
 
     if (immediatehistory[0] === 1) {
@@ -6067,7 +6066,6 @@ function undoLastAction(){
             drawDragPoint(lineID[0])
 
         }
-        //if (history.length<= 0){removeLines()}
     }
 
     canvas.renderAll();

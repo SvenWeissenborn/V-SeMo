@@ -478,9 +478,12 @@ function removeAllLines(){
 function checkSlideCondition() {
 
     if (currentSlide.slideCondition !== undefined){
+
         let conditionIsFulfilled = false;
+
         for (let ii = 0; ii < currentSlide.slideCondition.length; ii++){
 
+            // Loop for snapped Sectors
             if (currentSlide.slideCondition[ii][0] == 'snappedSectors'){
 
                 let sectorPairIsSnapped = false;
@@ -493,17 +496,21 @@ function checkSlideCondition() {
 
                         if (sectors[firstSectorID].snapStatus[jj] !== 0){
                             sectorPairIsSnapped = true;
-
                         }
                     }
                 }
 
                 if (sectorPairIsSnapped == true){
                     conditionIsFulfilled = true
+                }else{
+                    conditionIsFulfilled = false
+                    break
                 }
             }
 
         }
+
+
         if (conditionIsFulfilled){
             currentSlideNumber += 1;
 

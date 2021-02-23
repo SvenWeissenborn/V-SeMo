@@ -8,32 +8,27 @@ nColumnsInModel: 3
 sectorDistance_x: 30
 sectorDistance_y: 30
 startZoom =1.0
-startViewportTransform_4 =100
-startViewportTransform_5 =-100
+startViewportTransform_4 =0
+startViewportTransform_5 =0
 fontSize: 15
-startGeodesicsSectors: []
-startGeodesicsAngle: []
-startGeodesicsOffset_x: []
-startGeodesicsOffset_y: []
-startGeodesicsLength: []
-startGeodesicsOperational: []
-startMarksSectors: [2, 6]
-startMarksRadius: [5, 5]
-startMarksOffset_x: [0.8, 0.2]
-startMarksOffset_y: [0.2, 0.4]
-startTextsSectors: [2, 6]
-startTextContent: ['P1', 'P2']
-startTextsOffset_x: [0.85, 0.25]
-startTextsOffset_y: [0.1, 0.5]
+startGeodesicsSectors: [2, 2]
+startMarksSectors: [2, 3, 8]
+startMarksRadius: [5, 5, 5]
+startMarksOffset_x: [0.5, 0.5, 0.5]
+startMarksOffset_y: [0.5, 0.5, 0.5]
+startTextsSectors: [2, 3, 8]
+startTextContent: ['M1', 'M2', 'M3']
+startTextsOffset_x: [0.4, 0.4, 0.6]
+startTextsOffset_y: [0.4, 0.6, 0.4]
 ----------------------
 */
 
 startZoom =1.0
-startViewportTransform_4 =100
-startViewportTransform_5 =-100
+startViewportTransform_4 =0
+startViewportTransform_5 =0
 
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
-let mark_colors = ['grey', 'grey', 'grey', 'grey'];
+let mark_colors = ['grey', 'grey', 'grey'];
 sec_name= [ 1, 2, 3, 4, 5, '6.', 7, 8, '9.', ];
 sec_fill= [ 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, ];
@@ -52,28 +47,28 @@ sec_neighbour_left= [ -1, -1, -1, 0, 1, 2, 3, 4, 5, ];
 sec_posx= [ -201.88137789230134, -201.88137789230134, -201.88137789230134, 0.0, 0.0, 0.0, 201.88137789230134, 201.88137789230134, 201.88137789230134, ];
 sec_posy= [ -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-startSectors= [ ];
-x_Start= [ ];
-y_Start= [ ];
-x_End= [ ];
-y_End= [ ];
-startStrokeWidth= [ ];
-startFill= [ ];
-startStroke= [ ];
-startParentSector= [ ];
-startLineID= [ ];
-markStart_x= [ -150.31696452461094, 150.31696452461094, ];
-markStart_y= [ 258.6047070880902, -184.6899349084645, ];
-markStartStrokeWidth= [ 2, 2, ];
-markStartRadius= [ 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], ];
-markStartParentSector= [ [2,0], [6,0], ];
-markStartID= [ [0,1], [1,1], ];
-textStart_x= [ -141.7228956299959, 158.91103341922602, ];
-textStart_y= [ 276.0271908152063, -202.1124186355806, ];
-textStartContent= [ 'P1', 'P2', ];
-textStartFontSize= [ 15, 15, ];
-textStartParentSector= [ [2,0], [6,0], ];
-textStartID= [ [0], [1], ];
-textStartAngle= [ 0, 0, ];
+startSectors= [ 2, 2, ];
+x_Start= [ -270.6339290492219, -229.38239835506957, ];
+y_Start= [ 194.14151729776057, 282.12506011969697, ];
+x_End= [ -208.46225213266422, -167.21072143851188, ];
+y_End= [ 143.79588601377358, 231.77942883570998, ];
+startStrokeWidth= [ 2, 2, ];
+startFill= [ line_colors[0], line_colors[1], ];
+startStroke= [ line_colors[0], line_colors[1], ];
+startParentSector= [ [2,0], [2,1], ];
+startLineID= [ [0,1], [1,1], ];
+markStart_x= [ -201.88137789230137, 0.0, 201.88137789230134, ];
+markStart_y= [ 206.33725590674183, -202.1124186355806, 206.33725590674183, ];
+markStartStrokeWidth= [ 2, 2, 2, ];
+markStartRadius= [ 5, 5, 5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartParentSector= [ [2,0], [3,0], [8,0], ];
+markStartID= [ [0,1], [1,1], [2,1], ];
+textStart_x= [ -219.06951568153147, -17.188137789230126, 219.06951568153147, ];
+textStart_y= [ 223.75973963385795, -219.53490236269673, 223.75973963385795, ];
+textStartContent= [ 'M1', 'M2', 'M3', ];
+textStartFontSize= [ 15, 15, 15, ];
+textStartParentSector= [ [2,0], [3,1], [8,0], ];
+textStartID= [ [0], [1], [2], ];
+textStartAngle= [ 0, 0, 0, ];

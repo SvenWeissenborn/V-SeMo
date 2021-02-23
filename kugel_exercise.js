@@ -28,59 +28,83 @@
 let slideContent = [
     {
         id: 0,
-        text: 'Willkommen zu der Vorstellung von ViSeMo.',
+        text: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
         sectorsToShow: [2, 5],
         sectorsToHide: [0, 1, 3, 4, 6, 7, 8],
-        marksToHide: [0, 1],
-        textsToHide: [0, 1],
+        geodesicsToHide: [0, 1],
+        marksToHide: [0, 1, 2],
+        textsToHide: [0, 1, 2],
     },
 
     {
         id: 1,
-        text: 'Probiere die Funktionen Verschieben und Drehen der Sektoren aus, welche du im Video bereits gesehen hast.',
+        text: 'Beginnen wir mit etwas einfachem: Drehe und Verschiebe die Sektoren.',
     },
 
 
     {
         id: 2,
-        text: 'Setze die beiden Sektoren an den passenden Kanten zusammen, sodass sie aneinander snappen.',
+        text: 'Setze die beiden Sektoren an den passenden Kanten zusammen, orientiere Dich dabei an der Karte.',
         slideCondition: [['snappedSectors', [2, 5]]],
     },
 
     {
         id: 3,
-        text: 'Zeichne eine Geodäte auf einen der Sektoren und lösche sie anschließend wieder.',
+        text: 'Setze Sektor 9 passend an.',
+        sectorsToShow: [8],
+        slideCondition: [['snappedSectors', [2, 5]], ['snappedSectors', [5, 8]]],
     },
 
     {
         id: 4,
-        text: 'Zeichne eine Geodäte, welche über beide Sektoren verläuft.',
+        text: 'Zeichne eine Linie, die die Punkte M1 und M3 verbindet.',
+        marksToShow: [0, 2],
+        textsToShow: [0, 2],
     },
 
     {
         id: 5,
-        text: 'Ziehe die Sektoren wieder auseinander und versuche nun eine Geodäte über die Lücke von einem in den anderen Sektor zu zeichnen.',
-        startToRemoveAllLines: true,
+        text: 'Setze die Sektoren 5 und 4 passend an.',
+        sectorsToShow: [3, 4],
+        marksToShow: [1],
+        textsToShow: [1],
     },
 
     {
         id: 6,
-        text: 'Setze die Sektoren auf verschiedene Weisen zusammen, sodass unterschiedliche Sektoren miteinander snappen bzw. Lücken bilden.',
-        sectorsToShow: [1, 4],
+        text: 'Setze die Linie von Punkt M3 zu M2 auf dem kürzesten Weg fort. Was fällt Dir auf?',
 
     },
 
     {
         id: 7,
-        text: 'Zeichne eine Geodäte, die diagonal über das Sektormodell verläuft.',
+        text: 'Entferne das zuletzt gezeichnete Linienstück über den Rückgängig-Button.',
     },
 
     {
         id: 8,
-        text: 'Zeichne eine Geodäte von P1 in Sektor 3 zu P2 in Sektor 7.',
-        sectorsToShow: [0, 3, 6, 7, 8],
-        marksToShow: [0 ,1],
-        textsToShow: [0, 1],
+        text: 'Hier sind die noch notwendigen Sektoren. Verbinde nun die Punkte M3 und M2 auf dem kürzesten Weg miteinander.',
+        sectorsToShow: [0, 1, 6, 7 ],
+    },
+
+    {
+        id: 9,
+        text: 'Setze die Linie von M2 zu M1 fort.',
+    },
+
+    {
+        id: 10,
+        text: 'Welches geometrische Objekt hast Du soeben auf dem Sektormodell konstruiert?',
+    },
+
+    {
+        id: 11,
+        text: 'Bestimme mit Hilfe des Geodreiecks die Innenwinkelsumme des Dreiecks auf dem Sektormodell. Was fällt Dir auf?',
+    },
+
+    {
+        id: 11,
+        text: 'Kehre wieder zum Kurs zurück.',
     },
 
 ];
