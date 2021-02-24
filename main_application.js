@@ -3578,7 +3578,7 @@ function fitResponsiveCanvas() {
 
     if (showExerciseBox == "1"){
         canvas_exercise_box.setWidth(330 * scaleRatio);
-        canvas_exercise_box.setHeight(150 * scaleRatio);
+        canvas_exercise_box.setHeight(200 * scaleRatio);
     }
 
 
@@ -5491,6 +5491,7 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
 
     if (showExerciseBox == "1"){
         checkSlideCondition();
+        checkCheckBoxCondition();
     }
 
 }

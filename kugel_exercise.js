@@ -29,8 +29,8 @@ let slideContent = [
     {
         id: 0,
         text: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
-        sectorsToShow: [2, 5],
-        sectorsToHide: [0, 1, 3, 4, 6, 7, 8],
+        sectorsToShow: [1, 2, 5,],
+        sectorsToHide: [0, 3, 4, 6, 7, 8],
         geodesicsToHide: [0, 1],
         marksToHide: [0, 1, 2],
         textsToHide: [0, 1, 2],
@@ -44,8 +44,18 @@ let slideContent = [
 
     {
         id: 2,
-        text: 'Setze die beiden Sektoren an den passenden Kanten zusammen, orientiere Dich dabei an der Karte.',
-        slideCondition: [['snappedSectors', [2, 5]]],
+        text: 'Setze die Sektoren',
+        checkBoxesWithText: [
+            {
+                text: '2 und 3 &',
+                condition: ['snappedSectors', [1, 2]]
+            },
+
+            {
+                text: '3 und 6 zusammen',
+                condition: ['snappedSectors', [2, 5]]
+            },
+        ]
     },
 
     {
@@ -60,6 +70,17 @@ let slideContent = [
         text: 'Zeichne eine Linie, die die Punkte M1 und M3 verbindet.',
         marksToShow: [0, 2],
         textsToShow: [0, 2],
+        checkBoxesWithText: [
+            {
+                text: 'erster Text',
+                condition: ['snappedSectors', [1, 2]]
+            },
+
+            {
+                text: 'zweiter Text',
+                condition: ['snappedSectors', [2, 5]]
+            },
+        ]
     },
 
     {

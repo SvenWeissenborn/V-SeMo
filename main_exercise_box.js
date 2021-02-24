@@ -44,7 +44,7 @@ forward = new fabric.Triangle({
     width: 30,
     height: 20,
     left: 310,
-    top: 125,
+    top: 175,
     stroke: '#575656',
     strokeWidth: 3,
     fill: 'white',
@@ -98,7 +98,7 @@ backward = new fabric.Triangle({
     width: 30,
     height: 20,
     left: 20,
-    top: 125,
+    top: 175,
     stroke: '#575656',
     strokeWidth: 3,
     fill: 'white',
@@ -128,6 +128,134 @@ backward.on('mouseup', function (o) {
 canvas_exercise_box.add(backward);
 
 
+let hookPoints = [
+    {x: 6, y: 0},
+    {x: 7, y: 1},
+    {x: 3, y: 6},
+    {x: 0, y: 3},
+    {x: 1, y: 2},
+    {x: 3, y: 4},
+];
+
+let listOfCheckBoxesWithText = [];
+
+function drawCheckBoxWithText() {
+
+    let checkBoxRect;
+
+        checkBoxRect = new fabric.Rect({
+
+            left: 0,
+            top: 0,
+            fill: '',
+            width: 22,
+            height: 22,
+            strokeWidth: 2,
+            stroke: '#575656',
+            rx: 5,
+            ry: 5,
+            originX: 'center',
+            originY: 'center',
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            selectable: false,
+        });
+
+        let checkBoxHook;
+
+        checkBoxHook = new fabric.Polygon(hookPoints, {
+            left: 0,
+            top: 0,
+            fill: '#575656',
+            scaleX: 2.5,
+            scaleY: 2.5,
+            originX: 'center',
+            originY: 'center',
+            opacity: 0,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            selectable: false,
+        });
+
+
+        let checkBoxText;
+
+        checkBoxText = new fabric.Textbox("Text", {
+            width: 280,
+            opacity: 1,
+            fontSize: 16 * screenFactor,
+            fontFamily: 'arial',
+            fontWeight: 'bold',
+            selectable: false,
+            originX: 'left',
+            originY: 'top',
+            left: 20,
+            top: -10,
+            text: 'text',
+            fill: '#575656',
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            selectable: false,
+            perPixelTargetFind: true,
+        });
+
+        let checkBoxWithText = new fabric.Group([checkBoxRect, checkBoxHook, checkBoxText], {
+            left: 10,
+            top: 15 + exerciseText.height,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            selectable: false,
+        });
+
+        canvas_exercise_box.add(checkBoxWithText)
+
+        return checkBoxWithText
+
+
+}
+
+function addCheckBoxWithText() {
+
+    for (let ii = 0; ii < listOfCheckBoxesWithText.length; ii++) {
+        let checkBoxWithTextToRemove = listOfCheckBoxesWithText[ii]
+        canvas_exercise_box.remove(checkBoxWithTextToRemove)
+    }
+
+    if (currentSlide.checkBoxesWithText !== undefined) {
+
+        forward.set('opacity', 0);
+
+        listOfCheckBoxesWithText = [];
+
+        for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
+
+            checkBoxWithText = drawCheckBoxWithText();
+
+            listOfCheckBoxesWithText.push(checkBoxWithText);
+
+            checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text);
+            checkBoxWithText.condition = currentSlide.checkBoxesWithText[ii].condition;
+            checkBoxWithText.conditionIsFullfilled = false;
+
+
+            if (ii > 0) {
+
+                checkBoxWithText.set('top', listOfCheckBoxesWithText[ii - 1].height + listOfCheckBoxesWithText[ii - 1].top + 5)
+                checkBoxWithText.setCoords()
+
+            }
+
+        }
+    }
+}
+
+
+
+
 function showNextSlide() {
 
     currentSlide = slideContent[currentSlideNumber];
@@ -146,6 +274,8 @@ function showNextSlide() {
     }
 
     setText();
+
+    addCheckBoxWithText();
 
     setSectorsVisible();
 
@@ -517,6 +647,55 @@ function checkSlideCondition() {
             showNextSlide();
         }
     }
+
+}
+
+function checkCheckBoxCondition() {
+
+    let AllCheckBoxConditionsAreFulfilled = false;
+
+    if (currentSlide.checkBoxesWithText !== undefined){
+
+        for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++){
+
+            let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];
+
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'snappedSectors'){
+
+                let firstSectorID = currentSlide.checkBoxesWithText[ii].condition[1][0];
+                let secondSectorID = currentSlide.checkBoxesWithText[ii].condition[1][1];
+
+                for (let jj = 0; jj < 4; jj++){
+                    if (sectors[firstSectorID].neighbourhood[jj] == secondSectorID) {
+
+                        if (sectors[firstSectorID].snapStatus[jj] !== 0){
+                            currentCheckBoxWithText.conditionIsFullfilled = true;
+                            currentCheckBoxWithText._objects[1].set('opacity', 1);
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++){
+            let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];
+            if (currentCheckBoxWithText.conditionIsFullfilled == true){
+                AllCheckBoxConditionsAreFulfilled = true
+            }else{
+                AllCheckBoxConditionsAreFulfilled = false;
+                break
+            }
+        }
+
+        if (AllCheckBoxConditionsAreFulfilled){
+            forward.opacity = 1;
+        }
+
+    }
+
+    canvas_exercise_box.renderAll()
 
 }
 
