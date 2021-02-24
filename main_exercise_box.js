@@ -14,6 +14,7 @@ if (showExerciseBox == "1"){
 }
 
 
+
 let exerciseText;
 
 exerciseText = new fabric.Textbox("Text", {
@@ -34,6 +35,7 @@ exerciseText = new fabric.Textbox("Text", {
     hasControls: false,
     selectable: false,
     perPixelTargetFind: true,
+    hoverCursor: "default"
 });
 canvas_exercise_box.add(exerciseText);
 
@@ -160,6 +162,7 @@ function drawCheckBoxWithText() {
             hasBorders: false,
             hasControls: false,
             selectable: false,
+            hoverCursor: "default",
         });
 
         let checkBoxHook;
@@ -177,6 +180,7 @@ function drawCheckBoxWithText() {
             hasBorders: false,
             hasControls: false,
             selectable: false,
+            hoverCursor: "default",
         });
 
 
@@ -200,6 +204,7 @@ function drawCheckBoxWithText() {
             hasControls: false,
             selectable: false,
             perPixelTargetFind: true,
+            hoverCursor: "default"
         });
 
         let checkBoxWithText = new fabric.Group([checkBoxRect, checkBoxHook, checkBoxText], {
@@ -209,6 +214,7 @@ function drawCheckBoxWithText() {
             hasBorders: false,
             hasControls: false,
             selectable: false,
+            hoverCursor: "default"
         });
 
         canvas_exercise_box.add(checkBoxWithText)
@@ -237,7 +243,12 @@ function addCheckBoxWithText() {
 
             listOfCheckBoxesWithText.push(checkBoxWithText);
 
-            checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text);
+            if (language !== 'english'){
+                checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text_de);
+            } else{
+                checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text_en);
+            }
+
             checkBoxWithText.condition = currentSlide.checkBoxesWithText[ii].condition;
             checkBoxWithText.conditionIsFullfilled = false;
 
@@ -309,9 +320,16 @@ function showNextSlide() {
 
 function setText(){
 
-    if (currentSlide.text !== undefined) {
-        exerciseText.set('text', currentSlide.text)
+    if (language !== 'english'){
+        if (currentSlide.text_de !== undefined) {
+            exerciseText.set('text', currentSlide.text_de)
+        }
+    } else{
+        if (currentSlide.text_de !== undefined) {
+            exerciseText.set('text', currentSlide.text_en)
+        }
     }
+
 }
 
 function setSectorsVisible(){
