@@ -4977,8 +4977,11 @@ function resetAppliction() {
     geodreieck.set('angle', 0);
     canvas.renderAll();
 
-    currentSlideNumber = 0;
-    showNextSlide()
+    if (showExerciseBox == "1"){
+        currentSlideNumber = 0;
+        showNextSlide()
+    }
+
 }
 
 //------------Rotationskontrolle: Icon und Position werden verändert------------
