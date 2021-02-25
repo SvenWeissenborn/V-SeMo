@@ -4931,10 +4931,10 @@ function resetSectors() {
 
     }
 
-    history.push(immediatehistory)
+    history.push(immediatehistory);
 
     for (let rr = 0; rr < sectors.length; rr++){
-        changeSnapStatus(sectors[rr].ID)
+        changeSnapStatus(sectors[rr].ID);
         if (turnOverlapControllOn == "1"){
             overlapControll(sectors[rr].trapez);
         }
@@ -4944,7 +4944,11 @@ function resetSectors() {
 }
 
 function resetAppliction() {
+
     lines = [];
+    markPoints = [];
+    history = [];
+
     for( let ii = 0; ii < sectors.length; ii++){
         sectors[ii].lineSegments = [];
         sectors[ii].markCircles = [];
@@ -4972,6 +4976,9 @@ function resetAppliction() {
     toolChange('grab');
     geodreieck.set('angle', 0);
     canvas.renderAll();
+
+    currentSlideNumber = 0;
+    showNextSlide()
 }
 
 //------------Rotationskontrolle: Icon und Position werden verändert------------

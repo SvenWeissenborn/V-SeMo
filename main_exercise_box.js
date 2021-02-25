@@ -33,7 +33,6 @@ exerciseText = new fabric.Textbox("Text", {
     objectCaching: false,
     hasBorders: false,
     hasControls: false,
-    selectable: false,
     perPixelTargetFind: true,
     hoverCursor: "default"
 });
@@ -202,7 +201,6 @@ function drawCheckBoxWithText() {
             objectCaching: false,
             hasBorders: false,
             hasControls: false,
-            selectable: false,
             perPixelTargetFind: true,
             hoverCursor: "default"
         });
@@ -217,7 +215,7 @@ function drawCheckBoxWithText() {
             hoverCursor: "default"
         });
 
-        canvas_exercise_box.add(checkBoxWithText)
+        canvas_exercise_box.add(checkBoxWithText);
 
         return checkBoxWithText
 
@@ -263,7 +261,7 @@ function addImage(){
 function addCheckBoxWithText() {
 
     for (let ii = 0; ii < listOfCheckBoxesWithText.length; ii++) {
-        let checkBoxWithTextToRemove = listOfCheckBoxesWithText[ii]
+        let checkBoxWithTextToRemove = listOfCheckBoxesWithText[ii];
         canvas_exercise_box.remove(checkBoxWithTextToRemove)
     }
 
@@ -330,7 +328,7 @@ function showNextSlide() {
 
     setGeodesicsVisible();
 
-    addImage()
+    addImage();
 
     setGeodesicsUnvisible();
 
@@ -348,7 +346,7 @@ function showNextSlide() {
 
     sectorsToSnapTogether();
 
-    removeAllLines()
+    removeAllLines();
 
     canvas.renderAll();
 
