@@ -15,6 +15,8 @@
 // -> Array der Snappartner. Erster Eintrag gilt dem zu bewegenden Sektor der an den Zielsektor sngesnappt wird
 // slideCondition: [['snappedSectors', [2, 5]]],
    //textIfSlideConditionIsNotFulfilled: 'Du hast Sektor 5 noch nicht richtig angelegt!'
+
+// imageToAdd: 'add.png' fügt ein Bild ein
 /* -------------------------------------*/
 
 /*  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

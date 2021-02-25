@@ -224,6 +224,42 @@ function drawCheckBoxWithText() {
 
 }
 
+let image = 0;
+
+function addImage(){
+
+    if (image !== 0){
+        canvas_exercise_box.remove(image)
+    }
+
+    image = 0;
+
+    if (currentSlide.imageToAdd !== undefined) {
+        fabric.Image.fromURL(currentSlide.imageToAdd, function(img) {
+            image = img.set({
+                top:15 + exerciseText.height,
+                left: 45,
+                opacity: 1,
+                originX: "left",
+                originY: "top",
+                objectCaching: false,
+                hasBorders: false,
+                hasControls: false,
+                evented: false,
+                selectable: false,
+                centeredRotation: false,
+                scaleX: 1 ,
+                scaleY: 1 ,
+                hoverCursor: "default"});
+
+
+
+            canvas_exercise_box.add(image)
+        })
+    }
+
+}
+
 function addCheckBoxWithText() {
 
     for (let ii = 0; ii < listOfCheckBoxesWithText.length; ii++) {
@@ -293,6 +329,8 @@ function showNextSlide() {
     setSectorsUnvisible();
 
     setGeodesicsVisible();
+
+    addImage()
 
     setGeodesicsUnvisible();
 
