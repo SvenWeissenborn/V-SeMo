@@ -4296,28 +4296,28 @@ function init() {
             let panels =
 
                 [
-                    'europe_0.png',
-                    'europe_1.png',
-                    'europe_2.png',
-                    'europe_3.png',
-                    'europe_4.png',
-                    'europe_5.png',
-                    'europe_6.png',
-                    'europe_7.png',
-                    'europe_8.png'
+                    'textures/europe_0.png',
+                    'textures/europe_1.png',
+                    'textures/europe_2.png',
+                    'textures/europe_3.png',
+                    'textures/europe_4.png',
+                    'textures/europe_5.png',
+                    'textures/europe_6.png',
+                    'textures/europe_7.png',
+                    'textures/europe_8.png'
                 ];
             if (textureColored == "1") {
                 panels =
                     [
-                        'panel-7.3.jpg',
-                        'panel-7.4.jpg',
-                        'panel-7.5.jpg',
-                        'panel-8.3.jpg',
-                        'panel-8.4.jpg',
-                        'panel-8.5.jpg',
-                        'panel-9.3.jpg',
-                        'panel-9.4.jpg',
-                        'panel-9.5.jpg'
+                        'textures/panel-7.3.jpg',
+                        'textures/panel-7.4.jpg',
+                        'textures/panel-7.5.jpg',
+                        'textures/panel-8.3.jpg',
+                        'textures/panel-8.4.jpg',
+                        'textures/panel-8.5.jpg',
+                        'textures/panel-9.3.jpg',
+                        'textures/panel-9.4.jpg',
+                        'textures/panel-9.5.jpg'
                     ];
             }
 
