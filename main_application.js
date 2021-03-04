@@ -1257,6 +1257,7 @@ if (window.innerWidth < 1000 || window.innerHeight < 1000){
     scaleFacotor = Math.min(window.innerHeight/1000, window.innerWidth/1000)
 }
 
+/*
 //-----------------Instructional Overlay---------------------------------
 let instructional_overlay_language = 'instructional_overlay.png';
 
@@ -1305,7 +1306,7 @@ fabric.Image.fromURL(instructional_overlay_language, function(img) {
     });
 
 });
-
+*/
 
 //-----------------Geodreieck--------------------------------
 let geodreieckIsClicked = false;
