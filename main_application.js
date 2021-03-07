@@ -463,6 +463,7 @@ canvas.on('mouse:move', function (o) {
     if (lineTypeToDraw == 'polyline') {
 
         if (isLineStarted == true){
+
             let geodesicNearToMark = geodesicToMarkCalc();
 
             if (geodesicNearToMark[0]) {
@@ -833,12 +834,21 @@ canvas.on('mouse:up', function(opt) {
 
         isLineStarted = false;
 
+        if (polyline.abortFromBeginning == true){
+            canvas.remove(polyline)
+            pathCoords = [];
+            lineContinueAt = -1;
+            return
+        }
+
         if (lineContinueAt !== -1) {
             canvas.remove(lines[lineContinueAt][lines[lineContinueAt].length - 1].dragPoint);
             delete lines[lineContinueAt][lines[lineContinueAt].length - 1].dragPoint;
         }
 
         canvas.remove(polyline)
+
+
 
         pathCoords.splice(1, 1)
 
@@ -2420,6 +2430,11 @@ function drawDragPoint(lineToGivePoint) {
 
             pathCoords.push({x: points[0], y: points[1]});
             pathCoords.push({x: points[2], y: points[3]});
+
+            let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [points[0], points[1], points[2], points[3]])
+
+            console.log(schnittpunktsparameters)
+
             polyline = new fabric.Polyline(pathCoords, {
                 stroke: color,
                 fill: '',
@@ -2431,6 +2446,15 @@ function drawDragPoint(lineToGivePoint) {
                 evented: false,
                 selectable: false,
             });
+
+            polyline.abortFromBeginning = false;
+
+            if(schnittpunktsparameters.length > 0){
+                if (sectors[schnittpunktsparameters[0][1]].snapStatus[schnittpunktsparameters[0][2]] == 0) {
+                    polyline.stroke = 'red';
+                    polyline.abortFromBeginning = true
+                }
+            }
 
             canvas.add(polyline);
 
@@ -2907,6 +2931,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         evented: false,
                         selectable: false,
                     });
+
+                    polyline.abortFromBeginning = false;
 
                     canvas.add(polyline);
 
