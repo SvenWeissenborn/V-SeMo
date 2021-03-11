@@ -471,47 +471,6 @@ fabric.Image.fromURL('grab.png', function(img) {
 });
 */
 
-let undo;
-fabric.Image.fromURL('button_icons/undo.png', function(img) {
-    undo = img.set({
-        left: 51.5,
-        top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 1,
-        originX: "center",
-        originY: "top",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"});
-
-    undo.on('mousedown', function (o) {
-        undo.set('shadow', new fabric.Shadow(shadowOn));
-        canvas_side_bar_perm.renderAll()
-    });
-
-    undo.on('mouseout', function (o) {
-        undo.set('shadow', new fabric.Shadow(shadowOff));
-        canvas_side_bar_perm.renderAll()
-    });
-
-    undo.on('mouseup', function (o) {
-        undo.set('shadow', new fabric.Shadow(shadowOff));
-        undoLastAction();
-        changeGeodesicWidth(2);
-        showGeodesicButtons(false);
-        toolChange('grab');
-        canvas_side_bar_perm.renderAll()
-
-    });
-
-    canvas_side_bar_perm.add(undo);
-});
-
 let add;
 fabric.Image.fromURL('button_icons/add.png', function(img) {
      add = img.set({
@@ -691,7 +650,46 @@ fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
     canvas_side_bar_perm.add(add_dark_curved);
 });
 
+let undo;
+fabric.Image.fromURL('button_icons/undo.png', function(img) {
+    undo = img.set({
+        left: 51.5,
+        top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 1,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
 
+    undo.on('mousedown', function (o) {
+        undo.set('shadow', new fabric.Shadow(shadowOn));
+        canvas_side_bar_perm.renderAll()
+    });
+
+    undo.on('mouseout', function (o) {
+        undo.set('shadow', new fabric.Shadow(shadowOff));
+        canvas_side_bar_perm.renderAll()
+    });
+
+    undo.on('mouseup', function (o) {
+        undo.set('shadow', new fabric.Shadow(shadowOff));
+        undoLastAction();
+        changeGeodesicWidth(2);
+        showGeodesicButtons(false);
+        toolChange('grab');
+        canvas_side_bar_perm.renderAll()
+
+    });
+
+    canvas_side_bar_perm.add(undo);
+});
 
 let button_dreieck;
 

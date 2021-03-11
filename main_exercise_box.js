@@ -286,6 +286,11 @@ function addCheckBoxWithText() {
             checkBoxWithText.condition = currentSlide.checkBoxesWithText[ii].condition;
             checkBoxWithText.conditionIsFullfilled = false;
 
+            if (ii == 0){
+                if (exerciseText.text == ""){
+                    checkBoxWithText.set('top', 10)
+                }
+            }
 
             if (ii > 0) {
 
