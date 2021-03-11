@@ -4987,6 +4987,11 @@ function resetAppliction() {
         canvas.remove(objects[ii]);
     }
 
+    objects = canvas.getObjects('polyline');
+    for (let ii=0; ii < objects.length; ii++) {
+        canvas.remove(objects[ii]);
+    }
+
 
     objects = canvas.getObjects('circle');
     for (let ii = 0; ii < objects.length; ii++) {
