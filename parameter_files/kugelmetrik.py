@@ -360,7 +360,7 @@ def main():
 
         if (startText > 0):
             if (len(startTextsSectors) > 0):
-                for jj in range(0, startMark):
+                for jj in range(0, startText):
                     if (startTextsSectors[jj] == startTextsSectors[startText]):
                         textNumberInSector += 1
 
