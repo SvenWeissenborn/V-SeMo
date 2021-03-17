@@ -3410,7 +3410,14 @@ function drawSnapEdges(initialSectorID) {
                     strokeDashArray = [0, 0]
                 }
 
-                let edge = new fabric.Line([point_1.x, point_1.y, point_2.x, point_2.y,], {
+                let offsetToAdd = 0
+
+                if (turnLorentzTransformOn == "1"){
+                    offsetToAdd = 0.5
+                }
+
+                let edge = new fabric.Line(
+                    [point_1.x + offsetToAdd, point_1.y + offsetToAdd, point_2.x + offsetToAdd, point_2.y + offsetToAdd], {
                     strokeWidth: 1,
                     strokeDashArray: strokeDashArray,
                     fill: edgeColor,
