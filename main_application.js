@@ -1336,7 +1336,6 @@ if (turnLorentzTransformOn == "1"){
     geodreieckStartAngle = 0
     geodreieckScale = 0.12
 }
-
 fabric.Image.fromURL('geodreieck.png', function(img) {
     geodreieck = img.set({
         opacity: 1,
@@ -1602,29 +1601,25 @@ function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     let rapid_base;
 
-                    if (Math.abs(xt1 - xt2) > epsilon) {
-                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2) {
+                    if (Math.abs(xt1 - xt2) > Math.abs(yt1 - yt2)) {
+
                             rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
-                        } else {
+                    } else {
                             rapid_base = Math.atanh((xt2 - xt1) / (yt2 - yt1))
                         }
-                    } else {
-                        rapid_base = 0
-                    }
+
 
 
 
                     let rapid_target;
 
-                    if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon) {
-                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2) {
+                    if (Math.abs(xt1_uebergang - xt2_uebergang) > Math.abs(yt1_uebergang - yt2_uebergang)) {
+
                             rapid_target = Math.atanh((yt2_uebergang - yt1_uebergang) / (xt2_uebergang - xt1_uebergang))
-                        } else {
+                    } else {
                             rapid_target = Math.atanh((xt2_uebergang - xt1_uebergang) / (yt2_uebergang - yt1_uebergang))
                         }
-                    } else {
-                        rapid_target = 0
-                    }
+
 
 
 
@@ -2054,23 +2049,22 @@ function continueGeodesic(geodesicToContinue) {
 
                 if (turnLorentzTransformOn == "1"){
                     let rapid_base;
-                    if (Math.abs(xt1 - xt2) > epsilon) {
-                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                    if (Math.abs(xt1 - xt2) > Math.abs(yt1 - yt2)) {
                             rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
-                        }else {
+                    }else {
                             rapid_base = Math.atanh( (xt2 - xt1) / (yt2 - yt1 ) )
                         }
-                    } else {rapid_base = 0}
+
 
                     let rapid_target;
 
-                    if (Math.abs(xt1_uebergang - xt2_uebergang) > epsilon ){
-                        if ((kantenIndex + 2) % 4 == 0 || (kantenIndex + 2) % 4 == 2){
+                    if (Math.abs(xt1_uebergang - xt2_uebergang) > Math.abs(yt1_uebergang - yt2_uebergang) ){
+
                             rapid_target = Math.atanh((yt2_uebergang - yt1_uebergang) / (xt2_uebergang - xt1_uebergang))
-                        }else {
+                    }else {
                             rapid_target = Math.atanh( (xt2_uebergang - xt1_uebergang) / (yt2_uebergang - yt1_uebergang))
-                        }
-                    } else {rapid_target = 0}
+                    }
+
 
                     let rapid_sum = rapid_base - rapid_target;
 
@@ -2433,8 +2427,6 @@ function drawDragPoint(lineToGivePoint) {
 
             let schnittpunktsparameters = getSchnittpunktsparameters(sectors, [points[0], points[1], points[2], points[3]])
 
-            console.log(schnittpunktsparameters)
-
             polyline = new fabric.Polyline(pathCoords, {
                 stroke: color,
                 fill: '',
@@ -2687,7 +2679,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             stroke: sectorEdgeColor,
             perPixelTargetFind: true,
             hasControls: true,
-            hasBorders: false,
+            hasBorders: true,
             objectCaching: false,
             lockMovementX: false,
             lockMovementY: false,
@@ -3075,7 +3067,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     infoboxAreaTextByLanguageOnClick = "sector area:"
                 }
                 infoboxAreaText.set('text', infoboxAreaTextByLanguageOnClick + "\n" + sectorArea4Dec.toString() + " " + "cm²");
-                console
+
                 canvas_side_bar_perm.renderAll()
             }
 
@@ -4468,18 +4460,20 @@ function isItTimeToSnap(trapez) {
                         let rapidity_before = trapez.parent.rapidity;
 
                         let rapid_base;
-                        if (Math.abs(sec_coords[trapez.parent.ID][(ii*2) % 8] - sec_coords[trapez.parent.ID][(ii*2+2) % 8]) > epsilon) {
+                        if (Math.abs(sec_coords[trapez.parent.ID][(ii*2) % 8] - sec_coords[trapez.parent.ID][(ii*2+2) % 8]) > Math.abs(sec_coords[trapez.parent.ID][(ii*2 + 1) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 3) % 8])) {
                             rapid_base = Math.atanh((sec_coords[trapez.parent.ID][(ii * 2 + 1) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 3) % 8]) / (sec_coords[trapez.parent.ID][(ii * 2) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 2) % 8]));
-                        } else {rapid_base = 0}
+                        }
+                        else{
+                            rapid_base = Math.atanh((sec_coords[trapez.parent.ID][(ii * 2) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 2) % 8]) / (sec_coords[trapez.parent.ID][(ii * 2 + 1) % 8] - sec_coords[trapez.parent.ID][(ii * 2 + 3) % 8]));
+                        }
 
                         let rapid_target;
-                        if (Math.abs(point_a.x - point_b.x) > epsilon ){
-                            if (ii == 0 || ii == 2){
-                                rapid_target = Math.atanh((point_a.y - point_b.y) / (point_a.x - point_b.x))
-                            }else {
-                                rapid_target = Math.atanh( (point_a.x - point_b.x) / (point_a.y - point_b.y))
+                        if (Math.abs(point_a.x - point_b.x) > Math.abs(point_a.y - point_b.y) ){
+                            rapid_target = Math.atanh((point_a.y - point_b.y) / (point_a.x - point_b.x))
                             }
-                        } else {rapid_target = 0}
+                        else {
+                            rapid_target = Math.atanh( (point_a.x - point_b.x) / (point_a.y - point_b.y))
+                            }
 
                         let rapid_sum = - rapid_base + rapid_target;
 
@@ -4908,11 +4902,14 @@ function resetSectors() {
         if (turnLorentzTransformOn == "1"){
             if (Math.abs(sectors[rr].trapez.left - sec_posx[rr] + window.innerWidth/2) < epsilon || Math.abs(sectors[rr].trapez.top - sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2) < epsilon|| sectors[rr].rapidity !== 0) {
 
+
                 let lastLeft = sectors[rr].trapez.left;
                 let lastTop = sectors[rr].trapez.top;
 
                 let dist_inv_min_x_new = Math.min(sectors[rr].trapez.points[0].x, sectors[rr].trapez.points[1].x, sectors[rr].trapez.points[2].x, sectors[rr].trapez.points[3].x);
                 let dist_inv_min_y_new = Math.max(sectors[rr].trapez.points[0].y, sectors[rr].trapez.points[1].y, sectors[rr].trapez.points[2].y, sectors[rr].trapez.points[3].y);
+
+                let trapez_x_min = Math.min(sec_coords[rr][0], sec_coords[rr][2], sec_coords[rr][4], sec_coords[rr][6]);
 
                 lorentzTransform(0, sectors[rr].trapez);
 
@@ -4924,7 +4921,7 @@ function resetSectors() {
 
                 sectors[rr].draw(sectors[rr].trapez.points[0].x, sectors[rr].trapez.points[0].y, sectors[rr].trapez.points[1].x, sectors[rr].trapez.points[1].y, sectors[rr].trapez.points[2].x, sectors[rr].trapez.points[2].y, sectors[rr].trapez.points[3].x, sectors[rr].trapez.points[3].y);
 
-                sectors[rr].trapez.set('left', lastLeft - dist_inv_min_x_new).setCoords();
+                sectors[rr].trapez.set('left', lastLeft - dist_inv_min_x_new + trapez_x_min).setCoords();
                 sectors[rr].trapez.set('top', lastTop - dist_inv_min_y_new + sec_coords[rr][5]).setCoords();
 
                 sectors[rr].ID_text.set('left', lastLeft - dist_inv_min_x_new + 90).setCoords();
