@@ -233,10 +233,10 @@ function addImage(){
     image = 0;
 
     if (currentSlide.imageToAdd !== undefined) {
-        fabric.Image.fromURL(currentSlide.imageToAdd, function(img) {
+        fabric.Image.fromURL(currentSlide.imageToAdd[0], function(img) {
             image = img.set({
-                top:15 + exerciseText.height,
-                left: 45,
+                top: 25 + exerciseText.height,
+                left: currentSlide.imageToAdd[2],
                 opacity: 1,
                 originX: "left",
                 originY: "top",
@@ -246,8 +246,8 @@ function addImage(){
                 evented: false,
                 selectable: false,
                 centeredRotation: false,
-                scaleX: 1 ,
-                scaleY: 1 ,
+                scaleX: currentSlide.imageToAdd[1] ,
+                scaleY: currentSlide.imageToAdd[1] ,
                 hoverCursor: "default"});
 
 
@@ -592,6 +592,8 @@ function autoCompleteStartGeodesics(){
             continueGeodesic(geodesicID)
         }
     }
+
+    toolChange('grab')
 
 }
 
