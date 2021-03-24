@@ -17,30 +17,30 @@ startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = []
+startGeodesicsSectors = [47]
 # Winkel in Grad
-startGeodesicsAngle = []
+startGeodesicsAngle = [90]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.5]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [0.0001]
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = []
+startGeodesicsLength = [30]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = []
 
 # Parameter fuer die Startmarkierungen
-startMarksSectors = [54, 113, 113]
-startMarksRadius = [5, 3, 3]
-startMarksOffset_x = [0.5, 0.5, 0.5]
-startMarksOffset_y = [0.5, 0.2, 0.9]
+startMarksSectors = [43, 47, 113, 113]
+startMarksRadius = [5, 5, 3, 3]
+startMarksOffset_x = [0.5, 0.5, 0.5, 0.5]
+startMarksOffset_y = [0.5, 0.0001, 0.2, 0.9]
 
 # Parameter fuer die Starttexte
-startTextsSectors = [54, 113, 113]
-startTextContent = ['Karl &' '\\n' '  Lisa', 'P1', 'P2']
-startTextsOffset_x = [0.62, 0.3, 0.3]
-startTextsOffset_y = [0.55, 0.2, 0.8]
+startTextsSectors = [43, 43, 47, 113, 113]
+startTextContent = ['Karl &' '\\n' '  Lisa', 'Karl', 'Lisa', 'P1', 'P2']
+startTextsOffset_x = [0.6, 0.58, 0.7, 0.3, 0.3]
+startTextsOffset_y = [0.55, 0.55, 0.2, 0.2, 0.8]
 
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
@@ -62,7 +62,7 @@ def main():
 
 
 
-    file = io.open("neutronenstern_schwarzschild_mix.js",'w')
+    file = io.open("neutronstar_schwarzschild_mix.js",'w')
 
     file.write( "/*" +"\n"
             "------Parameter-------" +"\n"
@@ -103,7 +103,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey', 'green', 'green', 'grey', 'grey'];")
+        "let mark_colors = ['grey', 'grey', 'green', 'green', 'grey'];")
     file.write("\n")
 
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]

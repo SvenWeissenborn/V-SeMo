@@ -30,122 +30,54 @@
 let slideContent = [
     {
         id: 0,
-        text_de: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
+        text_de: 'Karl und Lisa sind in Sektor K4 am Neutronenstern angekommen.',
         text_en: 'Together we want to become familiar with the sector model.',
-        sectorsToShow: [1, 2, 5,],
-        sectorsToHide: [0, 3, 4, 6, 7, 8],
-        geodesicsToHide: [0, 1],
-        marksToHide: [0, 1, 2],
-        textsToHide: [0, 1, 2],
+        geodesicsToHide: [0],
+        marksToHide: [1, 2, 3,],
+        textsToHide: [1, 2, 3, 4],
     },
 
     {
         id: 1,
-        text_de: 'Beginnen wir mit etwas einfachem: Drehe und Verschiebe die Sektoren.',
+        text_de: 'Lisa verlässt mit einem Lander das Raumschiff und landet in Sektor D5 auf der Sternenoberfläche.',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        marksToShow: [0, 1],
+        textsToHide: [0],
+        textsToShow: [1, 2],
     },
 
 
     {
         id: 2,
-        text_de: 'Setze die Sektoren',
+        text_de: 'Um Karl ihre gelungene Landung mitzuteilen, versucht Lisa ihm ein Signal (blaue Geodäte) zu senden.',
         text_en: 'Join the sectors',
-        checkBoxesWithText: [
-            {
-                text_de: '2 und 3 &',
-                text_en: '2 and 3 &',
-                condition: ['snappedSectors', [1, 2]]
-            },
-
-            {
-                text_de: '3 und 6 zusammen.',
-                text_en: '3 and 6.',
-                condition: ['snappedSectors', [2, 5]]
-            },
-        ]
+        geodesicsToShow: [0],
+        geodesicsToComplete: [0],
     },
 
     {
         id: 3,
-        text_de: 'Setze Sektor 9 passend an.',
+        text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus und ändere anschließend ihre Startrichtung.',
         text_en: 'Set sector 9 suitably.',
-        sectorsToShow: [8],
-        slideCondition: [['snappedSectors', [2, 5]], ['snappedSectors', [5, 8]]],
+        imageToAdd: ['button_icons/direction.png', 0.5, 125]
+
     },
 
     {
         id: 4,
-        text_de: 'Zeichne eine Linie, die die Punkte M1 und M3 verbindet.',
+        text_de: 'Bestimme den Winkel zur Sternenoberfläche, in dem Lisa ihren Sender ausrichten muss, damit Karl das Signal empfangen kann. ',
         text_en: 'Draw a line connecting the points M1 and M3.',
-        marksToShow: [0, 2],
-        textsToShow: [0, 2],
-        checkBoxesWithText: [
-            {
-                text_de: 'erster Text',
-                text_en: 'first text',
-                condition: ['snappedSectors', [1, 2]]
-            },
 
-            {
-                text_de: 'zweiter Text',
-                text_en: 'second text',
-                condition: ['snappedSectors', [2, 5]]
-            },
-        ]
     },
 
     {
         id: 5,
-        text_de: 'Setze die Sektoren 5 und 4 passend an.',
-        text_en: 'first text',
-        sectorsToShow: [3, 4],
-        marksToShow: [1],
-        textsToShow: [1],
-    },
-
-    {
-        id: 6,
-        text_de: 'Setze die Linie von Punkt M3 zu M2 auf dem kürzesten Weg fort. Was fällt Dir auf?',
-        text_en: 'first text',
-
-    },
-
-    {
-        id: 7,
-        text_de: 'Entferne das zuletzt gezeichnete Linienstück über den Rückgängig-Button.',
-        text_en: 'first text',
-    },
-
-    {
-        id: 8,
-        text_de: 'Hier sind die noch notwendigen Sektoren. Verbinde nun die Punkte M3 und M2 auf dem kürzesten Weg miteinander.',
-        text_en: 'first text',
-        sectorsToShow: [0, 1, 6, 7 ],
-    },
-
-    {
-        id: 9,
-        text_de: 'Setze die Linie von M2 zu M1 fort.',
-        text_en: 'first text',
-    },
-
-    {
-        id: 10,
-        text_de: 'Welches geometrische Objekt hast Du soeben auf dem Sektormodell konstruiert?',
-        text_en: 'first text',
-    },
-
-    {
-        id: 11,
-        text_de: 'Bestimme mit Hilfe des Geodreiecks die Innenwinkelsumme des Dreiecks auf dem Sektormodell. Was fällt Dir auf?',
-        text_en: 'first text',
-    },
-
-    {
-        id: 11,
         text_de: 'Kehre wieder zum Kurs zurück.',
         text_en: 'first text',
+
     },
+
+
 
 ];
 
