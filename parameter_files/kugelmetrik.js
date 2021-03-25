@@ -8,14 +8,14 @@ nColumnsInModel: 3
 sectorDistance_x: 30
 sectorDistance_y: 30
 startZoom =1.0
-startViewportTransform_4 =100
-startViewportTransform_5 =-100
+startViewportTransform_4 =0
+startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: [2, 2]
-startGeodesicsAngle: [30, 30]
-startGeodesicsOffset_x: [0, 0]
-startGeodesicsOffset_y: [0, 0]
-startGeodesicsLength: [40, 40]
+startGeodesicsAngle: [40, 40]
+startGeodesicsOffset_x: [0.1, 0.35]
+startGeodesicsOffset_y: [0.55, 0.05]
+startGeodesicsLength: [80, 80]
 startGeodesicsOperational: []
 startMarksSectors: [2, 6]
 startMarksRadius: [5, 5]
@@ -29,8 +29,8 @@ startTextsOffset_y: [0.1, 0.5]
 */
 
 startZoom =1.0
-startViewportTransform_4 =100
-startViewportTransform_5 =-100
+startViewportTransform_4 =0
+startViewportTransform_5 =0
 
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey', 'grey', 'grey', 'grey'];
@@ -53,10 +53,10 @@ sec_posx= [ -201.88137789230134, -201.88137789230134, -201.88137789230134, 0.0, 
 sec_posy= [ -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, -202.1124186355806, 2.2664625997164762, 206.3372559067418, ];
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 startSectors= [ 2, 2, ];
-x_Start= [ -287.82206683845203, -287.82206683845203, ];
-y_Start= [ 293.44967454232244, 293.44967454232244, ];
-x_End= [ -253.18105068707447, -253.18105068707447, ];
-y_End= [ 273.44967454232244, 273.44967454232244, ];
+x_Start= [ -270.6339290492219, -227.66358457614655, ];
+y_Start= [ 197.62601404318377, 284.73843267876435, ];
+x_End= [ -209.35037359970363, -166.3800291266283, ];
+y_End= [ 146.20300526826063, 233.3154239038412, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];

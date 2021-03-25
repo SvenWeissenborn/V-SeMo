@@ -709,6 +709,7 @@ canvas.on('mouse:up', function(opt) {
             if (distance(new fabric.Point(xg1, yg1), new fabric.Point(xg2, yg2)) < abortlength) {
                 canvas.remove(line);
                 lineContinueAt = -1;
+                lineTypeToDraw = ""
                 return;
             }
 
@@ -1808,6 +1809,11 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
     history[history.length - 1].splice(1, 0, lineSegmentToChangeDirection.ID)
 
     history.push([3, 2])
+
+    if (showExerciseBox == "1"){
+        checkSlideCondition();
+        checkCheckBoxCondition();
+    }
 }
 
 function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){

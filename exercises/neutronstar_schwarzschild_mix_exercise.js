@@ -58,28 +58,21 @@ let slideContent = [
 
     {
         id: 3,
-        text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über diesen Button kannst Du ihre Startrichtung ändern.',
+        text_de: '',
         text_en: 'Set sector 9 suitably.',
+        checkBoxesWithText: [
+            {
+                text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über den Kompass-Button kannst Du ihre Startrichtung ändern.',
+                text_en: '2 and 3 &',
+                condition: ['lineTouchesMark', [0, 0]]
+            },
+        ],
         imageToAdd: ['button_icons/direction.png', 0.5, 125]
-
     },
+
 
     {
         id: 4,
-        text_de: 'Bestimme den Winkel zur Sternenoberfläche, in dem Lisa ihren Sender ausrichten muss, damit Karl das Signal empfangen kann.',
-        text_en: 'Draw a line connecting the points M1 and M3.',
-
-    },
-
-    {
-        id: 5,
-        text_de: 'Zur Kontrolle: Der einzustellende Winkel beträgt ca. 62°.',
-        text_en: 'first text',
-
-    },
-
-    {
-        id: 6,
         text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
         text_en: 'first text',
         imageToAdd: ['media/ns_rover_0.png', 0.38, 85],
@@ -93,7 +86,7 @@ let slideContent = [
     },
 
     {
-        id: 6,
+        id: 5,
         text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
         text_en: 'first text',
         imageToAdd: ['media/ns_rover_1.png', 0.38, 85],
@@ -107,7 +100,7 @@ let slideContent = [
     },
 
     {
-        id: 7,
+        id: 6,
         text_de: 'Als Lisa eine bestimmte Position erreicht, kann Karl ihr Signal nicht mehr empfangen.',
         text_en: 'first text',
         geodesicsToDelete: [2],
@@ -117,21 +110,21 @@ let slideContent = [
     },
 
     {
-        id: 8,
+        id: 7,
         text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte.',
         text_en: 'first text',
 
     },
 
     {
-        id: 9,
+        id: 8,
         text_de: 'Lisa setzt ihre Erkundungsfahrt fort. Nach einiger Zeit erreicht Karl wieder ihr Signal.',
         text_en: 'first text',
 
     },
 
     {
-        id: 10,
+        id: 9,
         text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
         text_en: 'first text',
 

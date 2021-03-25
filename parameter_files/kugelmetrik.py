@@ -19,8 +19,8 @@ sectorDistance_y = 30
 
 #Kameraeinstellungen
 startZoom = 1.0
-startViewportTransform_4 = 100
-startViewportTransform_5 = -100
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
 
 #Schriftgroesse im Modell
 fontSize = 15
@@ -28,14 +28,14 @@ fontSize = 15
 #Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [2, 2]
 #Winkel in Grad
-startGeodesicsAngle = [30, 30]
+startGeodesicsAngle = [40, 40]
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0, 0]
+startGeodesicsOffset_x = [0.1, 0.35]
 #Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0, 0]
+startGeodesicsOffset_y = [0.55, 0.05]
 #Laenge der Geodaete in Pixel
-startGeodesicsLength = [40,40]
+startGeodesicsLength = [80, 80]
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = []
 

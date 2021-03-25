@@ -212,6 +212,8 @@ function drawCheckBoxWithText() {
             hasBorders: false,
             hasControls: false,
             selectable: false,
+            originX: 'left',
+            originY: 'top',
             hoverCursor: "default"
         });
 
@@ -224,39 +226,7 @@ function drawCheckBoxWithText() {
 
 let image = 0;
 
-function addImage(){
 
-    if (image !== 0){
-        canvas_exercise_box.remove(image)
-    }
-
-    image = 0;
-
-    if (currentSlide.imageToAdd !== undefined) {
-        fabric.Image.fromURL(currentSlide.imageToAdd[0], function(img) {
-            image = img.set({
-                top: 25 + exerciseText.height,
-                left: currentSlide.imageToAdd[2],
-                opacity: 1,
-                originX: "left",
-                originY: "top",
-                objectCaching: false,
-                hasBorders: false,
-                hasControls: false,
-                evented: false,
-                selectable: false,
-                centeredRotation: false,
-                scaleX: currentSlide.imageToAdd[1] ,
-                scaleY: currentSlide.imageToAdd[1] ,
-                hoverCursor: "default"});
-
-
-
-            canvas_exercise_box.add(image)
-        })
-    }
-
-}
 
 function addCheckBoxWithText() {
 
@@ -279,6 +249,7 @@ function addCheckBoxWithText() {
 
             if (language !== 'english'){
                 checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text_de);
+                //checkBoxWithText.set('height', checkBoxWithText._objects[2].getScaledHeight() + 1)
             } else{
                 checkBoxWithText._objects[2].set('text', currentSlide.checkBoxesWithText[ii].text_en);
             }
@@ -288,13 +259,14 @@ function addCheckBoxWithText() {
 
             if (ii == 0){
                 if (exerciseText.text == ""){
+                    console.log('go')
                     checkBoxWithText.set('top', 10)
                 }
             }
 
             if (ii > 0) {
 
-                checkBoxWithText.set('top', listOfCheckBoxesWithText[ii - 1].height + listOfCheckBoxesWithText[ii - 1].top + 5)
+                checkBoxWithText.set('top', listOfCheckBoxesWithText[ii - 1]._objects[2].getScaledHeight() + 1 + listOfCheckBoxesWithText[ii - 1].top + 5)
                 checkBoxWithText.setCoords()
 
             }
@@ -303,14 +275,52 @@ function addCheckBoxWithText() {
     }
 }
 
+function addImage(){
 
+    if (image !== 0){
+        canvas_exercise_box.remove(image)
+    }
+
+    image = 0;
+
+    let imageTop = exerciseText.height + 25
+
+    if (currentSlide.checkBoxesWithText !== undefined) {
+
+        imageTop += listOfCheckBoxesWithText[currentSlide.checkBoxesWithText.length - 1].top + listOfCheckBoxesWithText[currentSlide.checkBoxesWithText.length - 1]._objects[2].getScaledHeight() - 30
+
+    }
+
+    if (currentSlide.imageToAdd !== undefined) {
+        fabric.Image.fromURL(currentSlide.imageToAdd[0], function(img) {
+            image = img.set({
+                top: imageTop,
+                left: currentSlide.imageToAdd[2],
+                opacity: 1,
+                originX: "left",
+                originY: "top",
+                objectCaching: false,
+                hasBorders: false,
+                hasControls: false,
+                evented: false,
+                selectable: false,
+                centeredRotation: false,
+                scaleX: currentSlide.imageToAdd[1] ,
+                scaleY: currentSlide.imageToAdd[1] ,
+                hoverCursor: "default"});
+
+
+
+            canvas_exercise_box.add(image)
+        })
+    }
+
+}
 
 
 function showNextSlide() {
 
     currentSlide = slideContent[currentSlideNumber];
-
-    console.log(currentSlide);
 
     if (turnBackwardOff !== true){
         if (currentSlideNumber <= 1){
@@ -751,6 +761,34 @@ function checkCheckBoxCondition() {
                     }
                 }
 
+            }
+
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesMark'){
+                let lineID = currentSlide.checkBoxesWithText[ii].condition[1][0]
+                let markID = currentSlide.checkBoxesWithText[ii].condition[1][0]
+
+                console.log(markPoints)
+
+                for (let ii = 0; ii < lines[lineID].length; ii++){
+                    let point_x = markPoints[markID].left;
+                    let point_y = markPoints[markID].top;
+
+
+                    let lineStartPoint = new fabric.Point(lines[lineID][ii].calcLinePoints().x1, lines[lineID][ii].calcLinePoints().y1)
+                    lineStartPoint = fabric.util.transformPoint(lineStartPoint, lines[lineID][ii].calcTransformMatrix());
+
+                    let direction_x = lines[lineID][ii].x2 - lines[lineID][ii].x1;
+                    let direction_y = lines[lineID][ii].y2 - lines[lineID][ii].y1;
+
+                    if (lines[lineID][ii].parentSector[0] == markPoints[markID].parentSector[0]){
+                        if (distancePointStraightLine(point_x, point_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < 2){
+                            console.log(ii)
+                            console.log(distancePointStraightLine(point_x, point_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y))
+                            currentCheckBoxWithText.conditionIsFullfilled = true;
+                            currentCheckBoxWithText._objects[1].set('opacity', 1);
+                        }
+                    }
+                }
             }
 
         }
