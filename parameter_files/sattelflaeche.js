@@ -14,6 +14,11 @@ startViewportTransform_4 =0
 startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: [2, 2]
+startGeodesicsAngle: [39, 39]
+startGeodesicsOffset_x: [0.145, 0.42]
+startGeodesicsOffset_y: [0.56, 0.06]
+startGeodesicsLength: [70, 70]
+startGeodesicsOperational: ['true', 'true']
 startMarksSectors: [2, 3, 8]
 startMarksRadius: [5, 5, 5]
 startMarksOffset_x: [0.5, 0.5, 0.5]
@@ -67,6 +72,6 @@ textStart_x= [ -246.7289264549844, -19.900912960195924, 246.72892645498442, ];
 textStart_y= [ 221.95211297953534, -221.95211297953534, 221.95211297953534, ];
 textStartContent= [ 'M1', 'M2', 'M3', ];
 textStartFontSize= [ 15, 15, 15, ];
-textStartParentSector= [ [2,0], [3,1], [8,0], ];
+textStartParentSector= [ [2,0], [3,0], [8,0], ];
 textStartID= [ [0], [1], [2], ];
 textStartAngle= [ 0, 0, 0, ];

@@ -2161,7 +2161,6 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
             for (let jj = 0; jj < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments.length; jj++) {
 
-
                 if (entryToSplice_tmp < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1]) {
 
                     sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1] -= 1

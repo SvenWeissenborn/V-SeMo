@@ -26,14 +26,15 @@
     von Anfang an sichtbar sein sollen
 */
 
+let turnBackwardOff = true;
 
 let slideContent = [
     {
         id: 0,
         text_de: 'Karl und Lisa sind in Sektor K4 am Neutronenstern angekommen.',
         text_en: 'Together we want to become familiar with the sector model.',
-        geodesicsToHide: [0],
-        marksToHide: [1, 2, 3,],
+        geodesicsToHide: [0, 1, 2],
+        marksToHide: [1, 2, 3],
         textsToHide: [1, 2, 3, 4],
     },
 
@@ -41,7 +42,7 @@ let slideContent = [
         id: 1,
         text_de: 'Lisa verlässt mit einem Lander das Raumschiff und landet in Sektor D5 auf der Sternenoberfläche.',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
-        marksToShow: [0, 1],
+        marksToShow: [1],
         textsToHide: [0],
         textsToShow: [1, 2],
     },
@@ -57,7 +58,7 @@ let slideContent = [
 
     {
         id: 3,
-        text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus und ändere anschließend ihre Startrichtung.',
+        text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über diesen Button kannst Du ihre Startrichtung ändern.',
         text_en: 'Set sector 9 suitably.',
         imageToAdd: ['button_icons/direction.png', 0.5, 125]
 
@@ -65,20 +66,83 @@ let slideContent = [
 
     {
         id: 4,
-        text_de: 'Bestimme den Winkel zur Sternenoberfläche, in dem Lisa ihren Sender ausrichten muss, damit Karl das Signal empfangen kann. ',
+        text_de: 'Bestimme den Winkel zur Sternenoberfläche, in dem Lisa ihren Sender ausrichten muss, damit Karl das Signal empfangen kann.',
         text_en: 'Draw a line connecting the points M1 and M3.',
 
     },
 
     {
         id: 5,
-        text_de: 'Kehre wieder zum Kurs zurück.',
+        text_de: 'Zur Kontrolle: Der einzustellende Winkel beträgt ca. 62°.',
         text_en: 'first text',
 
     },
 
+    {
+        id: 6,
+        text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
+        text_en: 'first text',
+        imageToAdd: ['media/ns_rover_0.png', 0.38, 85],
+        marksToHide: [1],
+        marksToShow: [2],
+        textsToHide: [2],
+        textsToShow: [3],
+        geodesicsToDelete: [0],
+        geodesicsToShow: [1],
+        geodesicsToComplete: [1],
+    },
 
+    {
+        id: 6,
+        text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
+        text_en: 'first text',
+        imageToAdd: ['media/ns_rover_1.png', 0.38, 85],
+        marksToHide: [2],
+        marksToShow: [3],
+        textsToHide: [3],
+        textsToShow: [4],
+        geodesicsToDelete: [1],
+        geodesicsToShow: [2],
+        geodesicsToComplete: [2],
+    },
 
+    {
+        id: 7,
+        text_de: 'Als Lisa eine bestimmte Position erreicht, kann Karl ihr Signal nicht mehr empfangen.',
+        text_en: 'first text',
+        geodesicsToDelete: [2],
+        marksToHide: [3],
+        textsToHide: [4],
+
+    },
+
+    {
+        id: 8,
+        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte.',
+        text_en: 'first text',
+
+    },
+
+    {
+        id: 9,
+        text_de: 'Lisa setzt ihre Erkundungsfahrt fort. Nach einiger Zeit erreicht Karl wieder ihr Signal.',
+        text_en: 'first text',
+
+    },
+
+    {
+        id: 10,
+        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
+        text_en: 'first text',
+
+    },
+
+    {
+        id: 10,
+        text_de: 'Kehre wieder zum Kurs zurück.',
+        text_en: 'first text',
+
+    },
 ];
 
 

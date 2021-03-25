@@ -312,11 +312,14 @@ function showNextSlide() {
 
     console.log(currentSlide);
 
-    if (currentSlideNumber <= 1){
-        backward.opacity = 0;
-    }else{
-        backward.opacity = 1;
+    if (turnBackwardOff !== true){
+        if (currentSlideNumber <= 1){
+            backward.opacity = 0;
+        }else{
+            backward.opacity = 1;
+        }
     }
+
     if (currentSlideNumber === slideContent.length-1){
         forward.opacity = 0;
     }else{
@@ -344,6 +347,8 @@ function showNextSlide() {
     setTextsVisible();
 
     setTextsUnvisible();
+
+    deleteChosenGeodesics();
 
     autoCompleteStartGeodesics();
 
@@ -663,6 +668,16 @@ function removeAllLines(){
             lines = [];
             history = [];
         }
+    }
+}
+
+function deleteChosenGeodesics() {
+    if (currentSlide.geodesicsToDelete !== undefined) {
+        for (let ii = 0; ii < currentSlide.geodesicsToDelete.length; ii++) {
+            console.log(currentSlide.geodesicsToDelete)
+            deleteWholeGeodesic(currentSlide.geodesicsToDelete[ii])
+        }
+
     }
 }
 
