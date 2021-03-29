@@ -1820,6 +1820,26 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
     initialSectorTrapez.parent.ID_text.relationship[4] = initialSectorTrapez.parent.ID_text.left - midpoint_boundingbox_before_global.x - 1;
     initialSectorTrapez.parent.ID_text.relationship[5] = initialSectorTrapez.parent.ID_text.top - midpoint_boundingbox_before_global.y + 1;
 
+    for (let jj = 0; jj < initialSectorTrapez.parent.ticks.length; jj++) {
+        let tick_start_point_calc = new fabric.Point(
+            initialSectorTrapez.parent.ticks[jj].start_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ticks[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+            initialSectorTrapez.parent.ticks[jj].start_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.ticks[jj].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+        );
+        let tick_end_point_calc = new fabric.Point(
+            initialSectorTrapez.parent.ticks[jj].end_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ticks[jj].end_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+            initialSectorTrapez.parent.ticks[jj].end_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.ticks[jj].end_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+        );
+
+        let tick_transformed_mid_point = new fabric.Point(
+            tick_start_point_calc.x + (tick_end_point_calc.x - tick_start_point_calc.x) * 0.5,
+            tick_start_point_calc.y + (tick_end_point_calc.y - tick_start_point_calc.y) * 0.5,
+        );
+
+        initialSectorTrapez.parent.ticks[jj].relationship[4] = tick_transformed_mid_point.x - midpoint_boundingbox_before_global.x - 0.5;
+
+        initialSectorTrapez.parent.ticks[jj].relationship[5] =  tick_transformed_mid_point.y - midpoint_boundingbox_before_global.y + 0.5;
+    }
+
     for (let jj = 0; jj < initialSectorTrapez.parent.lineSegments.length; jj++) {
 
         if (initialSectorTrapez.parent.lineSegments[jj].lineType == "geodesic") {
@@ -2322,6 +2342,12 @@ function drawDragPoint(lineToGivePoint) {
         line_end_point = fabric.util.transformPoint(line_end_point, lineSegment.calcTransformMatrix());
     }
 
+    let dragPointOpacity = 1.0;
+
+    if (buildTicks == "1"){
+        dragPointOpacity = 0.5
+    }
+
     lineSegment.dragPoint = new fabric.Circle({
         originX: 'center',
         originY: 'center',
@@ -2342,6 +2368,7 @@ function drawDragPoint(lineToGivePoint) {
         lockScalingY: true,
         evented: true,
         hoverCursor: 'crosshair',
+        opacity: dragPointOpacity,
     });
 
     lineSegment.dragPoint.on('mousedown',function(o){
@@ -3385,6 +3412,8 @@ function drawSnapEdges(initialSectorID) {
                     }
                 }
 
+                if (buildTicks == "1") return
+
                 let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
 
                 let point_1 = initialTrapezPointsAsGlobalCoords[ii];
@@ -3435,15 +3464,6 @@ function drawSnapEdges(initialSectorID) {
     }
 }
 
-window.addEventListener('keydown',function(event){
-    if(event.key === 't'){
-        for (let ii = 0;  ii < sectors.length; ii++){
-            drawTicks(sectors[ii].trapez)
-        }
-
-    }
-});
-
 let tick_dist = 10
 let tick_length = 3
 
@@ -3492,10 +3512,21 @@ function drawTicks(trapez){
                 temporary_offset = 0
             }
 
-            let tickPoint_0 = [
-                trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left ,
-                trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
-            ];
+            let tickPoint_0
+
+            if (turnLorentzTransformOn == "1"){
+                tickPoint_0 = [
+                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left ,
+                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
+                ];
+            }else{
+                tickPoint_0 = [
+                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left - trapez.width/2 - 1,
+                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset + trapez.height/2 + 1
+                ];
+            }
+
+
             let tickPoint_1;
 
             if (ii == 0 || ii == 1) {
@@ -3513,11 +3544,18 @@ function drawTicks(trapez){
 
             let   tick = new fabric.Line(
                     [tickPoint_0[0], tickPoint_0[1], tickPoint_1[0], tickPoint_1[1]] ,
-                    {fill: '#666',
-                    stroke: '#666',
-                    strokeWidth: 1,
-                    selectable: false,
-                    evented: false,
+                    {
+                        fill: '#666',
+                        stroke: '#666',
+                        strokeWidth: 1,
+                        evented: false,
+                        objectCaching: false,
+                        lockMovementX: false,
+                        lockMovementY: false,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        selectable: false,
+
                     }
                 );
 
@@ -3527,7 +3565,9 @@ function drawTicks(trapez){
 
             trapez.parent.ticks.push(tick);
 
-            getStartAndEndPointCoordsBeforeLorentztransform(tick)
+            if (turnLorentzTransformOn == "1"){
+                getStartAndEndPointCoordsBeforeLorentztransform(tick)
+            }
 
             canvas.add(tick);
 
@@ -4888,7 +4928,7 @@ function positionSectors() {
         sectors[ii].trapez.top = sectors[ii].pos_y;
         sectors[ii].trapez.left = sectors[ii].pos_x;
         sectors[ii].trapez.rotate(sectors[ii].sector_angle);
-        // sectors[ii].trapez.angle = ;
+        //sectors[ii].trapez.angle = ;
         updateMinions(sectors[ii].trapez);
     }
 }
@@ -4942,7 +4982,15 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
 
     sectors[initialSectorID].slider[0].relationship[5] = sectors[initialSectorID].slider[1].relationship[5] + sectors[initialSectorID].rapidity * slider_max;
 
+    if (sectors[initialSectorID].ticks.length > 0) {
+        for (let ii = 0; ii < sectors[initialSectorID].ticks.length; ii++) {
+            canvas.bringToFront(sectors[initialSectorID].ticks[ii]);
+        }
 
+        for (let ii = 0; ii < sectors[initialSectorID].ticks.length; ii++) {
+            sectors[initialSectorID].ticks[ii].relationship = getRelationship(sectors[initialSectorID].ticks[ii], sectors[initialSectorID].ID);
+        }
+    }
 
     if (sectors[initialSectorID].lineSegments.length > 0) {
 
@@ -5049,6 +5097,16 @@ function resetSectors() {
 
                 for (let ss = 0; ss < sectors[rr].slider.length; ss++) {
                     sectors[rr].slider[ss].relationship = getRelationship(sectors[rr].slider[ss], sectors[rr].ID);
+                }
+
+                if (sectors[rr].ticks.length > 0) {
+                    for (let ss = 0; ss < sectors[rr].ticks.length; ss++) {
+                        canvas.bringToFront(sectors[rr].ticks[ss]);
+
+                    }
+                    for (let ss = 0; ss < sectors[rr].ticks.length; ss++) {
+                        sectors[rr].ticks[ss].relationship = getRelationship(sectors[rr].ticks[ss], sectors[rr].ID);
+                    }
                 }
 
                 if (sectors[rr].lineSegments.length > 0) {
@@ -6111,6 +6169,30 @@ function updateMinions(boss) {
         }
     }
 
+    for (let ii = 0; ii < boss.parent.ticks.length; ii++) {
+        let tick = boss.parent.ticks[ii];
+        if (tick.relationship) {
+            tick.bringToFront();
+            let relationship = tick.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            tick.set({
+                flipX: false,
+                flipY: false,
+            });
+            tick.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            tick.set(options);
+            tick.setCoords();
+        }
+    }
 
     for (let ii = 0; ii < boss.parent.lineSegments.length; ii++) {
         let segment = boss.parent.lineSegments[ii];
@@ -6189,30 +6271,6 @@ function updateMinions(boss) {
         }
     }
 
-    for (let ii = 0; ii < boss.parent.ticks.length; ii++) {
-        let tick = boss.parent.ticks[ii];
-        if (tick.relationship) {
-            tick.bringToFront();
-            let relationship = tick.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            tick.set({
-                flipX: false,
-                flipY: false,
-            });
-            tick.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            tick.set(options);
-            tick.setCoords();
-        }
-    }
 
     for (let ii = 0; ii < boss.parent.cornerArcs.length; ii++) {
         let cornerArc = boss.parent.cornerArcs[ii];
@@ -6284,6 +6342,12 @@ function updateMinions(boss) {
 init();
 
 fitResponsiveCanvas();
+
+if (buildTicks == "1"){
+    for (let ii = 0; ii < sectors.length; ii++){
+        drawTicks(sectors[ii].trapez);
+    }
+}
 
 positionSectors();
 
