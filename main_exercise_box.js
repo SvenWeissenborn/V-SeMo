@@ -683,12 +683,14 @@ function removeAllLines(){
 
 function deleteChosenGeodesics() {
     if (currentSlide.geodesicsToDelete !== undefined) {
+        showGeodesicButtons(false)
         for (let ii = 0; ii < currentSlide.geodesicsToDelete.length; ii++) {
             console.log(currentSlide.geodesicsToDelete)
             deleteWholeGeodesic(currentSlide.geodesicsToDelete[ii])
         }
 
     }
+    chosenLineGlobalID = -1
 }
 
 function checkSlideCondition() {

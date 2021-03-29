@@ -19,9 +19,10 @@ let screenFactor = Math.min(containerSize.width / canvasSize.width, containerSiz
 let buttonfactor = 0.4;
 //let buttonwidth = buttonfactor * win_width;
 //let buttonheight = win_height * 0.5;
-let buttondist = 25;
+let buttondist = 15;
 let textSize = win_width * 0.01 * screenFactor;
-let dist_to_top = 25;
+let dist_to_top = 15;
+let dist_left = 51.5;
 
 let dist_to_top_undo_button_number = 3;
 if (showAddCurvedLine == "1") {
@@ -306,7 +307,7 @@ if(language !== "english"){
 /*
 fabric.Image.fromURL('back.png', function(img) {
     let back = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + 0 * 136 * buttonfactor * screenFactor ,
         opacity: 1,
         originX: "center",
@@ -355,7 +356,7 @@ window.addEventListener('keydown',function(event){
 
 fabric.Image.fromURL('button_icons/restart.png', function(img) {
     let restart = img.set({
-        left: 51.5 ,
+        left: dist_left ,
         top: dist_to_top + 0 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -399,7 +400,7 @@ fabric.Image.fromURL('button_icons/restart.png', function(img) {
 
 fabric.Image.fromURL('button_icons/reset.png', function(img) {
     let reset = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -443,7 +444,7 @@ fabric.Image.fromURL('button_icons/reset.png', function(img) {
 /*
 fabric.Image.fromURL('grab.png', function(img) {
     let grab = img.set({
-        left: 51.5,
+        left: dist_left,
         top: 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -474,7 +475,7 @@ fabric.Image.fromURL('grab.png', function(img) {
 let add;
 fabric.Image.fromURL('button_icons/add.png', function(img) {
      add = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -520,7 +521,7 @@ fabric.Image.fromURL('button_icons/add.png', function(img) {
 let add_dark;
 fabric.Image.fromURL('button_icons/add_dark.png', function(img) {
     add_dark = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -566,7 +567,7 @@ if (showAddCurvedLine == "1") {
 let add_curved;
 fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
     add_curved = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: add_curvedOpacity,
         originX: "center",
@@ -612,7 +613,7 @@ fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
 let add_dark_curved;
 fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
     add_dark_curved = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -653,7 +654,7 @@ fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
 let undo;
 fabric.Image.fromURL('button_icons/undo.png', function(img) {
     undo = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -721,7 +722,7 @@ function addGeodreieck(geodreieckToAdd){
 
 fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
     button_dreieck = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + dist_to_top_geodreieck_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
@@ -763,7 +764,7 @@ fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
 let button_dreieck_empty;
 fabric.Image.fromURL('button_icons/button_dreieck_empty.png', function(img) {
     button_dreieck_empty = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + dist_to_top_geodreieck_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -900,7 +901,7 @@ if (showAreaSector == "globe" || showAreaSector == "earth") {
 let area_sector
 fabric.Image.fromURL('button_icons/area_sector.png', function(img) {
     area_sector = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + dist_to_top_showArea_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: areaSectorOpacity,
         originX: "center",
@@ -991,7 +992,7 @@ if (showVerticesOn == "1") {
 let verticesOn
 fabric.Image.fromURL('button_icons/verticesOn.png', function(img) {
     verticesOn = img.set({
-        left: 51.5,
+        left: dist_left,
         top:  dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: verticesOnOpacity,
         originX: "center",
@@ -1080,7 +1081,7 @@ canvas_side_bar_perm.add(infoboxDeficitAngleText);
 let delete_whole;
 fabric.Image.fromURL('button_icons/delete.png', function(img) {
     delete_whole = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + dist_to_top_delete_whole_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -1120,7 +1121,7 @@ fabric.Image.fromURL('button_icons/delete.png', function(img) {
 let set_sectors;
 fabric.Image.fromURL('button_icons/set_sectors.png', function(img) {
     set_sectors = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + dist_to_top_set_sectors_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -1214,7 +1215,7 @@ function moveDirectionButtons(visibleToSet){
 
 fabric.Image.fromURL('button_icons/direction.png', function(img) {
     direction = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + dist_to_top_direction_main_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
@@ -1431,7 +1432,7 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_low.png', f
 let autocomplete;
 fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
     autocomplete = img.set({
-        left: 51.5,
+        left: dist_left,
         top: dist_to_top + (dist_to_top_auto_complete_main_button_number) * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
