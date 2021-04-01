@@ -10,14 +10,14 @@ startViewportTransform_5 =0
 fontSizeStern: 8
 fontSizeStern: 15
 startGeodesicsSectors: [47, 58, 69]
-startMarksSectors: [43, 47, 58, 69]
-startMarksRadius: [5, 5, 5, 5]
-startMarksOffset_x: [0.5, 0.5, 0.5, 0.3]
-startMarksOffset_y: [0.5, 0.0001, 0.0001, 0.0001]
-startTextsSectors: [43, 43, 47, 58, 69]
-startTextContent: ['Karl &\\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa']
-startTextsOffset_x: [0.6, 0.58, 0.7, 0.7, 0.5]
-startTextsOffset_y: [0.55, 0.55, 0.2, 0.2, 0.25]
+startMarksSectors: [43, 47, 58, 69, 80, 124]
+startMarksRadius: [5, 5, 5, 5, 5, 5]
+startMarksOffset_x: [0.5, 0.5, 0.5, 0.3, 0.75, 0.25]
+startMarksOffset_y: [0.5, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001]
+startTextsSectors: [43, 43, 47, 58, 69, 80, 124]
+startTextContent: ['Karl &\\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa', 'Lisa', 'Lisa']
+startTextsOffset_x: [0.6, 0.58, 0.7, 0.7, 0.5, 0.7, 0.3]
+startTextsOffset_y: [0.55, 0.55, 0.2, 0.2, 0.25, 0.25, 0.25]
 ----------------------
 */
 
@@ -26,7 +26,7 @@ startViewportTransform_4 =0
 startViewportTransform_5 =0
 
 let line_colors = ['blue', 'blue', 'blue', 'black', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
-let mark_colors = ['grey', 'grey', 'grey', 'grey', 'grey'];
+let mark_colors = ['grey', 'green', 'green', 'green', 'green', 'green'];
 sec_name= [ 'A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2', 'I2', 'J2', 'K2', 'A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3', 'I3', 'J3', 'K3', 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4', 'I4', 'J4', 'K4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5', 'H5', 'I5', 'J5', 'K5', 'A6', 'B6', 'C6', 'D6', 'E6', 'F6', 'G6', 'H6', 'I6', 'J6', 'K6', 'A7', 'B7', 'C7', 'D7', 'E7', 'F7', 'G7', 'H7', 'I7', 'J7', 'K7', 'A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'G8', 'H8', 'I8', 'J8', 'K8', 'A9', 'B9', 'C9', 'D9', 'E9', 'F9', 'G9', 'H9', 'I9', 'J9', 'K9', 'A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'G10', 'H10', 'I10', 'J10', 'K10', 'A11', 'B11', 'C11', 'D11', 'E11', 'F11', 'G11', 'H11', 'I11', 'J11', 'K11', 'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'G12', 'H12', 'I12', 'J12', 'K12', ];
 sec_fill= [ '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', '#e2e2e2', '#e2e2e2', '#e2e2e2', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, ];
@@ -55,18 +55,18 @@ startFill= [ line_colors[0], line_colors[1], line_colors[2], ];
 startStroke= [ line_colors[0], line_colors[1], line_colors[2], ];
 startParentSector= [ [47,0], [58,0], [69,0], ];
 startLineID= [ [0,1], [1,1], [2,1], ];
-markStart_x= [ 741.8914200822512, 167.84127968547966, 96.90320800754301, 19.877302663873614, ];
-markStart_y= [ -4.5427747645930666e-14, 96.90320800754289, 167.84127968547963, 193.80641601508592, ];
-markStartStrokeWidth= [ 2, 2, 2, 2, ];
-markStartRadius= [ 5, 5, 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], ];
-markStartParentSector= [ [43,0], [47,0], [58,0], [69,0], ];
-markStartID= [ [0,1], [1,1], [2,1], [3,1], ];
-textStart_x= [ 744.5698810513338, 744.5698810513338, 173.29914118727552, 88.57813977105347, 2.7213658133808116e-14, ];
-textStart_y= [ 27.331291162826073, 21.86503293026085, 123.0066379023066, 193.1764438511491, 216.03159149483935, ];
-textStartContent= [ 'Karl &\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa', ];
-textStartFontSize= [ 15, 15, 15, 15, 15, ];
-textStartParentSector= [ [43,0], [43,1], [47,0], [58,0], [69,0], ];
-textStartID= [ [0], [1], [2], [3], [4], ];
-textStartAngle= [ 0, 0, 0, 0, 0, ];
+markStart_x= [ 741.8914200822512, 167.84127968547966, 96.90320800754301, 19.877302663873614, -118.42101933957619, -118.42101933957628, ];
+markStart_y= [ -4.5427747645930666e-14, 96.90320800754289, 167.84127968547963, 193.80641601508592, 155.41796552055868, -155.41796552055857, ];
+markStartStrokeWidth= [ 2, 2, 2, 2, 2, 2, ];
+markStartRadius= [ 5, 5, 5, 5, 5, 5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], ];
+markStartParentSector= [ [43,0], [47,0], [58,0], [69,0], [80,0], [124,0], ];
+markStartID= [ [0,1], [1,1], [2,1], [3,1], [4,1], [5,1], ];
+textStart_x= [ 744.5698810513338, 744.5698810513338, 173.29914118727552, 88.57813977105347, 2.7213658133808116e-14, -125.23004481304625, -125.23004481304636, ];
+textStart_y= [ 27.331291162826073, 21.86503293026085, 123.0066379023066, 193.1764438511491, 216.03159149483935, 177.15019492257636, -177.15019492257628, ];
+textStartContent= [ 'Karl &\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa', 'Lisa', 'Lisa', ];
+textStartFontSize= [ 15, 15, 15, 15, 15, 15, 15, ];
+textStartParentSector= [ [43,0], [43,1], [47,0], [58,0], [69,0], [80,0], [124,0], ];
+textStartID= [ [0], [1], [2], [3], [4], [5], [6], ];
+textStartAngle= [ 0, 0, 0, 0, 0, 0, 0, ];

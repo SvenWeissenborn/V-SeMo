@@ -31,16 +31,16 @@ let turnBackwardOff = true;
 let slideContent = [
     {
         id: 0,
-        text_de: 'Karl und Lisa sind in Sektor K4 am Neutronenstern angekommen.',
+        text_de: 'Lisa berichtet Karl, dass sie hinter dem Stern zwei Schweber (S1 & S2) gestartet hat. Beide senden kontinuierlich Signale.',
         text_en: 'Together we want to become familiar with the sector model.',
-        geodesicsToHide: [0, 1, 2],
-        marksToHide: [1, 2, 3],
-        textsToHide: [1, 2, 3, 4],
+        geodesicsToHide: [],
+        marksToHide: [],
+        textsToHide: [],
     },
 
     {
         id: 1,
-        text_de: 'Lisa verlässt mit einem Lander das Raumschiff und landet in Sektor D5 auf der Sternenoberfläche.',
+        text_de: 'Lisa versucht ihren Empfänger passend auszurichten. Doch egal was sie macht, sie empfängt nur das Signal eines Schwebers.',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
         marksToShow: [1],
         textsToHide: [0],
@@ -50,11 +50,12 @@ let slideContent = [
 
     {
         id: 2,
-        text_de: 'Um Karl ihre gelungene Landung mitzuteilen, versucht Lisa ihm ein Signal (blaue Geodäte) zu senden.',
+        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann.',
         text_en: 'Join the sectors',
         geodesicsToShow: [0],
         geodesicsToComplete: [0],
     },
+
 
     {
         id: 3,
@@ -64,7 +65,7 @@ let slideContent = [
             {
                 text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über den Kompass-Button kannst Du ihre Startrichtung ändern.',
                 text_en: '2 and 3 &',
-                condition: ['lineTouchesMark', [0, 0]]
+                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 1, 2]],
             },
         ],
         imageToAdd: ['button_icons/direction.png', 0.5, 125]
@@ -111,23 +112,47 @@ let slideContent = [
 
     {
         id: 7,
-        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte.',
+        text_de: '',
         text_en: 'first text',
-
+        checkBoxesWithText: [
+            {
+                text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte. \n \nTipp: Beginne deine Geodäte bei Karl.',
+                text_en: '2 and 3 &',
+                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 4, 2]],
+                result: {
+                    type: 'showMarkAndText',
+                    mark: 4,
+                    text: 5
+                }
+            },
+        ],
     },
 
     {
         id: 8,
         text_de: 'Lisa setzt ihre Erkundungsfahrt fort. Nach einiger Zeit erreicht Karl wieder ihr Signal.',
         text_en: 'first text',
-
+        marksToHide: [4],
+        textsToHide: [5],
     },
+
 
     {
         id: 9,
-        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
+        text_de: '',
         text_en: 'first text',
-
+        checkBoxesWithText: [
+            {
+                text_de: 'Bestimme Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
+                text_en: '2 and 3 &',
+                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 5, 2]],
+                result: {
+                    type: 'showMarkAndText',
+                    mark: 5,
+                    text: 6
+                }
+            },
+        ],
     },
 
     {
