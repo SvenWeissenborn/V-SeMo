@@ -12,7 +12,7 @@ fontSize: 15
 startGeodesicsSectors: [7, 7]
 startGeodesicsAngle: [135, 135]
 startGeodesicsOffset_x: [0, 0]
-startGeodesicsOffset_y: [10, 40]
+startGeodesicsOffset_y: [15, 44]
 startGeodesicsOperational: ['true', 'true']
 ----------------------
 */
@@ -42,9 +42,9 @@ sec_posy= [ 150, 296.1895003862225, 442.379000772445, 588.5685011586675, 734.758
 sec_angle= [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 startSectors= [ 7, 7, ];
 x_Start= [ 150.0, 150.0, ];
-y_Start= [ 1138.7727721729432, 1108.7727721729432, ];
-x_End= [ 178.2842712474619, 178.2842712474619, ];
-y_End= [ 1110.4885009254813, 1080.4885009254813, ];
+y_Start= [ 1133.7727721729432, 1104.7727721729432, ];
+x_End= [ 174.74873734152916, 174.74873734152916, ];
+y_End= [ 1109.024034831414, 1080.024034831414, ];
 startStrokeWidth= [ 2, 2, ];
 startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];

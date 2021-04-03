@@ -218,7 +218,7 @@ function drawCheckBoxWithText() {
     let checkBoxText;
 
     checkBoxText = new fabric.Textbox("Text", {
-        width: 280,
+        width: 250,
         opacity: 1,
         fontSize: 16 * screenFactor,
         fontFamily: 'arial',
@@ -288,6 +288,11 @@ function addCheckBoxWithText() {
                 checkBoxWithText._objects[3].set('text', currentSlide.checkBoxesWithText[ii].text_en);
             }
 
+            if (currentSlide.checkBoxesWithText[ii].type !== undefined){
+                checkBoxWithText.type = currentSlide.checkBoxesWithText[ii].type
+                console.log(checkBoxWithText)
+            }
+
             if (currentSlide.checkBoxesWithText[ii].condition !== undefined){
                 checkBoxWithText.condition = currentSlide.checkBoxesWithText[ii].condition;
                 checkBoxWithText.conditionIsFullfilled = false;
@@ -298,9 +303,9 @@ function addCheckBoxWithText() {
                 listOfCheckBoxesWithText[ii].set('hoverCursor', "pointer")
                 currentSlide.checkBoxesWithText[ii].answerState = false
                 checkBoxWithText.on('mousedown', function () {
-                    console.log('huhu')
+
                     currentSlide.checkBoxesWithText[ii].answerState = !currentSlide.checkBoxesWithText[ii].answerState
-                    console.log(currentSlide.checkBoxesWithText[ii].answerState)
+
                     if (currentSlide.checkBoxesWithText[ii].answerState == true){
                         if (currentSlide.checkBoxesWithText[ii].answerIs == true){
                             listOfCheckBoxesWithText[ii]._objects[1].set('opacity', 1.0)
@@ -321,7 +326,7 @@ function addCheckBoxWithText() {
 
             if (ii == 0){
                 if (exerciseText.text == ""){
-                    console.log('go')
+
                     checkBoxWithText.set('top', 10)
                 }
             }
@@ -747,7 +752,6 @@ function deleteChosenGeodesics() {
     if (currentSlide.geodesicsToDelete !== undefined) {
         showGeodesicButtons(false)
         for (let ii = 0; ii < currentSlide.geodesicsToDelete.length; ii++) {
-            console.log(currentSlide.geodesicsToDelete)
             deleteWholeGeodesic(currentSlide.geodesicsToDelete[ii])
         }
         chosenLineGlobalID = -1
@@ -805,88 +809,92 @@ function checkCheckBoxCondition() {
     let AllCheckBoxConditionsAreFulfilled = false;
 
     if (currentSlide.checkBoxesWithText !== undefined){
-        console.log(currentSlide.checkBoxesWithText)
-        if (currentSlide.checkBoxesWithText.type == 'tracker') {
-            console.log('test')
-            for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
 
-                let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];
 
-                if (currentSlide.checkBoxesWithText[ii].condition[0] == 'snappedSectors') {
+        for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
 
-                    let firstSectorID = currentSlide.checkBoxesWithText[ii].condition[1][0];
-                    let secondSectorID = currentSlide.checkBoxesWithText[ii].condition[1][1];
 
-                    for (let jj = 0; jj < 4; jj++) {
-                        if (sectors[firstSectorID].neighbourhood[jj] == secondSectorID) {
+            if (currentSlide.checkBoxesWithText[ii].type !== 'tracker') {
+                return
+            }
 
-                            if (sectors[firstSectorID].snapStatus[jj] !== 0) {
-                                currentCheckBoxWithText.conditionIsFullfilled = true;
-                                currentCheckBoxWithText._objects[1].set('opacity', 1);
-                            }
-                        }
-                    }
+            let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];
 
-                }
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'snappedSectors') {
 
-                if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesTwoMarks') {
-                    if (chosenLineGlobalID == -1) {
-                        return
-                    }
-                    let lineID
-                    if (currentSlide.checkBoxesWithText[ii].condition[1][0] == 'chosenLineGlobalID') {
-                        lineID = chosenLineGlobalID
-                    } else {
-                        lineID = currentSlide.checkBoxesWithText[ii].condition[1][0]
-                    }
+                let firstSectorID = currentSlide.checkBoxesWithText[ii].condition[1][0];
+                let secondSectorID = currentSlide.checkBoxesWithText[ii].condition[1][1];
 
-                    let mark1ID = currentSlide.checkBoxesWithText[ii].condition[1][1]
-                    let mark2ID = currentSlide.checkBoxesWithText[ii].condition[1][2]
+                for (let jj = 0; jj < 4; jj++) {
+                    if (sectors[firstSectorID].neighbourhood[jj] == secondSectorID) {
 
-                    let check_1 = false;
-                    let check_2 = false;
-
-                    for (let jj = 0; jj < lines[lineID].length; jj++) {
-                        let point_1_x = markPoints[mark1ID].left;
-                        let point_1_y = markPoints[mark1ID].top;
-
-                        let point_2_x = markPoints[mark2ID].left;
-                        let point_2_y = markPoints[mark2ID].top;
-
-                        let lineStartPoint = new fabric.Point(lines[lineID][jj].calcLinePoints().x1, lines[lineID][jj].calcLinePoints().y1)
-                        lineStartPoint = fabric.util.transformPoint(lineStartPoint, lines[lineID][jj].calcTransformMatrix());
-
-                        let direction_x = lines[lineID][jj].x2 - lines[lineID][jj].x1;
-                        let direction_y = lines[lineID][jj].y2 - lines[lineID][jj].y1;
-
-                        if (lines[lineID][jj].parentSector[0] == markPoints[mark1ID].parentSector[0]) {
-                            if (distancePointStraightLine(point_1_x, point_1_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < currentSlide.checkBoxesWithText[ii].condition[1][3]) {
-                                check_1 = true
-                            }
-                        }
-
-                        if (lines[lineID][jj].parentSector[0] == markPoints[mark2ID].parentSector[0]) {
-                            if (distancePointStraightLine(point_2_x, point_2_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < currentSlide.checkBoxesWithText[ii].condition[1][3]) {
-                                check_2 = true
-                            }
-                        }
-
-                        if (check_1 == true && check_2 == true) {
+                        if (sectors[firstSectorID].snapStatus[jj] !== 0) {
                             currentCheckBoxWithText.conditionIsFullfilled = true;
                             currentCheckBoxWithText._objects[1].set('opacity', 1);
-
-                            if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
-                                if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
-                                    markPoints[currentSlide.checkBoxesWithText[ii].result.mark].set('opacity', 1)
-                                    texts[currentSlide.checkBoxesWithText[ii].result.text].set('opacity', 1)
-                                }
-                            }
                         }
                     }
                 }
 
             }
+
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesTwoMarks') {
+                if (chosenLineGlobalID == -1) {
+                    return
+                }
+                let lineID
+                if (currentSlide.checkBoxesWithText[ii].condition[1][0] == 'chosenLineGlobalID') {
+                    lineID = chosenLineGlobalID
+                } else {
+                    lineID = currentSlide.checkBoxesWithText[ii].condition[1][0]
+                }
+
+                let mark1ID = currentSlide.checkBoxesWithText[ii].condition[1][1]
+                let mark2ID = currentSlide.checkBoxesWithText[ii].condition[1][2]
+
+                let check_1 = false;
+                let check_2 = false;
+
+                for (let jj = 0; jj < lines[lineID].length; jj++) {
+                    let point_1_x = markPoints[mark1ID].left;
+                    let point_1_y = markPoints[mark1ID].top;
+
+                    let point_2_x = markPoints[mark2ID].left;
+                    let point_2_y = markPoints[mark2ID].top;
+
+                    let lineStartPoint = new fabric.Point(lines[lineID][jj].calcLinePoints().x1, lines[lineID][jj].calcLinePoints().y1)
+                    lineStartPoint = fabric.util.transformPoint(lineStartPoint, lines[lineID][jj].calcTransformMatrix());
+
+                    let direction_x = lines[lineID][jj].x2 - lines[lineID][jj].x1;
+                    let direction_y = lines[lineID][jj].y2 - lines[lineID][jj].y1;
+
+                    if (lines[lineID][jj].parentSector[0] == markPoints[mark1ID].parentSector[0]) {
+                        if (distancePointStraightLine(point_1_x, point_1_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < currentSlide.checkBoxesWithText[ii].condition[1][3]) {
+                            check_1 = true
+                        }
+                    }
+
+                    if (lines[lineID][jj].parentSector[0] == markPoints[mark2ID].parentSector[0]) {
+                        if (distancePointStraightLine(point_2_x, point_2_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < currentSlide.checkBoxesWithText[ii].condition[1][3]) {
+                            check_2 = true
+                        }
+                    }
+
+                    if (check_1 == true && check_2 == true) {
+                        currentCheckBoxWithText.conditionIsFullfilled = true;
+                        currentCheckBoxWithText._objects[1].set('opacity', 1);
+
+                        if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
+                            if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
+                                markPoints[currentSlide.checkBoxesWithText[ii].result.mark].set('opacity', 1)
+                                texts[currentSlide.checkBoxesWithText[ii].result.text].set('opacity', 1)
+                            }
+                        }
+                    }
+                }
+            }
+
         }
+
 
         for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++){
             let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];

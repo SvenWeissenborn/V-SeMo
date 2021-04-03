@@ -39,36 +39,6 @@ let slideContent = [
     },
 
     {
-        id: 7,
-        text_de: 'Welcher der Aussagen stimmt?',
-        text_en: 'first text',
-        checkBoxesWithText: [
-            {
-                text_de: 'a) Ich bin ein Test.',
-                text_en: '2 and 3 &',
-                type: 'quiz',
-                answerIs: true,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
-            },
-            {
-                text_de: 'b) Ich bin ein Test.',
-                text_en: '2 and 3 &',
-                type: 'quiz',
-                answerIs: false,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
-            },
-        ],
-    },
-
-    {
         id: 1,
         text_de: 'Lisa verlässt mit einem Lander das Raumschiff und landet in Sektor D5 auf der Sternenoberfläche.',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',

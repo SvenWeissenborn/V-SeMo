@@ -32,7 +32,7 @@ startGeodesicsAngle = [135, 135]
 
 startGeodesicsOffset_x = [0, 0]
 
-startGeodesicsOffset_y = [10, 40]
+startGeodesicsOffset_y = [15, 44]
 
 startGeodesicsOperational = ['true', 'true']
 
@@ -174,7 +174,7 @@ def main():
             file.write(str( sectorValues[ii][jj])+', ')
         file.write("];\n")
 
-    lengthStartGeodesics = 40
+    lengthStartGeodesics = 35
 
     variablenamesGeodesics = ["startSectors", "x_Start", "y_Start", "x_End", "y_End", "startStrokeWidth", "startFill", "startStroke","startParentSector", "startLineID", "startGeodesicOperational"]
     geodesicDict = dict(zip(variablenamesGeodesics, range(len(variablenamesGeodesics))))

@@ -3464,8 +3464,10 @@ function drawSnapEdges(initialSectorID) {
     }
 }
 
-let tick_dist = 10
-let tick_length = 3
+let tick_dist = 14.5;
+let tick_length = 3;
+let lightConeLength = 80;
+let tickWidth = 1
 
 function drawTicks(trapez){
 
@@ -3517,7 +3519,7 @@ function drawTicks(trapez){
             if (turnLorentzTransformOn == "1"){
                 tickPoint_0 = [
                     trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left ,
-                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
+                    trapez.points[directions[ii][0]].y + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
                 ];
             }else{
                 tickPoint_0 = [
@@ -3547,7 +3549,7 @@ function drawTicks(trapez){
                     {
                         fill: '#666',
                         stroke: '#666',
-                        strokeWidth: 1,
+                        strokeWidth: tickWidth,
                         evented: false,
                         objectCaching: false,
                         lockMovementX: false,
@@ -3555,6 +3557,10 @@ function drawTicks(trapez){
                         lockScalingX: true,
                         lockScalingY: true,
                         selectable: false,
+                        originX: 'center',
+                        originY: 'center',
+                        hasBorders: false,
+                        hasControls: false,
 
                     }
                 );
@@ -3574,6 +3580,52 @@ function drawTicks(trapez){
 
         }
 
+    }
+
+    if (turnLorentzTransformOn == "1"){
+
+        let temporary_offset;
+        if (trapez.points[2].y > 0){
+            temporary_offset = trapez.points[2].y
+        } else {
+            temporary_offset = 0
+        }
+
+        let lightConesPoint_0 = [
+            trapez.points[3].x + trapez.left + 0.5,
+            trapez.points[3].y + trapez.top  - temporary_offset - 0.5
+        ]
+
+        let lightConesPoint_1 = [
+            lightConesPoint_0[0] + lightConeLength / Math.sqrt(2),
+            lightConesPoint_0[1] - lightConeLength / Math.sqrt(2)
+        ]
+
+        let   lightCone = new fabric.Line(
+            [lightConesPoint_0[0], lightConesPoint_0[1], lightConesPoint_1[0], lightConesPoint_1[1]] ,
+            {
+                fill: '#666',
+                stroke: '#666',
+                strokeWidth: tickWidth/2,
+                evented: false,
+                objectCaching: false,
+                lockMovementX: false,
+                lockMovementY: false,
+                lockScalingX: true,
+                lockScalingY: true,
+                selectable: false,
+                originX: 'center',
+                originY: 'center',
+                hasBorders: false,
+                hasControls: false,
+
+            }
+        );
+        lightCone.parentSector = [trapez.parent.ID, trapez.parent.ticks.length];
+        lightCone.relationship = getRelationship(lightCone, lightCone.parentSector[0])
+        trapez.parent.ticks.push(lightCone);
+        getStartAndEndPointCoordsBeforeLorentztransform(lightCone)
+        canvas.add(lightCone);
     }
 
 }

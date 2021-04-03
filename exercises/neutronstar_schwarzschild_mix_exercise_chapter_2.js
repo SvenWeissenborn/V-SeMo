@@ -33,92 +33,38 @@ let slideContent = [
         id: 0,
         text_de: 'Lisa berichtet Karl, dass sie hinter dem Stern zwei Schweber (S1 & S2) gestartet hat. Beide senden kontinuierlich Signale.',
         text_en: 'Together we want to become familiar with the sector model.',
-        geodesicsToHide: [],
-        marksToHide: [],
-        textsToHide: [],
+
     },
 
     {
         id: 1,
         text_de: 'Lisa versucht ihren Empfänger passend auszurichten. Doch egal was sie macht, sie empfängt nur das Signal eines Schwebers.',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
-        marksToShow: [1],
-        textsToHide: [0],
-        textsToShow: [1, 2],
+
     },
 
 
     {
         id: 2,
-        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann.',
+        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann. \nPrüfe dein Ergebnis durch Antippen der entsprechenden Box.',
         text_en: 'Join the sectors',
-        geodesicsToShow: [0],
-        geodesicsToComplete: [0],
-    },
-
-
-    {
-        id: 3,
-        text_de: '',
-        text_en: 'Set sector 9 suitably.',
         checkBoxesWithText: [
             {
-                text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über den Kompass-Button kannst Du ihre Startrichtung ändern.',
+                text_de: 'a) Schweber 1',
                 text_en: '2 and 3 &',
-                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 1, 2]],
+                type: 'quiz',
+                answerIs: false,
+                result: {
+                    type: 'showMarkAndText',
+                    mark: 4,
+                    text: 5
+                }
             },
-        ],
-        imageToAdd: ['button_icons/direction.png', 0.5, 125]
-    },
-
-
-    {
-        id: 4,
-        text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
-        text_en: 'first text',
-        imageToAdd: ['media/ns_rover_0.png', 0.38, 85],
-        marksToHide: [1],
-        marksToShow: [2],
-        textsToHide: [2],
-        textsToShow: [3],
-        geodesicsToDelete: [0],
-        geodesicsToShow: [1],
-        geodesicsToComplete: [1],
-    },
-
-    {
-        id: 5,
-        text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
-        text_en: 'first text',
-        imageToAdd: ['media/ns_rover_1.png', 0.38, 85],
-        marksToHide: [2],
-        marksToShow: [3],
-        textsToHide: [3],
-        textsToShow: [4],
-        geodesicsToDelete: [1],
-        geodesicsToShow: [2],
-        geodesicsToComplete: [2],
-    },
-
-    {
-        id: 6,
-        text_de: 'Als Lisa eine bestimmte Position erreicht, kann Karl ihr Signal nicht mehr empfangen.',
-        text_en: 'first text',
-        geodesicsToDelete: [2],
-        marksToHide: [3],
-        textsToHide: [4],
-
-    },
-
-    {
-        id: 7,
-        text_de: '',
-        text_en: 'first text',
-        checkBoxesWithText: [
             {
-                text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte. \n \nTipp: Beginne deine Geodäte bei Karl.',
+                text_de: 'b) Schweber 2',
                 text_en: '2 and 3 &',
-                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 4, 2]],
+                type: 'quiz',
+                answerIs: true,
                 result: {
                     type: 'showMarkAndText',
                     mark: 4,
@@ -129,38 +75,14 @@ let slideContent = [
     },
 
     {
-        id: 8,
-        text_de: 'Lisa setzt ihre Erkundungsfahrt fort. Nach einiger Zeit erreicht Karl wieder ihr Signal.',
-        text_en: 'first text',
-        marksToHide: [4],
-        textsToHide: [5],
-    },
-
-
-    {
-        id: 9,
-        text_de: '',
-        text_en: 'first text',
-        checkBoxesWithText: [
-            {
-                text_de: 'Bestimme Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
-                text_en: '2 and 3 &',
-                condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 5, 2]],
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 5,
-                    text: 6
-                }
-            },
-        ],
-    },
-
-    {
-        id: 10,
+        id: 0,
         text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'first text',
-
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToHide: [],
+        marksToHide: [],
+        textsToHide: [],
     },
+
 ];
 
 
