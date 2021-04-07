@@ -290,7 +290,6 @@ function addCheckBoxWithText() {
 
             if (currentSlide.checkBoxesWithText[ii].type !== undefined){
                 checkBoxWithText.type = currentSlide.checkBoxesWithText[ii].type
-                console.log(checkBoxWithText)
             }
 
             if (currentSlide.checkBoxesWithText[ii].condition !== undefined){
@@ -838,6 +837,7 @@ function checkCheckBoxCondition() {
             }
 
             if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesTwoMarks') {
+
                 if (chosenLineGlobalID == -1) {
                     return
                 }

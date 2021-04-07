@@ -33,7 +33,7 @@ let slideContent = [
         id: 0,
         text_de: 'Lisa berichtet Karl, dass sie hinter dem Stern zwei Schweber (S1 & S2) gestartet hat. Beide senden kontinuierlich Signale.',
         text_en: 'Together we want to become familiar with the sector model.',
-
+        sectorsToSnapTogether: [[43, 42]]
     },
 
     {

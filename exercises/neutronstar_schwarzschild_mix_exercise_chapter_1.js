@@ -34,9 +34,11 @@ let slideContent = [
         text_de: 'Karl und Lisa sind in Sektor K4 am Neutronenstern angekommen.',
         text_en: 'Together we want to become familiar with the sector model.',
         geodesicsToHide: [0, 1, 2],
-        marksToHide: [1, 2, 3, 4, 5,],
+        marksToHide: [1, 2, 3, 4, 5],
         textsToHide: [1, 2, 3, 4, 5, 6],
+        sectorsToSnapTogether: [[43, 42]]
     },
+
 
     {
         id: 1,
@@ -117,7 +119,7 @@ let slideContent = [
         text_en: 'first text',
         checkBoxesWithText: [
             {
-                text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position als Karl ihr Signal zuletzt empfangen konnte. \n \nTipp: Beginne deine Geodäte bei Karl.',
+                text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position, als Karl ihr Signal zuletzt empfangen konnte. \n \nTipp: Beginne deine Geodäte bei Karl.',
                 text_en: '2 and 3 &',
                 type: 'tracker',
                 condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 4, 2]],
@@ -145,8 +147,9 @@ let slideContent = [
         text_en: 'first text',
         checkBoxesWithText: [
             {
-                text_de: 'Bestimme Lisas Position als Karl ihr Signal zum ersten Mal wieder empfängt.',
+                text_de: 'Bestimme Lisas Position, als Karl ihr Signal zum ersten Mal wieder empfängt.',
                 text_en: '2 and 3 &',
+                type: 'tracker',
                 condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 5, 2]],
                 result: {
                     type: 'showMarkAndText',

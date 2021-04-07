@@ -710,6 +710,7 @@ canvas.on('mouse:up', function(opt) {
                 canvas.remove(line);
                 lineContinueAt = -1;
                 lineTypeToDraw = ""
+                toolChange('grab')
                 return;
             }
 
@@ -5468,6 +5469,30 @@ function setSectorsToCenter(){
 
     }
     canvas.renderAll();
+}
+
+
+function setSectorsToRow(){
+    for (let ii = 0; ii < sectors.length; ii++) {
+
+            let ausgangssektorID;
+            let nachbarsektorTopID;
+
+            let ausgangssektor = sectors[sectors[ii].ID];
+            ausgangssektorID = ausgangssektor.ID
+
+            nachbarsektorTopID= ausgangssektor.neighbourhood[0];
+
+            if (nachbarsektorTopID !== -1){
+
+                snapInitialSectorToTargetSector(nachbarsektorTopID, ausgangssektorID)
+
+            }
+            drawSnapEdges(ausgangssektorID)
+        }
+
+
+
 }
 
 function setZoomPan(){
