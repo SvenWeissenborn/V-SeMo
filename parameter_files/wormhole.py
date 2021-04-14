@@ -29,7 +29,7 @@ startViewportTransform_5 = 0
 fontSize = 15
 
 lineStrokeWidthWhenNotSelected = 2
-lineStrokeWidthWhenSelected = 5
+lineStrokeWidthWhenSelected = 8
 
 #Parameter fuer die Startgeodaeten
 startGeodesicsSectors = []
@@ -210,18 +210,24 @@ def main():
             else:
                 sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) - 1
 
-            if (ii == (nColumnsInModel-1)):
-                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = -1
+            if (ii == (nColumnsInModel - 1)):
+                if(nSectorColumnsFromWhormhole == nColumnsInModel):
+                    sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = - (zeilestart - zeile)
+                else:
+                    sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) + nRowsInModel
+                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole - nRowsInModel) / 2) + nRowsInModel
 
             if (zeile == (nSectorRowsFromWormHole-round((nSectorRowsFromWormHole-nRowsInModel) / 2))-1):
                 sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) +1
+                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole - nRowsInModel) / 2) +1
 
             if (ii == 0):
-                sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = -1
+                if (nSectorColumnsFromWhormhole == nColumnsInModel):
+                    sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = nRowsInModel * nSectorColumnsFromWhormhole - nRowsInModel -( zeilestart - zeile)
+                else:
+                    sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
                 sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) - nRowsInModel
 
