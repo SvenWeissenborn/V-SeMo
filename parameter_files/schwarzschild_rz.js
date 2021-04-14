@@ -1,7 +1,8 @@
 startZoom =1.5
 startViewportTransform_4 =0
 startViewportTransform_5 =0
-
+let lineStrokeWidthWhenNotSelected = 2
+let lineStrokeWidthWhenSelected = 5
 line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 sec_name= [ 'A8', 'A7', 'A6', 'A5', 'A4', 'A3', 'A2', 'A1', 'B8', 'B7', 'B6', 'B5', 'B4', 'B3', 'B2', 'B1', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ];

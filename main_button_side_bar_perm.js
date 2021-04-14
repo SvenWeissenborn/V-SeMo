@@ -95,7 +95,7 @@ function changeGeodesicWidth(targetWidth){
     for (let ii = 0; ii < lines.length; ii++) {
 
         for (let jj = 0; jj < lines[ii].length; jj++) {
-            lines[ii][jj].strokeWidth = 2;
+            lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
         }
     }
 }

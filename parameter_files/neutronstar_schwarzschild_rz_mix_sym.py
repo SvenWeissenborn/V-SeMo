@@ -15,6 +15,9 @@ sectorDistance_y = 20
 
 fontSize = 15
 
+lineStrokeWidthWhenNotSelected = 2
+lineStrokeWidthWhenSelected = 5
+
 start_x = 300
 start_y = 100
 
@@ -79,7 +82,14 @@ def main():
     file.write(
         "line_colors = [ 'grey', 'black', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
     file.write("\n")
-
+    file.write(
+        "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
+    )
+    file.write("\n")
+    file.write(
+        "let lineStrokeWidthWhenSelected =" + str(lineStrokeWidthWhenSelected)
+    )
+    file.write("\n")
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = nRowsInModel * nColumnsInModel
@@ -255,7 +265,7 @@ def main():
                 geodesicValues[geodesicDict["startParentSector"]][startGeodesic] = "[" + str(startGeodesicsSectors[startGeodesic]) + "," + str(ParentID2) + "]"
 
         geodesicValues[geodesicDict["startLineID"]][startGeodesic] = "[" + str(startGeodesic) + "," + str(1) + "]"
-        geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = 2
+        geodesicValues[geodesicDict["startStrokeWidth"]][startGeodesic] = lineStrokeWidthWhenNotSelected
 
         geodesicValues[geodesicDict["startFill"]][startGeodesic] = "line_colors[" + str(startGeodesic) + "]"
         geodesicValues[geodesicDict["startStroke"]][startGeodesic] = "line_colors[" + str(startGeodesic) + "]"

@@ -3,35 +3,38 @@ import math
 import geodesicsTextsMarks as gtm
 
 nSektorzeilenVonRing = 40
-nSektorspaltenVonRing = 12
+nSektorspaltenVonRing = 96
 
 nSektorzeilenVonRingSchwarzschild = 3
-nSektorzeilenVonRingEuklid = 8
+nSektorzeilenVonRingEuklid = 30
 
 schwarzschildradius = 60
 dr = 1.25
 dradius = dr * schwarzschildradius
 
 #Kameraeinstellungen
-startZoom = 1
+startZoom = 0.5
 startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 
 fontSize = 15
 
+lineStrokeWidthWhenNotSelected = 10
+lineStrokeWidthWhenSelected = 15
+
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = []
+startGeodesicsSectors = [199, 259, 199, 199, 199]
 # Winkel in Grad
-startGeodesicsAngle = []
+startGeodesicsAngle = [270, 265, 270, 270, 270]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.25, 0.95, 0.5, 0.65, 0.75]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [0.8, 0.8, 0.8, 0.8, 0.8]
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = []
+startGeodesicsLength = [50, 50, 50, 50, 50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = []
+startGeodesicsOperational = ['true', 'true', 'true', 'true', 'true']
 
 # Parameter fuer die Startmarkierungen
 startMarksSectors = []
@@ -115,7 +118,14 @@ def main():
     file.write(
         "let mark_colors = ['grey', 'grey', 'grey'];")
     file.write("\n")
-
+    file.write(
+        "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
+    )
+    file.write("\n")
+    file.write(
+        "let lineStrokeWidthWhenSelected =" + str(lineStrokeWidthWhenSelected)
+    )
+    file.write("\n")
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = nSektorzeilenVonRing * nSektorspaltenVonRing
@@ -178,6 +188,14 @@ def main():
 
             radialSchwarzschild = math.sqrt(rad2 * (rad2 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad2 - schwarzschildradius) + math.sqrt(rad2)) - (math.sqrt(rad1 * (rad1 - schwarzschildradius)) + schwarzschildradius * math.log(math.sqrt(rad1 - schwarzschildradius) + math.sqrt(rad1)))
             radialEuklidisch = dradius
+
+            print("Ringzeile" + str(ringzeile))
+            print(str(lengthSchwarzschildBottom - lengthEuklidBottom))
+            print(str(1 - lengthEuklidBottom / lengthSchwarzschildBottom))
+            print(str(lengthSchwarzschildTop - lengthEuklidTop))
+            print(str(1 - lengthEuklidTop / lengthSchwarzschildTop))
+            print("difference radialSchwarzschild radialEuklidisch " + str(radialSchwarzschild - radialEuklidisch))
+            print("mistake " + str(1 - radialEuklidisch / radialSchwarzschild))
 
             if(ringzeile < nSektorzeilenVonRingSchwarzschild):
                 radial = radialSchwarzschild

@@ -15,6 +15,9 @@ startViewportTransform_5 = 0
 
 fontSize = 15
 
+lineStrokeWidthWhenNotSelected = 2
+lineStrokeWidthWhenSelected = 5
+
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = []
 # Winkel in Grad
@@ -109,7 +112,14 @@ def main():
     file.write(
         "let mark_colors = ['grey', 'grey', 'grey'];")
     file.write("\n")
-
+    file.write(
+        "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
+    )
+    file.write("\n")
+    file.write(
+        "let lineStrokeWidthWhenSelected =" + str(lineStrokeWidthWhenSelected)
+    )
+    file.write("\n")
     variablenamesSectors = ["sec_name", "sec_fill", "sec_ID", "sec_type", "sec_fontSize", "sec_top","sec_bottom", "sec_height", "sec_width", "sec_offset", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx","sec_posy","sec_angle"  ]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
     anzahlDerSektoren = nSektorzeilenVonRing * nSektorspaltenVonRing

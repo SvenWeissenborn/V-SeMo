@@ -20,7 +20,8 @@ startGeodesicsOperational: ['false', 'false', 'true', 'true']
 startZoom =0.6
 startViewportTransform_4 =-200
 startViewportTransform_5 =600
-
+let lineStrokeWidthWhenNotSelected = 2
+let lineStrokeWidthWhenSelected = 5
 line_colors = ['grey', 'grey', 'blue', 'black', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 sec_name= [ 'A7', 'A6', 'A5', 'A4', 'A3', 'A2', 'A1', 'B7', 'B6', 'B5', 'B4', 'B3', 'B2', 'B1', 'C7', 'C6', 'C5', 'C4', 'C3', 'C2', 'C1', 'D7', 'D6', 'D5', 'D4', 'D3', 'D2', 'D1', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, ];

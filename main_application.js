@@ -1249,6 +1249,15 @@ window.addEventListener('keydown',function(event){
 
 });
 
+window.addEventListener('keydown',function(event){
+    if(event.key === '4'){
+        canvas.setZoom( 0.5 );
+        canvas.viewportTransform[4]= 1000;
+        canvas.viewportTransform[5]= 0;
+    }
+
+});
+
 //Button-Funktionen
 window.resetSectors = resetSectors;
 
@@ -1419,8 +1428,6 @@ let abortlength = 20;
 let dragPointRadius = 5;
 let dragPointPadding = 15;
 
-let lineStrokeWidthWhenSelected = 5;
-
 let cursor;
 
 let pathCoords = [];
@@ -1558,7 +1565,7 @@ function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
             //Fortsetzung im nächsten Sektor
 
-            for (lauf = 0; lauf < 100; lauf++) {
+            for (lauf = 0; lauf < 1000; lauf++) {
 
                 if (neighbourSector === -1 || sectors[neighbourSector].trapez.opacity !== startOpacity) {
                     drawDragPoint(chosenGeodesicToSetSectors);
@@ -2037,8 +2044,7 @@ function continueGeodesic(geodesicToContinue) {
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
             }
 
-            for (lauf = 0; lauf < 100; lauf++) {
-
+            for (lauf = 0; lauf < 1000; lauf++) {
                 if (neighbourSectorID === -1 || sectors[neighbourSectorID].trapez.opacity !== startOpacity) {
                     drawDragPoint(geodesicToContinue);
                     break
@@ -2403,7 +2409,7 @@ function drawDragPoint(lineToGivePoint) {
 
         for (let kk = 0; kk < lines.length; kk++){
             for (let ll = 0; ll < lines[kk].length; ll++)
-                lines[kk][ll].strokeWidth = 2 ;
+                lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
         }
 
         for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
@@ -2869,7 +2875,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         for (let kk = 0; kk < lines.length; kk++){
             for (let ll = 0; ll < lines[kk].length; ll++)
-                lines[kk][ll].strokeWidth = 2 ;
+                lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
         }
 
 
@@ -2909,12 +2915,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 showGeodesicButtons(true);
 
                 if ( startStrokeWidth[0] == undefined){
-                    startStrokeWidth[0] = 2
+                    startStrokeWidth[0] = lineStrokeWidthWhenNotSelected
                 }
 
                 if (lineTypeToDraw == 'geodesic'){
                     line = new fabric.Line(points, {
-                        strokeWidth: startStrokeWidth[0],
+                        strokeWidth: lineStrokeWidthWhenNotSelected,
                         stroke: color,
                         fill: color,
                         originX: 'center',
@@ -3501,7 +3507,7 @@ function drawTicks(trapez){
 
 
 
-        for (let jj = 1; jj < 100; jj++){
+        for (let jj = 1; jj < 1000; jj++){
 
             //console.log(jj);
             if (Math.sqrt( Math.pow((dx_normiert * tick_dist * jj),2) + Math.pow((dy_normiert * tick_dist * jj),2)) >= dist_corners){
@@ -5419,6 +5425,11 @@ function setGeodesicMode (){
 }
 
 function setOuterSectorsToCircle() {
+
+    for (let ii = 0; ii < sectors.length; ii++) {
+        removeSnapEdges(sectors[ii].ID)
+    }
+
     for (let ii = 0; ii < sectors.length; ii++) {
         if (sectors[ii].sector_type == 'euklid') {
 
@@ -5593,7 +5604,7 @@ function startGeodesics(){
         let sec = sectors[startSectors[ii]];
 
         let lineSegment = new fabric.Line([x_Start[ii] + window.innerWidth / 2, y_Start[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2, x_End[ii] + window.innerWidth / 2, y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2], {
-            strokeWidth: startStrokeWidth[ii],
+            strokeWidth: lineStrokeWidthWhenNotSelected,
             fill: startFill[ii],
             stroke: startStroke[ii],
             originX: 'center',
@@ -5678,7 +5689,7 @@ function startMarks() {
 
             for (let kk = 0; kk < lines.length; kk++){
                 for (let ll = 0; ll < lines[kk].length; ll++)
-                    lines[kk][ll].strokeWidth = 2 ;
+                    lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
             }
 
 
@@ -5862,7 +5873,7 @@ function toolChange(argument) {
 
                 showGeodesicButtons(false);
                 lines[ii][jj].evented = false;
-                lines[ii][jj].strokeWidth = 2;
+                lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
                 lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
                 lines[ii][lines[ii].length - 1].evented = true;
                 lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
@@ -5874,7 +5885,7 @@ function toolChange(argument) {
                     chosenLineGlobalID = this.ID[0];
                     for (let kk = 0; kk < lines.length; kk++){
                         for (let ll = 0; ll < lines[kk].length; ll++)
-                            lines[kk][ll].strokeWidth = 2 ;
+                            lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
                     }
                     for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
                         /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
@@ -5994,7 +6005,7 @@ function toolChange(argument) {
 
                 if (selectedTool == 'delete') {
                     lines[ii][jj].evented = false;
-                    lines[ii][jj].strokeWidth = 2;
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
                     lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
                     lines[ii][lines[ii].length - 1].evented = true;
                     lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
