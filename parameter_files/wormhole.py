@@ -21,14 +21,14 @@ sectorDistance_x = 50
 sectorDistance_y = 10
 
 #Kameraeinstellungen
-startZoom = 1.0
-startViewportTransform_4 = 0
+startZoom = 0.5
+startViewportTransform_4 = -200
 startViewportTransform_5 = 0
 
 #Schriftgroesse im Modell
 fontSize = 15
 
-lineStrokeWidthWhenNotSelected = 2
+lineStrokeWidthWhenNotSelected = 4
 lineStrokeWidthWhenSelected = 8
 
 #Parameter fuer die Startgeodaeten

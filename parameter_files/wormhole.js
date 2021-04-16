@@ -7,8 +7,8 @@ nRowsInModel: 7
 nColumnsInModel: 12
 sectorDistance_x: 50
 sectorDistance_y: 10
-startZoom =1.0
-startViewportTransform_4 =0
+startZoom =0.5
+startViewportTransform_4 =-200
 startViewportTransform_5 =0
 fontSize: 15
 startGeodesicsSectors: []
@@ -28,8 +28,8 @@ startTextsOffset_y: []
 ----------------------
 */
 
-startZoom =1.0
-startViewportTransform_4 =0
+startZoom =0.5
+startViewportTransform_4 =-200
 startViewportTransform_5 =0
 
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
