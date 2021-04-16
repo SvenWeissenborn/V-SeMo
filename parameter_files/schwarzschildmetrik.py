@@ -2,11 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
-nSektorzeilenVonRing = 40
-nSektorspaltenVonRing = 96
+nSektorzeilenVonRing = 10
+nSektorspaltenVonRing = 12
 
-nSektorzeilenVonRingSchwarzschild = 3
-nSektorzeilenVonRingEuklid = 30
+nSektorzeilenVonRingSchwarzschild = 48
+nSektorzeilenVonRingEuklid = 0
 
 schwarzschildradius = 60
 dr = 1.25
@@ -23,18 +23,18 @@ lineStrokeWidthWhenNotSelected = 10
 lineStrokeWidthWhenSelected = 15
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [199, 259, 199, 199, 199]
+startGeodesicsSectors = []
 # Winkel in Grad
-startGeodesicsAngle = [270, 265, 270, 270, 270]
+startGeodesicsAngle = []
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.25, 0.95, 0.5, 0.65, 0.75]
+startGeodesicsOffset_x = []
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.8, 0.8, 0.8, 0.8, 0.8]
+startGeodesicsOffset_y = []
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = [50, 50, 50, 50, 50]
+startGeodesicsLength = []
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = ['true', 'true', 'true', 'true', 'true']
+startGeodesicsOperational = []
 
 # Parameter fuer die Startmarkierungen
 startMarksSectors = []
@@ -137,8 +137,8 @@ def main():
     for ringspalte in range(0, nSektorspaltenVonRing):
         for ringzeile in range(0, nSektorzeilenVonRing):
 
-            rad1 = (ringzeile + 1) * dradius
-            rad2 = (ringzeile + 2) * dradius
+            rad1 = 1.25 * schwarzschildradius + (ringzeile) * dradius
+            rad2 = 1.25 * schwarzschildradius + (ringzeile + 1) * dradius
 
             wichtungsfaktor = 0.0
 
@@ -209,7 +209,7 @@ def main():
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 30
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 10
             else:
                 sector_y_dist = dradius + sector_height/2 + 30
 
