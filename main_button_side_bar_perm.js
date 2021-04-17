@@ -1464,6 +1464,105 @@ fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
     canvas_side_bar_perm.add(autocomplete);
 });
 
+let joystickBackground;
+joystickBackground = new fabric.Circle({
+    radius: 35,
+    left: dist_left,
+    top: dist_to_top + (dist_to_top_auto_complete_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
+    stroke: '#575656',
+    strokeWidth: 2,
+    fill: 'white',
+    originY:'center',
+    originX:'center',
+    objectCaching: false,
+    lockMovementX: false,
+    lockMovementY: false,
+    lockScalingX: true,
+    lockScalingY: true,
+    selectable: false,
+    perPixelTargetFind: true,
+    opacity: 1,
+});
+canvas_side_bar_perm.add(joystickBackground);
+
+let joystickBall;
+joystickBall = new fabric.Circle({
+    radius: 20,
+    left: dist_left,
+    top: dist_to_top + (dist_to_top_auto_complete_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
+    stroke: '#575656',
+    strokeWidth: 2,
+    fill: '#575656',
+    originY:'center',
+    originX:'center',
+    objectCaching: false,
+    lockMovementX: false,
+    lockMovementY: false,
+    lockScalingX: true,
+    lockScalingY: true,
+    perPixelTargetFind: true,
+    opacity: 0.8,
+    hasBorders: false,
+    hasControls: false,
+});
+let joystickBalMoveDistance = 20;
+let joystickFactor = 0.25
+let mouseDownOnJoystickBall = -1
+
+let joystickBallDistX = 0
+let joystickBallDistY = 0
+
+joystickBall.on('mousedown', function () {
+    if(mouseDownOnJoystickBall == -1){
+        mouseDownOnJoystickBall = setInterval(whileMouseDownOnJoystickBall, 200)
+    }
+
+})
+
+function whileMouseDownOnJoystickBall(){
+    changeStartPointAndContinue(joystickBallDistX, joystickBallDistY, chosenLineGlobalID)
+}
+
+joystickBall.on('moving', function () {
+    if (joystickBall.top > joystickBackground.top + joystickBalMoveDistance) {
+        joystickBall.set('top', joystickBackground.top + joystickBalMoveDistance);
+    }
+    if (joystickBall.top < joystickBackground.top - joystickBalMoveDistance) {
+        joystickBall.set('top', joystickBackground.top - joystickBalMoveDistance);
+    }
+    if (joystickBall.left > joystickBackground.left + joystickBalMoveDistance) {
+        joystickBall.set('left', joystickBackground.left + joystickBalMoveDistance);
+    }
+    if (joystickBall.left < joystickBackground.left - joystickBalMoveDistance) {
+        joystickBall.set('left', joystickBackground.left - joystickBalMoveDistance);
+    }
+
+    joystickBallDistX = (joystickBall.left - joystickBackground.left) * joystickFactor;
+    joystickBallDistY = (joystickBall.top - joystickBackground.top) * joystickFactor;
+
+    if (Math.abs(joystickBallDistX) < 1.5){
+        joystickBallDistX = 0
+    }
+
+    if (Math.abs(joystickBallDistY) < 1.5){
+        joystickBallDistY = 0
+    }
+
+    console.log('joystickBallDistX', joystickBallDistX);
+    console.log('joystickBallDistY', joystickBallDistY);
+
+})
+joystickBall.on('mouseup', function () {
+    if(mouseDownOnJoystickBall !== -1){
+        clearInterval(mouseDownOnJoystickBall);
+        mouseDownOnJoystickBall = -1;
+    }
+    joystickBall.set('top', joystickBackground.top);
+    joystickBall.set('left', joystickBackground.left)
+    joystickBall.setCoords()
+})
+canvas_side_bar_perm.add(joystickBall);
+
 
 function download_image(){
     let canvasToDownload = document.getElementById("canvas");

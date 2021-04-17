@@ -1178,22 +1178,7 @@ window.addEventListener('keydown',function(event){
     }
 });
 
-window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowLeft' ){
-        changeDirectionAndContinue('counterclockwise', Math.PI/180, chosenLineGlobalID);
-        toolChange('grab');
 
-    }
-});
-
-
-window.addEventListener('keydown',function(event){
-    if(event.key === 'ArrowRight'){
-        changeDirectionAndContinue('clockwise', Math.PI/180, chosenLineGlobalID);
-        toolChange('grab');
-
-    }
-});
 
 //UnDo
 window.addEventListener('keydown',function(event){
@@ -1736,6 +1721,108 @@ function calcSectorArea() {
     }else {
         toCalcSectorArea = false
         showSectorAreaInfobox(false)
+    }
+}
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowUp' ){
+        changeStartPointAndContinue(0, -5, chosenLineGlobalID);
+        toolChange('grab');
+
+    }
+});
+
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowDown'){
+        changeStartPointAndContinue(0, 5, chosenLineGlobalID);
+        toolChange('grab');
+
+    }
+});
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowLeft' ){
+        changeStartPointAndContinue(-5, 0, chosenLineGlobalID);
+        toolChange('grab');
+
+    }
+});
+
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowRight'){
+        changeStartPointAndContinue(5, 0, chosenLineGlobalID);
+        toolChange('grab');
+
+    }
+});
+
+function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeStartPoint) {
+    if (chosenLineGlobalID == -1) {
+        return
+    }
+
+    if (lines[chosenGeodesicToChangeStartPoint][lines[chosenGeodesicToChangeStartPoint].length - 1].lineType !== 'geodesic') {
+        return
+    }
+
+    let segment_end_point = new fabric.Point(lines[chosenGeodesicToChangeStartPoint][0].calcLinePoints().x2, lines[chosenGeodesicToChangeStartPoint][0].calcLinePoints().y2);
+    segment_end_point = fabric.util.transformPoint(segment_end_point,lines[chosenGeodesicToChangeStartPoint][0].calcTransformMatrix() );
+
+    let geodesic_start_point = new fabric.Point(lines[chosenGeodesicToChangeStartPoint][0].calcLinePoints().x1, lines[chosenGeodesicToChangeStartPoint][0].calcLinePoints().y1);
+    geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lines[chosenGeodesicToChangeStartPoint][0].calcTransformMatrix());
+
+    let newGeodesic_start_point = new fabric.Point(geodesic_start_point.x + xChange, geodesic_start_point.y + yChange);
+
+    if(sectorContainsPoint(sectors[lines[chosenGeodesicToChangeStartPoint][0].parentSector[0]].trapez, newGeodesic_start_point) == false){
+        return
+    }
+
+
+    let xg1 = geodesic_start_point.x;
+    let yg1 = geodesic_start_point.y;
+    let xg2 = segment_end_point.x;
+    let yg2 = segment_end_point.y;
+
+    let dxg = xg2 - xg1;
+    let dyg = yg2 - yg1;
+
+    let kantenParameter = getKantenParameter(lines[chosenGeodesicToChangeStartPoint][0].parentSector[0], xg1, yg1 + yChange, dxg, dyg)
+    let lambda = kantenParameter[1];
+
+    let lineSegmentToChangeDirection;
+
+    let lineSegmentColor = lines[chosenGeodesicToChangeStartPoint][0].fill;
+    let lineSegmentStrokeWidth = lines[chosenGeodesicToChangeStartPoint][0].strokeWidth;
+    let parentSectorID = lines[chosenGeodesicToChangeStartPoint][0].parentSector[0];
+    let lineStart_x = geodesic_start_point.x + xChange;
+    let lineStart_y = geodesic_start_point.y + yChange;
+    let lineEnd_x = geodesic_start_point.x + xChange + dxg * lambda;
+    let lineEnd_y = geodesic_start_point.y + yChange + dyg * lambda;
+
+    deleteWholeGeodesic(chosenGeodesicToChangeStartPoint);
+
+    if(Math.abs(lineEnd_x - lineStart_x) > epsilon || Math.abs(lineEnd_y - lineStart_y) > epsilon) {
+
+        lineSegmentToChangeDirection = drawLineSegment(lineSegmentColor, lineSegmentStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
+
+        lineSegmentToChangeDirection.ID = [chosenGeodesicToChangeStartPoint, lines[chosenGeodesicToChangeStartPoint].length];
+
+        lines[chosenGeodesicToChangeStartPoint].push(lineSegmentToChangeDirection);
+
+    }
+
+    //Verlängerung der Geodäte bis zum Rand des Modells
+    continueGeodesic(chosenGeodesicToChangeStartPoint);
+
+    history[history.length - 1].splice(1, 0, lineSegmentToChangeDirection.ID);
+
+    history.push([3, 2]);
+
+    if (showExerciseBox == "1"){
+        checkSlideCondition();
+        checkCheckBoxCondition();
     }
 }
 

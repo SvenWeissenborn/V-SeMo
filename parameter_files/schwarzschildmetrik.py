@@ -2,11 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
-nSektorzeilenVonRing = 10
+nSektorzeilenVonRing = 12
 nSektorspaltenVonRing = 12
 
-nSektorzeilenVonRingSchwarzschild = 48
-nSektorzeilenVonRingEuklid = 0
+nSektorzeilenVonRingSchwarzschild = 8
+nSektorzeilenVonRingEuklid = 4
 
 schwarzschildradius = 60
 dr = 1.25
