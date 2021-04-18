@@ -84,9 +84,12 @@ let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_bu
 if (showChangeDirection == "1"){
     dist_to_top_auto_complete_main_button_number += 1;
 }
-
-let maxScrollNumber = dist_to_top_auto_complete_main_button_number;
+let dist_to_top_change_start_point_position_main_button_number = dist_to_top_auto_complete_main_button_number;
 if (showAutoComplete == "1"){
+    dist_to_top_change_start_point_position_main_button_number += 1;
+}
+let maxScrollNumber = dist_to_top_change_start_point_position_main_button_number;
+if (showChangeStartPointPosition == "1"){
     maxScrollNumber += 1;
 }
 
@@ -851,6 +854,11 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
                 if (showChangeDirection == "1") {
                     direction.set('opacity', 1);
                 }
+                if (showChangeStartPointPosition == "1") {
+                    joystickBackground.set('opacity', joystickBackgroundOpacity)
+                    joystickBall.set('opacity', joystickBallOpacity)
+                    joystickBall.bringToFront()
+                }
             }
         }else{
             if (chosenLineGlobalID !== -1){
@@ -866,6 +874,11 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
                     if (showChangeDirection == "1") {
                         direction.set('opacity', 1);
                     }
+                    if (showChangeStartPointPosition == "1") {
+                        joystickBackground.set('opacity', joystickBackgroundOpacity)
+                        joystickBall.set('opacity', joystickBallOpacity)
+                        joystickBall.bringToFront()
+                    }
                 }
             }
 
@@ -879,8 +892,14 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
         delete_whole.set('opacity', 0);
 
         autocomplete.set('opacity', 0);
+
         direction.set('opacity', 0);
+
         set_sectors.set('opacity', 0);
+
+        joystickBackground.set('opacity', 0);
+
+        joystickBall.set('opacity', 0);
 
         canvas_side_bar_perm.viewportTransform[5] = 0;
         canvas_side_bar_perm.forEachObject(function(o) {
@@ -1173,7 +1192,10 @@ function moveDirectionButtons(visibleToSet){
 
         autocomplete.set('top', dist_to_top + (dist_to_top_auto_complete_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
         autocomplete.setCoords();
-
+        joystickBackground.set('top', dist_to_top + 30 + (dist_to_top_change_start_point_position_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
+        joystickBackground.setCoords();
+        joystickBall.set('top', dist_to_top + 30 + (dist_to_top_change_start_point_position_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
+        joystickBall.setCoords();
         //delete_whole.set('top', dist_to_top + 10.5 * (136 * buttonfactor * screenFactor + buttondist));
         //delete_whole.setCoords();
 
@@ -1201,6 +1223,11 @@ function moveDirectionButtons(visibleToSet){
 
         autocomplete.set('top', dist_to_top + dist_to_top_auto_complete_main_button_number * (136 * buttonfactor * screenFactor + buttondist));
         autocomplete.setCoords();
+        joystickBackground.set('top', dist_to_top + additionalDistanceToButtonBefore + (dist_to_top_change_start_point_position_main_button_number) * (136 * buttonfactor * screenFactor + buttondist));
+        joystickBackground.setCoords();
+        joystickBall.set('top', dist_to_top + additionalDistanceToButtonBefore + (dist_to_top_change_start_point_position_main_button_number) * (136 * buttonfactor * screenFactor + buttondist));
+        joystickBall.setCoords();
+
         //delete_whole.set('top', dist_to_top + 9 * (136 * buttonfactor * screenFactor + buttondist));
         //delete_whole.setCoords();
 
@@ -1464,32 +1491,37 @@ fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
     canvas_side_bar_perm.add(autocomplete);
 });
 
+
 let joystickBackground;
-joystickBackground = new fabric.Circle({
-    radius: 35,
-    left: dist_left,
-    top: dist_to_top + (dist_to_top_auto_complete_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
-    stroke: '#575656',
-    strokeWidth: 2,
-    fill: 'white',
-    originY:'center',
-    originX:'center',
-    objectCaching: false,
-    lockMovementX: false,
-    lockMovementY: false,
-    lockScalingX: true,
-    lockScalingY: true,
-    selectable: false,
-    perPixelTargetFind: true,
-    opacity: 1,
+let joystickBackgroundOpacity = 1.0
+let joystickBallOpacity = 0.8
+let additionalDistanceToButtonBefore = 40
+fabric.Image.fromURL('button_icons/joystickBackground.png', function(img) {
+    joystickBackground = img.set({
+        left: dist_left,
+        top: dist_to_top - additionalDistanceToButtonBefore + (dist_to_top_change_start_point_position_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: 0,
+        originX: "center",
+        originY: "center",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"
+    });
+    canvas_side_bar_perm.add(joystickBackground);
 });
-canvas_side_bar_perm.add(joystickBackground);
+
 
 let joystickBall;
 joystickBall = new fabric.Circle({
     radius: 20,
     left: dist_left,
-    top: dist_to_top + (dist_to_top_auto_complete_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
+    top: dist_to_top - additionalDistanceToButtonBefore + (dist_to_top_change_start_point_position_main_button_number + 1) * (136 * buttonfactor * screenFactor + buttondist),
     stroke: '#575656',
     strokeWidth: 2,
     fill: '#575656',
@@ -1501,7 +1533,7 @@ joystickBall = new fabric.Circle({
     lockScalingX: true,
     lockScalingY: true,
     perPixelTargetFind: true,
-    opacity: 0.8,
+    opacity: 0,
     hasBorders: false,
     hasControls: false,
 });
@@ -1560,6 +1592,7 @@ joystickBall.on('mouseup', function () {
     joystickBall.set('top', joystickBackground.top);
     joystickBall.set('left', joystickBackground.left)
     joystickBall.setCoords()
+    toolChange('grab');
 })
 canvas_side_bar_perm.add(joystickBall);
 

@@ -11,8 +11,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="icons_visemo.svg.2021_03_26_16_19_24.0.svg"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="icons_visemo.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.1"
    id="svg2"
    viewBox="0 0 744.09448819 1052.3622047"
@@ -23,16 +23,16 @@
    inkscape:export-ydpi="90">
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="0"
-     inkscape:window-x="72"
-     inkscape:window-height="1163"
-     inkscape:window-width="1848"
+     inkscape:window-y="27"
+     inkscape:window-x="67"
+     inkscape:window-height="1025"
+     inkscape:window-width="1853"
      showgrid="true"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="-858.39845"
-     inkscape:cx="4204.6074"
-     inkscape:zoom="0.5"
+     inkscape:cy="1111.6546"
+     inkscape:cx="3553.404"
+     inkscape:zoom="2"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -12434,5 +12434,46 @@
            y="912.86255"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Manjari;-inkscape-font-specification:Manjari;fill:#ffffff" /></flowRegion><flowPara
          id="flowPara3359-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#ffffff">?</flowPara></flowRoot>  </g>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#ffffff">?</flowPara></flowRoot>    <circle
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/verticesOn.png"
+       r="92.1875"
+       cy="-17.889252"
+       cx="3403.9514"
+       id="circle5552-8"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_change_direction_clockwise_low.png"
+       inkscape:connector-curvature="0"
+       id="path6010-85"
+       d="m 3468.0801,-33.14305 14.2035,15.253799 -14.2035,15.2537973"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:8.75000095;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:8.75000095;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 3339.7472,-33.14305 -14.2035,15.253799 14.2035,15.2537973"
+       id="path8589"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_change_direction_clockwise_low.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_change_direction_clockwise_low.png"
+       inkscape:connector-curvature="0"
+       id="path8591"
+       d="m 3419.2052,-84.382094 -15.2538,-14.2035 -15.2537,14.2035"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:8.75000095;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:8.75000095;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 3419.2052,46.528906 -15.2538,14.203505 -15.2537,-14.203505"
+       id="path8593"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_change_direction_clockwise_low.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
 </svg>
