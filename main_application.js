@@ -1211,18 +1211,18 @@ window.addEventListener('keydown',function(event){
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
     if(event.key === '1'){
-        canvas.setZoom( 0.12 );
-        canvas.viewportTransform[4]= 800;
-        canvas.viewportTransform[5]= 480;
+        canvas.setZoom( 0.38 );
+        canvas.viewportTransform[4]= 350;
+        canvas.viewportTransform[5]= 330;
     }
 
 });
 
 window.addEventListener('keydown',function(event){
     if(event.key === '2'){
-        canvas.setZoom( 0.175 );
-        canvas.viewportTransform[4]= 700;
-        canvas.viewportTransform[5]= 640;
+        canvas.setZoom( 0.38 );
+        canvas.viewportTransform[4]= 350;
+        canvas.viewportTransform[5]= 400;
     }
 
 });

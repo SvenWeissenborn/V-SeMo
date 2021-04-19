@@ -19,8 +19,8 @@ startViewportTransform_5 = 300
 
 fontSize = 15
 
-lineStrokeWidthWhenNotSelected = 10
-lineStrokeWidthWhenSelected = 15
+lineStrokeWidthWhenNotSelected = 5
+lineStrokeWidthWhenSelected = 10
 
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [119]
