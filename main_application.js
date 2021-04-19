@@ -1200,7 +1200,7 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keydown',function(event){
     if(event.key === 'k'){
-        setOuterSectorsToCircle()
+        setOuterSectorsToRing()
 
     }
 });
@@ -1788,7 +1788,7 @@ function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeSta
     let dxg = xg2 - xg1;
     let dyg = yg2 - yg1;
 
-    let kantenParameter = getKantenParameter(lines[chosenGeodesicToChangeStartPoint][0].parentSector[0], xg1, yg1 + yChange, dxg, dyg)
+    let kantenParameter = getKantenParameter(lines[chosenGeodesicToChangeStartPoint][0].parentSector[0], xg1 + xChange, yg1 + yChange, dxg, dyg)
     let lambda = kantenParameter[1];
 
     let lineSegmentToChangeDirection;
@@ -5511,7 +5511,7 @@ function setGeodesicMode (){
     }
 }
 
-function setOuterSectorsToCircle() {
+function setOuterSectorsToRing() {
 
     for (let ii = 0; ii < sectors.length; ii++) {
         removeSnapEdges(sectors[ii].ID)

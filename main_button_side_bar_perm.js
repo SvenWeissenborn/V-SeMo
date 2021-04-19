@@ -24,57 +24,41 @@ let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 15;
 let dist_left = 51.5;
 
-let dist_to_top_undo_button_number = 3;
+let dist_to_top_set_sectors_to_ring_button_number = 1;
+if (showResetSectors == "1"){
+    dist_to_top_set_sectors_to_ring_button_number += 1;
+}
+
+let dist_to_top_add_button_number = dist_to_top_set_sectors_to_ring_button_number;
+if (showSetSectorsToRing == "1"){
+    dist_to_top_add_button_number += 1;
+}
+
+let dist_to_add_curved_line_button_number = dist_to_top_add_button_number + 1;
+
+let dist_to_top_undo_button_number = dist_to_add_curved_line_button_number;
 if (showAddCurvedLine == "1") {
     dist_to_top_undo_button_number += 1;
 }
 
-let dist_to_top_geodreieck_button_number = 4;
-if (showAddCurvedLine == "1") {
-    dist_to_top_geodreieck_button_number += 1;
-}
+let dist_to_top_geodreieck_button_number = dist_to_top_undo_button_number + 1;
 
-let dist_to_top_delete_whole_button_number = 5;
-if (showAddCurvedLine == "1") {
-    dist_to_top_delete_whole_button_number += 1;
-}
+let dist_to_top_showArea_button_number = dist_to_top_geodreieck_button_number + 1;
 
-if (showAreaSector == "globe" || showAreaSector == "earth") {
-    dist_to_top_delete_whole_button_number += 1;
-}
-
-if (showVerticesOn == "1"){
-    dist_to_top_delete_whole_button_number += 1;
-}
-
-let dist_to_top_showArea_button_number = 5;
-
-if (showAddCurvedLine == "1") {
-    dist_to_top_showArea_button_number += 1;
-}
-
-let dist_to_top_verticesOn_button_number = 5;
-
-if (showAddCurvedLine == "1") {
-    dist_to_top_verticesOn_button_number += 1;
-}
-
+let dist_to_top_verticesOn_button_number = dist_to_top_showArea_button_number;
 if (showAreaSector == "globe" || showAreaSector == "earth") {
     dist_to_top_verticesOn_button_number += 1;
 }
 
-let dist_to_top_set_sectors_button_number = 6;
-
-if (showAddCurvedLine == "1") {
-    dist_to_top_set_sectors_button_number += 1;
-}
-
+let dist_to_top_delete_whole_button_number = dist_to_top_geodreieck_button_number + 1;
 if (showAreaSector == "globe" || showAreaSector == "earth") {
-    dist_to_top_set_sectors_button_number += 1;
+    dist_to_top_delete_whole_button_number += 1;
 }
 if (showVerticesOn == "1"){
-    dist_to_top_set_sectors_button_number += 1;
+    dist_to_top_delete_whole_button_number += 1;
 }
+
+let dist_to_top_set_sectors_button_number = dist_to_top_delete_whole_button_number + 1;
 
 let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number;
 if (showAutoSet == "1"){
@@ -89,7 +73,7 @@ if (showAutoComplete == "1"){
     dist_to_top_change_start_point_position_main_button_number += 1;
 }
 let maxScrollNumber = dist_to_top_change_start_point_position_main_button_number;
-if (showChangeStartPointPosition == "1"){
+if (showChangeStartPoint == "1"){
     maxScrollNumber += 1;
 }
 
@@ -399,13 +383,16 @@ fabric.Image.fromURL('button_icons/restart.png', function(img) {
     canvas_side_bar_perm.add(restart);
 });
 
-
+let resetSectorsOpacity = 0
+if (showResetSectors == "1") {
+    resetSectorsOpacity = 1 ;
+}
 
 fabric.Image.fromURL('button_icons/reset.png', function(img) {
     let reset = img.set({
         left: dist_left,
         top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
-        opacity: 1,
+        opacity: resetSectorsOpacity,
         originX: "center",
         originY: "top",
         perPixelTargetFind: true,
@@ -443,6 +430,45 @@ fabric.Image.fromURL('button_icons/reset.png', function(img) {
     canvas_side_bar_perm.add(reset);
 });
 
+let setSectorsToRingOpacity = 0
+if (showSetSectorsToRing == "1") {
+    setSectorsToRingOpacity = 1 ;
+}
+
+let set_sectors_to_ring;
+fabric.Image.fromURL('button_icons/set_sectors_to_ring.png', function(img) {
+    set_sectors_to_ring = img.set({
+        left: dist_left,
+        top: dist_to_top + dist_to_top_set_sectors_to_ring_button_number * (136 * buttonfactor * screenFactor + buttondist),
+        opacity: setSectorsToRingOpacity,
+        originX: "center",
+        originY: "top",
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true,
+        selectable: false,
+        scaleX: buttonfactor * screenFactor,
+        scaleY: buttonfactor * screenFactor,
+        hoverCursor: "pointer"});
+
+    set_sectors_to_ring.on('mousedown', function (o) {
+        set_sectors_to_ring.set('shadow', new fabric.Shadow(shadowOn));
+    });
+    set_sectors_to_ring.on('mouseout', function (o) {
+        set_sectors_to_ring.set('shadow', new fabric.Shadow(shadowOff));
+    });
+
+    set_sectors_to_ring.on('mouseup', function (o) {
+        set_sectors_to_ring.set('shadow', new fabric.Shadow(shadowOff));
+        setOuterSectorsToRing();
+        toolChange('grab');
+        arrowheadline = -1;
+        moveDirectionButtons(false);
+    });
+    canvas_side_bar_perm.add(set_sectors_to_ring);
+});
 
 /*
 fabric.Image.fromURL('grab.png', function(img) {
@@ -479,7 +505,7 @@ let add;
 fabric.Image.fromURL('button_icons/add.png', function(img) {
      add = img.set({
         left: dist_left,
-        top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + dist_to_top_add_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 1,
         originX: "center",
         originY: "top",
@@ -525,7 +551,7 @@ let add_dark;
 fabric.Image.fromURL('button_icons/add_dark.png', function(img) {
     add_dark = img.set({
         left: dist_left,
-        top:  dist_to_top + 2 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + dist_to_top_add_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -571,7 +597,7 @@ let add_curved;
 fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
     add_curved = img.set({
         left: dist_left,
-        top:  dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + dist_to_add_curved_line_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: add_curvedOpacity,
         originX: "center",
         originY: "top",
@@ -617,7 +643,7 @@ let add_dark_curved;
 fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
     add_dark_curved = img.set({
         left: dist_left,
-        top:  dist_to_top + 3 * (136 * buttonfactor * screenFactor + buttondist),
+        top:  dist_to_top + dist_to_add_curved_line_button_number * (136 * buttonfactor * screenFactor + buttondist),
         opacity: 0,
         originX: "center",
         originY: "top",
@@ -854,7 +880,7 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
                 if (showChangeDirection == "1") {
                     direction.set('opacity', 1);
                 }
-                if (showChangeStartPointPosition == "1") {
+                if (showChangeStartPoint == "1") {
                     joystickBackground.set('opacity', joystickBackgroundOpacity)
                     joystickBall.set('opacity', joystickBallOpacity)
                     joystickBall.bringToFront()
@@ -874,7 +900,7 @@ function showGeodesicButtons(geodesicButtonsVisibleToSet) {
                     if (showChangeDirection == "1") {
                         direction.set('opacity', 1);
                     }
-                    if (showChangeStartPointPosition == "1") {
+                    if (showChangeStartPoint == "1") {
                         joystickBackground.set('opacity', joystickBackgroundOpacity)
                         joystickBall.set('opacity', joystickBallOpacity)
                         joystickBall.bringToFront()
@@ -1579,11 +1605,9 @@ joystickBall.on('moving', function () {
     if (Math.abs(joystickBallDistY) < 1.5){
         joystickBallDistY = 0
     }
-
-    console.log('joystickBallDistX', joystickBallDistX);
-    console.log('joystickBallDistY', joystickBallDistY);
-
 })
+
+
 joystickBall.on('mouseup', function () {
     if(mouseDownOnJoystickBall !== -1){
         clearInterval(mouseDownOnJoystickBall);

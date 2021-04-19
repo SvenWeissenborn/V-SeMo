@@ -5,7 +5,7 @@ import geodesicsTextsMarks as gtm
 nSektorzeilenVonRing = 12
 nSektorspaltenVonRing = 12
 
-nSektorzeilenVonRingSchwarzschild = 8
+nSektorzeilenVonRingSchwarzschild = 3
 nSektorzeilenVonRingEuklid = 4
 
 schwarzschildradius = 60
@@ -23,18 +23,18 @@ lineStrokeWidthWhenNotSelected = 10
 lineStrokeWidthWhenSelected = 15
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = []
+startGeodesicsSectors = [119]
 # Winkel in Grad
-startGeodesicsAngle = []
+startGeodesicsAngle = [-90]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.8]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [0.8]
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = []
+startGeodesicsLength = [50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = []
+startGeodesicsOperational = ['true']
 
 # Parameter fuer die Startmarkierungen
 startMarksSectors = []
