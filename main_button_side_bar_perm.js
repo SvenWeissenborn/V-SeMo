@@ -74,7 +74,7 @@ if (showAutoComplete == "1"){
 }
 let maxScrollNumber = dist_to_top_change_start_point_position_main_button_number;
 if (showChangeStartPoint == "1"){
-    maxScrollNumber += 1;
+    maxScrollNumber += 1.5;
 }
 
 function changeGeodesicWidth(targetWidth){

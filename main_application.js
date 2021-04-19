@@ -523,12 +523,14 @@ ham.on('pinchstart', function (ev) {
     //canvas.discardActiveObject()
     if (canvas.getActiveObject() !== undefined){
         if(canvas.getActiveObject() !== null){
-            isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
-            if (sectorToSnap > -1){
-                snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
-            }
+            if (canvas.getActiveObject().parent !== undefined){
+                isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
+                if (sectorToSnap > -1){
+                    snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
+                }
 
-            drawSnapEdges(canvas.getActiveObject().parent.ID)
+                drawSnapEdges(canvas.getActiveObject().parent.ID)
+            }
         }
 
     }
@@ -1342,6 +1344,9 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
         centeredRotation: false,
         scaleX: geodreieckScale ,
         scaleY: geodreieckScale ,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockRotation: lockRotationToSet,
         hoverCursor: "pointer"});
 
     geodreieck.on('mousedown', function (o) {

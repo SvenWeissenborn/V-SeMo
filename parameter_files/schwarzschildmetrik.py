@@ -13,9 +13,9 @@ dr = 1.25
 dradius = dr * schwarzschildradius
 
 #Kameraeinstellungen
-startZoom = 0.5
-startViewportTransform_4 = 0
-startViewportTransform_5 = 0
+startZoom = 0.45
+startViewportTransform_4 = 500
+startViewportTransform_5 = 300
 
 fontSize = 15
 
