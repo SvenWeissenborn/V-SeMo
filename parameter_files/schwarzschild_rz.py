@@ -2,8 +2,8 @@ import io
 import math
 
 
-nRowsInModel = 8
-nColumnsInModel = 2
+nRowsInModel = 3
+nColumnsInModel = 1
 
 radius = 120
 delta_r = 1.25
@@ -29,19 +29,19 @@ startViewportTransform_5 = -350
 #startGeodesicsOffset_x: Versatz entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsSectors = [7, 7]
+startGeodesicsSectors = []
 
-startGeodesicsAngle = [135, 135]
+startGeodesicsAngle = []
 
-startGeodesicsOffset_x = [0, 0]
+startGeodesicsOffset_x = []
 
-startGeodesicsOffset_y = [15, 44]
+startGeodesicsOffset_y = []
 
-startGeodesicsOperational = ['true', 'true']
+startGeodesicsOperational = []
 
 def main():
 
-    file = io.open("schwarzschild_rz_redshift.js",'w')
+    file = io.open("schwarzschild_rz_vertical_free_fall.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"

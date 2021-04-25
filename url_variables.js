@@ -46,6 +46,8 @@ let buildStartTexts = getUrlVars()["buildStartTexts"];
 //buildTicks=1& um die ticks zu Anfang einzuschalten
 let buildTicks = getUrlVars()["buildTicks"];
 
+//buildLightCone=1& um den Lichtkegel zu Anfang einzuschalten
+let buildLightCone = getUrlVars()["buildLightCone"];
 
 //showResetSectors=1& um den Button fuer das Zuruecksetzten aller Sektoren zu aktivieren
 let showResetSectors = getUrlVars()["showResetSectors"];

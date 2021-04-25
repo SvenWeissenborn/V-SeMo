@@ -1245,6 +1245,15 @@ window.addEventListener('keydown',function(event){
 
 });
 
+window.addEventListener('keydown',function(event){
+    if(event.key === '5'){
+        canvas.setZoom( 1.8 );
+        canvas.viewportTransform[4]= -850;
+        canvas.viewportTransform[5]= -800;
+    }
+
+});
+
 //Button-Funktionen
 window.resetSectors = resetSectors;
 
@@ -3568,7 +3577,7 @@ let tick_length = 3;
 let lightConeLength = 80;
 let tickWidth = 1
 
-function drawTicks(trapez){
+function drawTicks(trapez) {
 
     for (let ii = 0; ii < 4; ii++) {
 
@@ -3576,7 +3585,6 @@ function drawTicks(trapez){
         // Ziel ist, dass diese einfach Lorentztransformiert werden und nicht jedes Mal neu initialisiert werden
         //FALSCH --> Durch das neu initialisieren werden sie ja bereits passend lorentztransformiert ;-)
         //WICHTIG! Trotzdem müssen sie mit lorentztransformiert werden!!!
-
 
 
         //console.log(this.trapez.points);
@@ -3590,24 +3598,21 @@ function drawTicks(trapez){
         dist_corners = distance(trapez.points[directions[ii][0]], trapez.points[directions[ii][1]]);
 
 
-
         let dx = (trapez.points[directions[ii][1]].x - trapez.points[directions[ii][0]].x);
         let dy = (trapez.points[directions[ii][1]].y - trapez.points[directions[ii][0]].y);
-        let dx_normiert = dx/ dist_corners;
-        let dy_normiert = dy/ dist_corners;
+        let dx_normiert = dx / dist_corners;
+        let dy_normiert = dy / dist_corners;
 
 
-
-
-        for (let jj = 1; jj < 1000; jj++){
+        for (let jj = 1; jj < 1000; jj++) {
 
             //console.log(jj);
-            if (Math.sqrt( Math.pow((dx_normiert * tick_dist * jj),2) + Math.pow((dy_normiert * tick_dist * jj),2)) >= dist_corners){
+            if (Math.sqrt(Math.pow((dx_normiert * tick_dist * jj), 2) + Math.pow((dy_normiert * tick_dist * jj), 2)) >= dist_corners) {
                 break
             }
 
             let temporary_offset;
-            if (trapez.points[2].y > 0){
+            if (trapez.points[2].y > 0) {
                 temporary_offset = trapez.points[2].y + 0.5
             } else {
                 temporary_offset = 0
@@ -3615,15 +3620,15 @@ function drawTicks(trapez){
 
             let tickPoint_0
 
-            if (turnLorentzTransformOn == "1"){
+            if (turnLorentzTransformOn == "1") {
                 tickPoint_0 = [
-                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left ,
+                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left,
                     trapez.points[directions[ii][0]].y + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
                 ];
-            }else{
+            } else {
                 tickPoint_0 = [
-                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left - trapez.width/2 - 1,
-                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset + trapez.height/2 + 1
+                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left - trapez.width / 2 - 1,
+                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset + trapez.height / 2 + 1
                 ];
             }
 
@@ -3635,7 +3640,7 @@ function drawTicks(trapez){
                     tickPoint_0[0] - dy_normiert * tick_length,
                     tickPoint_0[1] + dx_normiert * tick_length
                 ];
-            }else {
+            } else {
                 tickPoint_1 = [
                     tickPoint_0[0] + dy_normiert * tick_length,
                     tickPoint_0[1] - dx_normiert * tick_length
@@ -3643,26 +3648,26 @@ function drawTicks(trapez){
             }
 
 
-            let   tick = new fabric.Line(
-                    [tickPoint_0[0], tickPoint_0[1], tickPoint_1[0], tickPoint_1[1]] ,
-                    {
-                        fill: '#666',
-                        stroke: '#666',
-                        strokeWidth: tickWidth,
-                        evented: false,
-                        objectCaching: false,
-                        lockMovementX: false,
-                        lockMovementY: false,
-                        lockScalingX: true,
-                        lockScalingY: true,
-                        selectable: false,
-                        originX: 'center',
-                        originY: 'center',
-                        hasBorders: false,
-                        hasControls: false,
+            let tick = new fabric.Line(
+                [tickPoint_0[0], tickPoint_0[1], tickPoint_1[0], tickPoint_1[1]],
+                {
+                    fill: '#666',
+                    stroke: '#666',
+                    strokeWidth: tickWidth,
+                    evented: false,
+                    objectCaching: false,
+                    lockMovementX: false,
+                    lockMovementY: false,
+                    lockScalingX: true,
+                    lockScalingY: true,
+                    selectable: false,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
 
-                    }
-                );
+                }
+            );
 
             tick.parentSector = [trapez.parent.ID, trapez.parent.ticks.length];
 
@@ -3670,7 +3675,7 @@ function drawTicks(trapez){
 
             trapez.parent.ticks.push(tick);
 
-            if (turnLorentzTransformOn == "1"){
+            if (turnLorentzTransformOn == "1") {
                 getStartAndEndPointCoordsBeforeLorentztransform(tick)
             }
 
@@ -3680,7 +3685,9 @@ function drawTicks(trapez){
         }
 
     }
+}
 
+function drawLightCone(trapez) {
     if (turnLorentzTransformOn == "1"){
 
         let temporary_offset;
@@ -6526,6 +6533,12 @@ fitResponsiveCanvas();
 if (buildTicks == "1"){
     for (let ii = 0; ii < sectors.length; ii++){
         drawTicks(sectors[ii].trapez);
+    }
+}
+
+if (buildLightCone == "1"){
+    for (let ii = 0; ii < sectors.length; ii++){
+        drawLightCone(sectors[ii].trapez);
     }
 }
 
