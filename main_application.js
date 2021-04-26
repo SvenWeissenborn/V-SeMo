@@ -2503,6 +2503,10 @@ function drawDragPoint(lineToGivePoint) {
         chosenLineGlobalID = lineSegment.ID[0];
         showGeodesicButtons(true);
 
+        if (showExerciseBox == "1") {
+            checkCheckBoxCondition()
+        }
+
         if (autoSetOnDraw == "1") {
             sectors[lineSegment.parentSector[0]].trapez.bringToFront();
             updateMinions(sectors[lineSegment.parentSector[0]].trapez)
@@ -5982,6 +5986,9 @@ function toolChange(argument) {
             if (typeof(lines[ii][jj].__eventListeners)=== 'undefined') {
                 lines[ii][jj].on('mousedown', function () {
                     chosenLineGlobalID = this.ID[0];
+                    if (showExerciseBox == "1") {
+                        checkCheckBoxCondition()
+                    }
                     for (let kk = 0; kk < lines.length; kk++){
                         for (let ll = 0; ll < lines[kk].length; ll++)
                             lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;

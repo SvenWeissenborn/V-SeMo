@@ -358,6 +358,8 @@ fabric.Image.fromURL('button_icons/restart.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    restart.buttonType = "restart"
+
     restart.on('mousedown', function (o) {
         restart.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -405,6 +407,8 @@ fabric.Image.fromURL('button_icons/reset.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    reset.buttonType = "reset"
+
     reset.on('mousedown', function (o) {
         reset.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -425,7 +429,7 @@ fabric.Image.fromURL('button_icons/reset.png', function(img) {
         showSectorAreaInfobox(false);
         removeDeficitAngleVisualize();
         canvas_side_bar_perm.renderAll()
-
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(reset);
 });
@@ -453,6 +457,8 @@ fabric.Image.fromURL('button_icons/set_sectors_to_ring.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    set_sectors_to_ring.buttonType = "set_sectors_to_ring"
+
     set_sectors_to_ring.on('mousedown', function (o) {
         set_sectors_to_ring.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -466,6 +472,7 @@ fabric.Image.fromURL('button_icons/set_sectors_to_ring.png', function(img) {
         toolChange('grab');
         arrowheadline = -1;
         moveDirectionButtons(false);
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(set_sectors_to_ring);
 });
@@ -519,6 +526,8 @@ fabric.Image.fromURL('button_icons/add.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    add.buttonType = "add"
+
     add.on('mousedown', function (o) {
         add.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -541,6 +550,7 @@ fabric.Image.fromURL('button_icons/add.png', function(img) {
         showVertices(false);
         showSectorAreaInfobox(false)
         showDeficitAngleInfobox(false)
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(add);
 });
@@ -565,6 +575,8 @@ fabric.Image.fromURL('button_icons/add_dark.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    add_dark.buttonType = "add_dark"
+
     add_dark.on('mousedown', function (o) {
         add_dark.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -584,6 +596,7 @@ fabric.Image.fromURL('button_icons/add_dark.png', function(img) {
         //add.opacity = 1;
         //add_dark.opacity = 0;
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(add_dark);
 });
@@ -611,6 +624,8 @@ fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    add_curved.buttonType = "add_curved"
+
     add_curved.on('mousedown', function (o) {
         add_curved.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -633,6 +648,7 @@ fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
         showVertices(false);
         showSectorAreaInfobox(false)
         showDeficitAngleInfobox(false)
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(add_curved);
 });
@@ -657,6 +673,8 @@ fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    add_dark_curved.buttonType = "add_dark_curved"
+
     add_dark_curved.on('mousedown', function (o) {
         add_dark_curved.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -676,6 +694,7 @@ fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
         //add.opacity = 1;
         //add_dark.opacity = 0;
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(add_dark_curved);
 });
@@ -698,6 +717,8 @@ fabric.Image.fromURL('button_icons/undo.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    undo.buttonType = "undo"
+
     undo.on('mousedown', function (o) {
         undo.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_bar_perm.renderAll()
@@ -715,6 +736,7 @@ fabric.Image.fromURL('button_icons/undo.png', function(img) {
         showGeodesicButtons(false);
         toolChange('grab');
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
 
     });
 
@@ -766,6 +788,8 @@ fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    button_dreieck.buttonType = "button_dreieck"
+
     button_dreieck.on('mousedown', function (o) {
         button_dreieck.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -785,6 +809,7 @@ fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
         toolChange('grab');
         addGeodreieck(true);
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
 
     });
     canvas_side_bar_perm.add(button_dreieck);
@@ -808,6 +833,8 @@ fabric.Image.fromURL('button_icons/button_dreieck_empty.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    button_dreieck_empty.buttonType = "button_dreieck_empty"
+
     button_dreieck_empty.on('mousedown', function (o) {
         button_dreieck_empty.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -823,6 +850,7 @@ fabric.Image.fromURL('button_icons/button_dreieck_empty.png', function(img) {
         //toolChange('grab');
         addGeodreieck(false);
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
     });
 
     button_dreieck_empty.on('mouseover', function (o) {
@@ -961,6 +989,8 @@ fabric.Image.fromURL('button_icons/area_sector.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    area_sector.buttonType = "area_sector"
+
     area_sector.on('mousedown', function (o) {
         area_sector.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -976,6 +1006,7 @@ fabric.Image.fromURL('button_icons/area_sector.png', function(img) {
         showGeodesicButtons(false);
         toolChange('grab');
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
 
     });
     canvas_side_bar_perm.add(area_sector);
@@ -1052,6 +1083,8 @@ fabric.Image.fromURL('button_icons/verticesOn.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    verticesOn.buttonType = "verticesOn"
+
     verticesOn.on('mousedown', function (o) {
         verticesOn.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1071,6 +1104,7 @@ fabric.Image.fromURL('button_icons/verticesOn.png', function(img) {
         showGeodesicButtons(false);
         toolChange('grab');
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
 
     });
     canvas_side_bar_perm.add(verticesOn);
@@ -1141,6 +1175,8 @@ fabric.Image.fromURL('button_icons/delete.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    delete_whole.buttonType = "delete_whole"
+
     delete_whole.on('mousedown', function (o) {
         delete_whole.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1157,11 +1193,12 @@ fabric.Image.fromURL('button_icons/delete.png', function(img) {
 
         chosenLineGlobalID = - 1;
         showGeodesicButtons(false)
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(delete_whole);
 });
 
-
+let lastPressedButton
 
 let set_sectors;
 fabric.Image.fromURL('button_icons/set_sectors.png', function(img) {
@@ -1181,6 +1218,8 @@ fabric.Image.fromURL('button_icons/set_sectors.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    set_sectors.buttonType = "set_sectors"
+
     set_sectors.on('mousedown', function (o) {
         set_sectors.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1189,16 +1228,25 @@ fabric.Image.fromURL('button_icons/set_sectors.png', function(img) {
     });
 
     set_sectors.on('mouseup', function (o) {
+
         set_sectors.set('shadow', new fabric.Shadow(shadowOff));
         autoSetSectorsAlongGeodesic(chosenLineGlobalID);
         toolChange('grab');
         arrowheadline = -1;
         moveDirectionButtons(false);
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(set_sectors);
 });
 
-
+function buttonPressedForExercise(button){
+    if (showExerciseBox !== "1") {
+        return
+    }
+    lastPressedButton = button.buttonType
+    console.log(button.buttonType)
+    checkSlideCondition()
+}
 
 
 let direction;
@@ -1283,6 +1331,8 @@ fabric.Image.fromURL('button_icons/direction.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    direction.buttonType = "direction"
+
     direction.on('mousedown', function (o) {
         direction.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1296,6 +1346,7 @@ fabric.Image.fromURL('button_icons/direction.png', function(img) {
             moveDirectionButtons(false)
         }else moveDirectionButtons(true)
         canvas_side_bar_perm.renderAll()
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(direction);
 });
@@ -1322,6 +1373,8 @@ fabric.Image.fromURL('button_icons/button_change_direction_counterclock_high.png
         scaleY: scalefactorclockbutton * screenFactor,
         hoverCursor: "pointer"});
 
+    change_direction_counterclock_high.buttonType = "change_direction_counterclock_high"
+
     change_direction_counterclock_high.on('mousedown', function (event) {
 
         change_direction_counterclock_high.set('shadow', new fabric.Shadow(shadowOn));
@@ -1345,6 +1398,7 @@ fabric.Image.fromURL('button_icons/button_change_direction_counterclock_high.png
         clearInterval(timeout);
         drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
+        buttonPressedForExercise(this)
     });
 
     canvas_side_bar_perm.add(change_direction_counterclock_high);
@@ -1368,6 +1422,8 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_high.png', 
         scaleY: scalefactorclockbutton * screenFactor,
         hoverCursor: "pointer"});
 
+    change_direction_clockwise_high.buttonType = "change_direction_clockwise_high"
+
     change_direction_clockwise_high.on('mousedown', function (event) {
         change_direction_clockwise_high.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('clockwise', Math.PI/180, chosenLineGlobalID);
@@ -1389,6 +1445,7 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_high.png', 
         clearInterval(timeout);
         drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
+        buttonPressedForExercise(this)
     });
 
     canvas_side_bar_perm.add(change_direction_clockwise_high);
@@ -1411,6 +1468,8 @@ fabric.Image.fromURL('button_icons/button_change_direction_counterclock_low.png'
         scaleY: scalefactorclockbutton * screenFactor,
         hoverCursor: "pointer"});
 
+    change_direction_counterclock_low.buttonType = "change_direction_counterclock_low"
+
     change_direction_counterclock_low.on('mousedown', function (event) {
         change_direction_counterclock_low.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('counterclockwise', Math.PI/180 * 0.1 , chosenLineGlobalID);
@@ -1432,6 +1491,7 @@ fabric.Image.fromURL('button_icons/button_change_direction_counterclock_low.png'
         clearInterval(timeout);
         drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
+        buttonPressedForExercise(this)
     });
 
     canvas_side_bar_perm.add(change_direction_counterclock_low);
@@ -1455,6 +1515,8 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_low.png', f
         scaleY: scalefactorclockbutton * screenFactor,
         hoverCursor: "pointer"});
 
+    change_direction_clockwise_low.buttonType = "change_direction_clockwise_low"
+
     change_direction_clockwise_low.on('mousedown', function (event) {
         change_direction_clockwise_low.set('shadow', new fabric.Shadow(shadowOn));
         changeDirectionAndContinue('clockwise', Math.PI/180 * 0.1, chosenLineGlobalID);
@@ -1476,6 +1538,7 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_low.png', f
         clearInterval(timeout);
         drawDragPoint(chosenLineGlobalID);
         toolChange('grab');
+        buttonPressedForExercise(this)
     });
 
     canvas_side_bar_perm.add(change_direction_clockwise_low);
@@ -1500,6 +1563,8 @@ fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    autocomplete.buttonType = "autocomplete"
+
     autocomplete.on('mousedown', function (o) {
         autocomplete.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1513,6 +1578,7 @@ fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
         toolChange('grab');
 
         moveDirectionButtons(false);
+        buttonPressedForExercise(this)
     });
     canvas_side_bar_perm.add(autocomplete);
 });
@@ -1652,6 +1718,8 @@ fabric.Image.fromURL('button_icons/camera.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    camera.buttonType = "camera"
+
     camera.on('mousedown', function (o) {
         camera.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
@@ -1665,6 +1733,7 @@ fabric.Image.fromURL('button_icons/camera.png', function(img) {
         camera.set('shadow', new fabric.Shadow(shadowOff));
         download_image()
         canvas_side_tools_right.renderAll()
+        buttonPressedForExercise(this)
 
     });
 
@@ -1715,6 +1784,8 @@ fabric.Image.fromURL('button_icons/fullscreen.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    fullscreen.buttonType = "fullscreen"
+
     fullscreen.on('mousedown', function (o) {
         fullscreen.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
@@ -1727,6 +1798,7 @@ fabric.Image.fromURL('button_icons/fullscreen.png', function(img) {
     fullscreen.on('mouseup', function (o) {
         fullscreen.set('shadow', new fabric.Shadow(shadowOff));
         canvas_side_tools_right.renderAll()
+        buttonPressedForExercise(this)
         /*
         if( safari ) {
             alert('Diese Funktion ist für iOS nicht integriert.\nThis function is not integrated for iOS.')
@@ -1807,6 +1879,8 @@ fabric.Image.fromURL('button_icons/exit_fullscreen.png', function(img) {
         scaleY: buttonfactor * screenFactor,
         hoverCursor: "pointer"});
 
+    exitFullscreen.buttonType = "exitFullscreen"
+
     exitFullscreen.on('mousedown', function (o) {
         exitFullscreen.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
@@ -1817,6 +1891,7 @@ fabric.Image.fromURL('button_icons/exit_fullscreen.png', function(img) {
     });
 
     exitFullscreen.on('mouseup', function (o) {
+        buttonPressedForExercise(this)
         exitFullscreen.set('shadow', new fabric.Shadow(shadowOff));
         if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
             if (document.cancelFullScreen) {
@@ -1890,6 +1965,8 @@ fabric.Image.fromURL('button_icons/zoomReset.png', function(img) {
         hoverCursor: "pointer"
     });
 
+    zoomReset.buttonType = "zoomReset"
+
     zoomReset.on('mousedown', function (o) {
         zoomReset.set('shadow', new fabric.Shadow(shadowOn));
         canvas_side_tools_right.renderAll()
@@ -1903,6 +1980,7 @@ fabric.Image.fromURL('button_icons/zoomReset.png', function(img) {
         zoomReset.set('shadow', new fabric.Shadow(shadowOff));
         setZoomPan();
         canvas_side_tools_right.renderAll()
+        buttonPressedForExercise(this)
     });
 
     canvas_side_tools_right.add(zoomReset);
@@ -1928,6 +2006,8 @@ fabric.Image.fromURL('button_icons/help.png', function(img) {
         hoverCursor: "pointer"
     });
 
+    help.buttonType = "help"
+
     help.on('mousedown', function (o) {
         help.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1939,6 +2019,7 @@ fabric.Image.fromURL('button_icons/help.png', function(img) {
         help.set('shadow', new fabric.Shadow(shadowOff));
         window.open(help_language, '_blank');
         canvas_side_tools_right.renderAll();
+        buttonPressedForExercise(this)
     });
 
     /*
@@ -1972,6 +2053,8 @@ fabric.Image.fromURL('button_icons/exit_help.png', function(img) {
         hoverCursor: "pointer"
     });
 
+    exitHelp.buttonType = "exitHelp"
+
     exitHelp.on('mousedown', function (o) {
         exitHelp.set('shadow', new fabric.Shadow(shadowOn));
     });
@@ -1984,6 +2067,7 @@ fabric.Image.fromURL('button_icons/exit_help.png', function(img) {
         addInstructionalOverlay(false);
         exitHelp.opacity = 0.0;
         canvas_side_tools_right.renderAll();
+        buttonPressedForExercise(this)
     });
 
     canvas_side_tools_right.add(exitHelp);

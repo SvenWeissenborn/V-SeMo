@@ -396,10 +396,16 @@ function showNextSlide() {
         }
     }
 
+
+
     if (currentSlideNumber === slideContent.length-1){
         forward.opacity = 0;
     }else{
-        forward.opacity = 1;
+        if (currentSlide.slideCondition !== undefined){
+            forward.opacity = 0;
+        }else{
+            forward.opacity = 1;
+        }
     }
 
     setText();
@@ -759,7 +765,6 @@ function deleteChosenGeodesics() {
 }
 
 function checkSlideCondition() {
-
     if (currentSlide.slideCondition !== undefined){
 
         let conditionIsFulfilled = false;
@@ -791,12 +796,20 @@ function checkSlideCondition() {
                 }
             }
 
+            if (currentSlide.slideCondition[ii][0] == 'buttonPressed'){
+
+                let buttonToPress = currentSlide.slideCondition[ii][1];
+
+                if (buttonToPress == lastPressedButton){
+                    conditionIsFulfilled = true
+                }
+            }
+
         }
 
 
         if (conditionIsFulfilled){
             currentSlideNumber += 1;
-
             showNextSlide();
         }
     }
@@ -834,6 +847,13 @@ function checkCheckBoxCondition() {
                     }
                 }
 
+            }
+
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'choseGeodesic'){
+                if (chosenLineGlobalID !== -1){
+                    currentCheckBoxWithText.conditionIsFullfilled = true;
+                    currentCheckBoxWithText._objects[1].set('opacity', 1);
+                }
             }
 
             if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesTwoMarks') {

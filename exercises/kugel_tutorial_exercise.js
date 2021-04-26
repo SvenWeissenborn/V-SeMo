@@ -25,7 +25,7 @@
     Marks verstecken sollte, die nicht
     von Anfang an sichtbar sein sollen
 */
-
+let turnBackwardOff = true;
 
 let slideContent = [
     {

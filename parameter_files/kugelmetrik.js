@@ -17,14 +17,14 @@ startGeodesicsOffset_x: [0.1, 0.35]
 startGeodesicsOffset_y: [0.55, 0.05]
 startGeodesicsLength: [80, 80]
 startGeodesicsOperational: []
-startMarksSectors: [2, 6]
-startMarksRadius: [5, 5]
-startMarksOffset_x: [0.8, 0.2]
-startMarksOffset_y: [0.2, 0.4]
-startTextsSectors: [2, 6]
-startTextContent: ['P1', 'P2']
-startTextsOffset_x: [0.85, 0.25]
-startTextsOffset_y: [0.1, 0.5]
+startMarksSectors: [2, 3, 8]
+startMarksRadius: [5, 5, 5]
+startMarksOffset_x: [0.5, 0.5, 0.5]
+startMarksOffset_y: [0.5, 0.5, 0.5]
+startTextsSectors: []
+startTextContent: []
+startTextsOffset_x: []
+startTextsOffset_y: []
 ----------------------
 */
 
@@ -35,7 +35,7 @@ startViewportTransform_5 =0
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey', 'grey', 'grey', 'grey'];
 let lineStrokeWidthWhenNotSelected = 2
-let lineStrokeWidthWhenSelected = 5
+let lineStrokeWidthWhenSelected =5
 sec_name= [ 1, 2, 3, 4, 5, '6.', 7, 8, '9.', ];
 sec_fill= [ 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, ];
@@ -64,18 +64,18 @@ startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [2,0], [2,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ -150.31696452461094, 150.31696452461094, ];
-markStart_y= [ 258.6047070880902, -184.6899349084645, ];
-markStartStrokeWidth= [ 2, 2, ];
-markStartRadius= [ 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], ];
-markStartParentSector= [ [2,0], [6,0], ];
-markStartID= [ [0,1], [1,1], ];
-textStart_x= [ -141.7228956299959, 158.91103341922602, ];
-textStart_y= [ 276.0271908152063, -202.1124186355806, ];
-textStartContent= [ 'P1', 'P2', ];
-textStartFontSize= [ 15, 15, ];
-textStartParentSector= [ [2,0], [6,0], ];
-textStartID= [ [0], [1], ];
-textStartAngle= [ 0, 0, ];
+markStart_x= [ -201.88137789230137, 0.0, 201.88137789230134, ];
+markStart_y= [ 206.33725590674183, -202.1124186355806, 206.33725590674183, ];
+markStartStrokeWidth= [ 2, 2, 2, ];
+markStartRadius= [ 5, 5, 5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
+markStartParentSector= [ [2,0], [3,0], [8,0], ];
+markStartID= [ [0,1], [1,1], [2,1], ];
+textStart_x= [ ];
+textStart_y= [ ];
+textStartContent= [ ];
+textStartFontSize= [ ];
+textStartParentSector= [ ];
+textStartID= [ ];
+textStartAngle= [ ];

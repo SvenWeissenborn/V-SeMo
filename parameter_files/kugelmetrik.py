@@ -43,16 +43,16 @@ startGeodesicsLength = [80, 80]
 startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [2, 6]
-startMarksRadius = [5, 5,]
-startMarksOffset_x = [0.8, 0.2, ]
-startMarksOffset_y = [0.2, 0.4, ]
+startMarksSectors = [2, 3, 8]
+startMarksRadius = [5, 5, 5]
+startMarksOffset_x = [0.5, 0.5, 0.5,]
+startMarksOffset_y = [0.5, 0.5, 0.5,]
 
 #Parameter fuer die Starttexte
-startTextsSectors = [2, 6]
-startTextContent = ['P1', 'P2']
-startTextsOffset_x = [0.85, 0.25]
-startTextsOffset_y = [0.1, 0.5]
+startTextsSectors = []
+startTextContent = []
+startTextsOffset_x = []
+startTextsOffset_y = []
 
 
 
