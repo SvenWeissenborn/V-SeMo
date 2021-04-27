@@ -31,7 +31,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Wir wollen eine neue Funktion von ViSeMo kennenlernen.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'We want to learn about a new feature of ViSeMo.',
     },
 
     {
@@ -41,7 +41,7 @@ let slideContent = [
         checkBoxesWithText: [
             {
                 text_de: 'Tippe dazu einen Teil oder den Endpunkt eines Geodätenstücks an.',
-                text_en: '2 and 3 &',
+                text_en: 'To do this, click on a part or the end point of a geodesic segment.',
                 type: 'tracker',
                 condition: ['choseGeodesic'],
             },
@@ -50,43 +50,58 @@ let slideContent = [
 
     {
         id: 2,
-        text_de: 'Wenn Du eine Geodäte auswählst, erscheinen in der linken Werkzeugleiste weitere Buttons. ',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_de: 'Wenn Du eine Geodäte auswählst, erscheinen in der linken Werkzeugleiste weitere Buttons.',
+        text_en: 'When you select a geodesic, more buttons appear in the left toolbar.',
     },
 
     {
         id: 3,
         text_de: 'Du kannst die Konstruktion einer Geodäte beschleunigen, indem Du ViSeMo alle notwendigen Sektoren automatisch zusammensetzen lässt. Tippe dazu auf diesen Button:',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'You can speed up the construction of a geodesic by letting ViSeMo automatically assemble all necessary sectors. Click on this button to do so:',
         slideCondition: [['buttonPressed', 'set_sectors']],
         imageToAdd: ['button_icons/set_sectors.png', buttonfactor, 125],
     },
 
     {
         id: 4,
-        text_de: 'Anschließend kannst Du die Geodäte wie bereits bekannt vervollständigen. Wiederhole dein Vorgehen mit der zweiten Geodäte.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_de: 'Anschließend kannst Du die Geodäte vervollständigen. Wiederhole dein Vorgehen mit der zweiten Geodäte.',
+        text_en: 'Then you can complete the geodesic. Repeat this procedure with the second geodesic.',
 
+    },
+
+    {
+        id: 3,
+        text_de: 'Für einen besseren Überblick kannst Du die Sektoren wieder in ihre Ausgangsposition zurücksetzen. Tippe dazu auf diesen Button:',
+        text_en: 'For a better overview you can reset the sectors to their initial position. Click on this button to do so:',
+        slideCondition: [['buttonPressed', 'reset']],
+        imageToAdd: ['button_icons/reset.png', buttonfactor, 125],
     },
 
     {
         id: 5,
         text_de: 'Finde eine Möglichkeit, die Richtung der beiden Geodätenenden miteinander zu vergleichen.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'Find a way to compare the direction of the two geodesic ends.',
         slideCondition: [['snappedSectors', [8, 11]]],
     },
 
     {
         id: 6,
         text_de: 'Gut gemacht!\nWenn Du die Richtung zweier Linienstücke miteinander vergleichen möchtest, musst Du ihre Sektoren zunächst zusammensetzen. Anders darfst Du ihre Richtung nicht miteinander vergleichen.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'Well done!\nIf you want to compare the direction of two line segments, you have to put their sectors together first. Otherwise you can\'t compare their direction.',
+
+    },
+
+    {
+        id: 6,
+        text_de: 'Mit Hilfe des Geodreiecks kannst Du die Richtung genauer vergleichen. Probiere es aus!',
+        text_en: 'With the help of the triangle you can compare the direction more accurately. Try it out!',
 
     },
 
     {
         id: 7,
         text_de: 'Kehre nun wieder zum Kurs zurück.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'Now return to the course.',
 
     },
 

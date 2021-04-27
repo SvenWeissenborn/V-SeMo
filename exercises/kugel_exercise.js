@@ -31,7 +31,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.',
 
     },
 
