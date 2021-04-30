@@ -60,15 +60,15 @@ if (showVerticesOn == "1"){
 
 let dist_to_top_set_sectors_button_number = dist_to_top_delete_whole_button_number + 1;
 
-let dist_to_top_direction_main_button_number = dist_to_top_set_sectors_button_number;
-if (showAutoSet == "1"){
-    dist_to_top_direction_main_button_number += 1;
-}
-let dist_to_top_auto_complete_main_button_number = dist_to_top_direction_main_button_number;
-if (showChangeDirection == "1"){
+let dist_to_top_auto_complete_main_button_number = dist_to_top_set_sectors_button_number;
+if (showAutoSet== "1"){
     dist_to_top_auto_complete_main_button_number += 1;
 }
-let dist_to_top_change_start_point_position_main_button_number = dist_to_top_auto_complete_main_button_number;
+let dist_to_top_direction_main_button_number = dist_to_top_auto_complete_main_button_number;
+if (showChangeDirection == "1"){
+    dist_to_top_direction_main_button_number += 1;
+}
+let dist_to_top_change_start_point_position_main_button_number = dist_to_top_direction_main_button_number;
 if (showAutoComplete == "1"){
     dist_to_top_change_start_point_position_main_button_number += 1;
 }
@@ -1264,8 +1264,6 @@ function moveDirectionButtons(visibleToSet){
 
         maxScrollNumber += 1.5;
 
-        autocomplete.set('top', dist_to_top + (dist_to_top_auto_complete_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
-        autocomplete.setCoords();
         joystickBackground.set('top', dist_to_top + 30 + (dist_to_top_change_start_point_position_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
         joystickBackground.setCoords();
         joystickBall.set('top', dist_to_top + 30 + (dist_to_top_change_start_point_position_main_button_number + 1.5) * (136 * buttonfactor * screenFactor + buttondist));
