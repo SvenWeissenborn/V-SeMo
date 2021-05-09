@@ -51,7 +51,14 @@ let slideContent = [
 
     {
         id: 1,
-        text_de: 'Wir beginnen mit einer Städtereise, welche in Rom startet. Zeichne eine erste Route von Rom nach Kopenhagen ein.',
+        text_de: 'Die Sektoren des Sektormodells ähneln kleinen Papierstücken. Sie lassen sich frei bewegen und verdrehen. Probiere es mal.',
+        text_en: 'Together, let\'s take a closer look at the sector model. Click on the arrow to get started.',
+
+    },
+
+    {
+        id: 2,
+        text_de: 'Wir beginnen mit einer Städtereise, welche in Rom startet. Zeichne eine erste Route von Rom nach Kopenhagen ein. Klicke anschließend wieder auf den Pfeil',
         text_en: 'We start with a city trip, which starts in Rome. Draw a first route from Rome to Copenhagen.',
         marksToShow: [3, 4],
         textsToShow: [3, 4],
@@ -60,7 +67,7 @@ let slideContent = [
 
 
     {
-        id: 2,
+        id: 3,
         text_de: 'Von Kopenhagen geht es weiter nach Helsinki. Zeichne auch diese Route ein.',
         text_en: 'From Copenhagen we continue to Helsinki. Draw this route as well.',
         sectorsToShow: [3],
@@ -70,7 +77,7 @@ let slideContent = [
     },
 
     {
-        id: 3,
+        id: 4,
         text_de: 'Nun wollen wir unsere Reise nach Reykjavik auf Island fortsetzen.',
         text_en: 'Now we want to continue our journey to Reykjavik in Iceland.',
         sectorsToShow: [0],
@@ -79,7 +86,7 @@ let slideContent = [
     },
 
     {
-        id: 4,
+        id: 5,
         text_de: 'Die letzte Station ist die irische Stadt Dublin.',
         text_en: 'The last stop is the Irish city of Dublin.',
         sectorsToShow: [1],
@@ -88,13 +95,13 @@ let slideContent = [
     },
 
     {
-        id: 5,
+        id: 6,
         text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen.',
         text_en: 'After our last stop, we want to take the shortest route back to Rome by plane.',
     },
 
     {
-        id: 6,
+        id: 7,
         text_de: 'Kehre wieder zum Kurs zurück.',
         text_en: 'Return back to the course.',
     },

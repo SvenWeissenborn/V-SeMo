@@ -30,7 +30,7 @@ let turnBackwardOff = true;
 let slideContent = [
     {
         id: 0,
-        text_de: 'Vervollständige die beiden Startstriche als Geodäten bis zum Rand des Sektormodells.\n \nÜberlege dazu:\n1. Wie verläuft eine Geodäte innerhalb eines Sektors?\n2. Was musst Du tun, um eine Geodäte im nächsten Sektor fortzusetzen?',
+        text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
         text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.',
 
     },
