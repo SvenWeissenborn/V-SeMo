@@ -2,7 +2,7 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
-nSektorzeilenVonRing = 12
+nSektorzeilenVonRing = 11
 nSektorspaltenVonRing = 12
 
 nSektorzeilenVonRingSchwarzschild = 3
@@ -23,14 +23,14 @@ lineStrokeWidthWhenNotSelected = 5
 lineStrokeWidthWhenSelected = 10
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [119]
+startGeodesicsSectors = [109]
 # Winkel in Grad
 startGeodesicsAngle = [-90]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.8]
+startGeodesicsOffset_x = [0.9]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.8]
+startGeodesicsOffset_y = [0.95]
 # Laenge der Geodaete in Pixel
 startGeodesicsLength = [50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
@@ -113,7 +113,7 @@ def main():
     file.write("\n")
     file.write("\n")
     file.write(
-        "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+        "let line_colors = [ 'black', 'blue', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
         "let mark_colors = ['grey', 'grey', 'grey'];")

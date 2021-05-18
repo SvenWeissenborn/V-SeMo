@@ -389,7 +389,7 @@ function showNextSlide() {
     currentSlide = slideContent[currentSlideNumber];
 
     if (turnBackwardOff !== true){
-        if (currentSlideNumber <= 1){
+        if (currentSlideNumber == 0){
             backward.opacity = 0;
         }else{
             backward.opacity = 1;

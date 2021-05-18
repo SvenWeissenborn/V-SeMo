@@ -25,16 +25,19 @@
     Marks verstecken sollte, die nicht
     von Anfang an sichtbar sein sollen
 */
-let turnBackwardOff = true;
+let turnBackwardOff = false;
 
 let slideContent = [
     {
         id: 0,
-        text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
-        text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.',
-
+        text_de: 'Konstruiere ein Dreieck, dessen Eckpunkte die Markierten Punkte darstellen. Bestimme anschließend die Innenwinkelsumme mit Hilfe des Geodreiecks.',
+        text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.'
     },
 
+    {
+        text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
+        text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.'
+    },
 
 ];
 

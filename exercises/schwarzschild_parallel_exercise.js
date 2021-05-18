@@ -64,8 +64,15 @@ let slideContent = [
 
     {
         id: 4,
-        text_de: 'Anschließend kannst Du die Geodäte vervollständigen. Wiederhole dein Vorgehen mit der zweiten Geodäte.',
-        text_en: 'Then you can complete the geodesic. Repeat this procedure with the second geodesic.',
+        text_de: 'Vervollständige jetzt die Geodäte.',
+        text_en: 'Complete the geodesic.',
+
+    },
+
+    {
+        id: 4,
+        text_de: 'Wiederhole diesen Vorgang für die zweite Geodäte.',
+        text_en: 'Repeat this process for the secon geodesic.',
 
     },
 

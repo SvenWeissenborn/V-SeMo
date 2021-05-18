@@ -1,6 +1,6 @@
-startZoom =1
-startViewportTransform_4 =0
-startViewportTransform_5 =0
+startZoom =0.9
+startViewportTransform_4 =80
+startViewportTransform_5 =50
 
 /*
 ------Parameter-------
