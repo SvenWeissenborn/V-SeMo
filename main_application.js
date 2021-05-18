@@ -1355,7 +1355,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
         scaleY: geodreieckScale ,
         lockScalingX: true,
         lockScalingY: true,
-        lockRotation: lockRotationToSet,
+        lockRotation: geodreieckLockRotationToSet,
         hoverCursor: "pointer"});
 
     geodreieck.on('mousedown', function (o) {
@@ -2775,6 +2775,8 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
     return polylineSegment
 }
 
+let geodreieckLockRotationToSet = false
+
 function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     if (typeof this.trapez !== 'undefined') {
         canvas.remove(this.trapez); //sollte ein Sektor zwei Trapeze erzeugen, wird der erste gelöscht
@@ -2788,11 +2790,11 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     if (turnLorentzTransformOn == "1"){
         originXToSet =  'left';
         originYToSet = 'bottom';
-        lockRotationToSet = true;
+        sectorLockRotationToSet = true;
     }else{
         originXToSet =  'center';
         originYToSet = 'center';
-        lockRotationToSet = false;
+        sectorLockRotationToSet = false;
     }
 
     if (textured !== "1" ){sectorEdgeColor = '#666'} else{sectorEdgeColor = '#666'}
@@ -2822,7 +2824,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
             lockMovementY: false,
             lockScalingX: true,
             lockScalingY: true,
-            lockRotation: lockRotationToSet,
+            lockRotation: sectorLockRotationToSet,
             cornerSize: 30,
             opacity: startOpacity,
 
