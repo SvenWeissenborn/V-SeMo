@@ -248,7 +248,6 @@ canvas.on('mouse:move', function (o) {
                 lambdas.push(schnittpunktsparameters[ii][0])
             }
 
-
             //let lineOverTheseSectors = schnittpunktsparameter[1];
             //let lineOverTheseEdges = schnittpunktsparameter[2];
             line.stroke = color;
@@ -3593,7 +3592,6 @@ function drawTicks(trapez) {
         //WICHTIG! Trotzdem müssen sie mit lorentztransformiert werden!!!
 
 
-        //console.log(this.trapez.points);
         let directions = [
             [3, 0],
             [0, 1],
@@ -3612,7 +3610,6 @@ function drawTicks(trapez) {
 
         for (let jj = 1; jj < 1000; jj++) {
 
-            //console.log(jj);
             if (Math.sqrt(Math.pow((dx_normiert * tick_dist * jj), 2) + Math.pow((dy_normiert * tick_dist * jj), 2)) >= dist_corners) {
                 break
             }
@@ -5291,6 +5288,13 @@ function resetSectors() {
                 }
                 sectors[rr].rapidity = 0;
             }
+
+            if (buildTicks == "1"){
+                drawTicks(sectors[rr].trapez)
+            }
+            if (buildLightCone == "1"){
+                drawLightCone(sectors[rr].trapez)
+            }
         }
 
         sectors[rr].trapez.left = sec_posx[rr] + window.innerWidth/2;
@@ -5507,8 +5511,6 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
                 let gamma = (xp - xt1 + ((yt1 - yp) * dyw) / dxw) / (dxt12 - (dyt12 * dyw) / dxw);
                 beta = ((yt1 - yp) / dxw) + (dyt12 / dxw) * gamma;
             }
-
-
 
             if (beta < epsilon){
                 isPointInsideSectors = false;
