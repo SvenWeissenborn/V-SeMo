@@ -6575,7 +6575,7 @@ canvas.renderAll();
 //TODO: Sektor nach oben holen beim drüber zeichnen
 //TODO: Werkzeug zum Messen von Linien
 //TODO: Exercise: Event für Drehen und Verschieben
-//TODO: Exercise: Tick-Leiste
+//TODO: Offset sorgt dafuer, dass es Probleme mit Linien gibt. Die Punkte der Trapeze werden ungleich verschoben
 
 
 //--------------------Ausschuss-----------------------
