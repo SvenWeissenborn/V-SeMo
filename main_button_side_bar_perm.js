@@ -372,14 +372,41 @@ fabric.Image.fromURL('button_icons/restart.png', function(img) {
 
     restart.on('mouseup', function (o) {
         restart.set('shadow', new fabric.Shadow(shadowOff));
-        showGeodesicButtons(false);
-        resetAppliction();
-        addGeodreieck(false);
-        toCalcSectorArea = false;
-        toShowVertices = false;
-        showSectorAreaInfobox(false);
-        showDeficitAngleInfobox(false)
-        canvas_side_bar_perm.renderAll();
+        if (language == "english"){
+            if (confirm("This button restarts ViSeMo completely. If you really want to do this, click OK.")) {
+                // Save it!
+                showGeodesicButtons(false);
+                resetAppliction();
+                addGeodreieck(false);
+                toCalcSectorArea = false;
+                toShowVertices = false;
+                showSectorAreaInfobox(false);
+                showDeficitAngleInfobox(false);
+                canvas_side_bar_perm.renderAll();
+            } else {
+                // Do nothing!
+                console.log('no restart');
+            }
+
+        }else {
+            if (confirm("Über diesen Button startest Du ViSeMo vollständig neu. Möchtest Du das wirklich tun, dann klicke auf OK.")) {
+                // Save it!
+                showGeodesicButtons(false);
+                resetAppliction();
+                addGeodreieck(false);
+                toCalcSectorArea = false;
+                toShowVertices = false;
+                showSectorAreaInfobox(false);
+                showDeficitAngleInfobox(false);
+                canvas_side_bar_perm.renderAll();
+            } else {
+                // Do nothing!
+                console.log('no restart');
+            }
+        }
+
+
+
 
     });
     canvas_side_bar_perm.add(restart);
