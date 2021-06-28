@@ -1477,7 +1477,7 @@ let slider_max = 100;
 
 let sectorToSnap = -1;
 
-let snappingToChosenDistance = 0.2;
+let snappingToChosenDistance = 0.6;
 
 
 function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
@@ -2927,7 +2927,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
     this.trapez.on('modified',function(){
         removeSnapEdges(this.parent.ID);
-        isItTimeToSnap(this);
+        //isItTimeToSnap(this);
         updateMinions(this);
         removeDeficitAngleVisualize();
     });
@@ -2992,7 +2992,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         // Mögliche Lösung um die angeklickten Sektoren nach vorne zu holen
         this.bringToFront()
         updateMinions(this)
-        //drawSnapEdges(this.parent.ID)
+        drawSnapEdges(this.parent.ID)
         geodreieck.bringToFront();
         //----------------
 
@@ -3164,7 +3164,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 if (sectorToSnap > -1) {
                     snapInitialSectorToTargetSector(this.parent.ID, sectorToSnap);
                 }
-                //drawSnapEdges(this.parent.ID)
+                drawSnapEdges(this.parent.ID)
             }
         }
 
