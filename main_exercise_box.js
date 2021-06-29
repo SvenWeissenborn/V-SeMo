@@ -822,9 +822,7 @@ function checkCheckBoxCondition() {
 
     if (currentSlide.checkBoxesWithText !== undefined){
 
-
         for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
-
 
             if (currentSlide.checkBoxesWithText[ii].type !== 'tracker') {
                 return
@@ -836,6 +834,8 @@ function checkCheckBoxCondition() {
 
                 let firstSectorID = currentSlide.checkBoxesWithText[ii].condition[1][0];
                 let secondSectorID = currentSlide.checkBoxesWithText[ii].condition[1][1];
+
+                console.log(firstSectorID, secondSectorID)
 
                 for (let jj = 0; jj < 4; jj++) {
                     if (sectors[firstSectorID].neighbourhood[jj] == secondSectorID) {

@@ -1443,7 +1443,7 @@ canvasSize = {
 
 let scaleRatio;
 
-let snap_radius_slider = 10 * scaleFacotor;
+let snap_radius_slider = 5 * scaleFacotor;
 
 let startOpacity = 0.9
 

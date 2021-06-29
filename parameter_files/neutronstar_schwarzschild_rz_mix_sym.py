@@ -2,7 +2,7 @@ import io
 import math
 
 
-nRowsInModel = 40
+nRowsInModel = 10
 nColumnsInModel = 24
 
 nColumnsOfStar = 6
@@ -21,31 +21,31 @@ lineStrokeWidthWhenSelected = 5
 start_x = 300
 start_y = 100
 
-startZoom = 0.65
-startViewportTransform_4 = -1300
-startViewportTransform_5 = -2800
+startZoom = 1.5
+startViewportTransform_4 = -3200
+startViewportTransform_5 = -1800
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
 #startGeodesicsOffset_x: Versatz in % entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz in px entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsAngle = [180, 180, 135, 135]
+startGeodesicsAngle = [180]
 
 #WICHTIG, wenn in einem Sektor mehrere Geodäten starten sollen, so müssen sie in startGeodesicsSectors direkt auf einander folgen
 
-startGeodesicsSectors = [639, 959, 639, 639]
+startGeodesicsSectors = [159]
 
 
-startGeodesicsOffset_x = [0.05, 0.9, 0.05, 0.05]
+startGeodesicsOffset_x = [0.4]
 
-startGeodesicsOffset_y = [0, 0, 30, 57]
+startGeodesicsOffset_y = [0]
 
-startGeodesicsOperational = ['false', 'false', 'true', 'true']
+startGeodesicsOperational = ['true']
 
 def main():
 
-    file = io.open("neutronstar_schwarzschild_rz_mix_sym_lander.js",'w')
+    file = io.open("neutronstar_schwarzschild_rz_mix_sym_leer.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
