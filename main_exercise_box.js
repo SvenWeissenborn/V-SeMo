@@ -17,6 +17,8 @@ if (showExerciseBox == "1"){
 
 let exerciseText;
 
+let exerciseTextTop = 15
+
 exerciseText = new fabric.Textbox("Text", {
     width: 300,
     opacity: 1,
@@ -27,7 +29,7 @@ exerciseText = new fabric.Textbox("Text", {
     originX: 'left',
     originY: 'top',
     left: 10,
-    top: 10,
+    top: exerciseTextTop,
     text: 'text',
     fill: '#575656',
     objectCaching: false,
@@ -128,6 +130,48 @@ backward.on('mouseup', function (o) {
 
 canvas_exercise_box.add(backward);
 
+let canvas_exercise_box_minimized = false;
+
+let minimize
+
+minimize = new fabric.Rect({
+    left: 302,
+    top: 5,
+    fill: 'white',
+    stroke: '#575656',
+    strokeWidth: 2,
+    width: 20,
+    height: 4,
+    padding: 10,
+    objectCaching: false,
+    hasBorders: false,
+    hasControls: false,
+    selectable: false,
+    hoverCursor: "pointer",
+});
+
+minimize.on('mouseup', function (o) {
+
+    if (canvas_exercise_box_minimized == false){
+        canvas_exercise_box.setWidth(34 * scaleRatio);
+        canvas_exercise_box.setHeight(15 * scaleRatio);
+        canvas_exercise_box_minimized = true;
+        minimize.set('left', 6)
+        minimize.setCoords()
+        console.log(minimize.left)
+        canvas_exercise_box.renderAll()
+    }else{
+        canvas_exercise_box.setWidth(330 * scaleRatio);
+        canvas_exercise_box.setHeight(200 * scaleRatio);
+        canvas_exercise_box_minimized = false;
+        minimize.set('left', 302)
+        minimize.setCoords()
+    }
+
+
+});
+
+canvas_exercise_box.add(minimize);
 
 let hookPoints = [
     {x: 6, y: 0},
@@ -227,7 +271,7 @@ function drawCheckBoxWithText() {
         originX: 'left',
         originY: 'top',
         left: 20,
-        top: -10,
+        top: -exerciseTextTop,
         text: 'text',
         fill: '#575656',
         objectCaching: false,
@@ -239,7 +283,7 @@ function drawCheckBoxWithText() {
 
     let checkBoxWithText = new fabric.Group([checkBoxRect, checkBoxHook, checkBoxCross, checkBoxText], {
         left: 10,
-        top: 15 + exerciseText.height,
+        top: exerciseTextTop + 5 + exerciseText.height,
         objectCaching: false,
         hasBorders: false,
         hasControls: false,
@@ -326,7 +370,7 @@ function addCheckBoxWithText() {
             if (ii == 0){
                 if (exerciseText.text == ""){
 
-                    checkBoxWithText.set('top', 10)
+                    checkBoxWithText.set('top', exerciseTextTop)
                 }
             }
 
