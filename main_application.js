@@ -2146,7 +2146,7 @@ function continueGeodesic(geodesicToContinue) {
 
             for (lauf = 0; lauf < 1000; lauf++) {
                 if (neighbourSectorID === -1 || sectors[neighbourSectorID].trapez.opacity !== startOpacity) {
-                    //drawDragPoint(geodesicToContinue);
+                    drawDragPoint(geodesicToContinue);
                     break
                 }
                 if (goThroughStar !== "1"){
@@ -3614,24 +3614,31 @@ function drawTicks(trapez) {
                 break
             }
 
-            let temporary_offset;
-            if (trapez.points[2].y > 0) {
-                temporary_offset = trapez.points[2].y + 0.5
+            let temporary_offset_x;
+            if (trapez.points[0].x < 0) {
+                temporary_offset_x = (Math.abs(Math.abs((trapez.points[1].x - trapez.points[0].x)) - Math.abs((trapez.points[2].x - trapez.points[3].x))))/2
             } else {
-                temporary_offset = 0
+                temporary_offset_x = 0
+            }
+
+            let temporary_offset_y;
+            if (trapez.points[2].y > 0) {
+                temporary_offset_y = trapez.points[2].y + 0.5
+            } else {
+                temporary_offset_y = 0
             }
 
             let tickPoint_0
 
             if (turnLorentzTransformOn == "1") {
                 tickPoint_0 = [
-                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left,
-                    trapez.points[directions[ii][0]].y + dy_normiert * tick_dist * jj + trapez.top - temporary_offset
+                    trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left + temporary_offset_x,
+                    trapez.points[directions[ii][0]].y + dy_normiert * tick_dist * jj + trapez.top - temporary_offset_y
                 ];
             } else {
                 tickPoint_0 = [
                     trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left - trapez.width / 2 - 1,
-                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset + trapez.height / 2 + 1
+                    trapez.points[directions[ii][0]].y - 0.5 + dy_normiert * tick_dist * jj + trapez.top - temporary_offset_y + trapez.height / 2 + 1
                 ];
             }
 
@@ -3693,16 +3700,16 @@ function drawTicks(trapez) {
 function drawLightCone(trapez) {
     if (turnLorentzTransformOn == "1"){
 
-        let temporary_offset;
+        let temporary_offset_y;
         if (trapez.points[2].y > 0){
-            temporary_offset = trapez.points[2].y
+            temporary_offset_y = trapez.points[2].y
         } else {
-            temporary_offset = 0
+            temporary_offset_y = 0
         }
 
         let lightConesPoint_0 = [
             trapez.points[3].x + trapez.left + 0.5,
-            trapez.points[3].y + trapez.top  - temporary_offset - 0.5
+            trapez.points[3].y + trapez.top  - temporary_offset_y - 0.5
         ]
 
         let lightConesPoint_1 = [
@@ -5772,13 +5779,13 @@ function startMarks() {
             perPixelTargetFind: true,
             hasBorders: false,
             objectCaching: false,
-            selectable: false,
             lockMovementX: true,
             lockMovementY: true,
             lockScalingX: true,
             lockScalingY: true,
-            evented: true,
-            hoverCursor: 'crosshair',
+            selectable: false,
+            evented: false,
+            hoverCursor: 'grabbing',
             padding: 10
         });
 
@@ -5967,7 +5974,17 @@ function toolChange(argument) {
     selectedTool = argument;
 
 
-
+    if (selectedTool === 'paint'){
+        for (let ii = 0; ii < markPoints.length; ii++){
+            markPoints[ii].hoverCursor = 'crosshair';
+            markPoints[ii].evented = true
+        }
+    }else{
+        for (let ii = 0; ii < markPoints.length; ii++){
+            markPoints[ii].hoverCursor = 'grabbing';
+            markPoints[ii].evented = false
+        }
+    }
 
     for (let ii = 0; ii < lines.length; ii++) {
 

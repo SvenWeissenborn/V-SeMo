@@ -74,7 +74,7 @@ let slideContent = [
 
     {
         id: 2,
-        text_de: 'Verlängere das in P1 erschienene Linienstück als Geodäte bis zum oberen Rand von P2.',
+        text_de: 'Wir lassen in Sektor P1 ein Teilchen aus der Ruhe los. Der Anfang seiner Weltlinie ist in P1 eingezeichnet.',
         text_en: 'Join the sectors',
         geodesicsToShow: [0],
     },
@@ -83,107 +83,29 @@ let slideContent = [
         id: 2,
         text_de: 'Transformiertst Du einen Sektor, werden alle darauf befindlichen Linien mittransformiert. Probiere es ruhig aus.',
         text_en: 'Join the sectors',
-        geodesicsToShow: [0],
     },
 
     {
         id: 2,
-        text_de: 'Setze die begonnene Geodäte bis zum Rand des Sektors P4 fort.',
+        text_de: 'Einstein sagt: "Teilchen folgen Geoädten in der Raumzeit. Verlängere die Weltlinie unseres Teilchens als Geodäte bis zum Rand des Sektors P4',
         text_en: 'Join the sectors',
-        geodesicsToShow: [0],
     },
 
     {
         id: 2,
-        text_de: 'Setze die Sektoren auf ihre ursprüngliche Position und Form zurück.',
+        text_de: 'Setze die Sektoren wieder zurück.',
         text_en: 'Join the sectors',
+        slideCondition: [['buttonPressed', 'reset']],
         imageToAdd: ['button_icons/reset.png', buttonfactor, 125],
     },
 
-    /*
     {
-        id: 3,
-        text_de: 'Setze Sektor 9 passend an.',
-        text_en: 'Set sector 9 suitably.',
-        sectorsToShow: [8],
-        slideCondition: [['snappedSectors', [2, 5]], ['snappedSectors', [5, 8]]],
-    },
-
-    {
-        id: 4,
-        text_de: 'Zeichne eine Linie, die die Punkte M1 und M3 verbindet.',
-        text_en: 'Draw a line connecting the points M1 and M3.',
-        marksToShow: [0, 2],
-        textsToShow: [0, 2],
-        checkBoxesWithText: [
-            {
-                text_de: 'erster Text',
-                text_en: 'first text',
-                condition: ['snappedSectors', [1, 2]]
-            },
-
-            {
-                text_de: 'zweiter Text',
-                text_en: 'second text',
-                condition: ['snappedSectors', [2, 5]]
-            },
-        ]
-    },
-
-    {
-        id: 5,
-        text_de: 'Setze die Sektoren 5 und 4 passend an.',
-        text_en: 'first text',
-        sectorsToShow: [3, 4],
-        marksToShow: [1],
-        textsToShow: [1],
-    },
-
-    {
-        id: 6,
-        text_de: 'Setze die Linie von Punkt M3 zu M2 auf dem kürzesten Weg fort. Was fällt Dir auf?',
-        text_en: 'first text',
-
-    },
-
-    {
-        id: 7,
-        text_de: 'Entferne das zuletzt gezeichnete Linienstück über den Rückgängig-Button.',
-        text_en: 'first text',
-    },
-
-    {
-        id: 8,
-        text_de: 'Hier sind die noch notwendigen Sektoren. Verbinde nun die Punkte M3 und M2 auf dem kürzesten Weg miteinander.',
-        text_en: 'first text',
-        sectorsToShow: [0, 1, 6, 7 ],
-    },
-
-    {
-        id: 9,
-        text_de: 'Setze die Linie von M2 zu M1 fort.',
-        text_en: 'first text',
-    },
-
-    {
-        id: 10,
-        text_de: 'Welches geometrische Objekt hast Du soeben auf dem Sektormodell konstruiert?',
-        text_en: 'first text',
-    },
-
-    {
-        id: 11,
-        text_de: 'Bestimme mit Hilfe des Geodreiecks die Innenwinkelsumme des Dreiecks auf dem Sektormodell. Was fällt Dir auf?',
-        text_en: 'first text',
-    },
-
-    {
-        id: 11,
+        id: 2,
         text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'first text',
+        text_en: 'Join the sectors',
     },
 
-    */
+
 
 ];
 

@@ -2,7 +2,7 @@ import io
 import math
 
 
-nRowsInModel = 3
+nRowsInModel = 8
 nColumnsInModel = 2
 
 radius = 120
@@ -13,36 +13,35 @@ sectorDistance_y = 30
 
 fontSize = 15
 
-lineStrokeWidthWhenNotSelected = 5
+lineStrokeWidthWhenNotSelected = 2
 lineStrokeWidthWhenSelected = 5
 
 start_x = 150
 start_y = 150
 
 #Kameraeinstellungen
-startZoom = 1.6
-startViewportTransform_4 = -900
-startViewportTransform_5 = -600
+startZoom = 0.8
+startViewportTransform_4 = -200
+startViewportTransform_5 = -350
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
 #startGeodesicsOffset_x: Versatz entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsSectors = []
+startGeodesicsSectors = [7]
 
-startGeodesicsAngle = []
+startGeodesicsAngle = [150]
 
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.3]
 
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [10]
 
-startGeodesicsOperational = []
-
+startGeodesicsOperational = ['true']
 
 def main():
 
-    file = io.open("schwarzschild_rz_blank.js", 'w')
+    file = io.open("schwarzschild_rz_vertical_free_fall.js", 'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -76,7 +75,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "let line_colors = [ 'black', 'blue', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
+        "let line_colors = [ 'blue', black, 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)

@@ -32,7 +32,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Karl und Lisa sind in Sektor K4 am Neutronenstern angekommen.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Karl and Lisa have arrived at the neutron star in sector K4.',
         geodesicsToHide: [0, 1, 2],
         marksToHide: [1, 2, 3, 4, 5],
         textsToHide: [1, 2, 3, 4, 5, 6],
@@ -43,7 +43,7 @@ let slideContent = [
     {
         id: 1,
         text_de: 'Lisa verlässt mit einem Lander das Raumschiff und landet in Sektor D5 auf der Sternenoberfläche.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'Lisa leaves the spaceship with a lander and lands in sector D5 on the surface of the star.',
         marksToShow: [1],
         textsToHide: [0],
         textsToShow: [1, 2],
@@ -53,7 +53,7 @@ let slideContent = [
     {
         id: 2,
         text_de: 'Um Karl ihre gelungene Landung mitzuteilen, versucht Lisa ihm ein Signal (blaue Geodäte) zu senden.',
-        text_en: 'Join the sectors',
+        text_en: 'To tell Karl about her successful landing, Lisa tries to send him a signal (blue geodesic).',
         geodesicsToShow: [0],
         geodesicsToComplete: [0],
     },
@@ -62,11 +62,11 @@ let slideContent = [
     {
         id: 3,
         text_de: '',
-        text_en: 'Set sector 9 suitably.',
+        text_en: '',
         checkBoxesWithText: [
             {
                 text_de: 'Hilf Lisa ihren Sender richtig auszurichten. Wähle dazu zuerst die blaue Geodäte aus. Über den Kompass-Button kannst Du ihre Startrichtung ändern.',
-                text_en: '2 and 3 &',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
                 condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 1, 2]],
             },
@@ -78,7 +78,7 @@ let slideContent = [
     {
         id: 4,
         text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
-        text_en: 'first text',
+        text_en: 'Lisa explores the surface of the stars with a rover. In the process, she continuously sends Karl a signal.',
         imageToAdd: ['media/ns_rover_0.png', 0.38, 85],
         marksToHide: [1],
         marksToShow: [2],
@@ -92,7 +92,7 @@ let slideContent = [
     {
         id: 5,
         text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
-        text_en: 'first text',
+        text_en: 'Lisa explores the surface of the stars with a rover. In the process, she continuously sends Karl a signal.',
         imageToAdd: ['media/ns_rover_1.png', 0.38, 85],
         marksToHide: [2],
         marksToShow: [3],
@@ -106,7 +106,7 @@ let slideContent = [
     {
         id: 6,
         text_de: 'Als Lisa eine bestimmte Position erreicht, kann Karl ihr Signal nicht mehr empfangen.',
-        text_en: 'first text',
+        text_en: 'When Lisa reaches a certain position, Karl can no longer receive her signal.',
         geodesicsToDelete: [2],
         marksToHide: [3],
         textsToHide: [4],
@@ -116,11 +116,13 @@ let slideContent = [
     {
         id: 7,
         text_de: '',
-        text_en: 'first text',
+        text_en: '',
         checkBoxesWithText: [
             {
                 text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten Lisas Position, als Karl ihr Signal zuletzt empfangen konnte. \n \nTipp: Beginne deine Geodäte bei Karl.',
-                text_en: '2 and 3 &',
+                text_en: 'By constructing suitable geodesics, determine Lisa\'s position when Karl last received her signal. \n' +
+                    ' \n' +
+                    'Tip: Start your geodesics from Karl.',
                 type: 'tracker',
                 condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 4, 2]],
                 result: {
@@ -135,7 +137,7 @@ let slideContent = [
     {
         id: 8,
         text_de: 'Lisa setzt ihre Erkundungsfahrt fort. Nach einiger Zeit erreicht Karl wieder ihr Signal.',
-        text_en: 'first text',
+        text_en: 'Lisa continues her exploratory trip. After some time, Karl achieves her signal again.',
         marksToHide: [4],
         textsToHide: [5],
     },
@@ -144,11 +146,11 @@ let slideContent = [
     {
         id: 9,
         text_de: '',
-        text_en: 'first text',
+        text_en: '',
         checkBoxesWithText: [
             {
                 text_de: 'Bestimme Lisas Position, als Karl ihr Signal zum ersten Mal wieder empfängt.',
-                text_en: '2 and 3 &',
+                text_en: 'Determine Lisa\'s position when Karl receives her signal again for the first time.',
                 type: 'tracker',
                 condition: ['lineTouchesTwoMarks', ['chosenLineGlobalID', 0, 5, 2]],
                 result: {
@@ -163,7 +165,7 @@ let slideContent = [
     {
         id: 10,
         text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'first text',
+        text_en: 'Good job!',
 
     },
 ];

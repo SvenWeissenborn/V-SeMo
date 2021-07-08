@@ -913,6 +913,26 @@ function checkCheckBoxCondition() {
                 }
             }
 
+            if (currentSlide.checkBoxesWithText[ii].condition[0] == 'lineTouchesOneMark') {
+
+                if (chosenLineGlobalID == -1) {
+                    return
+                }
+                let lineID
+                if (currentSlide.checkBoxesWithText[ii].condition[1][0] == 'chosenLineGlobalID') {
+                    lineID = chosenLineGlobalID
+                } else {
+                    lineID = currentSlide.checkBoxesWithText[ii].condition[1][0]
+                }
+
+                let mark1ID = currentSlide.checkBoxesWithText[ii].condition[1][1]
+
+                let check_1 = false;
+
+                let lineEndPoint = new fabric.Point(lines[lineID][lines[lineID].length - 1].x2, lines[lineID][lines[lineID].length - 1].y2)
+
+                console.log(mark1ID, lineEndPoint)
+            }
         }
 
 
