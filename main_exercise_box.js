@@ -484,6 +484,8 @@ function showNextSlide() {
 
     removeAllLines();
 
+    SetZoomAndPan()
+
     canvas.renderAll();
 
     canvas_exercise_box.renderAll()
@@ -771,6 +773,13 @@ function sectorsToSnapTogether(){
     }
 
 }
+
+function SetZoomAndPan(){
+    if (currentSlide.setZoomAndPanTo !== undefined) {
+        setZoomPan(currentSlide.setZoomAndPanTo[0], currentSlide.setZoomAndPanTo[1], currentSlide.setZoomAndPanTo[2])
+    }
+}
+
 
 function removeAllLines(){
 

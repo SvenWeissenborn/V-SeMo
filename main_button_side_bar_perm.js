@@ -2003,7 +2003,7 @@ fabric.Image.fromURL('button_icons/zoomReset.png', function(img) {
 
     zoomReset.on('mouseup', function (o) {
         zoomReset.set('shadow', new fabric.Shadow(shadowOff));
-        setZoomPan();
+        setZoomPan(startZoom, startViewportTransform_4, startViewportTransform_5)
         canvas_side_tools_right.renderAll()
         buttonPressedForExercise(this)
     });

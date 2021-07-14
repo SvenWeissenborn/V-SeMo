@@ -3928,7 +3928,7 @@ function fitResponsiveCanvas() {
     if (showExerciseBox == "1") {
         canvas_exercise_box.setZoom(scaleRatio);
     }
-    setZoomPan()
+    setZoomPan(startZoom, startViewportTransform_4, startViewportTransform_5)
 
     if (!document.fullscreenElement) {
         if (fullscreen == undefined || exitFullscreen == undefined){
@@ -5620,10 +5620,14 @@ function setSectorsToRow(){
 
 }
 
-function setZoomPan(){
-    canvas.setZoom( startZoom);
-    canvas.viewportTransform[4]= startViewportTransform_4;
-    canvas.viewportTransform[5]= startViewportTransform_5;
+canvas.setZoom( startZoom);
+canvas.viewportTransform[4]= startViewportTransform_4;
+canvas.viewportTransform[5]= startViewportTransform_5;
+
+function setZoomPan(zoomToSet, viewportToTransform_4, viewportToTransform_5){
+    canvas.setZoom( zoomToSet);
+    canvas.viewportTransform[4]= viewportToTransform_4;
+    canvas.viewportTransform[5]= viewportToTransform_5;
 }
 
 function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){

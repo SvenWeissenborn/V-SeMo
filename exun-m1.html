@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtuelle Sektormodelle</title>
+</head>
+<link rel="stylesheet" href="main.css" type="text/css">
+<link rel="icon" href="visemo_logo.png">
+
+
+
+<body onresize="fitResponsiveCanvas()">
+
+<div id="canvas-overAll">
+
+    <!--<canvas id="canvas_buttons" class = "part"></canvas>-->
+
+    <div
+            id="container_side_bar_perm" class = "part">
+        <canvas id="canvas_side_bar_perm" class = "part"></canvas>
+    </div>
+
+    <div
+            id="container_side_tools_right" class = "part">
+        <canvas id="canvas_side_tools_right" class = "part"></canvas>
+    </div>
+
+    <div
+            id="container_exercise_box" class = "part">
+        <canvas id="canvas_exercise_box" class = "part"></canvas>
+    </div>
+
+
+    <div id="container_canvas" class = "part">
+        <canvas id="canvas" ></canvas>
+    </div>
+
+</div>
+
+
+
+<script>
+    //Name des Bildes zum runterladen
+    let name_picture_result = "ergebnis_redshift"
+</script>
+
+<script src="url_variables.js"></script>
+<script src="fabric.js"></script>
+<script src="hammer.js"></script>
+<script src="main_button_side_bar_perm.js"></script>
+<script src="exercises/expanding_universe_exercise.js"></script>
+<script src="main_exercise_box.js"></script>
+<script src="parameter_files/expanding_universe_m1.js"></script>
+<script src="main_application.js"></script>
+
+
+
+
+
+</body>
+
+</html>
