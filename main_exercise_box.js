@@ -456,14 +456,14 @@ function showNextSlide() {
 
     addCheckBoxWithText();
 
+    addImage();
+
     setSectorsVisible();
 
     setSectorsUnvisible();
 
     setGeodesicsVisible();
-
-    addImage();
-
+    
     setGeodesicsUnvisible();
 
     setMarksVisible();
