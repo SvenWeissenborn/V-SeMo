@@ -75,7 +75,7 @@ let slideContent = [
         text_en: 'Repeat this process for the secon geodesic.',
 
     },
-
+/*
     {
         id: 3,
         text_de: 'Für einen besseren Überblick kannst Du die Sektoren wieder in ihre Ausgangsposition zurücksetzen. Tippe dazu auf diesen Button:',
@@ -83,12 +83,19 @@ let slideContent = [
         slideCondition: [['buttonPressed', 'reset']],
         imageToAdd: ['button_icons/reset.png', buttonfactor, 125],
     },
-
+*/
     {
         id: 5,
-        text_de: 'Finde eine Möglichkeit, die Richtung der beiden Geodätenenden miteinander zu vergleichen.',
-        text_en: 'Find a way to compare the direction of the two geodesic ends.',
-        slideCondition: [['snappedSectors', [8, 11]]],
+        text_de: '',
+        text_en: '',
+        checkBoxesWithText: [
+            {
+                text_de: 'Finde eine Möglichkeit, die Richtungen der Enden beider Geodäten miteinander zu vergleichen.',
+                text_en: 'To do this, click on a part or the end point of a geodesic segment.',
+                type: 'tracker',
+                condition: ['snappedSectors', [8, 11]],
+            },
+        ]
     },
 
     {
