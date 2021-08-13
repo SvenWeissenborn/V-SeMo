@@ -3,7 +3,284 @@
 
 
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
-let canvas = new fabric.Canvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9'});
+
+
+fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.Canvas.prototype */ {
+
+    // Disable touch scroll when an element is selected
+    selectionCreatedHandler: function (e) {
+        fabric.util.setStyle(this.wrapperEl, {
+            'touch-action': 'none'
+        })
+        fabric.util.setStyle(this.upperCanvasEl, {
+            'touch-action': 'none'
+        })
+        fabric.util.setStyle(this.lowerCanvasEl, {
+            'touch-action': 'none'
+        })
+    },
+    // Re-Enable touch scroll when nothing is selected
+    selectionClearedHandler: function (e) {
+        fabric.util.setStyle(this.wrapperEl, {
+            'touch-action': 'manipulation'
+        })
+        fabric.util.setStyle(this.upperCanvasEl, {
+            'touch-action': 'manipulation'
+        })
+        fabric.util.setStyle(this.lowerCanvasEl, {
+            'touch-action': 'manipulation'
+        })
+    },
+    /**
+     * Be sure that touchstart reacts to multitouch on hammerjs
+     * @param e
+     * @private
+     */
+    _onMouseDown: function (e) {
+        if (e.type === 'touchstart') {
+            // Do not allow grouping in mobile mode
+            this.selection = false
+            fabric.util.removeListener(this.upperCanvasEl, 'mousedown', this._onMouseDown)
+            if (this.currentTouchStart) {
+                // Second event, stop this as this is multitouch
+                clearTimeout(this.currentTouchStart)
+                this.currentTouchStart = null
+            } else {
+                // First touch start, wait 100 ms then call
+                this.currentTouchStart = setTimeout(() => {
+                    this.currentTouchStart = null
+                    this.callSuper('_onMouseDown', e)
+                }, 75)
+            }
+        } else {
+            this.callSuper('_onMouseDown', e)
+        }
+    },
+
+    /**
+     * mouseup delay has to be set as well
+     * @param e
+     * @private
+     */
+    _onMouseUp: function (e) {
+        if (e.type === 'touchend') {
+            setTimeout(() => {
+                this.callSuper('_onMouseUp', e)
+            }, 75)
+        } else {
+            this.callSuper('_onMouseUp', e)
+        }
+    },
+
+    _onMouseMove: function (e) {
+        this.getActiveObject() && e.preventDefault && e.preventDefault()
+        this.__onMouseMove(e)
+    },
+
+    /**
+     * add hammerjs event handlers as well
+     * @param functor
+     * @param eventjsFunctor
+     */
+    addOrRemove: function (functor, eventjsFunctor) {
+        this.callSuper('addOrRemove', functor, eventjsFunctor)
+        var mc = new Hammer.Manager(this.wrapperEl)
+
+        // create a recognizer
+        var Pinch = new Hammer.Pinch()
+        var Rotate = new Hammer.Rotate()
+        Pinch.recognizeWith(Rotate)
+        //Rotate.dropRecognizeWith(Pinch)
+        // add the recognizer
+
+        mc.add(Rotate)
+        mc.add(Pinch)
+        // subscribe to events
+        let zoomStartScale
+        let zoomCenter
+
+        mc.on('pinchstart', function(ev){
+            //console.log('pinchstart')
+            //console.log(ev)
+
+        })
+
+        mc.on('pinchin', function(ev){
+            //console.log('pinchin')
+            //console.log(ev)
+
+        })
+
+        mc.on('pinchout', function(ev){
+            //console.log('pinchout')
+            //console.log(ev)
+        })
+
+        mc.on('pinchend', function(ev) {
+            //console.log('pinchend')
+            //console.log(ev)
+        })
+
+        mc.on('rotatestart', function (ev) {
+            //console.log('rotatestart')
+            //console.log(ev)
+        })
+
+        mc.on('rotate', function(ev){
+            //console.log('rotating')
+            //console.log(ev)
+        })
+
+        mc.on('rotateend', function(ev) {
+            //console.log('rotateend')
+            //console.log(ev)
+        })
+
+        let AngleStart
+        let scaleStart
+        mc.on('pinchstart', function (ev) {
+            validPinch = true;
+            AngleStart = ev.rotation
+            scaleStart = ev.scale
+            zoomCenter = ev.center;
+            zoomStartScale = canvas.getZoom();
+
+            //canvas.discardActiveObject()
+            if (canvas.getActiveObject() !== undefined){
+                if(canvas.getActiveObject() !== null){
+                    if (canvas.getActiveObject().parent !== undefined){
+                        isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
+                        if (sectorToSnap > -1){
+                            snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
+                        }
+
+                        drawSnapEdges(canvas.getActiveObject().parent.ID)
+                    }
+                }
+
+            }
+            //canvas.discardActiveObject()
+            //canvas.renderAll()
+
+            for (let ii = 0; ii < sectors.length; ii++){
+                sectors[ii].trapez.selectable = false;
+                sectors[ii].trapez.lockMovementX = true;
+                sectors[ii].trapez.lockMovementY = true;
+                sectors[ii].trapez.lockRotation = true;
+            }
+
+            geodreieck.selectable = false;
+            geodreieck.lockMovementX = true;
+            geodreieck.lockMovementY = true;
+            geodreieck.lockRotation = true;
+
+
+
+        });
+
+        let superValidPinch = false
+
+        mc.on('pinchin', function (ev) {
+            if (validPinch) {
+                //console.log(Math.abs(AngleStart - ev.rotation))
+                //console.log(Math.abs(scaleStart - ev.scale))
+
+            if (Math.abs(scaleStart - ev.scale || superValidPinch) > 0.05){
+                superValidPinch = true
+                let delta = zoomStartScale * ev.scale;
+                canvas.zoomToPoint(zoomCenter, delta)
+            }
+
+            }
+        });
+
+        mc.on('pinchout', function (ev) {
+            if (validPinch) {
+                //console.log(Math.abs(AngleStart - ev.rotation))
+                //console.log(Math.abs(scaleStart - ev.scale))
+
+                if (Math.abs(scaleStart - ev.scale || superValidPinch) > 0.05){
+                    superValidPinch = true
+                    let delta = zoomStartScale * ev.scale;
+                    canvas.zoomToPoint(zoomCenter, delta)
+                }
+            }
+        });
+
+        mc.on('pinchend', function (ev) {
+            validPinch = false;
+            superValidPinch = false
+            for (let ii = 0; ii < sectors.length; ii++){
+                sectors[ii].trapez.selectable = true
+                sectors[ii].trapez.lockMovementX = false;
+                sectors[ii].trapez.lockMovementY = false;
+                sectors[ii].trapez.lockRotation = false;
+            }
+            geodreieck.selectable = true;
+            geodreieck.lockMovementX = false;
+            geodreieck.lockMovementY = false;
+            geodreieck.lockRotation = false;
+
+            canvas.renderAll()
+        });
+
+        mc.on('rotatestart', (e) => {
+            this.initialRotateTheta = e.rotation - (this.getActiveObject() ? this.getActiveObject().angle : 0)
+            this.initialRotateAngle = this.getActiveObject() ? this.getActiveObject().angle : 0
+        })
+
+
+        mc.on('rotate', (e) => {
+
+            if (turnLorentzTransformOn == 1){
+                return
+            }
+
+            let object = this.getActiveObject()
+            if (object != undefined){
+                if (object.parent != undefined){
+                    object.lockMovementX = true;
+                    object.lockMovementY = true;
+                }
+            }
+
+
+            if (object) {
+                let rotationTheta = e.rotation - this.initialRotateTheta - this.initialRotateAngle
+                if (Math.abs(scaleStart - e.scale) > 0.35){
+                    validPinch = true
+                    return
+                }
+                if (Math.abs(rotationTheta) > 1) {
+
+                    validPinch = false
+                    let newRotationAngle = e.rotation - this.initialRotateTheta
+                    object.rotate(newRotationAngle)
+                    if (object.parent != undefined) {
+                        removeSnapEdges(object.parent.ID);
+                        isItTimeToSnap(object);
+                        updateMinions(object);
+                        removeDeficitAngleVisualize();
+                    }
+                }
+                this.requestRenderAll()
+            }
+        })
+        mc.on('rotateend', (e) => {
+            let object = this.getActiveObject()
+            if (object != undefined){
+                if (object.parent != undefined){
+                    object.lockMovementX = true;
+                    object.lockMovementY = true;
+                    //console.log(object)
+                }
+            }
+        })
+
+    }
+})
+
+let canvas = new fabric.HammerCanvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9',});
 
 //Hintergrundbild einfügen
 //canvas.setBackgroundImage('background_image.png', canvas.renderAll.bind(canvas));
@@ -498,89 +775,7 @@ canvas.on('mouse:move', function (o) {
 
 });
 
-//Zoomoptionen
-
-let pausePanning = false;
-
-//var el = document.getElementById("canvas-wrap");
-let ham = new Hammer(canvas.upperCanvasEl, {
-    domEvents: true
-});
-
-let validPinch = false;
-ham.get('pinch').set({ enable: true });
-
-
-let zoomStartScale
-let zoomCenter
-ham.on('pinchstart', function (ev) {
-    validPinch = true;
-
-    zoomCenter = ev.center;
-    zoomStartScale = canvas.getZoom();
-
-    //canvas.discardActiveObject()
-    if (canvas.getActiveObject() !== undefined){
-        if(canvas.getActiveObject() !== null){
-            if (canvas.getActiveObject().parent !== undefined){
-                isItTimeToSnap(sectors[canvas.getActiveObject().parent.ID].trapez)
-                if (sectorToSnap > -1){
-                    snapInitialSectorToTargetSector(canvas.getActiveObject().parent.ID, sectorToSnap)
-                }
-
-                drawSnapEdges(canvas.getActiveObject().parent.ID)
-            }
-        }
-
-    }
-    canvas.discardActiveObject()
-    canvas.renderAll()
-    for (let ii = 0; ii < sectors.length; ii++){
-        sectors[ii].trapez.selectable = false;
-        sectors[ii].trapez.lockMovementX = true;
-        sectors[ii].trapez.lockMovementY = true;
-        sectors[ii].trapez.lockRotation = true;
-    }
-
-    geodreieck.selectable = false;
-    geodreieck.lockMovementX = true;
-    geodreieck.lockMovementY = true;
-    geodreieck.lockRotation = true;
-
-
-
-});
-
-ham.on('pinchin', function (ev) {
-    if (validPinch) {
-        let delta = zoomStartScale * ev.scale;
-        canvas.zoomToPoint(zoomCenter, delta)
-    }
-});
-
-ham.on('pinchout', function (ev) {
-    if (validPinch) {
-        canvas.discardActiveObject();
-        let delta = zoomStartScale * ev.scale;
-        canvas.zoomToPoint(zoomCenter, delta)
-    }
-});
-
-ham.on('pinchend', function (ev) {
-    validPinch = false;
-    for (let ii = 0; ii < sectors.length; ii++){
-        sectors[ii].trapez.selectable = true
-        sectors[ii].trapez.lockMovementX = false;
-        sectors[ii].trapez.lockMovementY = false;
-        sectors[ii].trapez.lockRotation = false;
-    }
-    geodreieck.selectable = true;
-    geodreieck.lockMovementX = false;
-    geodreieck.lockMovementY = false;
-    geodreieck.lockRotation = false;
-
-    canvas.renderAll()
-});
+//Zoomoptionen Maus
 
 canvas.on('mouse:wheel', function(opt) {
     var delta = -opt.e.deltaY;
@@ -1402,7 +1597,8 @@ let selectedTool = 'grab';
 let epsilon = 0.0000001;
 let snap_radius_sectors = 8;
 let snap_radius_line = 15;
-let snap_radius_markPoint = 15;
+let snap_radius_markPoint = 30;
+let paddingStartMarks = 10;
 
 let snap_geodreieck_on_mark = 5;
 
@@ -2466,7 +2662,7 @@ function drawDragPoint(lineToGivePoint) {
         fill: lineSegment.stroke,
         perPixelTargetFind: false,
         hasBorders: false,
-        padding: 5,
+        padding: 15,
         objectCaching: false,
         selectable: false,
         lockMovementX: true,
@@ -4041,7 +4237,7 @@ function geodesicToMarkCalc() {
     if (markPoints.length > 0) {
         for (let ii = 0; ii < markPoints.length; ii++) {
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
-            if (distance(markPointCoords, pointer) < 10) {
+            if (distance(markPointCoords, pointer) < snap_radius_markPoint) {
                 return [true, ii];
             }
         }
@@ -5780,7 +5976,7 @@ function startMarks() {
             stroke: markStartStroke[ii],
             strokeWidth: markStartStrokeWidth[ii],
             fill: markStartFill[ii],
-            perPixelTargetFind: true,
+            perPixelTargetFind: false,
             hasBorders: false,
             objectCaching: false,
             lockMovementX: true,
@@ -5790,7 +5986,7 @@ function startMarks() {
             selectable: false,
             evented: false,
             hoverCursor: 'grabbing',
-            padding: 10
+            padding: paddingStartMarks,
         });
 
         mark.parentSector = markStartParentSector[ii];
