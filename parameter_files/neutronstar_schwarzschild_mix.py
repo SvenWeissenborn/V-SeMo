@@ -20,31 +20,30 @@ startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = []
+startGeodesicsSectors = [47, 58, 69,]
 # Winkel in Grad
-startGeodesicsAngle = []
+startGeodesicsAngle = [90, 140.99, 160]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.5, 0.5, 0.3]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [0.0001, 0.0001, 0.0001]
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = []
+startGeodesicsLength = [10, 10, 10]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = []
+startGeodesicsOperational = ['true', 'true', 'true']
 
 # Parameter fuer die Startmarkierungen
-startMarksSectors = [43, 102, 102]
-startMarksRadius = [5, 5, 5, ]
-startMarksOffset_x = [0.5, 0.5, 0.5,]
-startMarksOffset_y = [0.5, 0.2, 0.9, ]
+startMarksSectors = [43, 47, 58, 69, 80, 124]
+startMarksRadius = [5, 5, 5, 5, 5, 5]
+startMarksOffset_x = [0.5, 0.5, 0.5, 0.3, 0.75, 0.25]
+startMarksOffset_y = [0.5, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001]
 
 # Parameter fuer die Starttexte
-startTextsSectors = [43, 102, 102]
-startTextContent = ['Karl &\\n  Lisa', 'S1', 'S2']
-startTextsOffset_x = [0.6, 0.3, 0.3, ]
-startTextsOffset_y = [0.55, 0.2, 0.9, ]
-
+startTextsSectors = [43, 43, 47, 58, 69, 80, 124]
+startTextContent = ['Karl &\\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa', 'Lisa', 'Lisa']
+startTextsOffset_x = [0.6, 0.58, 0.7, 0.7, 0.5, 0.7, 0.3]
+startTextsOffset_y = [0.55, 0.55, 0.2, 0.2, 0.25, 0.25, 0.25]
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
     rotatedPoint_x = sector_center_x + (point_x_tmp - sector_center_x) * math.cos(sector_angle * math.pi / 180) - (point_y_tmp - sector_center_y) * math.sin(sector_angle * math.pi / 180)
@@ -65,7 +64,7 @@ def main():
 
 
 
-    file = io.open("neutronstar_schwarzschild_mix_chapter_2.js",'w')
+    file = io.open("neutronstar_schwarzschild_mix_chapter_1.js",'w')
 
     file.write( "/*" +"\n"
             "------Parameter-------" +"\n"
@@ -79,6 +78,11 @@ def main():
             "fontSizeStern: " + str(fontSizeStern) + "\n"    
             "fontSizeStern: " + str(fontSizeAussenraum) + "\n" 
             "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
+            "startGeodesicsAngle: " + str(startGeodesicsAngle) + "\n"
+            "startGeodesicsOffset_x: " + str(startGeodesicsOffset_x) + "\n"
+            "startGeodesicsOffset_y: " + str(startGeodesicsOffset_y) + "\n"
+            "startGeodesicsLength: " + str(startGeodesicsLength) + "\n"
+            "startGeodesicsOperational: " + str(startGeodesicsOperational) + "\n"                                                          
             "startMarksSectors: " + str(startMarksSectors) + "\n"
             "startMarksRadius: " + str(startMarksRadius) + "\n"
             "startMarksOffset_x: " + str(startMarksOffset_x) + "\n"
@@ -106,7 +110,7 @@ def main():
         "let line_colors = ['blue', 'blue', 'blue', 'black', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey', 'grey', 'grey', 'green', 'green', 'green'];")
+        "let mark_colors = ['grey', 'green', 'green', 'green', 'green', 'green'];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
