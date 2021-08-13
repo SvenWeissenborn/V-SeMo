@@ -40,6 +40,7 @@ exerciseText = new fabric.Textbox("Text", {
 });
 canvas_exercise_box.add(exerciseText);
 
+let backwardForwardPadding = 10
 
 let forward;
 
@@ -58,9 +59,10 @@ forward = new fabric.Triangle({
     hasBorders: false,
     hasControls: false,
     selectable: false,
-    perPixelTargetFind: true,
+    perPixelTargetFind: false,
     hoverCursor: "pointer",
     opacity: 1,
+    padding: backwardForwardPadding
 });
 
 forward.on('mouseup', function (o) {
@@ -112,9 +114,10 @@ backward = new fabric.Triangle({
     hasBorders: false,
     hasControls: false,
     selectable: false,
-    perPixelTargetFind: true,
+    perPixelTargetFind: false,
     hoverCursor: "pointer",
     opacity: 0,
+    padding: backwardForwardPadding,
 
 });
 
