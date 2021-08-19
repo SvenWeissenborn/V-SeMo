@@ -185,8 +185,9 @@ fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.C
                 //console.log(Math.abs(AngleStart - ev.rotation))
                 //console.log(Math.abs(scaleStart - ev.scale))
 
-            if (Math.abs(scaleStart - ev.scale || superValidPinch) > 0.05){
+            if (Math.abs(scaleStart - ev.scale) > 0.0005  || superValidPinch){
                 superValidPinch = true
+                
                 let delta = zoomStartScale * ev.scale;
                 canvas.zoomToPoint(zoomCenter, delta)
             }
@@ -199,8 +200,9 @@ fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.C
                 //console.log(Math.abs(AngleStart - ev.rotation))
                 //console.log(Math.abs(scaleStart - ev.scale))
 
-                if (Math.abs(scaleStart - ev.scale || superValidPinch) > 0.05){
+                if (Math.abs(scaleStart - ev.scale) > 0.0005 || superValidPinch){
                     superValidPinch = true
+                    canvas.discardActiveObject()
                     let delta = zoomStartScale * ev.scale;
                     canvas.zoomToPoint(zoomCenter, delta)
                 }
@@ -208,18 +210,22 @@ fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.C
         });
 
         mc.on('pinchend', function (ev) {
-            validPinch = false;
+
             superValidPinch = false
-            for (let ii = 0; ii < sectors.length; ii++){
-                sectors[ii].trapez.selectable = true
-                sectors[ii].trapez.lockMovementX = false;
-                sectors[ii].trapez.lockMovementY = false;
-                sectors[ii].trapez.lockRotation = false;
-            }
-            geodreieck.selectable = true;
-            geodreieck.lockMovementX = false;
-            geodreieck.lockMovementY = false;
-            geodreieck.lockRotation = false;
+
+            setTimeout(function(){
+                validPinch = false;
+                for (let ii = 0; ii < sectors.length; ii++){
+                    sectors[ii].trapez.selectable = true
+                    sectors[ii].trapez.lockMovementX = false;
+                    sectors[ii].trapez.lockMovementY = false;
+                    sectors[ii].trapez.lockRotation = false;
+                }
+                geodreieck.selectable = true;
+                geodreieck.lockMovementX = false;
+                geodreieck.lockMovementY = false;
+                geodreieck.lockRotation = false;
+            }, 300);
 
             canvas.renderAll()
         });
@@ -830,6 +836,7 @@ canvas.on('mouse:down', function(opt) {
 
 canvas.on('mouse:move', function(opt) {
     if (shiftPressed === true) return;
+    if (validPinch === true) return;
     if (this.isDragging) {
         var e = opt.e;
         let XCoord;
