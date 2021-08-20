@@ -4,7 +4,7 @@
 
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
 
-
+let validPinch = true
 fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.Canvas.prototype */ {
 
     // Disable touch scroll when an element is selected
@@ -1627,7 +1627,7 @@ if (textured == "1"){
 let abortlength = 20;
 
 let dragPointRadius = 5;
-let dragPointPadding = 15;
+let dragPointPadding = 10;
 
 let cursor;
 
@@ -2669,7 +2669,7 @@ function drawDragPoint(lineToGivePoint) {
         fill: lineSegment.stroke,
         perPixelTargetFind: false,
         hasBorders: false,
-        padding: 15,
+        padding: dragPointPadding,
         objectCaching: false,
         selectable: false,
         lockMovementX: true,

@@ -19,7 +19,7 @@ let screenFactor = Math.min(containerSize.width / canvasSize.width, containerSiz
 let buttonfactor = 0.4;
 //let buttonwidth = buttonfactor * win_width;
 //let buttonheight = win_height * 0.5;
-let buttondist = 15;
+let buttondist = 20;
 let textSize = win_width * 0.01 * screenFactor;
 let dist_to_top = 15;
 let dist_left = 51.5;
@@ -341,7 +341,15 @@ window.addEventListener('keydown',function(event){
 });
 */
 
-fabric.Image.fromURL('button_icons/restart.png', function(img) {
+let restartLang
+if(language !== "english"){
+    restartLang = 'button_icons/restart_de.png'
+}else{
+    restartLang = 'button_icons/restart_en.png'
+}
+
+
+fabric.Image.fromURL(restartLang, function(img) {
     let restart = img.set({
         left: dist_left ,
         top: dist_to_top + 0 * (136 * buttonfactor * screenFactor + buttondist),
@@ -417,7 +425,14 @@ if (showResetSectors == "1") {
     resetSectorsOpacity = 1 ;
 }
 
-fabric.Image.fromURL('button_icons/reset.png', function(img) {
+let resetLang
+if(language !== "english"){
+    resetLang = 'button_icons/reset_de.png'
+}else{
+    resetLang = 'button_icons/reset_en.png'
+}
+
+fabric.Image.fromURL(resetLang, function(img) {
     let reset = img.set({
         left: dist_left,
         top: dist_to_top + 1 * (136 * buttonfactor * screenFactor + buttondist),
@@ -466,8 +481,15 @@ if (showSetSectorsToRing == "1") {
     setSectorsToRingOpacity = 1 ;
 }
 
+let set_sectors_to_ringLang
+if(language !== "english"){
+    set_sectors_to_ringLang = 'button_icons/set_sectors_to_ring_de.png'
+}else{
+    set_sectors_to_ringLang = 'button_icons/set_sectors_to_ring_en.png'
+}
+
 let set_sectors_to_ring;
-fabric.Image.fromURL('button_icons/set_sectors_to_ring.png', function(img) {
+fabric.Image.fromURL(set_sectors_to_ringLang, function(img) {
     set_sectors_to_ring = img.set({
         left: dist_left,
         top: dist_to_top + dist_to_top_set_sectors_to_ring_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -535,8 +557,15 @@ fabric.Image.fromURL('grab.png', function(img) {
 });
 */
 
+let addLang
+if(language !== "english"){
+    addLang = 'button_icons/add_de.png'
+}else{
+    addLang = 'button_icons/add_en.png'
+}
+
 let add;
-fabric.Image.fromURL('button_icons/add.png', function(img) {
+fabric.Image.fromURL(addLang, function(img) {
      add = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_add_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -582,10 +611,15 @@ fabric.Image.fromURL('button_icons/add.png', function(img) {
     canvas_side_bar_perm.add(add);
 });
 
-
+let add_darkLang
+if(language !== "english"){
+    add_darkLang = 'button_icons/add_dark_de.png'
+}else{
+    add_darkLang = 'button_icons/add_dark_en.png'
+}
 
 let add_dark;
-fabric.Image.fromURL('button_icons/add_dark.png', function(img) {
+fabric.Image.fromURL(add_darkLang, function(img) {
     add_dark = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_add_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -633,8 +667,15 @@ if (showAddCurvedLine == "1") {
     add_curvedOpacity = 1 ;
 }
 
+let add_curvedLang
+if(language !== "english"){
+    add_curvedLang = 'button_icons/add_curved_de.png'
+}else{
+    add_curvedLang = 'button_icons/add_curved_en.png'
+}
+
 let add_curved;
-fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
+fabric.Image.fromURL(add_curvedLang, function(img) {
     add_curved = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_add_curved_line_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -681,9 +722,15 @@ fabric.Image.fromURL('button_icons/add_curved.png', function(img) {
 });
 
 
+let add_dark_curvedLang
+if(language !== "english"){
+    add_dark_curvedLang = 'button_icons/add_dark_curved_de.png'
+}else{
+    add_dark_curvedLang = 'button_icons/add_dark_curved_en.png'
+}
 
 let add_dark_curved;
-fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
+fabric.Image.fromURL(add_dark_curvedLang, function(img) {
     add_dark_curved = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_add_curved_line_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -726,8 +773,15 @@ fabric.Image.fromURL('button_icons/add_dark_curved.png', function(img) {
     canvas_side_bar_perm.add(add_dark_curved);
 });
 
+let undoLang
+if(language !== "english"){
+    undoLang = 'button_icons/undo_de.png'
+}else{
+    undoLang = 'button_icons/undo_en.png'
+}
+
 let undo;
-fabric.Image.fromURL('button_icons/undo.png', function(img) {
+fabric.Image.fromURL(undoLang, function(img) {
     undo = img.set({
         left: dist_left,
         top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -770,6 +824,7 @@ fabric.Image.fromURL('button_icons/undo.png', function(img) {
     canvas_side_bar_perm.add(undo);
 });
 
+
 let button_dreieck;
 
 
@@ -798,7 +853,14 @@ function addGeodreieck(geodreieckToAdd){
 
 }
 
-fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
+let button_dreieckLang
+if(language !== "english"){
+    button_dreieckLang = 'button_icons/button_dreieck_de.png'
+}else{
+    button_dreieckLang = 'button_icons/button_dreieck_en.png'
+}
+
+fabric.Image.fromURL(button_dreieckLang, function(img) {
     button_dreieck = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_geodreieck_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -842,8 +904,15 @@ fabric.Image.fromURL('button_icons/button_dreieck.png', function(img) {
     canvas_side_bar_perm.add(button_dreieck);
 });
 
+let button_dreieck_emptyLang
+if(language !== "english"){
+    button_dreieck_emptyLang = 'button_icons/button_dreieck_empty_de.png'
+}else{
+    button_dreieck_emptyLang = 'button_icons/button_dreieck_empty_en.png'
+}
+
 let button_dreieck_empty;
-fabric.Image.fromURL('button_icons/button_dreieck_empty.png', function(img) {
+fabric.Image.fromURL(button_dreieck_emptyLang, function(img) {
     button_dreieck_empty = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_geodreieck_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -998,8 +1067,16 @@ if (showAreaSector == "globe" || showAreaSector == "earth") {
     areaSectorOpacity = 1 ;
 }
 
+let area_sectorLang
+if(language !== "english"){
+    area_sectorLang = 'button_icons/area_sector_de.png'
+}else{
+    area_sectorLang = 'button_icons/area_sector_en.png'
+}
+
+
 let area_sector
-fabric.Image.fromURL('button_icons/area_sector.png', function(img) {
+fabric.Image.fromURL(area_sectorLang, function(img) {
     area_sector = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_showArea_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -1092,8 +1169,15 @@ if (showVerticesOn == "1") {
     verticesOnOpacity = 1 ;
 }
 
+let verticesOnLang
+if(language !== "english"){
+    verticesOnLang = 'button_icons/verticesOn_de.png'
+}else{
+    verticesOnLang = 'button_icons/verticesOn_en.png'
+}
+
 let verticesOn
-fabric.Image.fromURL('button_icons/verticesOn.png', function(img) {
+fabric.Image.fromURL(verticesOnLang, function(img) {
     verticesOn = img.set({
         left: dist_left,
         top:  dist_to_top + dist_to_top_verticesOn_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -1184,8 +1268,15 @@ infoboxDeficitAngleText = new fabric.Text("Text", {
 });
 canvas_side_bar_perm.add(infoboxDeficitAngleText);
 
+let deleteLang
+if(language !== "english"){
+    deleteLang = 'button_icons/delete_de.png'
+}else{
+    deleteLang = 'button_icons/delete_en.png'
+}
+
 let delete_whole;
-fabric.Image.fromURL('button_icons/delete.png', function(img) {
+fabric.Image.fromURL(deleteLang, function(img) {
     delete_whole = img.set({
         left: dist_left,
         top: dist_to_top + dist_to_top_delete_whole_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -1227,8 +1318,15 @@ fabric.Image.fromURL('button_icons/delete.png', function(img) {
 
 let lastPressedButton
 
+let set_sectorsLang
+if(language !== "english"){
+    set_sectorsLang = 'button_icons/set_sectors_de.png'
+}else{
+    set_sectorsLang = 'button_icons/set_sectors_en.png'
+}
+
 let set_sectors;
-fabric.Image.fromURL('button_icons/set_sectors.png', function(img) {
+fabric.Image.fromURL(set_sectorsLang, function(img) {
     set_sectors = img.set({
         left: dist_left,
         top: dist_to_top + dist_to_top_set_sectors_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -1338,8 +1436,14 @@ function moveDirectionButtons(visibleToSet){
     }
 }
 
+let directionLang
+if(language !== "english"){
+    directionLang = 'button_icons/direction_de.png'
+}else{
+    directionLang = 'button_icons/direction_en.png'
+}
 
-fabric.Image.fromURL('button_icons/direction.png', function(img) {
+fabric.Image.fromURL(directionLang, function(img) {
     direction = img.set({
         left: dist_left,
         top: dist_to_top + dist_to_top_direction_main_button_number * (136 * buttonfactor * screenFactor + buttondist),
@@ -1569,9 +1673,15 @@ fabric.Image.fromURL('button_icons/button_change_direction_clockwise_low.png', f
     canvas_side_bar_perm.add(change_direction_clockwise_low);
 });
 
+let autocompleteLang
+if(language !== "english"){
+    autocompleteLang = 'button_icons/autocomplete_de.png'
+}else{
+    autocompleteLang = 'button_icons/autocomplete_en.png'
+}
 
 let autocomplete;
-fabric.Image.fromURL('button_icons/autocomplete.png', function(img) {
+fabric.Image.fromURL(autocompleteLang, function(img) {
     autocomplete = img.set({
         left: dist_left,
         top: dist_to_top + (dist_to_top_auto_complete_main_button_number) * (136 * buttonfactor * screenFactor + buttondist),
@@ -1721,10 +1831,15 @@ function download_image(){
     link.click();
 }
 
-
+let cameraLang
+if(language !== "english"){
+    cameraLang = 'button_icons/camera_de.png'
+}else{
+    cameraLang = 'button_icons/camera_en.png'
+}
 
 let camera;
-fabric.Image.fromURL('button_icons/camera.png', function(img) {
+fabric.Image.fromURL(cameraLang, function(img) {
     camera = img.set({
 
         left: 300 * screenFactor - buttondist - 1.2 * 136 * buttonfactor * screenFactor,
@@ -1791,8 +1906,15 @@ let isMobile = {
     }
 };
 
+let fullscreenLang
+if(language !== "english"){
+    fullscreenLang = 'button_icons/fullscreen_de.png'
+}else{
+    fullscreenLang = 'button_icons/fullscreen_en.png'
+}
+
 let fullscreen;
-fabric.Image.fromURL('button_icons/fullscreen.png', function(img) {
+fabric.Image.fromURL(fullscreenLang, function(img) {
     fullscreen = img.set({
         left: 300 * screenFactor - buttondist,
         top: 80 * screenFactor- buttondist/2,
@@ -1886,8 +2008,15 @@ fabric.Image.fromURL('button_icons/fullscreen.png', function(img) {
     canvas_side_tools_right.add(fullscreen);
 });
 
+let exit_fullscreenLang
+if(language !== "english"){
+    exit_fullscreenLang = 'button_icons/exit_fullscreen_de.png'
+}else{
+    exit_fullscreenLang = 'button_icons/exit_fullscreen_en.png'
+}
+
 let exitFullscreen;
-fabric.Image.fromURL('button_icons/exit_fullscreen.png', function(img) {
+fabric.Image.fromURL(exit_fullscreenLang, function(img) {
     exitFullscreen = img.set({
         left: 300 * screenFactor - buttondist,
         top: 80 * screenFactor- buttondist/2,
@@ -1971,8 +2100,15 @@ fabric.Image.fromURL('button_icons/exit_fullscreen.png', function(img) {
     canvas_side_tools_right.add(exitFullscreen);
 });
 
+let zoomResetLang
+if(language !== "english"){
+    zoomResetLang = 'button_icons/zoomReset_de.png'
+}else{
+    zoomResetLang = 'button_icons/zoomReset_en.png'
+}
+
 let zoomReset;
-fabric.Image.fromURL('button_icons/zoomReset.png', function(img) {
+fabric.Image.fromURL(zoomResetLang, function(img) {
     zoomReset = img.set({
         left: 300 * screenFactor - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
         top: 80 * screenFactor - buttondist / 2,
@@ -2012,8 +2148,15 @@ fabric.Image.fromURL('button_icons/zoomReset.png', function(img) {
 
 });
 
+let helpLang
+if(language !== "english"){
+    helpLang = 'button_icons/help_de.png'
+}else{
+    helpLang = 'button_icons/help_en.png'
+}
+
 let help;
-fabric.Image.fromURL('button_icons/help.png', function(img) {
+fabric.Image.fromURL(helpLang, function(img) {
     help = img.set({
         left: 300 * screenFactor - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
         top: 80 * screenFactor - buttondist / 2,
