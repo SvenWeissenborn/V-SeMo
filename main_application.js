@@ -1623,6 +1623,12 @@ if (textured == "1"){
 }else{
     edgeColor = '#FFFFFF';
 }
+let laufContinueGeodesicMax
+if (defineLaufContinueGeodesicMax !== undefined){
+    laufContinueGeodesicMax = parseInt(defineLaufContinueGeodesicMax)
+}else{
+    laufContinueGeodesicMax= 1000
+}
 
 let abortlength = 20;
 
@@ -2347,7 +2353,7 @@ function continueGeodesic(geodesicToContinue) {
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
             }
 
-            for (lauf = 0; lauf < 1000; lauf++) {
+            for (lauf = 0; lauf < laufContinueGeodesicMax; lauf++) {
                 if (neighbourSectorID === -1 || sectors[neighbourSectorID].trapez.opacity !== startOpacity) {
                     drawDragPoint(geodesicToContinue);
                     break
@@ -2359,6 +2365,7 @@ function continueGeodesic(geodesicToContinue) {
                     }
                 }
 
+                console.log(lauf)
 
                 let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSectorID].trapez)
 

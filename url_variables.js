@@ -79,7 +79,8 @@ let showChangeStartPoint = getUrlVars()["showChangeStartPoint"];
 //turnOverlapControllOn=1& um die OverlapControll ein- und auszuschalten
 let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 
-
+//defineLaufContinueGeodesicMax=XX& XX is a number to limit the function
+let defineLaufContinueGeodesicMax = getUrlVars()["defineLaufContinueGeodesicMax"];
 
 
 
