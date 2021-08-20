@@ -4,7 +4,7 @@
 
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
 
-let validPinch = true
+let validPinch = false
 fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.Canvas.prototype */ {
 
     // Disable touch scroll when an element is selected
