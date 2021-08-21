@@ -141,7 +141,7 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen. Kehre nachdem du die letzte Route gezeichnet hast wieder zum Kurs zurück.',
+                text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 6, 5]],
