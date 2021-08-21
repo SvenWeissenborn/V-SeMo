@@ -63,45 +63,97 @@ let slideContent = [
 
     {
         id: 3,
-        text_de: 'Wir beginnen mit einer Städtereise, welche in Rom startet. Zeichne eine erste Route von Rom nach Kopenhagen ein.',
+        text_de: '',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
         marksToShow: [4, 5],
         textsToShow: [4, 5],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Wir beginnen mit einer Städtereise, welche in Rom startet. Zeichne eine erste Route von Rom nach Kopenhagen ein.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 4, 5]],
+            },
+        ],
 
     },
 
     {
         id: 4,
-        text_de: 'Von Kopenhagen geht es weiter nach Dublin. Zeichne auch diese Route ein.',
+        text_de: '',
         text_en: 'Join the sectors',
         sectorsToShow: [1],
         marksToShow: [1],
         textsToShow: [1],
 
+        checkBoxesWithText: [
+            {
+                text_de: 'Von Kopenhagen geht es weiter nach Dublin. Zeichne auch diese Route ein.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 5, 1]],
+            },
+        ],
+
     },
 
     {
         id: 5,
-        text_de: 'Nun wollen wir unsere Reise nach Casablanca in Marokko fortsetzen.',
+        text_de: '',
         text_en: '',
         sectorsToShow: [2],
         marksToShow: [2],
         textsToShow: [2],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Nun wollen wir unsere Reise nach Casablanca in Marokko fortsetzen.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 1, 2]],
+            },
+        ],
     },
 
     {
         id: 6,
-        text_de: 'Die letzte Station ist die tunesische Hauptstadt Tunis.',
+        text_de: '',
         text_en: 'Draw a line connecting the points M1 and M3.',
         sectorsToShow: [5],
         marksToShow: [6],
         textsToShow: [6],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Die letzte Station ist die tunesische Hauptstadt Tunis.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 2, 6]],
+            },
+        ],
     },
 
     {
         id: 7,
-        text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen. Kehre nachdem du die letzte Route gezeichnet hast wieder zum Kurs zurück.',
+        text_de: '',
         text_en: 'first text',
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen. Kehre nachdem du die letzte Route gezeichnet hast wieder zum Kurs zurück.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 6, 5]],
+            },
+        ],
+    },
+
+    {
+        id: 8,
+        text_de: 'Kehre wieder zum Kurs zurück.',
+        text_en: 'first text',
+
     },
 
 ];

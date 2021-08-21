@@ -1280,6 +1280,9 @@ canvas.on('mouse:up', function(opt) {
         toolChange('grab')
     }
 
+    console.log('by mouseUp')
+    checkCheckBoxCondition()
+
     lineTypeToDraw = ""
 });
 
@@ -2044,6 +2047,7 @@ function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeSta
 
     if (showExerciseBox == "1"){
         checkSlideCondition();
+        console.log('by changeStart')
         checkCheckBoxCondition();
     }
 }
@@ -2122,6 +2126,7 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
 
     if (showExerciseBox == "1"){
         checkSlideCondition();
+        console.log('by changeDirection')
         checkCheckBoxCondition();
     }
 }
@@ -2713,7 +2718,15 @@ function drawDragPoint(lineToGivePoint) {
         showGeodesicButtons(true);
 
         if (showExerciseBox == "1") {
-            checkCheckBoxCondition()
+            if (currentSlide.checkBoxesWithText !== undefined) {
+                for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
+                    if (currentSlide.checkBoxesWithText[ii].condition[0][0] == 'chosenLineGlobalID') {
+                        checkCheckBoxCondition()
+                        console.log('test')
+                    }
+                }
+
+            }
         }
 
         if (autoSetOnDraw == "1") {
@@ -5920,6 +5933,7 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
 
     if (showExerciseBox == "1"){
         checkSlideCondition();
+        console.log('by snap')
         checkCheckBoxCondition();
     }
 
@@ -6222,6 +6236,7 @@ function toolChange(argument) {
                 lines[ii][jj].on('mousedown', function () {
                     chosenLineGlobalID = this.ID[0];
                     if (showExerciseBox == "1") {
+                        console.log('by tool')
                         checkCheckBoxCondition()
                     }
                     for (let kk = 0; kk < lines.length; kk++){
