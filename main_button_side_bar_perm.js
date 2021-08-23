@@ -957,6 +957,7 @@ fabric.Image.fromURL(button_dreieck_emptyLang, function(img) {
             //toolChange('grab');
             addGeodreieck(false);
         }
+        canvas_side_bar_perm.renderAll()
     });
 
     canvas_side_bar_perm.add(button_dreieck_empty);
