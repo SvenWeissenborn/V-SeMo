@@ -75,7 +75,7 @@ let slideContent = [
         text_en: 'Repeat this process for the secon geodesic.',
 
     },
-/*
+
     {
         id: 3,
         text_de: 'Für einen besseren Überblick kannst Du die Sektoren wieder in ihre Ausgangsposition zurücksetzen. Tippe dazu auf diesen Button:',
@@ -83,7 +83,7 @@ let slideContent = [
         slideCondition: [['buttonPressed', 'reset']],
         imageToAdd: ['button_icons/reset.png', buttonfactor, 125],
     },
-*/
+
     {
         id: 5,
         text_de: '',

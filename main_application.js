@@ -2720,7 +2720,7 @@ function drawDragPoint(lineToGivePoint) {
         if (showExerciseBox == "1") {
             if (currentSlide.checkBoxesWithText !== undefined) {
                 for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++) {
-                    if (currentSlide.checkBoxesWithText[ii].condition[0][0] == 'chosenLineGlobalID') {
+                    if (currentSlide.checkBoxesWithText[ii].condition[0] == 'choseGeodesic') {
                         checkCheckBoxCondition()
                         console.log('test')
                     }

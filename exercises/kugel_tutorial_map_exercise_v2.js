@@ -62,6 +62,13 @@ let slideContent = [
     },
 
     {
+        id: 2,
+        text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
+        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+    },
+
+
+    {
         id: 3,
         text_de: '',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
