@@ -29,24 +29,24 @@ lineStrokeWidthWhenNotSelected = 2
 lineStrokeWidthWhenSelected = 5
 
 #Parameter fuer die Startgeodaeten
-startGeodesicsSectors = []
+startGeodesicsSectors = [2, 2]
 #Winkel in Grad
-startGeodesicsAngle = []
+startGeodesicsAngle = [40, 40]
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = []
+startGeodesicsOffset_x = [0.1, 0.35]
 #Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = []
+startGeodesicsOffset_y = [0.55, 0.05]
 #Laenge der Geodaete in Pixel
-startGeodesicsLength = []
+startGeodesicsLength = [80, 80]
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [2, 3, 8]
-startMarksRadius = [5, 5, 5]
-startMarksOffset_x = [0.5, 0.5, 0.5,]
-startMarksOffset_y = [0.5, 0.5, 0.5,]
+startMarksSectors = [6, 6]
+startMarksRadius = [5, 5]
+startMarksOffset_x = [0.952, 0.96]
+startMarksOffset_y = [0.73, 0.6]
 
 #Parameter fuer die Starttexte
 startTextsSectors = []
@@ -82,7 +82,7 @@ def main():
     zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
     zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
-    file = io.open("kugelmetrik_triangle.js",'w')
+    file = io.open("kugelmetrik.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"

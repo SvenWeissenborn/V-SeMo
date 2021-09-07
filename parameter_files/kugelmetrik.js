@@ -17,10 +17,10 @@ startGeodesicsOffset_x: [0.1, 0.35]
 startGeodesicsOffset_y: [0.55, 0.05]
 startGeodesicsLength: [80, 80]
 startGeodesicsOperational: []
-startMarksSectors: [2, 3, 8]
-startMarksRadius: [5, 5, 5]
-startMarksOffset_x: [0.5, 0.5, 0.5]
-startMarksOffset_y: [0.5, 0.5, 0.5]
+startMarksSectors: [6, 6]
+startMarksRadius: [5, 5]
+startMarksOffset_x: [0.952, 0.96]
+startMarksOffset_y: [0.73, 0.6]
 startTextsSectors: []
 startTextContent: []
 startTextsOffset_x: []
@@ -64,14 +64,14 @@ startFill= [ line_colors[0], line_colors[1], ];
 startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [2,0], [2,1], ];
 startLineID= [ [0,1], [1,1], ];
-markStart_x= [ -201.88137789230137, 0.0, 201.88137789230134, ];
-markStart_y= [ 206.33725590674183, -202.1124186355806, 206.33725590674183, ];
-markStartStrokeWidth= [ 2, 2, 2, ];
-markStartRadius= [ 5, 5, 5, ];
-markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], ];
-markStartParentSector= [ [2,0], [3,0], [8,0], ];
-markStartID= [ [0,1], [1,1], [2,1], ];
+markStart_x= [ 279.57176069962156, 280.94681172275995, ];
+markStart_y= [ -242.1841312079477, -219.53490236269673, ];
+markStartStrokeWidth= [ 2, 2, ];
+markStartRadius= [ 5, 5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], ];
+markStartParentSector= [ [6,0], [6,1], ];
+markStartID= [ [0,1], [1,1], ];
 textStart_x= [ ];
 textStart_y= [ ];
 textStartContent= [ ];

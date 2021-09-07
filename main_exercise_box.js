@@ -868,6 +868,43 @@ function checkSlideCondition() {
                 }
             }
 
+            if (currentSlide.slideCondition[ii][0] == 'linesTouchMarks') {
+
+                if (chosenLineGlobalID == -1) {
+                    return
+                }
+
+                let lineTouchesMark = false;
+
+                for (let jj = 1; jj < currentSlide.slideCondition[ii].length; jj++){
+
+                    lineID = currentSlide.slideCondition[ii][jj][0]
+
+                    let markID = currentSlide.slideCondition[ii][jj][1]
+
+                    let lineEndPoint = new fabric.Point(lines[lineID][lines[lineID].length - 1].calcLinePoints().x2, lines[lineID][lines[lineID].length - 1].calcLinePoints().y2)
+                    lineEndPoint = fabric.util.transformPoint(lineEndPoint, lines[lineID][lines[lineID].length - 1].calcTransformMatrix());
+
+                    if (lines[lineID][lines[lineID].length - 1].parentSector[0] == markPoints[markID].parentSector[0]) {
+                        if (Math.abs(lineEndPoint.x - markPoints[markID].left) < 10 && Math.abs(lineEndPoint.y - markPoints[markID].top) < 10) {
+                            lineTouchesMark = true
+                        }
+                        else{
+                            lineTouchesMark = false
+                            return
+                        }
+                    }else{
+                        lineTouchesMark = false
+                        return
+                    }
+
+                }
+                console.log(lineTouchesMark)
+                if (lineTouchesMark == true){
+                    conditionIsFulfilled = true
+                }
+            }
+
         }
 
 

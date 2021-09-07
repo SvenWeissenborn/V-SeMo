@@ -2,7 +2,7 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
-nSektorzeilenVonRing = 11
+nSektorzeilenVonRing = 3
 nSektorspaltenVonRing = 12
 
 nSektorzeilenVonRingSchwarzschild = 3
@@ -13,34 +13,34 @@ dr = 1.25
 dradius = dr * schwarzschildradius
 
 #Kameraeinstellungen
-startZoom = 0.45
-startViewportTransform_4 = 500
-startViewportTransform_5 = 300
+startZoom = 1
+startViewportTransform_4 = 0
+startViewportTransform_5 = 0
 
 fontSize = 15
 
-lineStrokeWidthWhenNotSelected = 5
-lineStrokeWidthWhenSelected = 10
+lineStrokeWidthWhenNotSelected = 2
+lineStrokeWidthWhenSelected = 5
 
 # Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [109]
+startGeodesicsSectors = [29, 29]
 # Winkel in Grad
-startGeodesicsAngle = [-90]
+startGeodesicsAngle = [-70, -120]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.9]
+startGeodesicsOffset_x = [0.5, 0.5]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.95]
+startGeodesicsOffset_y = [0.7, 0.7]
 # Laenge der Geodaete in Pixel
-startGeodesicsLength = [50]
+startGeodesicsLength = [50, 50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = ['true']
 
 # Parameter fuer die Startmarkierungen
-startMarksSectors = []
-startMarksRadius = []
-startMarksOffset_x = []
-startMarksOffset_y = []
+startMarksSectors = [14, 11]
+startMarksRadius = [5, 5]
+startMarksOffset_x = [0.22, 0.9]
+startMarksOffset_y = [0.99, 0.99]
 
 # Parameter fuer die Starttexte
 startTextsSectors = []
@@ -64,13 +64,14 @@ def main():
     dphi = (2*math.pi/nSektorspaltenVonRing)
 
 
-    sector_y_dist = 0.0
+    sector_y_dist = 10.0
 
 
 
     #file = io.open("schwarzschildmetrik_parallel.js",'w')
-    file = io.open("schwarzschildmetrik_big_model.js", 'w')
+    #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
+    file = io.open("schwarzschildmetrik_zwei_signale.js", 'w')
 
     file.write(
         "startZoom =" + str(startZoom) + "\n"
@@ -209,7 +210,7 @@ def main():
 
 
             if (ringzeile != 0):
-                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 10
+                sector_y_dist = sector_height / 2 + sectorValues[sectorDict["sec_height"]][ringzeile-1] / 2 + sector_y_dist + 20
             else:
                 sector_y_dist = dradius + sector_height/2 + 30
 

@@ -39,16 +39,16 @@ startGeodesicsLength = [70, 70]
 startGeodesicsOperational = ['true', 'true']
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [2, 3, 8]
-startMarksRadius = [5, 5, 5]
-startMarksOffset_x = [0.5, 0.5, 0.5]
-startMarksOffset_y = [0.5, 0.5, 0.5]
+startMarksSectors = [6, 7]
+startMarksRadius = [5, 5]
+startMarksOffset_x = [0.81, 0.99]
+startMarksOffset_y = [0.99, 0.84]
 
 #Parameter fuer die Starttexte
-startTextsSectors = [2, 3, 8]
-startTextContent = ['M1', 'M2', 'M3']
-startTextsOffset_x = [0.4, 0.4, 0.6]
-startTextsOffset_y = [0.4, 0.6, 0.4]
+startTextsSectors = []
+startTextContent = []
+startTextsOffset_x = []
+startTextsOffset_y = []
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
 

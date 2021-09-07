@@ -1280,8 +1280,12 @@ canvas.on('mouse:up', function(opt) {
         toolChange('grab')
     }
 
-    console.log('by mouseUp')
-    checkCheckBoxCondition()
+
+    if (showExerciseBox == "1"){
+        checkSlideCondition();
+        console.log('by mouseUp')
+        checkCheckBoxCondition();
+    }
 
     lineTypeToDraw = ""
 });
