@@ -32,6 +32,7 @@ let slideContent = [
         id: 0,
         text_de: 'Vervollständige die beiden Startstriche als Geodäten bis zum Rand des Sektormodells.\n \nÜberlege dazu:\n1. Wie verläuft eine Geodäte innerhalb eines Sektors?\n2. Was musst Du tun, um eine Geodäte im nächsten Sektor fortzusetzen?',
         text_en: 'Complete the two starting lines as geodesics to the edge of the sector model.\n \nConsider:\n1. How does a geodesic run within a sector?\n2. What do you have to do to continue a geodesic in the next sector?',
+        marksToHide: [0, 1],
         slideCondition: [['linesTouchMarks', [0, 0], [1, 1]]],
     },
 
