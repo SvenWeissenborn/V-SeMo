@@ -990,8 +990,9 @@ canvas.on('mouse:up', function(opt) {
                 lineStart_y = lineEnd_y;
             }
 
-            history.push(immediatehistory);
-
+            if (immediatehistory.length !== 1){
+                history.push(immediatehistory);
+            }
 
             if (lineSegment === undefined) {
                 lineSegment = lines[lineContinueAt][lines[lineContinueAt].length - 1];
