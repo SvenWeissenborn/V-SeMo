@@ -939,8 +939,11 @@ canvas.on('mouse:up', function(opt) {
                             lambdas.push(1.0);
                         }
                     } else {
-                        lambdas.push(schnittpunktsparameters[ii][0])
+
+                        //ACHTUNG: Die -0.00001 sind eine Verringerung des Lamda-Wertes, damit die Linie nicht exakt auf der Kante liegen wird
+                        lambdas.push(schnittpunktsparameters[ii][0] - 0.00001)
                         break
+
                     }
                 }
             } else {
@@ -969,7 +972,7 @@ canvas.on('mouse:up', function(opt) {
 
                 parentSectorID = getParentSectorOfPoint(mittelpunktlineSegment)
 
-                if (Math.abs(lineEnd_x - lineStart_x) > epsilon || Math.abs(lineEnd_y - lineStart_y) > epsilon) {
+                if (Math.abs(lineEnd_x - lineStart_x) > 1 || Math.abs(lineEnd_y - lineStart_y) > 1) {
                     lineSegment = drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
 
                     if (lineContinueAt !== -1) {
