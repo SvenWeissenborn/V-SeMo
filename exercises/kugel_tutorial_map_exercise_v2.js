@@ -71,16 +71,16 @@ let slideContent = [
     {
         id: 3,
         text_de: '',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: '',
         marksToShow: [4, 5],
         textsToShow: [4, 5],
 
         checkBoxesWithText: [
             {
-                text_de: 'Wir beginnen mit einer Städtereise, welche in Rom startet. Zeichne eine erste Route von Rom nach Kopenhagen ein.',
+                text_de: 'Wir beginnen mit einer Städtereise, welche in Kopenhagen startet. Zeichne eine erste Route von Kopenhagen nach Rom ein.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
-                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 4, 5]],
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 5, 4]],
             },
         ],
 
@@ -90,16 +90,16 @@ let slideContent = [
         id: 4,
         text_de: '',
         text_en: 'Join the sectors',
-        sectorsToShow: [1],
-        marksToShow: [1],
-        textsToShow: [1],
+        sectorsToShow: [5],
+        marksToShow: [6],
+        textsToShow: [6],
 
         checkBoxesWithText: [
             {
-                text_de: 'Von Kopenhagen geht es weiter nach Dublin. Zeichne auch diese Route ein.',
-                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                text_de: 'Von Rom geht es weiter nach Tunis. Zeichne auch diese Route ein.',
+                text_en: '',
                 type: 'tracker',
-                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 5, 1]],
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 4, 6]],
             },
         ],
 
@@ -118,7 +118,7 @@ let slideContent = [
                 text_de: 'Nun wollen wir unsere Reise nach Casablanca in Marokko fortsetzen.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
-                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 1, 2]],
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 6, 2]],
             },
         ],
     },
@@ -126,17 +126,17 @@ let slideContent = [
     {
         id: 6,
         text_de: '',
-        text_en: 'Draw a line connecting the points M1 and M3.',
-        sectorsToShow: [5],
-        marksToShow: [6],
-        textsToShow: [6],
+        text_en: '',
+        sectorsToShow: [1],
+        marksToShow: [1],
+        textsToShow: [1],
 
         checkBoxesWithText: [
             {
-                text_de: 'Die letzte Station ist die tunesische Hauptstadt Tunis.',
+                text_de: 'Die letzte Station ist die irische Hauptstadt Dublin.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
-                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 2, 6]],
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 2, 1]],
             },
         ],
     },
@@ -148,10 +148,10 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Rom nehmen.',
+                text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Kopenhagen nehmen.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
-                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 6, 4]],
+                condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 1, 5]],
             },
         ],
     },
