@@ -536,10 +536,56 @@ canvas.on('mouse:move', function (o) {
             line.stroke = color;
             line.fill = color;
 
-            for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
-                if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
-                    line.stroke = 'red';
-                    line.fill = 'red';
+            if (schnittpunktsparameters.length > 0) {
+                for (let ii = 0; ii < schnittpunktsparameters.length; ii++) {
+                    if (sectors[schnittpunktsparameters[ii][1]].snapStatus[schnittpunktsparameters[ii][2]] == 0) {
+
+                        let lineStart_x = line.x1;
+                        let lineStart_y = line.y1;
+
+                        let lineEnd_x;
+                        let lineEnd_y;
+
+                        if (schnittpunktsparameters[ii][0] < epsilon) {
+                            schnittpunktsparameters[ii][0] = 0
+
+                            let pointIsInSectorWithID;
+
+                            if (schnittpunktsparameters.length == 1) {
+                                lineEnd_x = xg1 + 1.0 * (xg2 - xg1);
+                                lineEnd_y = yg1 + 1.0 * (yg2 - yg1);
+
+                                let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
+
+                                pointIsInSectorWithID = getParentSectorOfPoint(mittelpunktlineSegment)
+
+                                if (pointIsInSectorWithID !== lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0]) {
+                                    line.stroke = 'red';
+                                    line.fill = 'red';
+                                }
+                            } else {
+
+                                lineEnd_x = xg1 + schnittpunktsparameters[1][0] * (xg2 - xg1);
+                                lineEnd_y = yg1 + schnittpunktsparameters[1][0] * (yg2 - yg1);
+
+                                let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
+
+                                pointIsInSectorWithID = getParentSectorOfPoint(mittelpunktlineSegment)
+
+                                if (pointIsInSectorWithID !== lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0]) {
+                                    line.stroke = 'red';
+                                    line.fill = 'red';
+                                }
+                            }
+
+
+                        }else{
+                            line.stroke = 'red';
+                            line.fill = 'red';
+                        }
+
+
+                    }
                 }
             }
 
@@ -907,6 +953,13 @@ canvas.on('mouse:up', function(opt) {
             xg2 = line.x2;
             yg1 = line.y1;
             yg2 = line.y2;
+
+            let lineStart_x = line.x1;
+            let lineStart_y = line.y1;
+
+            let lineEnd_x;
+            let lineEnd_y;
+
             let zoom = canvas.getZoom();
 
             if (distance(new fabric.Point(xg1, yg1), new fabric.Point(xg2, yg2)) < abortlength) {
@@ -940,9 +993,47 @@ canvas.on('mouse:up', function(opt) {
                         }
                     } else {
 
-                        //ACHTUNG: Die -0.00001 sind eine Verringerung des Lamda-Wertes, damit die Linie nicht exakt auf der Kante liegen wird
-                        lambdas.push(schnittpunktsparameters[ii][0] - 0.00001)
-                        break
+                        if(schnittpunktsparameters[ii][0] < epsilon){
+                            schnittpunktsparameters[ii][0] = 0
+
+                            let pointIsInSectorWithID;
+
+                            if (schnittpunktsparameters.length == 1){
+                                lineEnd_x = xg1 + 1.0 * (xg2 - xg1);
+                                lineEnd_y = yg1 + 1.0 * (yg2 - yg1);
+
+                                let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
+
+                                pointIsInSectorWithID = getParentSectorOfPoint(mittelpunktlineSegment)
+
+                                if (pointIsInSectorWithID == lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0]) {
+                                    lambdas.push(1.0)
+                                } else{
+                                    lambdas.push(schnittpunktsparameters[0][0])
+                                    break
+                                }
+
+
+                            } else {
+
+                                lineEnd_x = xg1 + schnittpunktsparameters[1][0] * (xg2 - xg1);
+                                lineEnd_y = yg1 + schnittpunktsparameters[1][0] * (yg2 - yg1);
+
+                                let mittelpunktlineSegment = new fabric.Point(lineStart_x + (lineEnd_x - lineStart_x) / 2, lineStart_y + (lineEnd_y - lineStart_y) / 2);
+
+                                pointIsInSectorWithID = getParentSectorOfPoint(mittelpunktlineSegment)
+
+                                if (pointIsInSectorWithID !== lines[lineContinueAt][lines[lineContinueAt].length - 1].parentSector[0]) {
+                                    break
+                                }
+                            }
+
+
+                        } else{
+                            lambdas.push(schnittpunktsparameters[ii][0])
+                            break
+                        }
+
 
                     }
                 }
@@ -952,12 +1043,9 @@ canvas.on('mouse:up', function(opt) {
             }
 
             canvas.remove(line);
-            let lineStart_x = line.x1;
-            let lineStart_y = line.y1;
 
-            let lineEnd_x;
-            let lineEnd_y;
-
+            lineStart_x = line.x1;
+            lineStart_y = line.y1;
 
             let lineSegment
             let geodesic = [];
