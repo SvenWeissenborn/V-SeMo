@@ -77,7 +77,7 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Wir beginnen mit einer Städtereise, welche in Kopenhagen startet. Zeichne eine erste Route von Kopenhagen nach Rom ein.',
+                text_de: 'Wir beginnen mit einer Städtereise, welche in Kopenhagen startet. Zeichne eine erste Route von Kopenhagen nach Monaco ein.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 5, 4]],
@@ -96,7 +96,7 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Von Rom geht es weiter nach Tunis. Zeichne auch diese Route ein.',
+                text_de: 'Von Monaco geht es weiter nach Tunis. Zeichne auch diese Route ein.',
                 text_en: '',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 4, 6]],

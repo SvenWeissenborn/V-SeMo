@@ -29,33 +29,30 @@ lineStrokeWidthWhenNotSelected = 2
 lineStrokeWidthWhenSelected = 5
 
 #Parameter fuer die Startgeodaeten
-startGeodesicsSectors = [2, 2]
+startGeodesicsSectors = []
 #Winkel in Grad
-startGeodesicsAngle = [40, 40]
+startGeodesicsAngle = []
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.1, 0.35]
+startGeodesicsOffset_x = []
 #Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.55, 0.05]
+startGeodesicsOffset_y = []
 #Laenge der Geodaete in Pixel
-startGeodesicsLength = [80, 80]
+startGeodesicsLength = []
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [6, 6]
-startMarksRadius = [5, 5]
-startMarksOffset_x = [0.952, 0.96]
-startMarksOffset_y = [0.73, 0.6]
+startMarksSectors = [0, 1, 2, 3, 4, 4, 5]
+startMarksRadius = [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
+startMarksOffset_x = [0.52, 0.8, 0.68, 0.36, 0.25, 0.35, 0.4]
+startMarksOffset_y = [0.27, 0.68, 0.68, 0.8, 0.2, 0.8, 0.84]
 
 #Parameter fuer die Starttexte
-startTextsSectors = []
-startTextContent = []
-startTextsOffset_x = []
-startTextsOffset_y = []
-
-
-
+startTextsSectors = [0, 1, 2, 3, 4, 4, 5]
+startTextContent = ['Reykjavik', 'Dublin', 'Casablanca', 'Helsinki', 'Monaco', 'Kopenhagen', 'Tunis']
+startTextsOffset_x = [0.5, 0.62, 0.42, 0.65, 0.45, 0.62, 0.55]
+startTextsOffset_y = [0.37, 0.68, 0.68, 0.8, 0.2, 0.8, 0.84]
 
 
 def main():
@@ -82,35 +79,35 @@ def main():
     zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
     zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
-    file = io.open("kugelmetrik.js",'w')
+    file = io.open("kugelmetrik_tutorial_map_v2.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
-                "nSectorRowsFromSphere: " + str(nSectorRowsFromSphere) + "\n"
-                "nSectorColumnsFromSphere: " + str(nSectorColumnsFromSphere) + "\n"
-                "radius: " + str(radius) + "\n"
-                "nRowsInModel: " + str(nRowsInModel) + "\n"
-                "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
-                "sectorDistance_x: " + str(sectorDistance_x) + "\n"
-                "sectorDistance_y: " + str(sectorDistance_y) + "\n"
+                "nSectorRowsFromSphere = " + str(nSectorRowsFromSphere) + "\n"
+                "nSectorColumnsFromSphere = " + str(nSectorColumnsFromSphere) + "\n"
+                "radius = " + str(radius) + "\n"
+                "nRowsInModel = " + str(nRowsInModel) + "\n"
+                "nColumnsInModel = " + str(nColumnsInModel) + "\n"                                                        
+                "sectorDistance_x = " + str(sectorDistance_x) + "\n"
+                "sectorDistance_y = " + str(sectorDistance_y) + "\n"
                 "startZoom =" + str(startZoom) + "\n"
                 "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
                 "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
-                "fontSize: " + str(fontSize) + "\n"
-                "startGeodesicsSectors: " + str(startGeodesicsSectors) + "\n"  
-                "startGeodesicsAngle: " + str(startGeodesicsAngle) + "\n"    
-                "startGeodesicsOffset_x: " + str(startGeodesicsOffset_x) + "\n"
-                "startGeodesicsOffset_y: " + str(startGeodesicsOffset_y) + "\n"  
-                "startGeodesicsLength: " + str(startGeodesicsLength) + "\n"   
-                "startGeodesicsOperational: " + str(startGeodesicsOperational) + "\n" 
-                "startMarksSectors: " + str(startMarksSectors) + "\n"
-                "startMarksRadius: " + str(startMarksRadius) + "\n"
-                "startMarksOffset_x: " + str(startMarksOffset_x) + "\n"
-                "startMarksOffset_y: " + str(startMarksOffset_y) + "\n"                                               
-                "startTextsSectors: " + str(startTextsSectors) + "\n"
-                "startTextContent: " + str(startTextContent) + "\n"
-                "startTextsOffset_x: " + str(startTextsOffset_x) + "\n"
-                "startTextsOffset_y: " + str(startTextsOffset_y) + "\n"
+                "fontSize = " + str(fontSize) + "\n"
+                "startGeodesicsSectors = " + str(startGeodesicsSectors) + "\n"  
+                "startGeodesicsAngle = " + str(startGeodesicsAngle) + "\n"    
+                "startGeodesicsOffset_x = " + str(startGeodesicsOffset_x) + "\n"
+                "startGeodesicsOffset_y = " + str(startGeodesicsOffset_y) + "\n"  
+                "startGeodesicsLength = " + str(startGeodesicsLength) + "\n"   
+                "startGeodesicsOperational = " + str(startGeodesicsOperational) + "\n" 
+                "startMarksSectors = " + str(startMarksSectors) + "\n"
+                "startMarksRadius = " + str(startMarksRadius) + "\n"
+                "startMarksOffset_x = " + str(startMarksOffset_x) + "\n"
+                "startMarksOffset_y = " + str(startMarksOffset_y) + "\n"                                               
+                "startTextsSectors = " + str(startTextsSectors) + "\n"
+                "startTextContent = " + str(startTextContent) + "\n"
+                "startTextsOffset_x = " + str(startTextsOffset_x) + "\n"
+                "startTextsOffset_y = " + str(startTextsOffset_y) + "\n"
                 "----------------------"
                 + "\n"
                   "*/"
@@ -130,7 +127,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey', 'grey', 'grey', 'grey'];")
+        "let mark_colors = ['black', 'black','black','black','black','black','black','black','black', 'grey', 'grey', 'grey'];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
