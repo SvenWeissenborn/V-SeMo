@@ -1050,8 +1050,10 @@ function checkCheckBoxCondition() {
                         }
                     }
 
-                    if (lines[lineID][jj].parentSector[0] == markPoints[mark2ID].parentSector[0]) {
-                        if (Math.abs(lineStartPoint.x - point_2_x) < epsilon && Math.abs(lineStartPoint.y - point_2_y) < epsilon || Math.abs(lineEndPoint.x - point_2_x) < epsilon && Math.abs(lineEndPoint.y - point_2_y) < epsilon) {
+                    console.log(lines[lineID][lines[lineID].length - 1].dragPoint.top)
+
+                    if (lines[lineID][lines[lineID].length - 1].parentSector[0] == markPoints[mark2ID].parentSector[0]) {
+                        if (Math.abs(lines[lineID][lines[lineID].length - 1].dragPoint.left - point_2_x) < epsilon && Math.abs(lines[lineID][lines[lineID].length - 1].dragPoint.top - point_2_y) < epsilon || Math.abs(lineEndPoint.x - point_2_x) < epsilon && Math.abs(lineEndPoint.y - point_2_y) < epsilon) {
                             check_2 = true
                         }
                     }
