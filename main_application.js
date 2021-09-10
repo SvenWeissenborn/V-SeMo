@@ -432,30 +432,30 @@ canvas.on('mouse:move', function (o) {
                     beta = - beta
                 }
 
-                //Richtung der restlichen Geodäte
-                if (Math.abs(alpha - beta) <= Math.PI / 36) {
-                    line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
-                } else {
+                let geodesicNearToMark = geodesicToMarkCalc();
 
-                    //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+                if (geodesicNearToMark[0]) {
+                    geodesicToMark(geodesicNearToMark[1]);
+                }else {
 
-                    if (geodesicToGeodreieckCalc()) {
-                        geodesicToGeodreieck();
-                    } else if (geodesicToStartCalc()) {
-                        geodesicToStart();
-
+                    //Richtung der restlichen Geodäte
+                    if (Math.abs(alpha - beta) <= Math.PI / 36) {
+                        line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
                     } else {
-                        let geodesicNearToMark = geodesicToMarkCalc();
 
-                        if (geodesicNearToMark[0]) {
-                            geodesicToMark(geodesicNearToMark[1]);
-                        } else {
+                        //Wenn der Der Geodreieck-Empty-Button sichtbar ist
 
-                            //Linienende sitzt am Cursor
-                            line.set({x2: pointer.x, y2: pointer.y})
+                        if (geodesicToGeodreieckCalc()) {
+                            geodesicToGeodreieck();
+                        } else if (geodesicToStartCalc()) {
+                            geodesicToStart();
+
+                            } else {
+                                //Linienende sitzt am Cursor
+                                line.set({x2: pointer.x, y2: pointer.y})
+
                         }
                     }
-                    ;
                 }
             } else {
                 let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
@@ -465,31 +465,33 @@ canvas.on('mouse:move', function (o) {
                     beta = - beta
                 }
 
-                if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
-                    line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
+                let geodesicNearToMark = geodesicToMarkCalc();
+
+                if (geodesicNearToMark[0]) {
+                    geodesicToMark(geodesicNearToMark[1]);
                 } else {
 
-                    //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-
-                    if (geodesicToGeodreieckCalc()) {
-                        geodesicToGeodreieck();
-                    } else if (geodesicToStartCalc()) {
-                        geodesicToStart();
-
+                    if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
+                        line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
                     } else {
-                        let geodesicNearToMark = geodesicToMarkCalc();
 
-                        if (geodesicNearToMark[0]) {
-                            geodesicToMark(geodesicNearToMark[1]);
+                        //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+
+                        if (geodesicToGeodreieckCalc()) {
+                            geodesicToGeodreieck();
+                        } else if (geodesicToStartCalc()) {
+                            geodesicToStart();
+
                         } else {
 
-                            //Linienende sitzt am Cursor
-                            line.set({x2: pointer.x, y2: pointer.y})
-                        }
-                    }
-                    ;
-                }
 
+                                //Linienende sitzt am Cursor
+                                line.set({x2: pointer.x, y2: pointer.y})
+
+                        }
+
+                    }
+                }
             }
         } else {
             if (selectedTool == 'paint' || startAtMarkPoint !== -1) {
