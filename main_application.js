@@ -4362,8 +4362,10 @@ function geodesicToMarkCalc() {
     if (markPoints.length > 0) {
         for (let ii = 0; ii < markPoints.length; ii++) {
             let markPointCoords = new fabric.Point(markPoints[ii].left, markPoints[ii].top);
-            if (distance(markPointCoords, pointer) < snap_radius_markPoint) {
-                return [true, ii];
+            if (markPoints[ii].opacity !== 0){
+                if (distance(markPointCoords, pointer) < snap_radius_markPoint) {
+                    return [true, ii];
+                }
             }
         }
 
