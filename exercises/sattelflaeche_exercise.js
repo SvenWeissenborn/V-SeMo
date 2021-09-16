@@ -32,15 +32,15 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Vervollständige die beiden Startstriche als Geodäten bis zum Rand des Sektormodells.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Complete the two starting lines as geodesics to the edge of the sector model.',
         marksToHide: [0, 1],
         slideCondition: [['linesTouchMarks', [0, 0], [1, 1]]],
     },
 
     {
         id: 1,
-        text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'Go back to the cours.',
+        text_de: 'Gut gemacht. Kehre wieder zum Kurs zurück.',
+        text_en: 'Well done. Go back to the cours.',
     },
 ];
 

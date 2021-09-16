@@ -31,8 +31,8 @@ let turnBackwardOff = true
 let slideContent = [
     {
         id: 0,
-        text_de: 'Vervollständige die beiden Startstriche als Geodäten bis zum Rand des Sektormodells.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_de: 'Konstruiere ein Dreieck, dessen Eckpunkte die Markierten Punkte darstellen. Bestimme anschließend die Innenwinkelsumme mit Hilfe des Geodreiecks.',
+        text_en: 'Construct a triangle whose vertices represent the marked points. Then determine the sum of the interior angles with the help of the triangle.',
     },
 
 

@@ -38,8 +38,8 @@ let slideContent = [
 
     {
         id: 1,
-        text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'Go back to the cours.',
+        text_de: 'Sehr schön. Kehre wieder zum Kurs zurück.',
+        text_en: 'Very nice. Go back to the cours.',
     },
 ];
 

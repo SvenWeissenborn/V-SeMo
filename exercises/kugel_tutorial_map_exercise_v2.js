@@ -42,7 +42,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Willkommen zur Vorstellung von ViSeMo. Klicke auf den Pfeil, um zu beginnen.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Together we want to become familiar with the sector model.  Click on the arrow to begin.',
         sectorsToShow: [4],
         sectorsToHide: [0, 1, 2, 3, 5, 6, 7, 8],
         marksToHide: [0, 1, 2, 3, 4, 5, 6],
@@ -52,19 +52,19 @@ let slideContent = [
     {
         id: 1,
         text_de: 'Die Sektoren des Sektormodells ähneln kleinen Papierschnippseln. Sie lassen sich frei bewegen. Probiere es mal.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'The sectors of the sector model resemble small pieces of paper. They can be moved freely. Give it a try.',
     },
 
     {
         id: 2,
         text_de: 'Du kannst jeden Sektor auch drehen. Teste es mal.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'You can also rotate each sector. Try it out.',
     },
 
     {
         id: 2,
         text_de: 'Tipp:\nDu kannst entweder mit zwei Fingern auf deinem Tablet oder mit Hilfe des Mausrades in die Arbeitsfläche hinein- oder herauszoomen.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+        text_en: 'Tip:\nYou can either use two fingers on your tablet or the mouse wheel to zoom in or out of the workspace.',
     },
 
 
@@ -77,8 +77,8 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Wir beginnen mit einer Städtereise, welche in Kopenhagen startet. Zeichne eine erste Route von Kopenhagen nach Monaco ein.',
-                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                text_de: 'Wir beginnen mit einer Städtereise, welche in Kopenhagen startet. Zeichne eine erste Route beginnend in Kopenhagen nach Monaco ein.',
+                text_en: 'We start with a city trip that starts in Copenhagen. Draw a first route from Copenhagen to Monaco.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 5, 4]],
             },
@@ -89,7 +89,7 @@ let slideContent = [
     {
         id: 4,
         text_de: '',
-        text_en: 'Join the sectors',
+        text_en: '',
         sectorsToShow: [5],
         marksToShow: [6],
         textsToShow: [6],
@@ -97,7 +97,7 @@ let slideContent = [
         checkBoxesWithText: [
             {
                 text_de: 'Von Monaco geht es weiter nach Tunis. Zeichne auch diese Route ein.',
-                text_en: '',
+                text_en: 'From Monaco, the route continues to Tunis. Draw this route as well.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 4, 6]],
             },
@@ -116,7 +116,7 @@ let slideContent = [
         checkBoxesWithText: [
             {
                 text_de: 'Nun wollen wir unsere Reise nach Casablanca in Marokko fortsetzen.',
-                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                text_en: 'Now we want to continue our journey to Casablanca in Morocco.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 6, 2]],
             },
@@ -134,7 +134,7 @@ let slideContent = [
         checkBoxesWithText: [
             {
                 text_de: 'Die letzte Station ist die irische Hauptstadt Dublin.',
-                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                text_en: 'The last stop is the Irish capital Dublin.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 2, 1]],
             },
@@ -144,12 +144,12 @@ let slideContent = [
     {
         id: 7,
         text_de: '',
-        text_en: 'first text',
+        text_en: '',
 
         checkBoxesWithText: [
             {
                 text_de: 'Nach unserer letzten Station wollen wir mit dem Flugzeug die kürzeste Route zurück nach Kopenhagen nehmen.',
-                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                text_en: 'After our last stop, we want to take the shortest route back to Copenhagen by plane.',
                 type: 'tracker',
                 condition: ['lineCrossTwoMarks', ['chosenLineGlobalID', 1, 5]],
             },
@@ -158,8 +158,8 @@ let slideContent = [
 
     {
         id: 8,
-        text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'first text',
+        text_de: 'Gut gemacht. Kehre wieder zum Kurs zurück.',
+        text_en: 'Well done. Return to the course.',
 
     },
 

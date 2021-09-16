@@ -40,8 +40,8 @@ let slideContent = [
         text_en: '',
         checkBoxesWithText: [
             {
-                text_de: 'Tippe dazu einen Teil oder den Endpunkt eines Geodätenstücks an.',
-                text_en: 'To do this, click on a part or the end point of a geodesic segment.',
+                text_de: 'Tippe dazu einen Teil einer Geodäte oder ihren Endpunkt an.',
+                text_en: 'Click on a part of a geodesic or its end point.',
                 type: 'tracker',
                 condition: ['choseGeodesic'],
             },
@@ -91,7 +91,7 @@ let slideContent = [
         checkBoxesWithText: [
             {
                 text_de: 'Finde eine Möglichkeit, die Richtungen der Enden beider Geodäten miteinander zu vergleichen.',
-                text_en: 'To do this, click on a part or the end point of a geodesic segment.',
+                text_en: 'Find a way to compare the directions of the ends of both geodesics.',
                 type: 'tracker',
                 condition: ['snappedSectors', [8, 11]],
             },
