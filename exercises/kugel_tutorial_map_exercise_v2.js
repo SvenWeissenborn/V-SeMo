@@ -42,7 +42,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Willkommen zur Vorstellung von ViSeMo. Klicke auf den Pfeil, um zu beginnen.',
-        text_en: 'Together we want to become familiar with the sector model.  Click on the arrow to begin.',
+        text_en: 'Welcome to the introduction of ViSeMo. Click on the arrow to begin.',
         sectorsToShow: [4],
         sectorsToHide: [0, 1, 2, 3, 5, 6, 7, 8],
         marksToHide: [0, 1, 2, 3, 4, 5, 6],

@@ -36,10 +36,7 @@
 </div>
 
 
-<script>
-    //Name des Bildes zum runterladen
-    let name_picture_result = "ergebnis_kugel"
-</script>
+
 
 <script src="url_variables.js"></script>
 <script src="fabric.js"></script>
@@ -50,7 +47,15 @@
 <script src="parameter_files/kugelmetrik.js"></script>
 <script src="main_application.js"></script>
 
+<script>
+    //Name des Bildes zum runterladen
+    let name_picture_result = "ergebnis_kugel_parallele"
 
+    if (userName !== undefined){
+        name_picture_result += "_"
+        name_picture_result += userName
+    }
+</script>
 
 
 

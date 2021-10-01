@@ -1824,8 +1824,20 @@ canvas_side_bar_perm.add(joystickBall);
 
 
 function download_image(){
-    let canvasToDownload = document.getElementById("canvas");
+    //let canvasToDownload = document.getElementById("canvas");
     image = canvas.toDataURL("image/png")//.replace("image/png", "image/octet-stream");
+
+    let ajax = new XMLHttpRequest();
+    ajax.open("POST", "save-capture.php", true);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send("image=" + name_picture_result + ";" + canvas.toDataURL("image/png"))
+
+    ajax.onreadystatechange = function (){
+        if (this.readyState == 4 && this.status == 200){
+            console.log(this.responseText)
+        }
+    }
+
     var link = document.createElement('a');
     link.download = name_picture_result.valueOf() + ".png";
     link.href = image;

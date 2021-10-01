@@ -39,10 +39,7 @@
 
 
 
-<script>
-    //Name des Bildes zum runterladen
-    let name_picture_result = "ergebnis_redshift"
-</script>
+
 
 <script src="url_variables.js"></script>
 <script src="fabric.js"></script>
@@ -53,7 +50,15 @@
 <script src="parameter_files/expanding_universe_m2.js"></script>
 <script src="main_application.js"></script>
 
+<script>
+    //Name des Bildes zum runterladen
+    let name_picture_result = "ergebnis_expanding_universe"
 
+    if (userName !== undefined){
+        name_picture_result += "_"
+        name_picture_result += userName
+    }
+</script>
 
 
 

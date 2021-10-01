@@ -82,7 +82,7 @@ let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 //defineLaufContinueGeodesicMax=XX& XX is a number to limit the function
 let defineLaufContinueGeodesicMax = getUrlVars()["defineLaufContinueGeodesicMax"];
 
-
+let userName = getUrlVars()["userName"];
 
 //autoSetOnDraw=1& um das automatische Zusammensetzen der Sektoren beim Zeichnen einer Linie zu aktivieren
 //noch zu entwickeln

@@ -37,10 +37,6 @@
 
 
 
-<script>
-    //Name des Bildes zum runterladen
-    let name_picture_result = "ergebnis_neutronenstern";
-</script>
 
 <script src="url_variables.js"></script>
 <script src="fabric.js"></script>
@@ -52,6 +48,15 @@
 <script src="main_application.js"></script>
 <!--<script src="main_nav_foot.js"></script>-->
 
+<script>
+    //Name des Bildes zum runterladen
+    let name_picture_result = "ergebnis_neutronenstern";
+
+    if (userName !== undefined){
+        name_picture_result += "_"
+        name_picture_result += userName
+    }
+</script>
 
 
 </body>

@@ -36,10 +36,6 @@
 </div>
 
 
-<script>
-    //Name des Bildes zum runterladen
-    let name_picture_result = "ergebnis_schwarzes_loch_3"
-</script>
 
 <script src="url_variables.js"></script>
 <script src="fabric.js"></script>
@@ -50,6 +46,15 @@
 <script src="parameter_files/schwarzschildmetrik_zwei_signale.js"></script>
 <script src="main_application.js"></script>
 
+<script>
+    //Name des Bildes zum runterladen
+    let name_picture_result = "ergebnis_schwarzes_loch_3"
+
+    if (userName !== undefined){
+        name_picture_result += "_"
+        name_picture_result += userName
+    }
+</script>
 
 
 
