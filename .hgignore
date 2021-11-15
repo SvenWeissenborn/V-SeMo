@@ -6,3 +6,4 @@ home.svg
 index_visemo.html
 .idea/.name
 venv/**
+*.pyc
