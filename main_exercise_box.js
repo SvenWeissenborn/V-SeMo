@@ -531,6 +531,10 @@ function setSectorsVisible(){
                 sectors[sectorsID].trapez.opacity = startOpacity;
 
                 sectors[sectorsID].ID_text.opacity = startOpacity;
+
+                sectors[sectorsID].trapez.bringToFront()
+
+                updateMinions(sectors[sectorsID].trapez)
             }else {console.log('Sector', sectorsID, 'does not exist')}
         }
     }
