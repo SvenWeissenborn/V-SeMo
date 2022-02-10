@@ -3963,7 +3963,6 @@ function drawTicks(trapez) {
                 ];
             }
 
-
             let tickPoint_1;
 
             if (ii == 0 || ii == 1) {
@@ -3978,6 +3977,8 @@ function drawTicks(trapez) {
                 ];
             }
 
+            tickPoint_0 = rotatePoint(tickPoint_0, trapez.angle, trapez.left, trapez.top)
+            tickPoint_1 = rotatePoint(tickPoint_1, trapez.angle, trapez.left, trapez.top)
 
             let tick = new fabric.Line(
                 [tickPoint_0[0], tickPoint_0[1], tickPoint_1[0], tickPoint_1[1]],
@@ -4018,8 +4019,27 @@ function drawTicks(trapez) {
     }
 }
 
+function rotatePoint(point, rotationAngle, trapez_left, trapez_top){
+
+    point_x_tmp = point[0]
+    point_y_tmp = point[1]
+
+    point_x_new = trapez_left + Math.cos(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) - Math.sin(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
+    point_y_new = trapez_top + Math.sin(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) + Math.cos(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
+
+    let newPoint = [
+        point_x_new, point_y_new
+    ]
+
+    return newPoint
+}
+
 function drawLightCone(trapez) {
     if (turnLorentzTransformOn == "1"){
+
+        if (Math.abs(trapez.points[3].x - trapez.points[2].x) < epsilon){
+            return
+        }
 
         let temporary_offset_y;
         if (trapez.points[2].y > 0){
@@ -4029,7 +4049,7 @@ function drawLightCone(trapez) {
         }
 
         let lightConesPoint_0 = [
-            trapez.points[3].x + trapez.left + 0.5,
+            (trapez.points[3].x - trapez.points[0].x) + trapez.left + 0.5,
             trapez.points[3].y + trapez.top  - temporary_offset_y - 0.5
         ]
 
