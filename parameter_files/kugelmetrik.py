@@ -186,7 +186,7 @@ def main():
                                                                                           max(0, offset),
                                                                                           sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
 
-            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - nColumnsInModel * 0.5 + 0.5) * (sectorDistance_x + maxSectorWidth) + (maxSectorWidth - sector_width) / 2
+            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = (ii - nColumnsInModel * 0.5 + 0.5) * (sectorDistance_x + maxSectorWidth) #+ (maxSectorWidth - sector_width) / 2
 
             sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = (zeile - (nRowsInModel + 0.5)) * sector_y_dist - 100
 
