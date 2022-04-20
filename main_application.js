@@ -1100,6 +1100,9 @@ canvas.on('mouse:up', function(opt) {
 
             drawDragPoint(lineSegment.ID[0]);
             chosenLineGlobalID = lineSegment.ID[0];
+            if (buildGeodesicTicks == "1"){
+                drawGeodesicTicks(lineSegment.ID[0])
+            }
         }
 
         canvas.renderAll();
@@ -3898,6 +3901,53 @@ function drawSnapEdges(initialSectorID) {
     }
 }
 
+function drawGeodesicTicks(lineID){
+
+    console.log(lineID)
+    console.log(lines[lineID][0])
+    line = lines[lineID][0]
+
+    let lineStart_x = line.x1
+    let lineStart_y = line.y1
+    let lineEnd_x = line.x2
+    let lineEnd_y = line.y2
+
+    let delta_x = lineEnd_x - lineStart_x
+    let delta_y = lineEnd_y - lineStart_y
+
+    let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x
+    let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y
+
+    let geodesicTicksDistanceFactor = 60
+
+    for(let ii = 1; ii < 10; ii++){
+        let newTickPoint = new fabric.Point(
+            lineStart_x + delta_x_normed * ii * geodesicTicksDistanceFactor,
+            lineStart_y + delta_y_normed * ii * geodesicTicksDistanceFactor
+        )
+
+        let lineEndPoint = new fabric.Point(
+            lineEnd_x,
+            lineEnd_y
+        )
+        if (
+            distance(newTickPoint, lineEndPoint) > geodesicTicksDistanceFactor
+        ) {
+            drawOrientationCirc(
+                'red',
+                lineStart_x + delta_x_normed * ii * geodesicTicksDistanceFactor,
+                lineStart_y + delta_y_normed * ii * geodesicTicksDistanceFactor
+            )
+        }else{
+            return
+        }
+    }
+
+
+
+
+}
+
 let tick_dist = 14.5;
 let tick_length = 3;
 let lightConeLength = 80;
@@ -4019,20 +4069,7 @@ function drawTicks(trapez) {
     }
 }
 
-function rotatePoint(point, rotationAngle, trapez_left, trapez_top){
 
-    point_x_tmp = point[0]
-    point_y_tmp = point[1]
-
-    point_x_new = trapez_left + Math.cos(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) - Math.sin(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
-    point_y_new = trapez_top + Math.sin(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) + Math.cos(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
-
-    let newPoint = [
-        point_x_new, point_y_new
-    ]
-
-    return newPoint
-}
 
 function drawLightCone(trapez) {
     if (turnLorentzTransformOn == "1"){
@@ -5744,6 +5781,21 @@ function renderIcon(ctx, left, top, styleOverride, fabricObject) {
     ctx.restore();
 }
 //-----------------------------------------------------------------------------
+
+function rotatePoint(point, rotationAngle, trapez_left, trapez_top){
+
+    point_x_tmp = point[0]
+    point_y_tmp = point[1]
+
+    point_x_new = trapez_left + Math.cos(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) - Math.sin(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
+    point_y_new = trapez_top + Math.sin(rotationAngle * Math.PI / 180) * (point_x_tmp - trapez_left) + Math.cos(rotationAngle * Math.PI / 180) * (point_y_tmp - trapez_top)
+
+    let newPoint = [
+        point_x_new, point_y_new
+    ]
+
+    return newPoint
+}
 
 function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 

@@ -87,3 +87,5 @@ let userName = getUrlVars()["userName"];
 //autoSetOnDraw=1& um das automatische Zusammensetzen der Sektoren beim Zeichnen einer Linie zu aktivieren
 //noch zu entwickeln
 let autoSetOnDraw = getUrlVars()["autoSetOnDraw"];
+
+let buildGeodesicTicks = getUrlVars()["buildGeodesicTicks"];
