@@ -1100,6 +1100,7 @@ canvas.on('mouse:up', function(opt) {
 
             drawDragPoint(lineSegment.ID[0]);
             chosenLineGlobalID = lineSegment.ID[0];
+
             if (buildGeodesicTicks == "1"){
                 drawGeodesicTicks(lineSegment.ID[0])
             }
@@ -2721,6 +2722,138 @@ function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
     deficitAngleVisualizeGroup.add(arc)
 }
 
+
+function drawGeodesicTicks(lineID){
+
+
+
+
+    let geodesicTicksDistance
+        = 60;
+
+    let wholeLineLength = 0;
+
+    let remBefore;
+    let lastLineSegmentWithRem;
+
+    if (lines[lineID].remLast !== undefined){
+        remBefore = lines[lineID].remLast
+    }else{
+        console.log("go here")
+        remBefore = 0
+    }
+
+    console.log("start last rem:", lines[lineID].lastLineSegmentWithRem)
+
+    if(lines[lineID].lastLineSegmentWithRem !== undefined){
+        console.log("hier geht es rein")
+        lastLineSegmentWithRem = lines[lineID].lastLineSegmentWithRem + 1
+        console.log(lastLineSegmentWithRem)
+    }else{
+        lastLineSegmentWithRem = 0
+    }
+
+    for (let ii = lastLineSegmentWithRem; ii < lines[lineID].length; ii++){
+
+        let lineSegment = lines[lineID][ii]
+
+        if (lineSegment.geodesicTicks == undefined){
+            lineSegment.geodesicTicks = [];
+        }
+
+
+        let lineStart_x = lineSegment.x1;
+        let lineStart_y = lineSegment.y1;
+        let lineEnd_x = lineSegment.x2;
+        let lineEnd_y = lineSegment.y2;
+
+        let delta_x = lineEnd_x - lineStart_x;
+        let delta_y = lineEnd_y - lineStart_y;
+
+        //let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x;
+        //let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y;
+
+        let actualLengthToDivide = remBefore + lineSegment.lineSegmentLength
+
+        //rem: remainder, quo: Quotient
+        let rem = actualLengthToDivide % geodesicTicksDistance;
+
+        let quo = (actualLengthToDivide - rem) / geodesicTicksDistance;
+
+        console.log("LineSegment:", ii);
+        console.log("remBefore:", remBefore)
+        console.log("lineSegmentLength:", lineSegment.lineSegmentLength)
+        console.log("actualLengthToDivide:", actualLengthToDivide)
+        console.log("quo:", quo);
+        console.log("rem:", rem);
+
+
+
+        for (let jj = 1; jj < quo + 1; jj++){
+
+            let tickLambda = (jj * geodesicTicksDistance - remBefore) / lineSegment.lineSegmentLength
+            console.log("tickLambda:", tickLambda)
+
+            let newTickPoint = new fabric.Point(
+                lineStart_x + delta_x * tickLambda,
+                lineStart_y + delta_y * tickLambda
+
+            );
+            console.log("set Tick by:", jj * geodesicTicksDistance - remBefore)
+
+            let geodesicTick;
+
+            geodesicTick = new fabric.Circle(
+                {
+                    radius: 5,
+                    fill: "gray",
+                    left: newTickPoint.x,
+                    top:  newTickPoint.y,
+                    evented: false,
+                    objectCaching: false,
+                    lockMovementX: false,
+                    lockMovementY: false,
+                    lockScalingX: true,
+                    lockScalingY: true,
+                    selectable: false,
+                    originX: 'center',
+                    originY: 'center',
+                    hasBorders: false,
+                    hasControls: false,
+                    opacity: 0.8
+                }
+            );
+
+            canvas.add(geodesicTick);
+
+            if (lineSegment.parentSector[0] !== -1){
+                geodesicTick.relationship = getRelationship(geodesicTick, lineSegment.parentSector[0]);
+            }
+
+            lineSegment.geodesicTicks.push(geodesicTick);
+
+            console.log(lineSegment.geodesicTicks)
+
+        }
+
+
+
+
+            remBefore = rem
+
+    }
+
+    lines[lineID].remLast = remBefore;
+
+    lines[lineID].lastLineSegmentWithRem = lines[lineID].length - 1;
+
+    console.log("save last with rem:", lines[lineID].lastLineSegmentWithRem);
+
+    console.log("-----------------------------------")
+
+}
+
+
 function drawDragPoint(lineToGivePoint) {
 
     if (typeof lineToGivePoint === 'undefined' || lineToGivePoint == -1) {
@@ -2963,6 +3096,8 @@ function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, li
 
     lineSegment.lineType = 'geodesic';
 
+    lineSegment.lineSegmentLength = Math.sqrt(Math.pow((lineEnd_x - lineStart_x), 2) + Math.pow((lineEnd_y - lineStart_y), 2))
+
     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
     if (turnLorentzTransformOn == "1"){
@@ -3036,7 +3171,14 @@ function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClock
 }
 
 function drawOrientationCirc(color, pos_x, pos_y){
-    canvas.add(new fabric.Circle({ radius: 5, originX: 'center', originY: 'center', fill: color, left: pos_x, top:  pos_y}));
+    let orientationCirc
+
+    orientationCirc = new fabric.Circle({ radius: 5, originX: 'center', originY: 'center', fill: color, left: pos_x, top:  pos_y})
+
+    canvas.add(orientationCirc);
+
+    return orientationCirc
+
 }
 
 function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylineSegmentCoords){
@@ -3901,52 +4043,6 @@ function drawSnapEdges(initialSectorID) {
     }
 }
 
-function drawGeodesicTicks(lineID){
-
-    console.log(lineID)
-    console.log(lines[lineID][0])
-    line = lines[lineID][0]
-
-    let lineStart_x = line.x1
-    let lineStart_y = line.y1
-    let lineEnd_x = line.x2
-    let lineEnd_y = line.y2
-
-    let delta_x = lineEnd_x - lineStart_x
-    let delta_y = lineEnd_y - lineStart_y
-
-    let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x
-    let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y
-
-    let geodesicTicksDistanceFactor = 60
-
-    for(let ii = 1; ii < 10; ii++){
-        let newTickPoint = new fabric.Point(
-            lineStart_x + delta_x_normed * ii * geodesicTicksDistanceFactor,
-            lineStart_y + delta_y_normed * ii * geodesicTicksDistanceFactor
-        )
-
-        let lineEndPoint = new fabric.Point(
-            lineEnd_x,
-            lineEnd_y
-        )
-        if (
-            distance(newTickPoint, lineEndPoint) > geodesicTicksDistanceFactor
-        ) {
-            drawOrientationCirc(
-                'red',
-                lineStart_x + delta_x_normed * ii * geodesicTicksDistanceFactor,
-                lineStart_y + delta_y_normed * ii * geodesicTicksDistanceFactor
-            )
-        }else{
-            return
-        }
-    }
-
-
-
-
-}
 
 let tick_dist = 14.5;
 let tick_length = 3;
@@ -6116,37 +6212,27 @@ function startGeodesics(){
     for (let ii = 0; ii < startSectors.length; ii++) {
 
         let sec = sectors[startSectors[ii]];
+        let parentSectorID = startParentSector[ii][0];
 
-        let lineSegment = new fabric.Line([x_Start[ii] + window.innerWidth / 2, y_Start[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2, x_End[ii] + window.innerWidth / 2, y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2], {
-            strokeWidth: lineStrokeWidthWhenNotSelected,
-            fill: startFill[ii],
-            stroke: startStroke[ii],
-            originX: 'center',
-            originY: 'center',
-            perPixelTargetFind: true,
-            objectCaching: false,
-            hasBorders: false,
-            hasControls: false,
-            evented: true,
-            selectable: false,
-        });
-        lineSegment.parentSector = startParentSector[ii];
+        let lineStart_x = x_Start[ii] + window.innerWidth / 2;
+        let lineStart_y = y_Start[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2;
+        let lineEnd_x = x_End[ii] + window.innerWidth / 2;
+        let lineEnd_y = y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2;
+
+        lineSegment = drawLineSegment(startFill[ii], lineStrokeWidthWhenNotSelected, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y)
 
         lineSegment.ID = startLineID[ii];
 
-        lineSegment.lineType = "geodesic"
-
-        lineSegment.relationship = getRelationship(lineSegment, sec.ID);
-
         sec.lineSegments.push(lineSegment);
+
         lines.push([lineSegment]);
-        let stackidx = canvas.getObjects().indexOf(sectors[lineSegment.parentSector[0]].ID_text);
-        canvas.insertAt(lineSegment, stackidx);
+
+        if (buildGeodesicTicks == "1"){
+            drawGeodesicTicks(lineSegment.ID[0])
+        }
 
         if (turnLorentzTransformOn == "1"){
 
-
-            getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
 
             lines[ii].operational = startGeodesicOperational[ii];
             if (lines[ii].operational === false){
@@ -6857,6 +6943,33 @@ function updateMinions(boss) {
                 object.setCoords();
             }
 
+        }
+
+        if(segment.geodesicTicks !== undefined){
+            for(let jj =0; jj < segment.geodesicTicks.length; jj++){
+                let object = segment.geodesicTicks[jj];
+                if (object.relationship) {
+                    object.bringToFront();
+                    let relationship = object.relationship;
+                    let newTransform = multiply(
+                        boss.calcTransformMatrix(),
+                        relationship
+                    );
+                    let options;
+                    options = fabric.util.qrDecompose(newTransform);
+                    object.set({
+                        flipX: false,
+                        flipY: false,
+                    });
+                    object.setPositionByOrigin(
+                        {x: options.translateX, y: options.translateY},
+                        'center',
+                        'center'
+                    );
+                    object.set(options);
+                    object.setCoords();
+                }
+            }
         }
     }
 
