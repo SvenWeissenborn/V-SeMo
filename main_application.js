@@ -2316,6 +2316,26 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
             initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[5] = dragPoint_transformed_mid_point.y - midpoint_boundingbox_before_global.y + 0.5;
 
         }
+
+        if (buildGeodesicTicks == "1"){
+
+            if (initialSectorTrapez.parent.lineSegments[jj].geodesicTicks.length > 0){
+
+                for (let kk = 0; kk < initialSectorTrapez.parent.lineSegments[jj].geodesicTicks.length; kk++){
+
+                    geodesicTick_transformed_mid_point = new fabric.Point(
+                        initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].start_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                        initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].start_point_BL.x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].start_point_BL.y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+                    );
+
+                    initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].relationship[4] = geodesicTick_transformed_mid_point.x - midpoint_boundingbox_before_global.x - 0.5;
+                    initialSectorTrapez.parent.lineSegments[jj].geodesicTicks[kk].relationship[5] = geodesicTick_transformed_mid_point.y - midpoint_boundingbox_before_global.y + 0.5;
+
+                }
+
+
+            }
+        }
     }
 }
 
@@ -2850,6 +2870,9 @@ function drawGeodesicTicks(lineID){
 
             if (lineSegment.parentSector[0] !== -1){
                 geodesicTick.relationship = getRelationship(geodesicTick, lineSegment.parentSector[0]);
+
+                let geodesicTickStart_point_BL = {x: geodesicTick.left, y: geodesicTick.top}
+                geodesicTick.start_point_BL = getPointCoordsBeforeLorentztransform(geodesicTickStart_point_BL, sectors[lineSegment.parentSector[0]].trapez)
             }
 
             lineSegment.geodesicTicks.push(geodesicTick);
@@ -5396,6 +5419,16 @@ function lorentzTransform(theta, trapez) {
                 trapez.parent.lineSegments[ii].dragPoint.set('top', trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(theta) + trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
             }
 
+            if (buildGeodesicTicks == "1"){
+                if (trapez.parent.lineSegments[ii].geodesicTicks.length > 0){
+                    console.log(trapez.parent.lineSegments[ii].geodesicTicks)
+                    for (let jj = 0; jj < trapez.parent.lineSegments[ii].geodesicTicks.length; jj++) {
+                        trapez.parent.lineSegments[ii].geodesicTicks[jj].set('left', trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
+                        trapez.parent.lineSegments[ii].geodesicTicks[jj].set('top', trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+                    }
+                }
+            }
+
         }
     }
 
@@ -5673,6 +5706,16 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
             if (sectors[initialSectorID].lineSegments[ii].dragPoint !== undefined) {
                 canvas.bringToFront(sectors[initialSectorID].lineSegments[ii].dragPoint);
                 sectors[initialSectorID].lineSegments[ii].dragPoint.relationship = getRelationship(sectors[initialSectorID].lineSegments[ii].dragPoint, sectors[initialSectorID].ID);
+            }
+
+            if(buildGeodesicTicks == "1"){
+                if (sectors[initialSectorID].lineSegments[ii].geodesicTicks.length > 0){
+                    console.log('test')
+                    for (let jj = 0; jj < sectors[initialSectorID].lineSegments[ii].geodesicTicks.length; jj++){
+                        canvas.bringToFront(sectors[initialSectorID].lineSegments[ii].geodesicTicks[jj]);
+                        sectors[initialSectorID].lineSegments[ii].geodesicTicks[jj].relationship = getRelationship(sectors[initialSectorID].lineSegments[ii].geodesicTicks[jj], sectors[initialSectorID].ID);
+                    }
+                }
             }
         }
     }
