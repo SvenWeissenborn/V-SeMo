@@ -2138,6 +2138,10 @@ function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeSta
 
         lines[chosenGeodesicToChangeStartPoint].push(lineSegmentToChangeDirection);
 
+        if (buildGeodesicTicks == "1"){
+            drawGeodesicTicks(chosenGeodesicToChangeStartPoint)
+        }
+
     }
 
     //Verlängerung der Geodäte bis zum Rand des Modells
@@ -2216,6 +2220,10 @@ function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeod
         lineSegmentToChangeDirection.ID = [chosenGeodesicTochangeDirection, lines[chosenGeodesicTochangeDirection].length];
 
         lines[chosenGeodesicTochangeDirection].push(lineSegmentToChangeDirection);
+
+        if (buildGeodesicTicks == "1"){
+            drawGeodesicTicks(chosenGeodesicTochangeDirection)
+        }
 
     }
 
@@ -2429,6 +2437,11 @@ function continueGeodesic(geodesicToContinue) {
                 lines[geodesicToContinue].push(lineSegmentContinue);
 
                 immediatehistory.push(lineSegmentContinue.ID);
+
+                if (buildGeodesicTicks == "1"){
+                    drawGeodesicTicks(geodesicToContinue)
+                }
+
             }
 
             /*
@@ -2563,6 +2576,10 @@ function continueGeodesic(geodesicToContinue) {
                     lines[geodesicToContinue].push(lineSegmentContinue);
 
                     immediatehistory.push(lineSegmentContinue.ID);
+
+                    if (buildGeodesicTicks == "1"){
+                        drawGeodesicTicks(geodesicToContinue)
+                    }
                 }
 
 
@@ -2614,11 +2631,24 @@ function deleteWholeGeodesic(geodesicToDelete) {
         }
 
         let lineSegment = lines[geodesicToDelete][ii];
+        console.log(lineSegment)
 
         if(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint!==undefined){
             canvas.remove(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint);
             delete lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint;
+        }
 
+        if (buildGeodesicTicks == "1"){
+
+            console.log(lineSegment.geodesicTicks)
+
+            if(lineSegment.geodesicTicks.length > 0){
+                for (let jj = lineSegment.geodesicTicks.length; jj >= 0; jj--){
+                    canvas.remove(lineSegment.geodesicTicks[jj])
+                    delete lineSegment.geodesicTicks[jj]
+                }
+
+            }
         }
 
         if (lineSegment.lineType == 'geodesic'){
@@ -2725,9 +2755,6 @@ function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
 
 function drawGeodesicTicks(lineID){
 
-
-
-
     let geodesicTicksDistance
         = 60;
 
@@ -2748,7 +2775,7 @@ function drawGeodesicTicks(lineID){
     if(lines[lineID].lastLineSegmentWithRem !== undefined){
         console.log("hier geht es rein")
         lastLineSegmentWithRem = lines[lineID].lastLineSegmentWithRem + 1
-        console.log(lastLineSegmentWithRem)
+        console.log("lastLineSegmentWithRem:", lastLineSegmentWithRem)
     }else{
         lastLineSegmentWithRem = 0
     }
@@ -2756,11 +2783,6 @@ function drawGeodesicTicks(lineID){
     for (let ii = lastLineSegmentWithRem; ii < lines[lineID].length; ii++){
 
         let lineSegment = lines[lineID][ii]
-
-        if (lineSegment.geodesicTicks == undefined){
-            lineSegment.geodesicTicks = [];
-        }
-
 
         let lineStart_x = lineSegment.x1;
         let lineStart_y = lineSegment.y1;
@@ -2831,7 +2853,6 @@ function drawGeodesicTicks(lineID){
             }
 
             lineSegment.geodesicTicks.push(geodesicTick);
-
             console.log(lineSegment.geodesicTicks)
 
         }
@@ -3097,6 +3118,10 @@ function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, li
     lineSegment.lineType = 'geodesic';
 
     lineSegment.lineSegmentLength = Math.sqrt(Math.pow((lineEnd_x - lineStart_x), 2) + Math.pow((lineEnd_y - lineStart_y), 2))
+
+    if (buildGeodesicTicks == "1"){
+        lineSegment.geodesicTicks = []
+    }
 
     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
@@ -6223,7 +6248,7 @@ function startGeodesics(){
 
         lineSegment.ID = startLineID[ii];
 
-        sec.lineSegments.push(lineSegment);
+        //sec.lineSegments.push(lineSegment);
 
         lines.push([lineSegment]);
 
@@ -6677,6 +6702,14 @@ function undoLastAction(){
 
             }
 
+            if (buildGeodesicTicks == "1"){
+                for (let kk = lineSegment.geodesicTicks.length - 1; kk >= 0; kk--){
+                    canvas.remove(lineSegment.geodesicTicks[kk])
+                    delete lineSegment.geodesicTicks[kk]
+                }
+                lines[lineID[0]].lastLineSegmentWithRem -= 1
+            }
+
             if (typeof(lineSegment) !== undefined) {
                 let secID = lineSegment.parentSector;
 
@@ -6697,8 +6730,8 @@ function undoLastAction(){
             lineSegment = lines[lineID[0]][lines[lineID[0]].length - 1];
 
             drawDragPoint(lineID[0])
-
         }
+
     }
 
     if (immediatehistory[0] === 1) {
@@ -6760,6 +6793,10 @@ function undoLastAction(){
         }
 
         drawDragPoint(line[line.length - 1].ID[0]);
+
+        if (buildGeodesicTicks == "1"){
+            drawGeodesicTicks(immediatehistory[1])
+        }
 
         }
 

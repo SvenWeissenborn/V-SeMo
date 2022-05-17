@@ -73,7 +73,7 @@ let showChangeDirection = getUrlVars()["showChangeDirection"];
 //showAutoComplete=1& um den Button fuer die automatische Vervollstaendigung anzuzeigen
 let showAutoComplete = getUrlVars()["showAutoComplete"];
 
-//showChangeStartPointPosition=1& um den Joystick fuer die Aenderung der Startposition anzuzeigen
+//showChangeStartPoint=1& um den Joystick fuer die Aenderung der Startposition anzuzeigen
 let showChangeStartPoint = getUrlVars()["showChangeStartPoint"];
 
 //turnOverlapControllOn=1& um die OverlapControll ein- und auszuschalten
@@ -88,4 +88,5 @@ let userName = getUrlVars()["userName"];
 //noch zu entwickeln
 let autoSetOnDraw = getUrlVars()["autoSetOnDraw"];
 
+//buildGeodesicTicks=1&
 let buildGeodesicTicks = getUrlVars()["buildGeodesicTicks"];
