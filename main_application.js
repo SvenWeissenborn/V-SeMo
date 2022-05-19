@@ -5835,6 +5835,22 @@ function resetSectors() {
                             sectors[rr].lineSegments[ss].dragPoint.relationship = getRelationship(sectors[rr].lineSegments[ss].dragPoint, sectors[rr].ID);
                         }
 
+
+                        if (buildGeodesicTicks == "1"){
+
+                            if (sectors[rr].lineSegments[ss].geodesicTicks.length > 0){
+
+                                for (let kk = 0; kk < sectors[rr].lineSegments[ss].geodesicTicks.length; kk++){
+
+                                    canvas.bringToFront(sectors[rr].lineSegments[ss].geodesicTicks[kk])
+                                    sectors[rr].lineSegments[ss].geodesicTicks[kk].relationship = getRelationship(sectors[rr].lineSegments[ss].geodesicTicks[kk], sectors[rr].ID);
+
+                                }
+
+
+                            }
+                        }
+
                     }
                 }
                 sectors[rr].rapidity = 0;
