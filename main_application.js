@@ -2505,8 +2505,6 @@ function continueGeodesic(geodesicToContinue) {
                     }
                 }
 
-                console.log(lauf)
-
                 let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSectorID].trapez)
 
                 //Übergangspunkte übernehmen
@@ -2651,7 +2649,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
         }
 
         let lineSegment = lines[geodesicToDelete][ii];
-        console.log(lineSegment)
+        //console.log(lineSegment)
 
         if(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint!==undefined){
             canvas.remove(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint);
@@ -2660,7 +2658,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
         if (buildGeodesicTicks == "1"){
 
-            console.log(lineSegment.geodesicTicks)
+            //console.log(lineSegment.geodesicTicks)
 
             if(lineSegment.geodesicTicks.length > 0){
                 for (let jj = lineSegment.geodesicTicks.length; jj >= 0; jj--){
@@ -2775,8 +2773,8 @@ function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
 
 function drawGeodesicTicks(lineID){
 
-    let geodesicTicksDistance
-        = 60;
+    let geodesicTicksDistanceConstant
+        = 40;
 
     let wholeLineLength = 0;
 
@@ -2786,16 +2784,16 @@ function drawGeodesicTicks(lineID){
     if (lines[lineID].remLast !== undefined){
         remBefore = lines[lineID].remLast
     }else{
-        console.log("go here")
+        //console.log("go here")
         remBefore = 0
     }
 
-    console.log("start last rem:", lines[lineID].lastLineSegmentWithRem)
+    //console.log("start last rem:", lines[lineID].lastLineSegmentWithRem)
 
     if(lines[lineID].lastLineSegmentWithRem !== undefined){
-        console.log("hier geht es rein")
+        //console.log("hier geht es rein")
         lastLineSegmentWithRem = lines[lineID].lastLineSegmentWithRem + 1
-        console.log("lastLineSegmentWithRem:", lastLineSegmentWithRem)
+        //console.log("lastLineSegmentWithRem:", lastLineSegmentWithRem)
     }else{
         lastLineSegmentWithRem = 0
     }
@@ -2812,36 +2810,47 @@ function drawGeodesicTicks(lineID){
         let delta_x = lineEnd_x - lineStart_x;
         let delta_y = lineEnd_y - lineStart_y;
 
+        let velocityFactor = Math.abs(delta_x) / Math.abs(delta_y)
+        //console.log({velocityFactor})
+
+        let geodesicTicksDistanceToUse
+
+        if (turnLorentzTransformOn == "1"){
+            geodesicTicksDistanceToUse = geodesicTicksDistanceConstant * Math.sqrt( (1 + velocityFactor * velocityFactor) / (1 - velocityFactor * velocityFactor) )
+        } else{
+            geodesicTicksDistanceToUse = geodesicTicksDistanceConstant
+        }
+
         //let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x;
         //let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y;
 
         let actualLengthToDivide = remBefore + lineSegment.lineSegmentLength
 
         //rem: remainder, quo: Quotient
-        let rem = actualLengthToDivide % geodesicTicksDistance;
+        let rem = actualLengthToDivide % geodesicTicksDistanceToUse;
 
-        let quo = (actualLengthToDivide - rem) / geodesicTicksDistance;
+        let quo = (actualLengthToDivide - rem) / geodesicTicksDistanceToUse;
 
-        console.log("LineSegment:", ii);
-        console.log("remBefore:", remBefore)
-        console.log("lineSegmentLength:", lineSegment.lineSegmentLength)
-        console.log("actualLengthToDivide:", actualLengthToDivide)
-        console.log("quo:", quo);
-        console.log("rem:", rem);
+        //console.log("LineSegment:", ii);
+        //console.log("remBefore:", remBefore)
+        //console.log("lineSegmentLength:", lineSegment.lineSegmentLength)
+        //console.log("actualLengthToDivide:", actualLengthToDivide)
+        //console.log("quo:", quo);
+        //console.log("rem:", rem);
 
 
 
         for (let jj = 1; jj < quo + 1; jj++){
 
-            let tickLambda = (jj * geodesicTicksDistance - remBefore) / lineSegment.lineSegmentLength
-            console.log("tickLambda:", tickLambda)
+            let tickLambda = (jj * geodesicTicksDistanceToUse - remBefore) / lineSegment.lineSegmentLength
+            //console.log("tickLambda:", tickLambda)
 
             let newTickPoint = new fabric.Point(
                 lineStart_x + delta_x * tickLambda,
                 lineStart_y + delta_y * tickLambda
 
             );
-            console.log("set Tick by:", jj * geodesicTicksDistance - remBefore)
+            //console.log("set Tick by:", jj * geodesicTicksDistanceToUse - remBefore)
 
             let geodesicTick;
 
@@ -2876,7 +2885,7 @@ function drawGeodesicTicks(lineID){
             }
 
             lineSegment.geodesicTicks.push(geodesicTick);
-            console.log(lineSegment.geodesicTicks)
+            //console.log(lineSegment.geodesicTicks)
 
         }
 
@@ -2891,9 +2900,9 @@ function drawGeodesicTicks(lineID){
 
     lines[lineID].lastLineSegmentWithRem = lines[lineID].length - 1;
 
-    console.log("save last with rem:", lines[lineID].lastLineSegmentWithRem);
+    //console.log("save last with rem:", lines[lineID].lastLineSegmentWithRem);
 
-    console.log("-----------------------------------")
+    //console.log("-----------------------------------")
 
 }
 
