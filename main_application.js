@@ -2856,10 +2856,12 @@ function drawGeodesicTicks(lineID){
 
             let geodesicTick;
 
+            let geodesicTickColor = lineSegment.fill
+
             geodesicTick = new fabric.Circle(
                 {
                     radius: 5,
-                    fill: "gray",
+                    fill: geodesicTickColor,
                     left: newTickPoint.x,
                     top:  newTickPoint.y,
                     evented: false,
