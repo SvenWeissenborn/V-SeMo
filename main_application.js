@@ -2824,7 +2824,10 @@ function drawGeodesicTicks(lineID){
         //let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x;
         //let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y;
 
-        remBefore = remBefore * Math.sqrt( (1 + velocityFactor * velocityFactor) / (1 - velocityFactor * velocityFactor) )
+        if (turnLorentzTransformOn == "1"){
+            remBefore = remBefore * Math.sqrt( (1 + velocityFactor * velocityFactor) / (1 - velocityFactor * velocityFactor) )
+        }
+
 
         let actualLengthToDivide = remBefore + lineSegment.lineSegmentLength
 
@@ -2895,8 +2898,12 @@ function drawGeodesicTicks(lineID){
 
 
 
+            if (turnLorentzTransformOn == "1"){
+                remBefore = rem * Math.sqrt( (1 - velocityFactor * velocityFactor) / (1 + velocityFactor * velocityFactor) )
+            }else{
+                remBefore = rem
+            }
 
-            remBefore = rem * Math.sqrt( (1 - velocityFactor * velocityFactor) / (1 + velocityFactor * velocityFactor) )
 
     }
 
