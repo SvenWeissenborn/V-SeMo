@@ -3,7 +3,7 @@ import math
 
 
 nRowsInModel = 8
-nColumnsInModel = 8
+nColumnsInModel = 16
 
 schwarzschildRadius = 600
 Delta = 0.1 * schwarzschildRadius
@@ -126,15 +126,6 @@ def main():
             offset_x = (spaceEdgeTop - spaceEdgeBottom) / 2
             offset_y = (timeEdgeRight - timeEdgeLeft) / 2
 
-            if (ii == 0):
-                if (zeile == 0):
-                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = start_x
-                else:
-                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile - 1] - offset_x
-
-            else:
-                sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile + (ii - 1) * nRowsInModel] + sectorDistance_x
-
             print('spaceEdgeBottom', spaceEdgeBottom)
             print('spaceEdgeTop', spaceEdgeTop)
             print(timeEdgeLeft)
@@ -173,7 +164,10 @@ def main():
             if (ii == nColumnsInModel - 1):
                sectorValues[sectorDict["sec_neighbour_right"]][zeile + ii * nRowsInModel] = -1
             else:
-               sectorValues[sectorDict["sec_neighbour_right"]][zeile + ii * nRowsInModel] = zeile + (ii + 1) * nRowsInModel
+                if (zeile == 0):
+                    sectorValues[sectorDict["sec_neighbour_right"]][zeile + ii * nRowsInModel] = -1
+                else:
+                    sectorValues[sectorDict["sec_neighbour_right"]][zeile + ii * nRowsInModel] = zeile + (ii + 1) * nRowsInModel - 1
 
             if (zeile == 0):
                sectorValues[sectorDict["sec_neighbour_bottom"]][zeile + ii * nRowsInModel] = - 1
@@ -183,19 +177,32 @@ def main():
             if (ii == 0):
                sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel] = -1
             else:
-               sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel] = zeile + (ii - 1) * nRowsInModel
+                if (zeile == nRowsInModel - 1):
+                    sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel] = -1
+                else:
+                    sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel] = zeile + (ii - 1) * nRowsInModel + 1
+
+
+            if (ii == 0):
+                if (zeile == 0):
+                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = start_x
+                else:
+                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile - 1] - offset_x
+
+            else:
+                sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile + (ii - 1) * nRowsInModel] + sectorDistance_x
 
 
             if (zeile == 0):
                 if (ii == 0):
                     sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] - sectorValues[sectorDict["sec_height"]][zeile + (ii - 1) * nRowsInModel] - sectorDistance_y
             else:
                 if (ii == 0):
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y - zeile * (timeEdgeRight + sectorDistance_y)
+                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile - 1] - sectorValues[sectorDict["sec_height"]][zeile - 1] - sectorDistance_y
                 else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] - sectorValues[sectorDict["sec_height"]][zeile - 1 + (ii - 1) * nRowsInModel] - sectorDistance_y
 
 
     for ii in range(0,len(variablenamesSectors)):

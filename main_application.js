@@ -3503,6 +3503,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
+        console.log(this.parent.neighbourhood)
+
         showGeodesicButtons(false);
 
         if (turnLorentzTransformOn == "1"){
