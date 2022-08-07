@@ -3,3 +3,6 @@
 [V-SeMo](https://v-semo.com/) is a canvas tool based on fabric.js with the purpose to teach General Relativity with virtual sector models.
 
 ## How to get started
+
+## V-SeMo in Action
+![](https://github.com/hethet93/V-SeMo/blob/main/documentation/images/tablet_line.png)
