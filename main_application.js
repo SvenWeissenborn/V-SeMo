@@ -6068,8 +6068,9 @@ function Sector() {
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
     this.neighbourhood = [-1,-1,-1,-1];
     this.snapStatus = [0,0,0,0];
-    this.overlapStatus = [0,0,0,0];
     this.snapEdges = [[0],[0],[0],[0]];
+    //this.overlapStatus = [0,0,0,0];
+
 }
 
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
@@ -7202,7 +7203,8 @@ if (buildLightCone == "1"){
     }
 }
 
-positionSectors();
+// Ein Relikt aus alten Tagen:
+//positionSectors();
 
 if (buildStartGeodesics == "1"){startGeodesics();}
 
