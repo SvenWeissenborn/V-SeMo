@@ -1,9 +1,6 @@
-startZoom =1
-startViewportTransform_4 =0
-startViewportTransform_5 =0
-
 /*
 ------Parameter-------
+turnLorentzTransformOn = 0
 nSektorzeilenVonRing: 3
 nSektorspaltenVonRing: 12
 schwarzschildradius: 0
@@ -29,10 +26,16 @@ startTextsOffset_y: []
 ----------------------
 */
 
+startZoom =1
+startViewportTransform_4 =0
+startViewportTransform_5 =0
+
+let turnLorentzTransformOn =0
+
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey', 'grey', 'grey'];
 let lineStrokeWidthWhenNotSelected = 2
-let lineStrokeWidthWhenSelected = 5
+let lineStrokeWidthWhenSelected =5
 sec_name= [ 'A1', 'B1', 'C1', 'A2', 'B2', 'C2', 'A3', 'B3', 'C3', 'A4', 'B4', 'C4', 'A5', 'B5', 'C5', 'A6', 'B6', 'C6', 'A7', 'B7', 'C7', 'A8', 'B8', 'C8', 'A9', 'B9', 'C9', 'A10', 'B10', 'C10', 'A11', 'B11', 'C11', 'A12', 'B12', 'C12', ];
 sec_fill= [ 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, ];

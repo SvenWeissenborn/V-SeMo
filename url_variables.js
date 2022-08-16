@@ -13,7 +13,7 @@ function getUrlVars() {
 let language = getUrlVars()["language"];
 
 //turnLorentzTransformOn=1& um lorentzTransform einzuschalten
-let turnLorentzTransformOn = getUrlVars()["turnLorentzTransformOn"];
+//let turnLorentzTransformOn = getUrlVars()["turnLorentzTransformOn"];
 
 //goThroughStar=1& um lorentzTransform einzuschalten
 let goThroughStar = getUrlVars()["goThroughStar"];

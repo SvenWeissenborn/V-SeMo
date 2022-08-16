@@ -2,6 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
+# modeltype:
+# spatial: turnLorentzTransformOn = 0
+# spacetime: turnLorentzTransformOn = 1
+lorentzTransform = 0
+
 # Einteilung der Kugeloberfläche
 nSectorRowsFromSphere = 9
 nSectorColumnsFromSphere = 18
@@ -83,6 +88,7 @@ def main():
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
+                "turnLorentzTransformOn = " + str(lorentzTransform) + "\n"                   
                 "nSectorRowsFromSphere = " + str(nSectorRowsFromSphere) + "\n"
                 "nSectorColumnsFromSphere = " + str(nSectorColumnsFromSphere) + "\n"
                 "radius = " + str(radius) + "\n"
@@ -121,6 +127,10 @@ def main():
         "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
         "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
     )
+    file.write("\n")
+
+    file.write("let turnLorentzTransformOn =" + str(lorentzTransform) + "\n")
+
     file.write("\n")
 
     file.write(

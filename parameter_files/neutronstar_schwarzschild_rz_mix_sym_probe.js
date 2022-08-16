@@ -22,6 +22,8 @@ startZoom =0.65
 startViewportTransform_4 =-1300
 startViewportTransform_5 =-2800
 
+let turnLorentzTransformOn =1
+
 line_colors = [ 'black', 'blue', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];
 let lineStrokeWidthWhenNotSelected = 2
 let lineStrokeWidthWhenSelected = 5

@@ -28,6 +28,8 @@ startTextsOffset_y: []
 ----------------------
 */
 
+let turnLorentzTransformOn =0
+
 startZoom =0.5
 startViewportTransform_4 =-200
 startViewportTransform_5 =0

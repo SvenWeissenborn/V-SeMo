@@ -19,6 +19,12 @@ text_dist_from_mid_y: [0.5, -0.9]
 ----------------------
 */
 
+startZoom =0.9
+startViewportTransform_4 =80
+startViewportTransform_5 =50
+
+let turnLorentzTransformOn =0
+
 let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
 let mark_colors = ['grey'];
 let lineStrokeWidthWhenNotSelected = 2

@@ -1633,7 +1633,7 @@ let geodreieckStartAngle;
 let geodreieckSnapAngle;
 let geodreieckScale;
 
-if (turnLorentzTransformOn == "1"){
+if (turnLorentzTransformOn == 1){
     geodreieckSnapAngle = 15
     geodreieckStartAngle = 90
     geodreieckScale = 0.0585
@@ -1897,7 +1897,7 @@ function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                 //drawOrientationCirc('blue', x_kante_uebergang, y_kante_uebergang)
 
-                if (turnLorentzTransformOn == "1"){
+                if (turnLorentzTransformOn == 1){
 
                     let neighbourTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[neighbourSector].trapez)
 
@@ -2478,7 +2478,7 @@ function continueGeodesic(geodesicToContinue) {
 
             */
 
-            if (turnLorentzTransformOn == "1"){
+            if (turnLorentzTransformOn == 1){
 
                 getStartAndEndPointCoordsBeforeLorentztransform(lines[geodesicToContinue][lines[geodesicToContinue].length - 1])
 
@@ -2489,7 +2489,7 @@ function continueGeodesic(geodesicToContinue) {
 
             //Fortsetzung im nächsten Sektor
 
-            if (turnLorentzTransformOn !== "1"){
+            if (turnLorentzTransformOn !== 1){
                 slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
             }
 
@@ -2521,7 +2521,7 @@ function continueGeodesic(geodesicToContinue) {
 
                 //Übergangsrichtung ermitteln
 
-                if (turnLorentzTransformOn == "1"){
+                if (turnLorentzTransformOn == 1){
                     let rapid_base;
                     if (Math.abs(xt1 - xt2) > Math.abs(yt1 - yt2)) {
                             rapid_base = Math.atanh((yt2 - yt1) / (xt2 - xt1))
@@ -2601,11 +2601,11 @@ function continueGeodesic(geodesicToContinue) {
                 }
 
 
-                if (turnLorentzTransformOn == "1"){
+                if (turnLorentzTransformOn == 1){
                     getStartAndEndPointCoordsBeforeLorentztransform(lineSegmentContinue)
                 }
 
-                if (turnLorentzTransformOn !== "1"){
+                if (turnLorentzTransformOn !== 1){
                     slopeAngle = Math.acos((dxg * dxt12 + dyg * dyt12) / ((Math.sqrt(dxg * dxg + dyg * dyg)) * (Math.sqrt(dxt12 * dxt12 + dyt12 * dyt12))));
                 }
 
@@ -2815,7 +2815,7 @@ function drawGeodesicTicks(lineID){
 
         let geodesicTicksDistanceToUse
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
             geodesicTicksDistanceToUse = geodesicTicksDistanceConstant * Math.sqrt( (1 + velocityFactor * velocityFactor) / (1 - velocityFactor * velocityFactor) )
         } else{
             geodesicTicksDistanceToUse = geodesicTicksDistanceConstant
@@ -2824,7 +2824,7 @@ function drawGeodesicTicks(lineID){
         //let delta_x_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_x;
         //let delta_y_normed = 1/(Math.sqrt((delta_x * delta_x) + (delta_y * delta_y))) * delta_y;
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
             remBefore = remBefore * Math.sqrt( (1 + velocityFactor * velocityFactor) / (1 - velocityFactor * velocityFactor) )
         }
 
@@ -2898,7 +2898,7 @@ function drawGeodesicTicks(lineID){
 
 
 
-            if (turnLorentzTransformOn == "1"){
+            if (turnLorentzTransformOn == 1){
                 remBefore = rem * Math.sqrt( (1 - velocityFactor * velocityFactor) / (1 + velocityFactor * velocityFactor) )
             }else{
                 remBefore = rem
@@ -3121,7 +3121,7 @@ function drawDragPoint(lineToGivePoint) {
     }
 
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         if (lineSegment.lineType == "geodesic"){
             lineSegment.dragPoint.start_pos_BL_dragPoint_x = lineSegment.end_point_BL.x;
             lineSegment.dragPoint.start_pos_BL_dragPoint_y = lineSegment.end_point_BL.y;
@@ -3168,7 +3168,7 @@ function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, li
 
     sectors[lineSegment.parentSector[0]].lineSegments.push(lineSegment);
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         getStartAndEndPointCoordsBeforeLorentztransform(lineSegment)
     }
 
@@ -3286,7 +3286,7 @@ function drawPolylineSegment(color, polylineStrokeWidth, parentSectorID, polylin
 
         sectors[polylineSegment.parentSector[0]].lineSegments.push(polylineSegment);
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
             getPolylinePathCoordsBeforeLorentztransform(polylineSegment)
             let polylineMidPoint = {x: polylineSegment.left - 0.5, y: polylineSegment.top - 0.5}
             polylineSegment.polylineMidPoint_BL = getPointCoordsBeforeLorentztransform(polylineMidPoint, sectors[polylineSegment.parentSector[0]].trapez)
@@ -3320,7 +3320,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     let originXToSet;
     let originYToSet;
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         originXToSet =  'left';
         originYToSet = 'bottom';
         sectorLockRotationToSet = true;
@@ -3374,7 +3374,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     this.trapez.y_offset = Math.min(y0,y1,y2,y3) + 0.5;
 
     let showRotationControll;
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         showRotationControll = false;
     }else{
         showRotationControll = true;
@@ -3404,7 +3404,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     let textPos_x;
     let textPos_y;
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         textPos_x = this.pos_x + this.sector_width/2;
         textPos_y = this.pos_y - this.sector_height/2;
     }else{
@@ -3440,7 +3440,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
     let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(this.trapez)
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         this.ID_text.start_pos_BL_text_x = this.ID_text.left - trapezPointsAsGlobalCoords[3].x;
         this.ID_text.start_pos_BL_text_y = this.ID_text.top - trapezPointsAsGlobalCoords[3].y;
     }
@@ -3468,7 +3468,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
 
     this.trapez.on('selected', function () {
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
 
             for(let ii = 0; ii < this.parent.slider.length; ii++){
                 this.parent.slider[ii].opacity = 1.00;
@@ -3483,7 +3483,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     });
 
     this.trapez.on('deselected', function () {
-        if (turnLorentzTransformOn == "1") {
+        if (turnLorentzTransformOn == 1) {
             for (let ii = 0; ii < this.parent.slider.length; ii++) {
                 this.parent.slider[ii].opacity = 0.00;
             }
@@ -3507,7 +3507,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         showGeodesicButtons(false);
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
 
             rapidity_before_something = this.parent.rapidity;
 
@@ -3674,7 +3674,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
     this.trapez.on('mouseup', function (o) {
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
 
             rapidity_after_something = this.parent.rapidity;
 
@@ -3751,7 +3751,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
         if (sectorParameterOnMousedown.length > 0){
             if (sectorParameterOnMousedown[0] === sectorParameterOnMouseup[0]){
-                if (turnLorentzTransformOn == "1") {
+                if (turnLorentzTransformOn == 1) {
                     if (sectorParameterOnMousedown[2] !== sectorParameterOnMouseup[2] || sectorParameterOnMousedown[3] !== sectorParameterOnMouseup[3] || sectorParameterOnMousedown[4] !== sectorParameterOnMouseup[4] || sectorParameterOnMousedown[5] !== sectorParameterOnMouseup[5]){
                         immediatehistory.push(sectorParameterOnMousedown);
                         sectorParameterOnMousedown = [];
@@ -4080,7 +4080,7 @@ function drawSnapEdges(initialSectorID) {
 
                 let offsetToAdd = 0
 
-                if (turnLorentzTransformOn == "1"){
+                if (turnLorentzTransformOn == 1){
                     offsetToAdd = 0.5
                 }
 
@@ -4167,7 +4167,7 @@ function drawTicks(trapez) {
 
             let tickPoint_0
 
-            if (turnLorentzTransformOn == "1") {
+            if (turnLorentzTransformOn == 1) {
                 tickPoint_0 = [
                     trapez.points[directions[ii][0]].x + 0.5 + dx_normiert * tick_dist * jj + trapez.left + temporary_offset_x,
                     trapez.points[directions[ii][0]].y + dy_normiert * tick_dist * jj + trapez.top - temporary_offset_y
@@ -4223,7 +4223,7 @@ function drawTicks(trapez) {
 
             trapez.parent.ticks.push(tick);
 
-            if (turnLorentzTransformOn == "1") {
+            if (turnLorentzTransformOn == 1) {
                 getStartAndEndPointCoordsBeforeLorentztransform(tick)
             }
 
@@ -4238,7 +4238,7 @@ function drawTicks(trapez) {
 
 
 function drawLightCone(trapez) {
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
 
         if (Math.abs(trapez.points[3].x - trapez.points[2].x) < epsilon){
             return
@@ -5039,7 +5039,7 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
 function getSectorParameterOnMousedown(initialSectorID){
     let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
-    if (turnLorentzTransformOn === "1"){
+    if (turnLorentzTransformOn === 1){
         sectorParameterOnMousedown = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle, sectors[initialSectorID].rapidity]
     } else{
         sectorParameterOnMousedown = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle];
@@ -5050,7 +5050,7 @@ function getSectorParameterOnMousedown(initialSectorID){
 
 function getSectorParameterOnMouseup(initialSectorID){
     let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
-    if (turnLorentzTransformOn === "1"){
+    if (turnLorentzTransformOn === 1){
         sectorParameterOnMouseup = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle, sectors[initialSectorID].rapidity]
     } else{
         sectorParameterOnMouseup = [sectors[initialSectorID].ID, stack_idx_of_initialSector, sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top, sectors[initialSectorID].trapez.angle];
@@ -5106,7 +5106,7 @@ function getPolylinePointsImGlobalCoords(lineSegment){
 function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
     let transformMatrix = trapezToGetGlobalCoords.calcTransformMatrix('True');
     let globalCoords = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         for (let ii = 0; ii < 4; ii++) {
             globalCoords[ii].x = trapezToGetGlobalCoords.points[ii].x - trapezToGetGlobalCoords.width / 2 - trapezToGetGlobalCoords.x_offset;
             globalCoords[ii].y = trapezToGetGlobalCoords.points[ii].y - trapezToGetGlobalCoords.height / 2 - trapezToGetGlobalCoords.y_offset;
@@ -5148,7 +5148,7 @@ function init() {
         sec.pos_y = sec_posy[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2;
         sec.sector_height = sec_height[ii];
         sec.sector_width = sec_width[ii];
-        if (turnLorentzTransformOn !== "1") {
+        if (turnLorentzTransformOn !== 1) {
             //sec.sector_bottom = sec_bottom[ii];
             //sec.sector_top = sec_top[ii];
             sec.sector_angle = sec_angle[ii];
@@ -5166,7 +5166,7 @@ function init() {
         }
         sec.draw(sec_coords[ii][0], sec_coords[ii][1], sec_coords[ii][2], sec_coords[ii][3], sec_coords[ii][4], sec_coords[ii][5], sec_coords[ii][6], sec_coords[ii][7]);
 
-        if (turnLorentzTransformOn == "1") {
+        if (turnLorentzTransformOn == 1) {
             sec.draw_slider(sec.pos_x - 40, sec.pos_y - 20);
         }
 
@@ -5310,7 +5310,7 @@ function isItTimeToSnap(trapez) {
 
                     sectorToSnap = potentialSnappingPartnerID;
 
-                    if (turnLorentzTransformOn == "1"){
+                    if (turnLorentzTransformOn == 1){
 
                         let rapidity_before = trapez.parent.rapidity;
 
@@ -5484,7 +5484,7 @@ function moveMinionsToStack(initialSectorID, sectorStackID){
         canvas.moveTo(markPoint, sectorStackID + addToStack)
         addToStack += 1
     }
-    if (turnLorentzTransformOn === "1") {
+    if (turnLorentzTransformOn === 1) {
         for (let ii = 0; ii < sectors[initialSectorID].slider.length; ii++) {
             let slider_move = sectors[initialSectorID].slider[ii];
             canvas.moveTo(slider_move, sectorStackID + addToStack)
@@ -5801,7 +5801,7 @@ function resetSectors() {
         immediatehistory.push(sectorParameterOnMousedown)
 
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
             if (Math.abs(sectors[rr].trapez.left - sec_posx[rr] + window.innerWidth/2) < epsilon || Math.abs(sectors[rr].trapez.top - sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2) < epsilon|| sectors[rr].rapidity !== 0) {
 
 
@@ -6045,13 +6045,14 @@ function Sector() {
     this.sector_width;
     this.sector_angle;
     this.name;
+    this.fontSize;
     this.ID;
     this.fill;
     this.sector_type;
 
     this.draw = drawSector; // das Objekt Sektor bekommt die Methode 'drawSectors' mitgegeben, keine Klammern
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         this.slider;
         this.rapidity = 0;
         this.draw_slider = drawSlider;
@@ -6289,7 +6290,7 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
         sectors[targetSectorID].trapez.fill = sec_fill[sectors[targetSectorID].ID];
     }
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
 
         translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
 
@@ -6337,7 +6338,7 @@ function startGeodesics(){
             drawGeodesicTicks(lineSegment.ID[0])
         }
 
-        if (turnLorentzTransformOn == "1"){
+        if (turnLorentzTransformOn == 1){
 
 
             lines[ii].operational = startGeodesicOperational[ii];
@@ -6823,7 +6824,7 @@ function undoLastAction(){
 
             removeSnapEdges(sectorID);
 
-            if (turnLorentzTransformOn == "1") {
+            if (turnLorentzTransformOn == 1) {
 
                 let dist_inv_min_x_old = Math.min(sectors[sectorID].trapez.points[0].x, sectors[sectorID].trapez.points[1].x, sectors[sectorID].trapez.points[2].x, sectors[sectorID].trapez.points[3].x);
                 let dist_inv_max_y_old = Math.max(sectors[sectorID].trapez.points[0].y, sectors[sectorID].trapez.points[1].y, sectors[sectorID].trapez.points[2].y, sectors[sectorID].trapez.points[3].y);
@@ -6961,7 +6962,7 @@ function updateMinions(boss) {
         }
     }
 
-    if (turnLorentzTransformOn === "1"){
+    if (turnLorentzTransformOn === 1){
         for (let ii = 0; ii < boss.parent.slider.length; ii++){
             let slider_move = boss.parent.slider[ii];
             if (slider_move.relationship) {
@@ -7174,7 +7175,7 @@ function updateMinions(boss) {
     }
 
 
-    if (turnLorentzTransformOn == "1"){
+    if (turnLorentzTransformOn == 1){
         canvas.bringToFront(boss.parent.slider[0])
     }
 

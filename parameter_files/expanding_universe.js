@@ -20,6 +20,9 @@ startGeodesicsOperational: ['false', 'false', 'true', 'true']
 startZoom =0.6
 startViewportTransform_4 =-200
 startViewportTransform_5 =600
+
+let turnLorentzTransformOn =1
+
 let lineStrokeWidthWhenNotSelected = 2
 let lineStrokeWidthWhenSelected = 5
 line_colors = ['grey', 'grey', 'blue', 'black', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];

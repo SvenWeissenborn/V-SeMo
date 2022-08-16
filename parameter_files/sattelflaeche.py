@@ -2,6 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
+# modeltype:
+# spatial: turnLorentzTransformOn = 0
+# spacetime: turnLorentzTransformOn = 1
+lorentzTransform = 0
+
 #Eigenschaften des Ausgangsobjekts
 radius = 500
 
@@ -71,15 +76,9 @@ def main():
 
     file = io.open("sattelflaeche.js",'w')
 
-    file.write(
-        "startZoom =" + str(startZoom) + "\n"
-        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
-        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
-    )
-    file.write("\n")
-
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
+                "turnLorentzTransformOn = " + str(lorentzTransform) + "\n"
                 "radius: " + str(radius) + "\n"
                 "nRowsInModel: " + str(nRowsInModel) + "\n"
                 "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
@@ -110,6 +109,18 @@ def main():
 
     file.write("\n")
     file.write("\n")
+
+    file.write(
+        "startZoom =" + str(startZoom) + "\n"
+        "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
+        "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
+    )
+    file.write("\n")
+
+    file.write("let turnLorentzTransformOn =" + str(lorentzTransform) + "\n")
+
+    file.write("\n")
+
     file.write(
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")

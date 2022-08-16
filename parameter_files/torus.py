@@ -2,6 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
+# modeltype:
+# spatial: turnLorentzTransformOn = 0
+# spacetime: turnLorentzTransformOn = 1
+lorentzTransform = 0
+
 #Eigenschaften des Ausgangsobjekts
 radiusQuerschnittsKreis = 2.5
 radiusMittellinienKreis = 7
@@ -72,6 +77,7 @@ def main():
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
+                "turnLorentzTransformOn = " + str(lorentzTransform) + "\n"
                 "radiusQuerschnittsKreis: " + str(radiusQuerschnittsKreis) + "\n"
                 "radiusMittellinienKreis: " + str(radiusMittellinienKreis) + "\n"
                 "deltaWinkelQuerschnittsKreis: " + str(deltaWinkelQuerschnittsKreis) + "\n"
@@ -111,6 +117,11 @@ def main():
         "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
         "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
     )
+    file.write("\n")
+
+
+    file.write("let turnLorentzTransformOn =" + str(lorentzTransform) + "\n")
+
     file.write("\n")
 
     file.write(

@@ -2,6 +2,11 @@ import io
 import math
 import geodesicsTextsMarks as gtm
 
+# modeltype:
+# spatial: turnLorentzTransformOn = 0
+# spacetime: turnLorentzTransformOn = 1
+lorentzTransform = 0
+
 nSektorzeilenVonRing = 11
 nSektorspaltenVonRing = 12
 
@@ -68,6 +73,7 @@ def main():
 
     file.write( "/*" +"\n"
             "------Parameter-------" +"\n"
+            "turnLorentzTransformOn = " + str(lorentzTransform) + "\n"
             "nSektorzeilenVonRing: " + str(nSektorzeilenVonRing) +"\n"
             "nSektorspaltenVonRing: " + str(nSektorspaltenVonRing) +"\n"
             "schwarzschildradius: " + str(schwarzschildradius) +"\n"
@@ -104,6 +110,10 @@ def main():
         "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
         "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
     )
+    file.write("\n")
+
+    file.write("let turnLorentzTransformOn =" + str(lorentzTransform) + "\n")
+
     file.write("\n")
 
     file.write(

@@ -1,6 +1,10 @@
 import io
 import math
 
+# modeltype:
+# spatial: turnLorentzTransformOn = 0
+# spacetime: turnLorentzTransformOn = 1
+lorentzTransform = 1
 
 nRowsInModel = 8
 nColumnsInModel = 16
@@ -46,6 +50,7 @@ def main():
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
+                "turnLorentzTransformOn = " + str(lorentzTransform) + "\n"
                 "radius: " + str(schwarzschildRadius) + "\n"
                 "nRowsInModel: " + str(nRowsInModel) + "\n"
                 "nColumnsInModel: " + str(nColumnsInModel) + "\n"                                                        
@@ -73,6 +78,11 @@ def main():
         "startViewportTransform_4 =" + str(startViewportTransform_4) + "\n"
         "startViewportTransform_5 =" + str(startViewportTransform_5) + "\n"
     )
+    file.write("\n")
+
+
+    file.write("let turnLorentzTransformOn =" + str(lorentzTransform) + "\n")
+
     file.write("\n")
 
     file.write(

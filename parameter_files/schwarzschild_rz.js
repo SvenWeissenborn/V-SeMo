@@ -1,6 +1,9 @@
 startZoom =1.5
 startViewportTransform_4 =0
 startViewportTransform_5 =0
+
+let turnLorentzTransformOn =1
+
 let lineStrokeWidthWhenNotSelected = 2
 let lineStrokeWidthWhenSelected = 5
 line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
