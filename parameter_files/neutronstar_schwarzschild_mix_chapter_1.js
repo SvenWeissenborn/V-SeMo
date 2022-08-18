@@ -1,5 +1,6 @@
 /*
 ------Parameter-------
+turnLorentzTransformOn = 0
 nSektorzeilenVonRing: 11
 nSektorspaltenVonRing: 12
 schwarzschildradius: 120
@@ -71,7 +72,7 @@ markStartRadius= [ 5, 5, 5, 5, 5, 5, ];
 markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], ];
 markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], ];
 markStartParentSector= [ [43,0], [47,0], [58,0], [69,0], [80,0], [124,0], ];
-markStartID= [ [0,1], [1,1], [2,1], [3,1], [4,1], [5,1], ];
+markStartID= [ [0], [1], [2], [3], [4], [5], ];
 textStart_x= [ 744.5698810513338, 744.5698810513338, 173.29914118727552, 88.57813977105347, 2.7213658133808116e-14, -125.23004481304625, -125.23004481304636, ];
 textStart_y= [ 27.331291162826073, 21.86503293026085, 123.0066379023066, 193.1764438511491, 216.03159149483935, 177.15019492257636, -177.15019492257628, ];
 textStartContent= [ 'Karl &\n  Lisa', 'Karl', 'Lisa', 'Lisa', 'Lisa', 'Lisa', 'Lisa', ];

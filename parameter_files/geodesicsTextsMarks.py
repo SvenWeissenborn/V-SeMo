@@ -137,7 +137,7 @@ def startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle,
 
         markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(markNumberInSector) + "]"
 
-        markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "," + str(1) + "]"
+        markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "]"
 
         markValues[markDict["markStartStrokeWidth"]][startMark] = 2
 

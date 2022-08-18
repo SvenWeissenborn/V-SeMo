@@ -5155,7 +5155,7 @@ function init() {
             //sec.offset_x = sec_offset[ii];
         } else {
             sec.sector_angle = 0;
-            sec.sec_diff_edges = Math.max(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]) - Math.min(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]);
+            //sec.sec_diff_edges = Math.max(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]) - Math.min(sec_timeEdgeLeft[ii], sec_timeEdgeRight[ii]);
 
         }
 
@@ -6319,7 +6319,7 @@ function startGeodesics(){
 
     for (let ii = 0; ii < startSectors.length; ii++) {
 
-        let sec = sectors[startSectors[ii]];
+        //let sec = sectors[startSectors[ii]];
         let parentSectorID = startParentSector[ii][0];
 
         let lineStart_x = x_Start[ii] + window.innerWidth / 2;
