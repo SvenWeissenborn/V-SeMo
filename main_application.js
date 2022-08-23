@@ -1377,7 +1377,9 @@ canvas.on('mouse:up', function(opt) {
 
         toolChange('grab')
     }
-
+    if (lineTypeToDraw == 'vector') {
+        toolChange('grab')
+    }
 
     if (showExerciseBox == "1"){
         checkSlideCondition();
@@ -3503,7 +3505,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
 
-        console.log(this.parent.neighbourhood)
+        //console.log(this.parent.neighbourhood)
 
         showGeodesicButtons(false);
 
@@ -3605,6 +3607,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     polyline.bringToFront();
 
                     canvas.renderAll();
+                }
+
+                if (lineTypeToDraw == 'vector'){
+
+                    drawVector(pointer, this.parent.ID)
+
                 }
 
             }
@@ -4288,6 +4296,89 @@ function drawLightCone(trapez) {
         canvas.add(lightCone);
     }
 
+}
+
+window.addEventListener('keydown',function(event){
+    if(event.key === 'v'){
+        lineTypeToDraw = 'vector'
+        changeGeodesicWidth(2);
+        showGeodesicButtons(false);
+        toolChange('paint');
+        geodreieck.selectable = false;
+        //add.opacity = 0;
+        //add_dark.opacity = 1;
+        canvas_side_bar_perm.renderAll()
+        showVertices(false);
+        showSectorAreaInfobox(false)
+        showDeficitAngleInfobox(false)
+        buttonPressedForExercise(this)
+    }
+
+});
+
+function drawVector(clickedPoint, parentSectorID){
+
+    let vectorlength = 60
+
+    let vectorDashed = new fabric.Line([clickedPoint.x-vectorlength/2,clickedPoint.y-vectorlength/2,clickedPoint.x+vectorlength/2,clickedPoint.y+vectorlength/2], {
+        strokeWidth: 4,
+        strokeDashArray: [2, 2],
+        stroke: 'black',
+        fill: 'black',
+        originX: 'center',
+        originY: 'center',
+        perPixelTargetFind: false,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: false,
+        padding: 5
+    });
+
+    vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID)
+    vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID)
+    vectorDashed.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
+    sectors[parentSectorID].vectors.push(vectorDashed)
+
+    let vector = new fabric.Line([clickedPoint.x-vectorlength/2,clickedPoint.y-vectorlength/2,clickedPoint.x+vectorlength/2,clickedPoint.y+vectorlength/2], {
+        strokeWidth: 4,
+        stroke: 'black',
+        fill: 'black',
+        originX: 'center',
+        originY: 'center',
+        perPixelTargetFind: true,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        evented: true
+    });
+
+    vector.on('mousedown',function() {
+        vector.bringToFront()
+    });
+
+    vector.on('modified',function() {
+        let vectorParentIDBefore = vector.parentSector[0]
+        sectors[vectorParentIDBefore].vectors.splice(vector.parentSector[1], 1)
+        console.log(sectors[vectorParentIDBefore].vectors)
+        let vectorMidPoint = new fabric.Point(vector.left, vector. top)
+        let vectorParentIDNew = getParentSectorOfPoint(vectorMidPoint)
+        console.log(vectorParentIDNew)
+        if (vectorParentIDNew !== undefined){
+            vector.parentSector = [vectorParentIDNew, sectors[vectorParentIDNew].vectors.length];
+            vector.relationship = getRelationship(vector, vectorParentIDNew)
+            sectors[vectorParentIDNew].vectors.push(vector)
+        }
+    });
+
+    vector.relationship = getRelationship(vector, parentSectorID)
+    vector.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
+
+    sectors[parentSectorID].vectors.push(vector)
+
+    canvas.add(vector, vectorDashed);
+    canvas.bringToFront(vector, vectorDashed);
+    canvas.renderAll();
 }
 
 function drawVertices() {
@@ -6064,6 +6155,7 @@ function Sector() {
     this.texts = [];
     this.cornerArcs = [];
     this.ticks = [];
+    this.vectors = [];
 
     this.ID_text;
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
@@ -6960,6 +7052,31 @@ function updateMinions(boss) {
             );
             markPoint.set(options);
             markPoint.setCoords();
+        }
+    }
+
+    for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
+        let vector = boss.parent.vectors[ii];
+        if (vector.relationship) {
+            vector.bringToFront();
+            let relationship = vector.relationship;
+            let newTransform = multiply(
+                boss.calcTransformMatrix(),
+                relationship
+            );
+            let options;
+            options = fabric.util.qrDecompose(newTransform);
+            vector.set({
+                flipX: false,
+                flipY: false,
+            });
+            vector.setPositionByOrigin(
+                {x: options.translateX, y: options.translateY},
+                'center',
+                'center'
+            );
+            vector.set(options);
+            vector.setCoords();
         }
     }
 
