@@ -4337,6 +4337,11 @@ function drawVector(clickedPoint, parentSectorID){
     vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID);
     vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID);
     vectorDashed.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
+
+    if (turnLorentzTransformOn == 1){
+        getStartAndEndPointCoordsBeforeLorentztransform(vectorDashed)
+    }
+
     sectors[parentSectorID].vectors.push(vectorDashed);
 
     let vector = new fabric.Line([clickedPoint.x-vectorlength/2,clickedPoint.y-vectorlength/2,clickedPoint.x+vectorlength/2,clickedPoint.y+vectorlength/2], {
@@ -4368,10 +4373,17 @@ function drawVector(clickedPoint, parentSectorID){
             vector.relationship = getRelationship(vector, vectorParentIDNew);
             sectors[vectorParentIDNew].vectors.push(vector)
         }
+        if (turnLorentzTransformOn == 1){
+            getStartAndEndPointCoordsBeforeLorentztransform(vector)
+        }
     });
 
     vector.relationship = getRelationship(vector, parentSectorID);
     vector.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
+
+    if (turnLorentzTransformOn == 1){
+        getStartAndEndPointCoordsBeforeLorentztransform(vector)
+    }
 
     sectors[parentSectorID].vectors.push(vector);
 
@@ -5558,6 +5570,11 @@ function lorentzTransform(theta, trapez) {
             lorentzTransformLinePoints(trapez.parent.ticks[ii], theta, trapezPointsAsGlobalCoords)
         }
     }
+    if (trapez.parent.vectors.length > 0) {
+        for (let ii = 0; ii < trapez.parent.vectors.length; ii++) {
+            lorentzTransformLinePoints(trapez.parent.vectors[ii], theta, trapezPointsAsGlobalCoords)
+        }
+    }
     canvas.renderAll();
 
 
@@ -5799,6 +5816,16 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
 
         for (let ii = 0; ii < sectors[initialSectorID].ticks.length; ii++) {
             sectors[initialSectorID].ticks[ii].relationship = getRelationship(sectors[initialSectorID].ticks[ii], sectors[initialSectorID].ID);
+        }
+    }
+
+    if (sectors[initialSectorID].vectors.length > 0) {
+        for (let ii = 0; ii < sectors[initialSectorID].vectors.length; ii++) {
+            canvas.bringToFront(sectors[initialSectorID].vectors[ii]);
+        }
+
+        for (let ii = 0; ii < sectors[initialSectorID].vectors.length; ii++) {
+            sectors[initialSectorID].vectors[ii].relationship = getRelationship(sectors[initialSectorID].vectors[ii], sectors[initialSectorID].ID);
         }
     }
 
