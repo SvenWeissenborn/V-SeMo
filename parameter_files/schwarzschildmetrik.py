@@ -39,7 +39,7 @@ startGeodesicsOffset_y = [0.7, 0.7]
 # Laenge der Geodaete in Pixel
 startGeodesicsLength = [50, 50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
-startGeodesicsOperational = ['true']
+startGeodesicsOperational = ['true', 'true']
 
 # Parameter fuer die Startmarkierungen
 startMarksSectors = [14, 11]
