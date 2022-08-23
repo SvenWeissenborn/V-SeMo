@@ -5482,6 +5482,29 @@ function isItTimeToSnap(trapez) {
     }
 }
 
+function lorentzTransformLinePoints(lineToTransform, theta, trapezPointsAsGlobalCoords) {
+    lineToTransform.set({
+        'x1': lineToTransform.start_point_BL.x * Math.cosh(theta) + lineToTransform.start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
+        'y1': lineToTransform.start_point_BL.x * Math.sinh(theta) + lineToTransform.start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
+        'x2': lineToTransform.end_point_BL.x * Math.cosh(theta) + lineToTransform.end_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
+        'y2': lineToTransform.end_point_BL.x * Math.sinh(theta) + lineToTransform.end_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
+
+        /*
+        trapez.parent.lineSegments[ii].set({
+            'x1': (geodesic_start_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
+            'y1': (geodesic_start_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
+            'x2': (geodesic_end_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
+            'y2': (geodesic_end_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
+        */
+    })
+}
+
+function lorentzTransformObjectPosition(object, theta, trapezPointsAsGlobalCoords) {
+    object.set('left', object.start_pos_BL_text_x * Math.cosh(theta) + object.start_pos_BL_text_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
+    object.set('top', object.start_pos_BL_text_x * Math.sinh(theta) + object.start_pos_BL_text_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+
+}
+
 function lorentzTransform(theta, trapez) {
 
 
@@ -5489,37 +5512,25 @@ function lorentzTransform(theta, trapez) {
     //**** !!!! Beachte, dass 'sector' das übergegebene Trapez ist !!!!
 
 
-    for (let ii=0;ii<4;ii++){
+    for (let ii = 0; ii < 4; ii++){
         trapez.points[ii].x= sec_coords[trapez.parent.ID][ii*2] * Math.cosh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.sinh(theta);
         trapez.points[ii].y= sec_coords[trapez.parent.ID][ii*2] * Math.sinh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.cosh(theta);
 
     }
 
-    trapez.parent.ID_text.set('left', trapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(theta) + trapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
-    trapez.parent.ID_text.set('top', trapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(theta) + trapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+    lorentzTransformObjectPosition(trapez.parent.ID_text, theta, trapezPointsAsGlobalCoords);
 
     if (trapez.parent.lineSegments.length > 0) {
         for (let ii = 0; ii < trapez.parent.lineSegments.length; ii++) {
             if (trapez.parent.lineSegments[ii].lineType == "geodesic"){
-                trapez.parent.lineSegments[ii].set({
-                    'x1': trapez.parent.lineSegments[ii].start_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
-                    'y1': trapez.parent.lineSegments[ii].start_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
-                    'x2': trapez.parent.lineSegments[ii].end_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].end_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
-                    'y2': trapez.parent.lineSegments[ii].end_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].end_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
 
-                    /*
-                    trapez.parent.lineSegments[ii].set({
-                        'x1': (geodesic_start_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
-                        'y1': (geodesic_start_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
-                        'x2': (geodesic_end_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
-                        'y2': (geodesic_end_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
-                    */
-                });
+                lorentzTransformLinePoints(trapez.parent.lineSegments[ii], theta, trapezPointsAsGlobalCoords)
+
             }
             if (trapez.parent.lineSegments[ii].lineType == "polyline"){
                 for (let jj = 0; jj < trapez.parent.lineSegments[ii].points_BL.length; jj++){
-                    trapez.parent.lineSegments[ii].points[jj].x = trapez.parent.lineSegments[ii].points_BL[jj].x * Math.cosh(theta) + trapez.parent.lineSegments[ii].points_BL[jj].y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x
-                    trapez.parent.lineSegments[ii].points[jj].y = trapez.parent.lineSegments[ii].points_BL[jj].x * Math.sinh(theta) + trapez.parent.lineSegments[ii].points_BL[jj].y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y
+                    trapez.parent.lineSegments[ii].points[jj].x = trapez.parent.lineSegments[ii].points_BL[jj].x * Math.cosh(theta) + trapez.parent.lineSegments[ii].points_BL[jj].y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x;
+                    trapez.parent.lineSegments[ii].points[jj].y = trapez.parent.lineSegments[ii].points_BL[jj].x * Math.sinh(theta) + trapez.parent.lineSegments[ii].points_BL[jj].y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y;
 
                 }
                 //Die Boundingbox der Polylines wird hier drüber nach jedem Schritt geupdatet
@@ -5527,16 +5538,14 @@ function lorentzTransform(theta, trapez) {
             }
 
             if(trapez.parent.lineSegments[ii].dragPoint !== undefined) {
-                trapez.parent.lineSegments[ii].dragPoint.set('left', trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(theta) + trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
-                trapez.parent.lineSegments[ii].dragPoint.set('top', trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(theta) + trapez.parent.lineSegments[ii].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
-            }
+                lorentzTransformObjectPosition(trapez.parent.lineSegments[ii].dragPoint, theta, trapezPointsAsGlobalCoords);
+                }
 
             if (buildGeodesicTicks == "1"){
                 if (trapez.parent.lineSegments[ii].geodesicTicks.length > 0){
                     console.log(trapez.parent.lineSegments[ii].geodesicTicks);
                     for (let jj = 0; jj < trapez.parent.lineSegments[ii].geodesicTicks.length; jj++) {
-                        trapez.parent.lineSegments[ii].geodesicTicks[jj].set('left', trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.x * Math.cosh(theta) + trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
-                        trapez.parent.lineSegments[ii].geodesicTicks[jj].set('top', trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.x * Math.sinh(theta) + trapez.parent.lineSegments[ii].geodesicTicks[jj].start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+                        lorentzTransformObjectPosition(trapez.parent.lineSegments[ii].geodesicTicks[jj], theta, trapezPointsAsGlobalCoords);
                     }
                 }
             }
@@ -5546,20 +5555,7 @@ function lorentzTransform(theta, trapez) {
 
     if (trapez.parent.ticks.length > 0) {
         for (let ii = 0; ii < trapez.parent.ticks.length; ii++) {
-            trapez.parent.ticks[ii].set({
-                'x1': trapez.parent.ticks[ii].start_point_BL.x * Math.cosh(theta) + trapez.parent.ticks[ii].start_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
-                'y1': trapez.parent.ticks[ii].start_point_BL.x * Math.sinh(theta) + trapez.parent.ticks[ii].start_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
-                'x2': trapez.parent.ticks[ii].end_point_BL.x * Math.cosh(theta) + trapez.parent.ticks[ii].end_point_BL.y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x,
-                'y2': trapez.parent.ticks[ii].end_point_BL.x * Math.sinh(theta) + trapez.parent.ticks[ii].end_point_BL.y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y,
-
-                /*
-                trapez.parent.lineSegments[ii].set({
-                    'x1': (geodesic_start_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
-                    'y1': (geodesic_start_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_start_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
-                    'x2': (geodesic_end_point.x - transformedPoints[3].x) * Math.cosh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.sinh(theta) + transformedPoints[3].x,
-                    'y2': (geodesic_end_point.x - transformedPoints[3].x) * Math.sinh(theta) + (geodesic_end_point.y - transformedPoints[3].y) * Math.cosh(theta) + transformedPoints[3].y,
-                */
-            });
+            lorentzTransformLinePoints(trapez.parent.ticks[ii], theta, trapezPointsAsGlobalCoords)
         }
     }
     canvas.renderAll();
@@ -7019,6 +7015,31 @@ function undoLastAction(){
 
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
 //TODO: Vereinfachen durch function
+
+function updateMinionsRelationship(boss, minion) {
+    if (minion.relationship) {
+        minion.bringToFront();
+        let relationship = minion.relationship;
+        let newTransform = multiply(
+            boss.calcTransformMatrix(),
+            relationship
+        );
+        let options;
+        options = fabric.util.qrDecompose(newTransform);
+        minion.set({
+            flipX: false,
+            flipY: false,
+        });
+        minion.setPositionByOrigin(
+            {x: options.translateX, y: options.translateY},
+            'center',
+            'center'
+        );
+        minion.set(options);
+        minion.setCoords();
+    }
+}
+
 function updateMinions(boss) {
     boss.bringToFront();
     /*
@@ -7031,180 +7052,41 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
         let markPoint = boss.parent.markCircles[ii];
-        if (markPoint.relationship) {
-            markPoint.bringToFront();
-            let relationship = markPoint.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            markPoint.set({
-                flipX: false,
-                flipY: false,
-            });
-            markPoint.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            markPoint.set(options);
-            markPoint.setCoords();
-        }
+        updateMinionsRelationship(boss, markPoint);
     }
 
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
-        if (vector.relationship) {
-            vector.bringToFront();
-            let relationship = vector.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            vector.set({
-                flipX: false,
-                flipY: false,
-            });
-            vector.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            vector.set(options);
-            vector.setCoords();
-        }
+        updateMinionsRelationship(boss, vector);
     }
 
     if (turnLorentzTransformOn === 1){
         for (let ii = 0; ii < boss.parent.slider.length; ii++){
             let slider_move = boss.parent.slider[ii];
-            if (slider_move.relationship) {
-                slider_move.bringToFront();
-                let relationship = slider_move.relationship;
-                let newTransform = multiply(
-                    boss.calcTransformMatrix(),
-                    relationship
-                );
-                let options;
-                options = fabric.util.qrDecompose(newTransform);
-                slider_move.set({
-                    flipX: false,
-                    flipY: false,
-                });
-                slider_move.setPositionByOrigin(
-                    {x: options.translateX, y: options.translateY},
-                    'center',
-                    'center'
-                );
-                slider_move.set(options);
-                slider_move.setCoords();
-            }
+            updateMinionsRelationship(boss, slider_move);
 
         }
     }
 
     for (let ii = 0; ii < boss.parent.ticks.length; ii++) {
         let tick = boss.parent.ticks[ii];
-        if (tick.relationship) {
-            tick.bringToFront();
-            let relationship = tick.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            tick.set({
-                flipX: false,
-                flipY: false,
-            });
-            tick.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            tick.set(options);
-            tick.setCoords();
-        }
+        updateMinionsRelationship(boss, tick)
     }
 
     for (let ii = 0; ii < boss.parent.lineSegments.length; ii++) {
         let segment = boss.parent.lineSegments[ii];
-        if (segment.relationship) {
-            segment.bringToFront();
-            let relationship = segment.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            segment.set({
-                flipX: false,
-                flipY: false,
-            });
-            segment.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            segment.set(options);
-            segment.setCoords();
-        }
+        updateMinionsRelationship(boss, segment);
+
         if(segment.dragPoint !== undefined){
-            let object = segment.dragPoint;
-            if (object.relationship) {
-                object.bringToFront();
-                let relationship = object.relationship;
-                let newTransform = multiply(
-                    boss.calcTransformMatrix(),
-                    relationship
-                );
-                let options;
-                options = fabric.util.qrDecompose(newTransform);
-                object.set({
-                    flipX: false,
-                    flipY: false,
-                });
-                object.setPositionByOrigin(
-                    {x: options.translateX, y: options.translateY},
-                    'center',
-                    'center'
-                );
-                object.set(options);
-                object.setCoords();
-            }
+            let segmentDragPoint = segment.dragPoint;
+            updateMinionsRelationship(boss, segmentDragPoint);
 
         }
 
         if(segment.geodesicTicks !== undefined){
             for(let jj =0; jj < segment.geodesicTicks.length; jj++){
-                let object = segment.geodesicTicks[jj];
-                if (object.relationship) {
-                    object.bringToFront();
-                    let relationship = object.relationship;
-                    let newTransform = multiply(
-                        boss.calcTransformMatrix(),
-                        relationship
-                    );
-                    let options;
-                    options = fabric.util.qrDecompose(newTransform);
-                    object.set({
-                        flipX: false,
-                        flipY: false,
-                    });
-                    object.setPositionByOrigin(
-                        {x: options.translateX, y: options.translateY},
-                        'center',
-                        'center'
-                    );
-                    object.set(options);
-                    object.setCoords();
-                }
+                let segmentGeodesicTick = segment.geodesicTicks[jj];
+                updateMinionsRelationship(boss, segmentGeodesicTick);
             }
         }
     }
@@ -7213,83 +7095,18 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.texts.length; ii++) {
         let text = boss.parent.texts[ii];
-        if (text.relationship) {
-            text.bringToFront();
-            let relationship = text.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            text.set({
-                flipX: false,
-                flipY: false,
-            });
-            text.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            text.set(options);
-            text.setCoords();
-        }
+        updateMinionsRelationship(boss, text);
     }
 
 
     for (let ii = 0; ii < boss.parent.cornerArcs.length; ii++) {
         let cornerArc = boss.parent.cornerArcs[ii];
-        if (cornerArc.relationship) {
-            cornerArc.bringToFront();
-            let relationship = cornerArc.relationship;
-            let newTransform = multiply(
-                boss.calcTransformMatrix(),
-                relationship
-            );
-            let options;
-            options = fabric.util.qrDecompose(newTransform);
-            cornerArc.set({
-                flipX: false,
-                flipY: false,
-            });
-            cornerArc.setPositionByOrigin(
-                {x: options.translateX, y: options.translateY},
-                'center',
-                'center'
-            );
-            cornerArc.set(options);
-            cornerArc.setCoords();
-        }
+        updateMinionsRelationship(boss, cornerArc);
     }
 
-    if (boss.parent.ID_text.relationship) {
-        boss.parent.ID_text.bringToFront();
-
-        let relationship = boss.parent.ID_text.relationship;
-
-        let newTransform = multiply(
-            boss.calcTransformMatrix(),
-            relationship
-        );
-
-        let options;
-        options = fabric.util.qrDecompose(newTransform);
+    updateMinionsRelationship(boss, boss.parent.ID_text);
 
 
-        boss.parent.ID_text.set({
-            flipX: false,
-            flipY: false,
-        });
-
-        boss.parent.ID_text.setPositionByOrigin(
-            {x: options.translateX, y: options.translateY},
-            'center',
-            'center'
-        );
-
-        boss.parent.ID_text.set(options);
-        boss.parent.ID_text.setCoords();
-    }
 
 
     if (turnLorentzTransformOn == 1){
