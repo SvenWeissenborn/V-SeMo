@@ -2247,8 +2247,8 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
 
     let midpoint_boundingbox_before_global = new fabric.Point(initialSectorTrapez.left + initialSectorTrapez.width/2 , initialSectorTrapez.top - initialSectorTrapez.height/2 );
 
-    initialSectorTrapez.parent.ID_text.set('left', initialSectorTrapez.parent.ID_text.start_pos_BL_text_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_text_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
-    initialSectorTrapez.parent.ID_text.set('top', initialSectorTrapez.parent.ID_text.start_pos_BL_text_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_text_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
+    initialSectorTrapez.parent.ID_text.set('left', initialSectorTrapez.parent.ID_text.start_pos_BL_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
+    initialSectorTrapez.parent.ID_text.set('top', initialSectorTrapez.parent.ID_text.start_pos_BL_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.ID_text.start_pos_BL_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
 
     initialSectorTrapez.parent.ID_text.relationship[4] = initialSectorTrapez.parent.ID_text.left - midpoint_boundingbox_before_global.x - 1;
     initialSectorTrapez.parent.ID_text.relationship[5] = initialSectorTrapez.parent.ID_text.top - midpoint_boundingbox_before_global.y + 1;
@@ -2309,8 +2309,8 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
         if (initialSectorTrapez.parent.lineSegments[jj].dragPoint !== undefined) {
 
             dragPoint_transformed_mid_point = new fabric.Point(
-                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
-                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_dragPoint_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
+                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
+                initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.lineSegments[jj].dragPoint.start_pos_BL_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y
             );
 
             initialSectorTrapez.parent.lineSegments[jj].dragPoint.relationship[4] = dragPoint_transformed_mid_point.x - midpoint_boundingbox_before_global.x - 0.5;
@@ -3124,12 +3124,12 @@ function drawDragPoint(lineToGivePoint) {
 
     if (turnLorentzTransformOn == 1){
         if (lineSegment.lineType == "geodesic"){
-            lineSegment.dragPoint.start_pos_BL_dragPoint_x = lineSegment.end_point_BL.x;
-            lineSegment.dragPoint.start_pos_BL_dragPoint_y = lineSegment.end_point_BL.y;
+            lineSegment.dragPoint.start_pos_BL_x = lineSegment.end_point_BL.x;
+            lineSegment.dragPoint.start_pos_BL_y = lineSegment.end_point_BL.y;
         }
         if (lineSegment.lineType == "polyline"){
-            lineSegment.dragPoint.start_pos_BL_dragPoint_x = lineSegment.points_BL[lineSegment.points_BL.length -1].x;
-            lineSegment.dragPoint.start_pos_BL_dragPoint_y = lineSegment.points_BL[lineSegment.points_BL.length -1].y;
+            lineSegment.dragPoint.start_pos_BL_x = lineSegment.points_BL[lineSegment.points_BL.length -1].x;
+            lineSegment.dragPoint.start_pos_BL_y = lineSegment.points_BL[lineSegment.points_BL.length -1].y;
         }
     }
 
@@ -3442,8 +3442,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
     let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(this.trapez);
 
     if (turnLorentzTransformOn == 1){
-        this.ID_text.start_pos_BL_text_x = this.ID_text.left - trapezPointsAsGlobalCoords[3].x;
-        this.ID_text.start_pos_BL_text_y = this.ID_text.top - trapezPointsAsGlobalCoords[3].y;
+        this.ID_text.start_pos_BL_x = this.ID_text.left - trapezPointsAsGlobalCoords[3].x;
+        this.ID_text.start_pos_BL_y = this.ID_text.top - trapezPointsAsGlobalCoords[3].y;
     }
 
     this.trapez.on('moving',function(){
@@ -5512,8 +5512,8 @@ function lorentzTransformLinePoints(lineToTransform, theta, trapezPointsAsGlobal
 }
 
 function lorentzTransformObjectPosition(object, theta, trapezPointsAsGlobalCoords) {
-    object.set('left', object.start_pos_BL_text_x * Math.cosh(theta) + object.start_pos_BL_text_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
-    object.set('top', object.start_pos_BL_text_x * Math.sinh(theta) + object.start_pos_BL_text_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
+    object.set('left', object.start_pos_BL_x * Math.cosh(theta) + object.start_pos_BL_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
+    object.set('top', object.start_pos_BL_x * Math.sinh(theta) + object.start_pos_BL_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
 
 }
 
@@ -5778,8 +5778,8 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
     let lastTopID_text = sectors[initialSectorID].ID_text.top;
     let lastLeftID_text = sectors[initialSectorID].ID_text.left;
 
-    let start_pos_BL_text_x = sectors[initialSectorID].ID_text.start_pos_BL_text_x;
-    let start_pos_BL_text_y = sectors[initialSectorID].ID_text.start_pos_BL_text_y;
+    let start_pos_BL_x = sectors[initialSectorID].ID_text.start_pos_BL_x;
+    let start_pos_BL_y = sectors[initialSectorID].ID_text.start_pos_BL_y;
 
     let dist_inv_min_x_new = Math.min(sectors[initialSectorID].trapez.points[0].x, sectors[initialSectorID].trapez.points[1].x, sectors[initialSectorID].trapez.points[2].x, sectors[initialSectorID].trapez.points[3].x);
     let dist_inv_min_y_new = Math.max(sectors[initialSectorID].trapez.points[0].y, sectors[initialSectorID].trapez.points[1].y, sectors[initialSectorID].trapez.points[2].y, sectors[initialSectorID].trapez.points[3].y);
@@ -5797,8 +5797,8 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
     sectors[initialSectorID].ID_text.set('left', lastLeftID_text).setCoords();
     sectors[initialSectorID].ID_text.set('top', lastTopID_text).setCoords();
 
-    sectors[initialSectorID].ID_text.start_pos_BL_text_x = start_pos_BL_text_x;
-    sectors[initialSectorID].ID_text.start_pos_BL_text_y = start_pos_BL_text_y;
+    sectors[initialSectorID].ID_text.start_pos_BL_x = start_pos_BL_x;
+    sectors[initialSectorID].ID_text.start_pos_BL_y = start_pos_BL_y;
 
     sectors[initialSectorID].ID_text.relationship = getRelationship(sectors[initialSectorID].ID_text, sectors[initialSectorID].ID);
 
