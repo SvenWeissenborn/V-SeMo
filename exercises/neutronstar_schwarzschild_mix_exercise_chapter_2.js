@@ -32,7 +32,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Lisa berichtet Karl, dass sie hinter dem Stern zwei Schweber (S1 & S2) gestartet hat. Beide senden kontinuierlich Signale.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Lisa tells Karl that she has launched two floaters (F1 & F2) behind the star. Both are continuously sending signals.',
         sectorsToSnapTogether: [[43, 42]]
     },
 
@@ -47,11 +47,11 @@ let slideContent = [
     {
         id: 2,
         text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann. \nPrüfe dein Ergebnis durch Antippen der entsprechenden Box.',
-        text_en: 'Join the sectors',
+        text_en: 'Determine from which float Lisa can receive a signal by constructing suitable geodesics. \nCheck your result by tapping the corresponding box.',
         checkBoxesWithText: [
             {
                 text_de: 'a) Schweber 1',
-                text_en: '2 and 3 &',
+                text_en: 'a) Floater 1',
                 type: 'quiz',
                 answerIs: false,
                 result: {
@@ -62,7 +62,7 @@ let slideContent = [
             },
             {
                 text_de: 'b) Schweber 2',
-                text_en: '2 and 3 &',
+                text_en: 'b) Floater 2',
                 type: 'quiz',
                 answerIs: true,
                 result: {
@@ -77,7 +77,7 @@ let slideContent = [
     {
         id: 0,
         text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_en: 'Return to the course.',
         geodesicsToHide: [],
         marksToHide: [],
         textsToHide: [],
