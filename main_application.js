@@ -286,7 +286,7 @@ fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.C
     }
 })
 
-let canvas = new fabric.HammerCanvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9',});
+let canvas = new fabric.HammerCanvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9', willReadFrequently: true });
 
 //Hintergrundbild einfügen
 //canvas.setBackgroundImage('background_image.png', canvas.renderAll.bind(canvas));
@@ -1518,9 +1518,9 @@ window.addEventListener('keydown',function(event){
 //reset Zoom and Pan
 window.addEventListener('keydown',function(event){
     if(event.key === '1'){
-        canvas.setZoom( 0.38 );
-        canvas.viewportTransform[4]= 350;
-        canvas.viewportTransform[5]= 330;
+        canvas.setZoom( 1 );
+        canvas.viewportTransform[4]= -250;
+        canvas.viewportTransform[5]= 40;
     }
 
 });
