@@ -286,7 +286,7 @@ fabric.HammerCanvas = fabric.util.createClass(fabric.Canvas, /** @lends fabric.C
     }
 })
 
-let canvas = new fabric.HammerCanvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9', willReadFrequently: true });
+let canvas = new fabric.HammerCanvas('canvas',{preserveObjectStacking: true, backgroundColor: '#8ab8d9'});
 
 //Hintergrundbild einfügen
 //canvas.setBackgroundImage('background_image.png', canvas.renderAll.bind(canvas));
@@ -4451,13 +4451,8 @@ function drawVertices() {
                 sectors[ii].cornerArcs.push(arc);
                 vertexAngleParts.push(arc);
                 arc.ID_in_global = vertexAngleParts.length-1;
-                canvas.renderAll();
-
-
 
                 arc.on('mouseup', function (o) {
-
-
 
                     let currentArcID = this.ID_on_sector;
                     let pickedSectorID = this.parentSector;
@@ -4537,7 +4532,7 @@ function drawVertices() {
             }
         }
 
-
+    canvas.renderAll();
 }
 
 function fitResponsiveCanvas() {
@@ -6593,8 +6588,9 @@ function startMarks() {
         });
 
 
-        canvas.renderAll();
+
     }
+    canvas.renderAll();
 }
 
 function startTexts() {
@@ -6625,8 +6621,9 @@ function startTexts() {
         let stackIdx = canvas.getObjects().indexOf(sectors[text.parentSector[0]].ID_text);
         canvas.insertAt(text, stackIdx);
         texts.push(text);
-        canvas.renderAll();
+
     }
+    canvas.renderAll();
 }
 
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
