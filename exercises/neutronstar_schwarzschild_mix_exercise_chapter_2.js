@@ -76,7 +76,7 @@ let slideContent = [
 
     {
         id: 0,
-        text_de: 'Kehre wieder zum Kurs zurück.',
+        text_de: 'Wo könnte sich ein Alien auf der Oberfläche des Neutronensterns vor Karl verstecken?',
         text_en: 'Return to the course.',
         geodesicsToHide: [],
         marksToHide: [],

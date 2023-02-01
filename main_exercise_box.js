@@ -363,6 +363,7 @@ function addCheckBoxWithText() {
                             canvas_exercise_box.renderAll()
                         }
                         forward.set('opacity', 1)
+                        forward.set('evented', true)
                     }else{
                         listOfCheckBoxesWithText[ii]._objects[1].set('opacity', 0.0)
                         listOfCheckBoxesWithText[ii]._objects[2].set('opacity', 0.0)
