@@ -2340,30 +2340,32 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
     }
 }
 
+/**
+ * Changes snap status for the given initial sector ID and its neighboring sectors based on the distance between
+ * opposite edges of the sectors.
+ * @param {number} initialSectorID - The ID of the initial sector.
+ * @returns {void}
+ */
 function changeSnapStatus(initialSectorID) {
-    for (let ii = 0; ii < 4; ii++){
-        if (sectors[initialSectorID].neighbourhood[ii] > -1) {
-            let edgePoints = getPointsOfOppositeEdges(initialSectorID, sectors[initialSectorID].neighbourhood[ii]);
+    const initialSector = sectors[initialSectorID];
+    const { neighbourhood, snapStatus } = initialSector;
 
-            let point_1 = edgePoints[0];
-            let point_2 = edgePoints[1];
+    for (let ii = 0; ii < 4; ii++) {
+        const nbh = neighbourhood[ii];
+        if (nbh > -1) {
 
-            let point_a = edgePoints[2];
-            let point_b = edgePoints[3];
+            const [point_1, point_2, point_a, point_b] = getPointsOfOppositeEdges(initialSectorID, nbh);
 
-            let dist_1a = distance(point_1, point_a);
-            let dist_2b = distance(point_2, point_b);
+            const dist_1a = distance(point_1, point_a);
+            const dist_2b = distance(point_2, point_b);
 
-            if (dist_1a < epsilon && dist_2b < epsilon) {
-                sectors[initialSectorID].snapStatus[ii] = 1;
-                sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 1;
-            } else {
-                sectors[initialSectorID].snapStatus[ii] = 0;
-                sectors[sectors[initialSectorID].neighbourhood[ii]].snapStatus[(ii + 2) % 4] = 0;
-            }
+            //snap gets o or 1 when both dists are lower than epsilon ? 1 : 0 shorter for double ifs
+            const snapvalue = dist_1a < epsilon && dist_2b < epsilon ? 1 : 0;
+
+            snapStatus[ii] = snapvalue;
+            sectors[nbh].snapStatus[(ii + 2) % 4] = snapvalue;
         }
     }
-
 }
 
 function continueGeodesic(geodesicToContinue) {
@@ -2710,13 +2712,16 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
 }
 
-function distance(punkt1, punkt2) {
-    return Math.sqrt(Math.pow((punkt2.x - punkt1.x), 2) + Math.pow((punkt2.y - punkt1.y), 2));
+function distance(point_1, point_2) {
+    const dx = point_2.x - point_1.x;
+    const dy = point_2.y - point_1.y;
+    return Math.sqrt(dx ** 2 + dy ** 2);
 }
 
 function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y, direction_x, direction_y) {
-
-    return Math.abs(((point_x - point_line_x) * direction_y - (point_y - point_line_y) * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
+    const dx = point_x - point_line_x;
+    const dy = point_y - point_line_y;
+    return Math.abs((dx * direction_y - dy * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
 
 }
 
@@ -3898,6 +3903,8 @@ function drawSlider(pos_x, pos_y) {
     }
     canvas.bringToFront(this.slider[0]);
 
+
+    /*
     //Anlegen der Variablen für die Koordinaten des neuen Sektors
 
     let xn0 ;
@@ -3919,7 +3926,7 @@ function drawSlider(pos_x, pos_y) {
 
 
     //Berechnen der Sektorkoordinaten beim Klicken auf den Regler
-    /*
+
     this.slider[0].on('mousedown', function f() {
         transformMatrix = this.parent.trapez.calcTransformMatrix('True');
         transformedPoints = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
