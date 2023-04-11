@@ -1,5 +1,5 @@
 //ACHTUNG!!! SNAPPING UND SETSECTORS MÜSSEN ÜBERARBEITET WERDEN; SIE MÜSSEN DERZEIT JEWEILS ZWEIMAL AUSGEFÜHRT WERDEN UM DIE RICHTIGEN ERGEBNISSE ZU ERHALTEN
-
+//Test for contribution
 
 
 //preserveObjectStacking: Reihenfolge der Objekte in z-Richtung wird nicht verändert
