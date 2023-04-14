@@ -8,17 +8,17 @@ import geodesicsTextsMarks as gtm
 lorentzTransform = 0
 
 # Einteilung der Kugeloberfläche
-nSectorRowsFromWormHole = 25
+nSectorRowsFromWormHole = 5
 nSectorColumnsFromWhormhole = 12
 
 #Eigenschaften des Ausgangsobjekts
-lmin = - 50
-lmax = 50
+lmin = - 20/3
+lmax = 20/3
 schlundradius = 2
 scaleFactor = 30
 
 #Eigenschaften des Sektormodells
-nRowsInModel = 7
+nRowsInModel = 5
 nColumnsInModel = 12
 
 #Abstaende der Sektoren zueinander
@@ -26,8 +26,8 @@ sectorDistance_x = 50
 sectorDistance_y = 10
 
 #Kameraeinstellungen
-startZoom = 0.5
-startViewportTransform_4 = -200
+startZoom = 1
+startViewportTransform_4 = 0
 startViewportTransform_5 = 0
 
 #Schriftgroesse im Modell
@@ -88,9 +88,9 @@ def main():
     zeileende = nSectorRowsFromWormHole-round((nSectorRowsFromWormHole-nRowsInModel)/2)
 
     print(zeilestart)
-    maxSectorWidth = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(lmin + zeilestart * 2 * schlundradius, 2) ) * math.pow(dphi, 2)) * scaleFactor
-
-    file = io.open("wormhole.js",'w')
+    maxSectorWidth = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(lmin + zeilestart * 4/3 * schlundradius, 2) ) * math.pow(dphi, 2)) * scaleFactor
+    print(maxSectorWidth)
+    file = io.open("wormhole_circ.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -176,12 +176,12 @@ def main():
     for zeile in range(zeilestart, zeileende):
         for ii in range(0,nColumnsInModel):
 
-            actualL = lmin + zeile * 2 * schlundradius
-            nextL = lmin + (zeile + 1) * 2 * schlundradius
+            actualL = lmin + zeile * 4/3 * schlundradius
+            nextL = lmin + (zeile + 1) * 4/3 * schlundradius
 
-            sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(actualL, 2) ) * math.pow(dphi, 2)) * scaleFactor
+            sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(actualL, 2) ) * math.pow(dphi, 2)) * scaleFactor
 
-            sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(nextL, 2) ) * math.pow(dphi, 2)) * scaleFactor
+            sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(nextL, 2) ) * math.pow(dphi, 2)) * scaleFactor
 
             offset = (sectorValues[sectorDict["sec_top"]][jj + ii * (zeileende - zeilestart)] - sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)])/2
 
@@ -193,7 +193,10 @@ def main():
 
             sectorValues[sectorDict["sec_width"]][jj + ii * (zeileende - zeilestart)] = sector_width
 
-            sector_y_dist = sector_height + sectorDistance_y
+            if(zeile != 0):
+                sector_y_dist = sector_height + sectorDistance_y + sector_y_dist_before
+            else:
+                sector_y_dist = 140 + sector_height + sectorDistance_y
 
             sectorValues[sectorDict["sec_offset"]][jj + ii * (zeileende - zeilestart)] = offset
 
@@ -206,19 +209,18 @@ def main():
                                                                                           max(0, offset),
                                                                                           sectorValues[sectorDict["sec_height"]][jj + ii * (zeileende - zeilestart)]])
 
-            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = ii * (maxSectorWidth + sectorDistance_x)
-            print(zeile)
-            if(zeile == zeilestart):
-                sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = 0
-            else:
-                sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = sectorValues[sectorDict["sec_posy"]][jj - 1 + ii * (zeileende - zeilestart)] + sectorValues[sectorDict["sec_height"]][jj - 1 + ii * (zeileende - zeilestart)] + sectorDistance_y
+            print(jj)
 
-            sectorValues[sectorDict["sec_angle"]][jj + ii * (zeileende - zeilestart)] = 0
+            sectorValues[sectorDict["sec_posx"]][jj + ii * (zeileende - zeilestart)] = math.sin(ii * dphi) * ( sector_y_dist)
+
+            sectorValues[sectorDict["sec_posy"]][jj + ii * (zeileende - zeilestart)] = - math.cos(ii * dphi) * ( sector_y_dist)
+
+            sectorValues[sectorDict["sec_angle"]][jj + ii * (zeileende - zeilestart)] = ii * dphi *180/math.pi #+ 180
 
             if (zeile == round((nSectorRowsFromWormHole-nRowsInModel) / 2)):
-                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = -1
+                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) - 1
+                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) - 1
 
             if (ii == (nColumnsInModel - 1)):
                 if(nSectorColumnsFromWhormhole == nColumnsInModel):
@@ -229,9 +231,9 @@ def main():
                 sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole - nRowsInModel) / 2) + nRowsInModel
 
             if (zeile == (nSectorRowsFromWormHole-round((nSectorRowsFromWormHole-nRowsInModel) / 2))-1):
-                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = -1
+                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
-                sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole - nRowsInModel) / 2) +1
+                sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole - nRowsInModel) / 2) +1
 
             if (ii == 0):
                 if (nSectorColumnsFromWhormhole == nColumnsInModel):
@@ -242,7 +244,7 @@ def main():
                 sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromWormHole-nRowsInModel) / 2) - nRowsInModel
 
         jj = jj + 1
-
+        sector_y_dist_before = sector_y_dist
 
     for ii in range(0,len(variablenamesSectors)):
         file.write(variablenamesSectors[ii]+"= [ ")

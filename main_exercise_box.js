@@ -481,6 +481,8 @@ function showNextSlide() {
 
     setMarksUnvisible();
 
+    setSectorsToRingsOnR();
+
     setTextsVisible();
 
     setTextsUnvisible();
@@ -792,6 +794,29 @@ function sectorsToSnapTogether(){
 function SetZoomAndPan(){
     if (currentSlide.setZoomAndPanTo !== undefined) {
         setZoomPan(currentSlide.setZoomAndPanTo[0], currentSlide.setZoomAndPanTo[1], currentSlide.setZoomAndPanTo[2])
+    }
+}
+
+function setSectorsToRingsOnR(){
+    if (currentSlide.sectorsSetToRingsOnR !== undefined) {
+        console.log('test test test')
+        for (let ii = 0; ii < sectors.length; ii++){
+
+            let r_ring_row = 140
+
+            let sector_position_on_ring_x = r_ring_row * Math.cos(Math.PI/6 * (ii%12))
+            let sector_position_on_ring_y = r_ring_row * Math.sin(Math.PI/6 * (ii%12))
+            //let sector_position_on_ring_angle = 30 * ((ii-4)%12)
+            console.log(ii%12)
+            //console.log(sector_position_on_ring_angle)
+
+            sectors[ii].trapez.set('left', sector_position_on_ring_x)
+            sectors[ii].trapez.set('top', -sector_position_on_ring_y)
+            //sectors[ii].trapez.set('angle', sector_position_on_ring_angle)
+            updateMinions(sectors[ii].trapez)
+
+        }
+        canvas.renderAll()
     }
 }
 
