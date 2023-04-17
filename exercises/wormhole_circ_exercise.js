@@ -32,8 +32,15 @@ let slideContent = [
         id: 0,
         text_de: 'Ringe',
         text_en: 'Complete the two starting lines as geodesics to the edge of the sector model.\n \nConsider:\n1. How does a geodesic run within a sector?\n2. What do you have to do to continue a geodesic in the next sector?',
-        sectorsToHide: [0, 1, 2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18, 20, 21, 22, 23, 25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 40, 41, 42, 43, 45, 46, 47, 48, 50, 51, 52, 53, 55, 56, 57, 58, 60],
-        sectorsSetToRingsOnR: 0
+        sectorsToHide: [0, 1, 2, 5, 6, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 25, 26, 27, 30, 31, 32, 35, 36, 37, 40, 41, 42, 45, 46, 47, 50, 51, 52, 55, 56, 57, ],
+        sectorsSetToRingsOnR:
+            {
+                ringsToSetStart: 3,
+                ringsToSetEnd: 4,
+                numberOfSectorsPerRing: 12,
+
+            }
+
     },
 
     {
