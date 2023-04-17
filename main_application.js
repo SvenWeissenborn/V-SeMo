@@ -5909,6 +5909,20 @@ function resetSectors() {
 
     let immediatehistory = [1];
 
+    if (showExerciseBox == "1" & currentSlide.sectorsSetToRingsOnR !== undefined){
+
+            for (let rr = 0; rr < sectors.length; rr++) {
+                removeSnapEdges(sectors[rr].ID);
+
+                sectorParameterOnMousedown = getSectorParameterOnMousedown(sectors[rr].ID);
+                immediatehistory.push(sectorParameterOnMousedown);
+
+
+            }
+        setSectorsToRingsOnR()
+        return
+    }
+
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
 
@@ -6472,6 +6486,8 @@ function startGeodesics(){
 }
 
 function startMarks() {
+
+    console.log('Go')
 
     for (let ii = 0; ii < markStartParentSector.length; ii++) {
 
@@ -7186,7 +7202,6 @@ toolChange(selectedTool);
 if (setPositionAndAngleRandomly == "1"){randomPositionAndAngle();}
 
 canvas.renderAll();
-
 //----------------------TODOs-------------------------
 //TODO: Sektor nach oben holen beim drüber zeichnen
 //TODO: Werkzeug zum Messen von Linien

@@ -497,7 +497,11 @@ function showNextSlide() {
 
     removeAllLines();
 
-    SetZoomAndPan()
+    SetZoomAndPan();
+
+    setLineColor();
+
+    deactivateAllDragPoints()
 
     canvas.renderAll();
 
@@ -799,39 +803,57 @@ function SetZoomAndPan(){
 
 function setSectorsToRingsOnR(){
     if (currentSlide.sectorsSetToRingsOnR !== undefined) {
-        console.log(currentSlide.sectorsSetToRingsOnR.ringsToSetStart)
-        console.log(currentSlide.sectorsSetToRingsOnR.ringsToSetEnd)
-        console.log(currentSlide.sectorsSetToRingsOnR.numberOfSectorsPerRing)
 
         const ringsToSetStart = currentSlide.sectorsSetToRingsOnR.ringsToSetStart
         const ringsToSetEnd = currentSlide.sectorsSetToRingsOnR.ringsToSetEnd
         const numberOfSectorsPerRing = currentSlide.sectorsSetToRingsOnR.numberOfSectorsPerRing
+        const numberOfRings = currentSlide.sectorsSetToRingsOnR.numberOfRings
 
-        let r_ring_row = 200
+        let r_ring_row = 300
         for (let ii = ringsToSetStart; ii < ringsToSetEnd + 1; ii++){
-            console.log(ii)
 
             for (let jj = 0; jj < numberOfSectorsPerRing; jj++){
 
-                let sector_position_on_ring_x = r_ring_row * Math.sin(Math.PI/6 * (jj))
-                let sector_position_on_ring_y = r_ring_row * Math.cos(Math.PI/6 * (jj))
+                let sector_position_on_ring_x = (r_ring_row) * Math.sin(Math.PI/6 * (jj))
+                let sector_position_on_ring_y = (r_ring_row) * Math.cos(Math.PI/6 * (jj))
                 let sector_position_on_ring_angle = 30 * jj
 
-                //console.log(sector_position_on_ring_angle)
+                sectors[ii + numberOfRings * jj].trapez.set('left', sector_position_on_ring_x + window.innerWidth / 2)
+                sectors[ii + numberOfRings * jj].trapez.set('top', -sector_position_on_ring_y + (window.innerHeight - window.innerHeight * 0.08) / 2)
+                sectors[ii + numberOfRings * jj].trapez.set('angle', sector_position_on_ring_angle)
+                updateMinions(sectors[ii + numberOfRings * jj].trapez)
 
-                sectors[ii + (ii + 1) * jj].trapez.set('left', sector_position_on_ring_x)
-                sectors[ii + (ii + 1) * jj].trapez.set('top', -sector_position_on_ring_y)
-                //sectors[ii].trapez.set('angle', sector_position_on_ring_angle)
-                updateMinions(sectors[ii + (ii +1) * jj].trapez)
+                removeSnapEdges(ii + numberOfRings * jj)
+                changeSnapStatus(ii + numberOfRings * jj)
             }
-            console.log(sectors[ii].sector_height)
-            r_ring_row = r_ring_row + sectors[ii].sector_height
+
+            r_ring_row = r_ring_row + sectors[ii].sector_height + 10
 
         }
+
+
+
         canvas.renderAll()
     }
 }
 
+function deactivateAllDragPoints(){
+    if (currentSlide.deactivateAllDragPoints !== undefined & currentSlide.deactivateAllDragPoints == true) {
+        for (let ii = 0; ii < lines.length; ii++){
+
+            lines[ii][lines[ii].length - 1].dragPoint.opacity = 0
+            lines[ii][lines[ii].length - 1].dragPoint.evented = false
+        }
+
+        canvas.renderAll()
+    }
+}
+
+function setLineColor(){
+    if (currentSlide.setLineColor !== undefined) {
+        line_colors = currentSlide.setLineColor
+    }
+}
 
 function removeAllLines(){
 
