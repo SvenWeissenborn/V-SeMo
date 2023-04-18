@@ -821,6 +821,7 @@ function setSectorsToRingsOnR(){
                 sectors[ii + numberOfRings * jj].trapez.set('left', sector_position_on_ring_x + window.innerWidth / 2)
                 sectors[ii + numberOfRings * jj].trapez.set('top', -sector_position_on_ring_y + (window.innerHeight - window.innerHeight * 0.08) / 2)
                 sectors[ii + numberOfRings * jj].trapez.set('angle', sector_position_on_ring_angle)
+                sectors[ii + numberOfRings * jj].trapez.setCoords()
                 updateMinions(sectors[ii + numberOfRings * jj].trapez)
 
                 removeSnapEdges(ii + numberOfRings * jj)
@@ -892,6 +893,7 @@ function deleteChosenGeodesics() {
 }
 
 function checkSlideCondition() {
+
     if (currentSlide.slideCondition !== undefined){
 
         let conditionIsFulfilled = false;
@@ -969,8 +971,76 @@ function checkSlideCondition() {
                 }
             }
 
+            if (currentSlide.slideCondition[ii][0] == 'AnyLineTouchsTwoMarks') {
+
+                let mark1ID = currentSlide.slideCondition[ii][1].mark1
+                let mark2ID = currentSlide.slideCondition[ii][1].mark2
+
+                let point_1_x = markPoints[mark1ID].left;
+                let point_1_y = markPoints[mark1ID].top;
+
+                let point_2_x = markPoints[mark2ID].left;
+                let point_2_y = markPoints[mark2ID].top;
+
+                console.log(mark1ID)
+                console.log(mark2ID)
+
+                let check_1 = false;
+                let check_2 = false;
+
+                for (let jj = 0; jj < lines.length; jj++){
+
+                    for (let kk = 0; kk < lines[jj].length; kk++) {
+                        console.log('kk:', kk)
+                        let lineStartPoint = new fabric.Point(lines[jj][kk].calcLinePoints().x1, lines[jj][kk].calcLinePoints().y1)
+                        lineStartPoint = fabric.util.transformPoint(lineStartPoint, lines[jj][kk].calcTransformMatrix());
+
+                        let direction_x = lines[jj][kk].x2 - lines[jj][kk].x1;
+                        let direction_y = lines[jj][kk].y2 - lines[jj][kk].y1;
+
+                        if (lines[jj][kk].parentSector[0] == markPoints[mark1ID].parentSector[0]) {
+                            console.log('check 1')
+                            if (distancePointStraightLine(point_1_x, point_1_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < epsilon) {
+                                check_1 = true
+                            }
+                        }
+
+                        if (lines[jj][kk].parentSector[0] == markPoints[mark2ID].parentSector[0]) {
+                            console.log('check 2')
+                            if (distancePointStraightLine(point_2_x, point_2_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < epsilon) {
+                                check_2 = true
+                            }
+                        }
+
+                        if (check_1 == true && check_2 == true) {
+                            currentSlide.slideCondition[ii].conditionIsFullfilled = true;
+
+                            }
+
+                    }
+
+                }
+
+            }
+
+
         }
 
+        if (currentSlide.slideCondition.length >1){
+            console.log('Test')
+            let allSlideConditions = false
+            for (let ii = 0; ii < currentSlide.slideCondition.length; ii++){
+                if (currentSlide.slideCondition[ii].conditionIsFullfilled == true){
+                    allSlideConditions = true
+                }else{
+                    allSlideConditions = false
+                    break
+                }
+            }
+            if (allSlideConditions == true){
+                conditionIsFulfilled = true
+            }
+        }
 
         if (conditionIsFulfilled){
             currentSlideNumber += 1;

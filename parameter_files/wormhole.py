@@ -51,10 +51,10 @@ startGeodesicsLength = []
 startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = []
-startMarksRadius = []
-startMarksOffset_x = []
-startMarksOffset_y = []
+startMarksSectors = [4, 2, 0, 19, 17, 15, 34, 32, 30, 49, 47, 45]
+startMarksRadius = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+startMarksOffset_x = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+startMarksOffset_y = [0.9, 0.5, 0.1, 0.9, 0.5, 0.1, 0.9, 0.5, 0.1, 0.9, 0.5, 0.1,]
 
 #Parameter fuer die Starttexte
 startTextsSectors = []
@@ -143,7 +143,7 @@ def main():
         "let line_colors = ['blue', 'black', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];")
     file.write("\n")
     file.write(
-        "let mark_colors = ['grey', 'grey', 'grey', 'grey'];")
+        "let mark_colors = ['yellow', 'red', 'blue', 'yellow', 'red', 'blue','yellow', 'red', 'blue','yellow', 'red', 'blue',];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)

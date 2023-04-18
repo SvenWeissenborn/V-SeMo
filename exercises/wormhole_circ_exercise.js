@@ -42,7 +42,13 @@ let slideContent = [
                 numberOfRings: 5
 
             },
-        setLineColor: ['yellow']
+        setLineColor: ['yellow'],
+        slideCondition: [
+            ['AnyLineTouchsTwoMarks', {mark1: 0, mark2: 3}],
+            ['AnyLineTouchsTwoMarks', {mark1: 3, mark2: 6}],
+            ['AnyLineTouchsTwoMarks', {mark1: 6, mark2: 9}],
+            ['AnyLineTouchsTwoMarks', {mark1: 9, mark2: 0}]
+        ],
 
 
     },
@@ -106,7 +112,7 @@ let slideContent = [
                 numberOfRings: 5
 
             },
-
+        deactivateAllDragPoints: true,
     },
 
     {
@@ -142,8 +148,8 @@ let slideContent = [
                 numberOfRings: 5
 
             },
-        setLineColor: ['blue']
-
+        setLineColor: ['blue'],
+        deactivateAllDragPoints: true,
     },
 ];
 
