@@ -1794,7 +1794,10 @@ let sectorToSnap = -1;
 
 let snappingToChosenDistance = 0.6;
 
-
+/**
+ * automatically snaps all sectors along a chosen geodesic
+ * @param chosenGeodesicToSetSectors - the ID of the geodesic that is to be continued
+ */
 function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
 
@@ -2086,6 +2089,13 @@ window.addEventListener('keydown',function(event){
     }
 });
 
+/**
+ * changing the starting point of a geodesic and continue it in a new direction
+ * @param xChange - how much the new starting point is moved in x direction
+ * @param yChange - how much the new starting point is moved in y direction
+ * @param chosenGeodesicToChangeStartPoint - the ID of the geodesic that is to get a new starting point
+ */
+
 function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeStartPoint) {
     if (chosenLineGlobalID == -1) {
         return
@@ -2159,6 +2169,12 @@ function changeStartPointAndContinue(xChange, yChange, chosenGeodesicToChangeSta
     }
 }
 
+/**
+ * changes the direction of a geodesic and continues it to the edge of a sector model
+ * @param rotationdirection - the change of direction clockwise or counter-clockwise
+ * @param rotationAngle - by which angle the direction of the geodesic is to be rotated
+ * @param chosenGeodesicTochangeDirection - the ID of the geodesic that needs another direction
+ */
 function changeDirectionAndContinue(rotationdirection, rotationAngle, chosenGeodesicTochangeDirection) {
     if (chosenLineGlobalID == -1) {
         return
@@ -2368,6 +2384,10 @@ function changeSnapStatus(initialSectorID) {
     }
 }
 
+/**
+ * draw a geodesic to the edge of the sector containing it
+ * @param geodesicToContinue - ID of the geodesic that is to be continued to the edge of its sector
+ */
 function continueGeodesic(geodesicToContinue) {
 
     if (lines[geodesicToContinue][lines[geodesicToContinue].length - 1].lineType !== 'geodesic') {
@@ -2628,6 +2648,10 @@ function continueGeodesic(geodesicToContinue) {
 
 }
 
+/**
+ * removes a geodesic including its drag points and ticks from the canvas
+ * @param geodesicToDelete - the ID of the geodesic that must be removed
+ */
 function deleteWholeGeodesic(geodesicToDelete) {
 
     let immediatehistory = [2, geodesicToDelete];
@@ -2712,6 +2736,12 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
 }
 
+/**
+ * calculates the distance between two points in 2D
+ * @param point_1 - x and y coords of the first point
+ * @param point_2 - x and y coords of the second point
+ * @returns {number} - the distance between them
+ */
 function distance(point_1, point_2) {
     const dx = point_2.x - point_1.x;
     const dy = point_2.y - point_1.y;
@@ -2776,7 +2806,10 @@ function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
     deficitAngleVisualizeGroup.add(arc)
 }
 
-
+/**
+ * adds markings along a geodesic to indicate intervals of the same distance
+ * @param lineID - the ID of the line on which the ticks are to be drawn
+ */
 function drawGeodesicTicks(lineID){
 
     let geodesicTicksDistanceConstant
@@ -2923,7 +2956,10 @@ function drawGeodesicTicks(lineID){
 
 }
 
-
+/**
+ * adds a drag point to the end of a line which can be grabbed to change the end point of the line
+ * @param lineToGivePoint - the ID of the line on which the drag point is to be drawn
+ */
 function drawDragPoint(lineToGivePoint) {
 
     if (typeof lineToGivePoint === 'undefined' || lineToGivePoint == -1) {
@@ -3141,6 +3177,17 @@ function drawDragPoint(lineToGivePoint) {
     canvas.add(lineSegment.dragPoint);
 }
 
+/**
+ * adds a geodesic line to the canvas
+ * @param color - the color of the new line
+ * @param lineStrokeWidth - the width of the new line
+ * @param parentSectorID - the ID of the sector the line is to be drawn on
+ * @param lineStart_x - the x coord of the starting point of the line
+ * @param lineStart_y - the y coord of the starting point of the line
+ * @param lineEnd_x - the x coord of the end point of the line
+ * @param lineEnd_y - the y coord of the end point of the line
+ * @returns {*}
+ */
 function drawLineSegment(color, lineStrokeWidth, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y){
 
     let lineSegment;
@@ -4833,6 +4880,12 @@ function geodreieckRotate(geodreieckToRotate){
 
 }
 
+/**
+ * getCommonEdgeNumber werden die IDs von Start- und Zielsektors übergeben. Als Output erhält man die gemeinsame Kante dieser Sektoren
+ * @param initialSectorID
+ * @param targetSectorID
+ * @returns {number}
+ */
 function getCommonEdgeNumber(initialSectorID, targetSectorID){
     let commonEdgeNumber;
 
@@ -6163,11 +6216,13 @@ function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 }
 
 function Sector() {
+
     this.trapez; //Anlegen der Variablen trapez, undefiniert, um mehr als eines anlegen zu können
 
     //this.sector_top ;
     //this.sector_bottom;
     //this.offset_x;
+
     this.pos_x;
     this.pos_y;
     this.sector_height;
@@ -6197,6 +6252,7 @@ function Sector() {
 
     this.ID_text;
     //Nachbarschaftsbeziehung (Indizes der benachbarten Sektoren; top, right , bottom, left)
+
     this.neighbourhood = [-1,-1,-1,-1];
     this.snapStatus = [0,0,0,0];
     this.snapEdges = [[0],[0],[0],[0]];
@@ -6616,6 +6672,9 @@ function startMarks() {
     canvas.renderAll();
 }
 
+/**
+ * startTexts fügt Sektoren Texte hinzu
+ */
 function startTexts() {
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
 
@@ -6901,6 +6960,9 @@ function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
 }
 
 //Zuletzt gesetzte Linie wird gelöscht
+/**
+ *
+ */
 function undoLastAction(){
     if (history.length <= 0){return}
     let immediatehistory = history.pop();
@@ -7062,7 +7124,12 @@ function undoLastAction(){
 
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
 //TODO: Vereinfachen durch function
-
+/**
+ * updateMinionsRelationship gibt Objekten auf einem Sektor neue Koordinaten, sodass die Position relativ zu diesem Sektor konstant bleibt.
+ * Als Argument wird der Funktion die ID eines Sektors (boss) übergeben sowie die Objekte, die sich auf dem Sektor befinden.
+ * @param boss
+ * @param minion
+ */
 function updateMinionsRelationship(boss, minion) {
     if (minion.relationship) {
         minion.bringToFront();
@@ -7087,6 +7154,11 @@ function updateMinionsRelationship(boss, minion) {
     }
 }
 
+/**
+ * updateMinions wendet updateMinionsRelationship auf Punkte, Vektoren, Linien etc an, die sich auf einem Sektor befinden.
+ * Der Funktion wird die ID eines Sektors übergeben.
+ * @param boss
+ */
 function updateMinions(boss) {
     boss.bringToFront();
     /*
