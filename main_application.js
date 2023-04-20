@@ -594,7 +594,35 @@ canvas.on('mouse:move', function (o) {
             //TODO autoSetOnDraw muss endlich fertig gestellt werden
             if (autoSetOnDraw == "1") {
 
-                let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[actualSector].trapez)
+                let xg1 = line.x1
+                let yg1 = line.y1
+                let xg2 = line.x2
+                let yg2 = line.y2
+
+                let schnittpunktparameter = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2])
+
+                console.log(schnittpunktparameter)
+
+                if (schnittpunktparameter.length > 0){
+                    let immediatehistory =[1];
+                    let undoTemp = false
+                    console.log('I have to snap')
+                    for (let ii = 0; ii < schnittpunktparameter.length; ii++){
+                        if (undoTemp){
+                            undoLastAction()
+                        }
+                        let initialSectorID = schnittpunktparameter[ii][1]
+                        let sectorToSnapID = sectors[initialSectorID].neighbourhood[schnittpunktparameter[ii][2]]
+
+                        console.log(initialSectorID, sectorToSnapID)
+                        snapInitialSectorToTargetSector(sectorToSnapID, initialSectorID)
+                        line.bringToFront()
+                        //history.push(immediatehistory)
+                    }
+
+                }
+
+                /*let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[actualSector].trapez)
 
                 for (let kk = 0; kk < 4; kk++) {
 
@@ -783,6 +811,8 @@ canvas.on('mouse:move', function (o) {
                 }
 
                 line.bringToFront()
+
+                 */
             }
 
             canvas.renderAll();
@@ -5909,7 +5939,7 @@ function resetSectors() {
 
     let immediatehistory = [1];
 
-    if (showExerciseBox == "1" & currentSlide.sectorsSetToRingsOnR !== undefined){
+    /*if (showExerciseBox == "1" & currentSlide.sectorsSetToRingsOnR !== undefined){
 
             for (let rr = 0; rr < sectors.length; rr++) {
                 removeSnapEdges(sectors[rr].ID);
@@ -5922,6 +5952,7 @@ function resetSectors() {
         setSectorsToRingsOnR()
         return
     }
+     */
 
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
