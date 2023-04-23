@@ -6415,6 +6415,11 @@ function setZoomPan(zoomToSet, viewportToTransform_4, viewportToTransform_5){
     canvas.viewportTransform[5]= viewportToTransform_5;
 }
 
+/**
+ * makes the deficit angle infobox visible and adjusts the vertical tool bar if told so
+ * additionally removes the indication of the deficit angle if param is false
+ * @param deficitAngleInfoboxVisibleToSet - boolean (true for showing the deficit angle infobox, false for hiding it)
+ */
 function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){
     if (deficitAngleInfoboxVisibleToSet == true) {
         canvas_side_bar_perm.setWidth(220 * scaleRatio);
@@ -6434,6 +6439,10 @@ function showDeficitAngleInfobox(deficitAngleInfoboxVisibleToSet){
 
 }
 
+/**
+ * makes the sector area infobox visible and adjusts the vertical tool bar if told so
+ * @param sectorAreaInfoboxVisibleToSet - boolean (true for showing the area infobox, false for hiding it)
+ */
 function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
     if (sectorAreaInfoboxVisibleToSet == true) {
         canvas_side_bar_perm.setWidth(220 * scaleRatio);
@@ -6452,6 +6461,10 @@ function showSectorAreaInfobox(sectorAreaInfoboxVisibleToSet){
 
 }
 
+/**
+ * adds the vertex angle parts (angle arc etc) and the deficit angle infobox if told so
+ * @param toShowVertices - boolean (true for showing vertex angle parts and infobox, false for hiding them)
+ */
 function showVertices(toShowVertices){
     if (toShowVertices == true){
         verticesVisible = true;
@@ -6471,6 +6484,12 @@ function showVertices(toShowVertices){
     }
 }
 
+/**
+ * snaps neighboring sectors together by rotating and translating the initial sector to the target sector
+ * no rotating in case of lorentz transform
+ * @param initialSectorID - the ID of the sector that is to be moved in order to snap
+ * @param targetSectorID - the ID of the sector the initial sector is snapped to
+ */
 function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
 
     if(textured !== "1") {
@@ -6501,6 +6520,10 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
 
 }
 
+/**
+ * adds geodesic line segments with drag points via the drawLineSegment function to the sectors in the startSectors array
+ * additionally decides whether to draw geodesic ticks or not
+ */
 function startGeodesics(){
 
     for (let ii = 0; ii < startSectors.length; ii++) {
@@ -6541,6 +6564,10 @@ function startGeodesics(){
 
 }
 
+/**
+ * adds mark objects and defines their parent sector objects
+ * additionally enables drawing geodesic- and polylines when clicking on a mark
+ */
 function startMarks() {
 
     console.log('Go')
@@ -6673,7 +6700,7 @@ function startMarks() {
 }
 
 /**
- * startTexts fügt Sektoren Texte hinzu
+ * creates text objects and defines their parent sector objects
  */
 function startTexts() {
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
@@ -6939,6 +6966,11 @@ function toRadians(deg) {
     return deg * Math.PI / 180
 }
 
+/**
+ * moves a Sector (initial sector) to its neighbor sector (target sector) to align with their common edge.
+ * @param initialSectorID - ID of the sector that has to be moved to snap to the target sector.
+ * @param targetSectorID - ID of the sector the initial sector is snapped to.
+ */
 function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
 
     let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
@@ -7125,10 +7157,9 @@ function undoLastAction(){
 //Mitbewegen von untergeordneten Objekten (zugehörig zu einem Parentalsektor)
 //TODO: Vereinfachen durch function
 /**
- * updateMinionsRelationship gibt Objekten auf einem Sektor neue Koordinaten, sodass die Position relativ zu diesem Sektor konstant bleibt.
- * Als Argument wird der Funktion die ID eines Sektors (boss) übergeben sowie die Objekte, die sich auf dem Sektor befinden.
- * @param boss
- * @param minion
+ * transforms the coords of objects drawn on a sector to maintain their position in relation to the sector
+ * @param boss - ID of a sector
+ * @param minion - object that is drawn on a sector (markPoints, lines etc)
  */
 function updateMinionsRelationship(boss, minion) {
     if (minion.relationship) {
@@ -7155,9 +7186,8 @@ function updateMinionsRelationship(boss, minion) {
 }
 
 /**
- * updateMinions wendet updateMinionsRelationship auf Punkte, Vektoren, Linien etc an, die sich auf einem Sektor befinden.
- * Der Funktion wird die ID eines Sektors übergeben.
- * @param boss
+ * updateMinions applies updateMinionsRelationship on marks, vectors, lines etc which are drawn on a sector
+ * @param boss - ID of a parent sector
  */
 function updateMinions(boss) {
     boss.bringToFront();
