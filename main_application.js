@@ -601,20 +601,24 @@ canvas.on('mouse:move', function (o) {
 
                 let schnittpunktparameter = getSchnittpunktsparameters(sectors, [xg1, yg1, xg2, yg2])
 
-                console.log(schnittpunktparameter)
+
 
                 if (schnittpunktparameter.length > 0){
                     let immediatehistory =[1];
                     let undoTemp = false
-                    console.log('I have to snap')
+
                     for (let ii = 0; ii < schnittpunktparameter.length; ii++){
                         if (undoTemp){
                             undoLastAction()
                         }
                         let initialSectorID = schnittpunktparameter[ii][1]
                         let sectorToSnapID = sectors[initialSectorID].neighbourhood[schnittpunktparameter[ii][2]]
+                        //console.log('initialSectorID:', initialSectorID)
+                        //console.log(schnittpunktparameter[ii][0])
+                        //console.log('Sektor', sectorToSnapID, 'schnappt an Sektor', initialSectorID)
+                        //console.log(schnittpunktparameter[ii][0])
+                        //console.log(schnittpunktparameter)
 
-                        console.log(initialSectorID, sectorToSnapID)
                         snapInitialSectorToTargetSector(sectorToSnapID, initialSectorID)
                         line.bringToFront()
                         //history.push(immediatehistory)
@@ -5058,7 +5062,6 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
 
             }
 
-
             if (epsilon <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1) {
                 lambdas.push(lambda);
             }
@@ -5120,9 +5123,12 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
             }
 
+            //console.log('lambda:', lambda)
 
             if ((0 - epsilon) <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1){ // && Math.abs(lambdas[lambdas.length-1] - lambda) >= epsilon) {
 
+                console.log(distancePointStraightLine(xt2, yt2, xg2, yg2, dxg, dyg))
+                console.log('lambda:', lambda)
                 lambdaOfThisLineSegment = lambda;
                 lineOverThisSector = ii;
                 lineOverThisEdge = kk;
@@ -5132,6 +5138,8 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
                 schnittpunktsparameters.push(schnittpunktsparameter)
 
             }
+
+
         }
     }
     if(schnittpunktsparameters.length > 0){

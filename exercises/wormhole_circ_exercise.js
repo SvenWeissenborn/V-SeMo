@@ -25,7 +25,7 @@
     Marks verstecken sollte, die nicht
     von Anfang an sichtbar sein sollen
 */
-let turnBackwardOff = true;
+let turnBackwardOff = false;
 
 let slideContent = [
     {
@@ -43,12 +43,12 @@ let slideContent = [
 
             },
         setLineColor: ['yellow'],
-        slideCondition: [
+        /*slideCondition: [
             ['AnyLineTouchsTwoMarks', {mark1: 0, mark2: 3}],
             ['AnyLineTouchsTwoMarks', {mark1: 3, mark2: 6}],
             ['AnyLineTouchsTwoMarks', {mark1: 6, mark2: 9}],
             ['AnyLineTouchsTwoMarks', {mark1: 9, mark2: 0}]
-        ],
+        ],*/
 
 
     },
