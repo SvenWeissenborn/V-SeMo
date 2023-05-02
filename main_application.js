@@ -1443,6 +1443,15 @@ canvas.on('mouse:up', function(opt) {
         toolChange('grab')
     }
     if (lineTypeToDraw == 'vector') {
+        console.log(vectorPoint)
+
+        vector = new fabric.Group([vectorPoint, vectorLine, vectorHead]);
+        canvas.add(vector);
+        console.log(vector)
+        vector.set({
+            hasBorders: false
+        });
+
         toolChange('grab')
     }
 
@@ -3766,7 +3775,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         {x: -20, y: -10},
                         {x: -20, y: 10}
                     ], {
-                        id: "vector-tip",
+                        id: "vector-head",
                         stroke: "blue",
                         strokeWidth: 3,
                         fill: "blue",
