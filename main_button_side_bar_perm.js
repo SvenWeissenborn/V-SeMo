@@ -2280,3 +2280,5 @@ function addInstructionalOverlay(InstructionalOverlayToAdd){
     }
 
 }
+
+let addVector;
