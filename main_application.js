@@ -2090,7 +2090,7 @@ window.addEventListener('keydown',function(event){
 });
 
 /**
- * changing the starting point of a geodesic and continue it in a new direction
+ * changes the starting point of a geodesic and continues it in a new direction
  * @param xChange - how much the new starting point is moved in x direction
  * @param yChange - how much the new starting point is moved in y direction
  * @param chosenGeodesicToChangeStartPoint - the ID of the geodesic that is to get a new starting point
@@ -2385,7 +2385,7 @@ function changeSnapStatus(initialSectorID) {
 }
 
 /**
- * draw a geodesic to the edge of the sector containing it
+ * draws a geodesic to the edge of the sector containing it
  * @param geodesicToContinue - ID of the geodesic that is to be continued to the edge of its sector
  */
 function continueGeodesic(geodesicToContinue) {
@@ -4881,10 +4881,11 @@ function geodreieckRotate(geodreieckToRotate){
 }
 
 /**
- * getCommonEdgeNumber werden die IDs von Start- und Zielsektors übergeben. Als Output erhält man die gemeinsame Kante dieser Sektoren
+ * gets the common edge of two sectors
  * @param initialSectorID
  * @param targetSectorID
- * @returns {number}
+ * @returns {number} - one number out of {0, 1, 2, 3} or -1 if there is no common edge in case the target sector id is
+ * not in the neighborhood of the initial sector
  */
 function getCommonEdgeNumber(initialSectorID, targetSectorID){
     let commonEdgeNumber;
@@ -4898,6 +4899,17 @@ function getCommonEdgeNumber(initialSectorID, targetSectorID){
     return commonEdgeNumber;
 }
 
+/**
+ * Calculates the edge parameter for a given sector and coordinates.
+ * @param {number} SectorID - The ID of the sector.
+ * @param {number} xg1 - The x-coordinate of the starting point of the geodesic.
+ * @param {number} yg1 - The y-coordinate of the starting point of the geodesic.
+ * @param {number} dxg - The change in x-coordinate of the geodesic.
+ * @param {number} dyg - The change in y-coordinate of the geodesic.
+ * @returns {array} An array containing the edge parameter [alpha, lambda, kantenIndex].
+ * kantenIndex is a number out of {0, 1, 2, 3} and indicates the edge a geodesic intersects with.
+ * alpha and lambda indicate the exact intersection point on that edge.
+ */
 function getKantenParameter(SectorID, xg1, yg1, dxg, dyg){
 
     let alpha;
@@ -4958,6 +4970,11 @@ function getMittelpunktsabstand(trapez) {
     }
 }
 
+/**
+ * gets the ID of the parent sector that contains a given point.
+ * @param {Object} point - The point to check, with x and y coords.
+ * @returns {number} The ID of the parent sector, or `undefined` if the point is not in any sector.
+ */
 function getParentSectorOfPoint(point){
     let sectorID;
     let stackIdx = -1;
@@ -4989,6 +5006,12 @@ function getPointCoordsBeforeLorentztransform (point, trapezToGetCoordsBL){
     return point_BL
 }
 
+/**
+ * Gives the coords of the points defining the common edge of two sectors --> 2 points for each sector
+ * @param initialSectorID
+ * @param targetSectorID
+ * @returns {({x: number, y: number}|{x: number, y: number}|{x: number, y: number}|{x: number, y: number})[]}
+ */
 function getPointsOfOppositeEdges(initialSectorID, targetSectorID){
 
     let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
@@ -5008,6 +5031,13 @@ function getPointsOfOppositeEdges(initialSectorID, targetSectorID){
 
 }
 
+/**
+ * Calculates the transformation matrix that maps the objects local coords to the global coords of its parent sector, so
+ * the position and orientation of the object matches those of its parent sector.
+ * @param ObjectToGiveRelation - the object for which to calculate its relationship to the parent sector.
+ * @param parentSectorID - the ID of the parent sector to which the object belongs.
+ * @returns {Array} - a 3x3 transformation matrix
+ */
 function getRelationship(ObjectToGiveRelation, parentSectorID) {
     let trapezTransform = sectors[parentSectorID].trapez.calcTransformMatrix();
     let invertedtrapezTransform = invert(trapezTransform);
@@ -5091,6 +5121,18 @@ function getSchnittpunktsparameterPadding(sectors,[xg1,yg1,xg2,yg2]) {
     return lambdas;
 }
 
+/**
+ * Calculates the intersection points of the direction of a line segment with the edges of each sector in the sectors
+ * array.
+ * @param sectors - the array of sectors
+ * @param xg1 - the x coord of the starting point of the line segment
+ * @param yg1 - the y coord of the starting point of the line segment
+ * @param xg2 - the x coord of the ending point of the line segment
+ * @param yg2 - the y coord of the ending point of the line segment
+ * @returns {*[]} - an array containing the intersection parameter of the line segment direction (lambda), the id of the sector
+ * which the line segment direction intersects with (lineOverThisSector) and the index of the edge the line segment
+ * direction intersects with (lineOverThisEdge).
+ */
 function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
     let lambda;
@@ -5194,6 +5236,11 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
     return schnittpunktsparameters;
 }
 
+/**
+ * gets the parameters of a sector (id, objects on the sector, coords, angle and rapidity in case of lorentz transform)
+ * @param initialSectorID
+ * @returns {*|[*,number,*,*,*]} - an array containing the sector parameters
+ */
 function getSectorParameterOnMousedown(initialSectorID){
     let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
     if (turnLorentzTransformOn === 1){
@@ -5205,6 +5252,11 @@ function getSectorParameterOnMousedown(initialSectorID){
     return sectorParameterOnMousedown
 }
 
+/**
+ * same thing as getSectorParametersOnMouseDown but this function is used for mouse:up events.
+ * @param initialSectorID
+ * @returns {*|[*,number,*,*,*]|(*|number)[]}
+ */
 function getSectorParameterOnMouseup(initialSectorID){
     let stack_idx_of_initialSector = canvas.getObjects().indexOf(sectors[initialSectorID].trapez);
     if (turnLorentzTransformOn === 1){
@@ -5260,6 +5312,12 @@ function getPolylinePointsImGlobalCoords(lineSegment){
     return lineSegmentTransformedPoints
 }
 
+/**
+ * Transforms the 4 corner points of a sector from local to global coords
+ * @param trapezToGetGlobalCoords
+ * @returns {[{x: number, y: number},{x: number, y: number},{x: number, y: number},{x: number, y: number}]} - the new
+ * calculated trapezoid points in global coords in an array which contains the 4 corner points.
+ */
 function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
     let transformMatrix = trapezToGetGlobalCoords.calcTransformMatrix('True');
     let globalCoords = [{x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}, {x: 0.0, y: 0.0}];
@@ -5281,6 +5339,9 @@ function getTrapezPointsAsGlobalCoords(trapezToGetGlobalCoords) {
     return globalCoords
 }
 
+/**
+ * initializes sector objects from the constructor Sector().
+ */
 function init() {
     for (let ii = 0; ii < sec_name.length; ii++) {
 
@@ -5406,6 +5467,10 @@ function init() {
     }
 }
 
+/**
+ * checks if it is time to snap a sector to another one
+ * @param trapez - the trapezoid to snap
+ */
 function isItTimeToSnap(trapez) {
     let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
     let midpointpotentialSnappingPartnerID;
@@ -5815,6 +5880,9 @@ function positionSectors() {
     }
 }
 
+/**
+ * sets the position and orientation of the sectors in the sectors array to random values.
+ */
 function randomPositionAndAngle(){
     for (let ii = 0; ii < sectors.length; ii++){
         let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
@@ -6091,6 +6159,10 @@ function resetSectors() {
     canvas.renderAll();
 }
 
+/**
+ * sets the application to start properties by emptying the object arrays, removing line and circle objects from the canvas,
+ * calling the resetSectors function and setting the start parameters if told so
+ */
 function resetAppliction() {
 
     lines = [];
@@ -6181,6 +6253,12 @@ function rotatePoint(point, rotationAngle, trapez_left, trapez_top){
     return newPoint
 }
 
+/**
+ * part of the snapInitialSectorToTargetSector function
+ * rotates a sector, so it is aligned to the common edge with another sector before translating
+ * @param initialSectorID - the ID of the sector that is to be rotated
+ * @param targetSectorID - the ID of the other sector
+ */
 function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 
 
@@ -6215,6 +6293,10 @@ function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 
 }
 
+/**
+ * blueprint for the sector objects which contains the function to draw the trapezoids on the canvas
+ * @constructor
+ */
 function Sector() {
 
     this.trapez; //Anlegen der Variablen trapez, undefiniert, um mehr als eines anlegen zu können
@@ -6260,6 +6342,12 @@ function Sector() {
 
 }
 
+/**
+ * checks if a segment midpoint of a line is inside a sector (first bounding box, then trapezoid itself)
+ * @param trapez
+ * @param segmentMittelpunkt
+ * @returns {boolean} - true for sector contains point, false for point is outside
+ */
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
     let isPointInsideSectors = false;
     //
@@ -6323,6 +6411,11 @@ function setGeodesicMode (){
     }
 }
 
+/**
+ * snaps every sector in the sectors array to the neighbor on top and on the right if its euklid
+ * the top and right neighbors are being moved to the current (ausgangssektor) sector
+ * updates the coords of non euklid sectors in the sectors array including its minions to center
+ */
 function setOuterSectorsToRing() {
 
     for (let ii = 0; ii < sectors.length; ii++) {
@@ -6364,6 +6457,10 @@ function setOuterSectorsToRing() {
     }
 }
 
+/**
+ * updates the coords of every sector in the sectors array (if the sector is not euklid) to the center
+ * additionally uses updateMinions to move every object on a sector likewise
+ */
 function setSectorsToCenter(){
 
     for (let ii =0; ii < sectors.length; ii++){
@@ -6381,7 +6478,10 @@ function setSectorsToCenter(){
     canvas.renderAll();
 }
 
-
+/**
+ * snaps every sector in the sectors array to its neighbor on top if there is one, so the sectors resemble rows or pillars
+ * the top neighbors are being moved down to the current sector, not otherwise
+ */
 function setSectorsToRow(){
     for (let ii = 0; ii < sectors.length; ii++) {
 
@@ -6405,12 +6505,12 @@ function setSectorsToRow(){
 
 }
 
-canvas.setZoom( startZoom);
+canvas.setZoom(startZoom);
 canvas.viewportTransform[4]= startViewportTransform_4;
 canvas.viewportTransform[5]= startViewportTransform_5;
 
 function setZoomPan(zoomToSet, viewportToTransform_4, viewportToTransform_5){
-    canvas.setZoom( zoomToSet);
+    canvas.setZoom(zoomToSet);
     canvas.viewportTransform[4]= viewportToTransform_4;
     canvas.viewportTransform[5]= viewportToTransform_5;
 }
@@ -6706,7 +6806,6 @@ function startTexts() {
     for (let ii = 0; ii < textStartParentSector.length; ii++) {
 
         let sec = sectors[textStartParentSector[ii][0]];
-
         let text = new fabric.Text("" + (textStartContent[ii]), {
             fontSize : textStartFontSize[ii],
             originX: 'center',
@@ -6779,6 +6878,10 @@ function toDegree(rad) {
     return rad * 180 /Math.PI
 }
 
+/**
+ *
+ * @param argument - string that contains the selected tool (paint, delete etc)
+ */
 //Werkzeugsänderung über die Button der Internetseite
 function toolChange(argument) {
 
@@ -6968,6 +7071,7 @@ function toRadians(deg) {
 
 /**
  * moves a Sector (initial sector) to its neighbor sector (target sector) to align with their common edge.
+ * sectors are already rotated when this function is applied, meaning their common edges are parallel.
  * @param initialSectorID - ID of the sector that has to be moved to snap to the target sector.
  * @param targetSectorID - ID of the sector the initial sector is snapped to.
  */
@@ -6998,7 +7102,7 @@ function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
 function undoLastAction(){
     if (history.length <= 0){return}
     let immediatehistory = history.pop();
-
+    //zeichnen von Linien rückgängig
     if (immediatehistory[0] === 0) {
 
         for (let jj = 1; jj < immediatehistory.length; jj++) {
@@ -7046,6 +7150,7 @@ function undoLastAction(){
     }
 
     if (immediatehistory[0] === 1) {
+        //bewegen von sektoren rückgängig
         for (let jj = 1; jj < immediatehistory.length; jj++) {
             let sectorID = immediatehistory[immediatehistory.length - jj][0];
             let sectorStackID = immediatehistory[immediatehistory.length - jj][1];
@@ -7080,6 +7185,7 @@ function undoLastAction(){
     }
 
     if (immediatehistory[0] === 2) {
+        //Löschen einer Linie rückgängig
         let line = [];
 
         for (let jj = immediatehistory.length - 1; jj > 1; jj--) {
