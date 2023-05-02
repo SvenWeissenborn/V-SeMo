@@ -862,15 +862,15 @@ canvas.on('mouse:move', function (o) {
     if(lineTypeToDraw == "vector") {
         if(isLineStarted == true) {
 
-            line.set({
+            vectorLine.set({
                 x2: pointer.x,
                 y2: pointer.y
             });
 
-            console.log(line)
+            console.log(vectorLine)
 
-            let x1 = line.x1;
-            let y1 = line.y1;
+            let x1 = vectorLine.x1;
+            let y1 = vectorLine.y1;
             let x2 = pointer.x;
             let y2 = pointer.y;
 
@@ -3728,11 +3728,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                 if (lineTypeToDraw == 'vector'){
 
-                     vectorPoint;
-                     vectorLine;
-                     vectorHead;
-
-                    vectorPoint = new fabric.Circle({
+                     vectorPoint = new fabric.Circle({
                         id: "added-vector-point",
                         radius: 5,
                         fill: "blue",
@@ -3751,7 +3747,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         hasControls: false
                     });
 
-                    line = new fabric.Line(points, {
+                    vectorLine = new fabric.Line(points, {
                         strokeWidth: 2,
                         stroke: color,
                         fill: color,
@@ -3782,7 +3778,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         originY: "center"
                     });
 
-                    canvas.add(vectorPoint, line, vectorHead);
+                    canvas.add(vectorPoint, vectorLine, vectorHead);
                     canvas.renderAll();
 
                 }
