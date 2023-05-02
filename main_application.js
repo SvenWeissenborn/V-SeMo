@@ -392,7 +392,6 @@ let actualSector;
 canvas.on('mouse:move', function (o) {
 
 
-
     if (selectedTool !== 'paint' && selectedTool !== 'grab') return;
 
     let color;
@@ -822,6 +821,39 @@ canvas.on('mouse:move', function (o) {
             }
 
             canvas.renderAll();
+        }
+
+    }
+
+    if(lineTypeToDraw == "vector") {
+        if(isLineStarted == true) {
+
+            line.set({
+                x2: pointer.x,
+                y2: pointer.y
+            });
+
+            console.log(line)
+
+            let x1 = line.x1;
+            let y1 = line.y1;
+            let x2 = pointer.x;
+            let y2 = pointer.y;
+
+            let verticalHeight = y2 - y1;
+            let horizontalWidth = x2 - x1;
+
+            let pointerAngle = Math.atan2(verticalHeight, horizontalWidth) * 180 / Math.PI; //Grad
+
+            vectorHead.set({
+                left: pointer.x,
+                top: pointer.y,
+                angle: pointerAngle
+            });
+
+            vectorLine.setCoords();
+            vectorHead.setCoords();
+            canvas.requestRenderAll();
         }
 
     }
@@ -3662,7 +3694,62 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                 if (lineTypeToDraw == 'vector'){
 
-                    drawVector(pointer, this.parent.ID)
+                     vectorPoint;
+                     vectorLine;
+                     vectorHead;
+
+                    vectorPoint = new fabric.Circle({
+                        id: "added-vector-point",
+                        radius: 5,
+                        fill: "blue",
+                        left: pointer.x,
+                        top: pointer.y,
+                        evented: false,
+                        objectCaching: false,
+                        lockMovementX: false,
+                        lockMovementY: false,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        selectable: false,
+                        originX: 'center',
+                        originY: 'center',
+                        hasBorders: false,
+                        hasControls: false
+                    });
+
+                    line = new fabric.Line(points, {
+                        strokeWidth: 2,
+                        stroke: color,
+                        fill: color,
+                        originX: 'center',
+                        originY: 'center',
+                        perPixelTargetFind: true,
+                        objectCaching: false,
+                        hasBorders: false,
+                        hasControls: false,
+                        evented: true
+                    });
+
+
+                    vectorHead = new fabric.Polygon([
+                        {x: 0, y: 0},
+                        {x: -20, y: -10},
+                        {x: -20, y: 10}
+                    ], {
+                        id: "vector-tip",
+                        stroke: "blue",
+                        strokeWidth: 3,
+                        fill: "blue",
+                        selectable: false,
+                        hasControls: false,
+                        top: pointer.y,
+                        left: pointer.x,
+                        originX: "center",
+                        originY: "center"
+                    });
+
+                    canvas.add(vectorPoint, line, vectorHead);
+                    canvas.renderAll();
 
                 }
 
@@ -4398,18 +4485,7 @@ function drawVector(clickedPoint, parentSectorID){
 
     sectors[parentSectorID].vectors.push(vectorDashed);
 
-    let vector = new fabric.Line([clickedPoint.x-vectorlength/2,clickedPoint.y-vectorlength/2,clickedPoint.x+vectorlength/2,clickedPoint.y+vectorlength/2], {
-        strokeWidth: 4,
-        stroke: 'black',
-        fill: 'black',
-        originX: 'center',
-        originY: 'center',
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true
-    });
+
 
     vector.on('mousedown',function() {
         vector.bringToFront()
