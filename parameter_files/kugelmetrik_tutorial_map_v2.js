@@ -1,5 +1,6 @@
 /*
 ------Parameter-------
+turnLorentzTransformOn = 0
 nSectorRowsFromSphere = 9
 nSectorColumnsFromSphere = 18
 radius = 500
@@ -73,7 +74,7 @@ markStartRadius= [ 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, ];
 markStartFill= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], mark_colors[6], ];
 markStartStroke= [ mark_colors[0], mark_colors[1], mark_colors[2], mark_colors[3], mark_colors[4], mark_colors[5], mark_colors[6], ];
 markStartParentSector= [ [0,0], [1,0], [2,0], [3,0], [4,0], [4,1], [5,0], ];
-markStartID= [ [0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], ];
+markStartID= [ [0], [1], [2], [3], [4], [5], [6], ];
 textStart_x= [ -201.88137789230137, -181.2556125452252, -215.63188812368548, 25.782206683845203, -8.594068894615063, 20.625765347076154, 8.594068894615077, ];
 textStart_y= [ -179.46318979032964, -29.149463936181462, 174.9767851979328, -254.379869816929, 54.62634015954636, -50.09341496011342, 147.10081123454702, ];
 textStartContent= [ 'Reykjavik', 'Dublin', 'Casablanca', 'Helsinki', 'Monaco', 'Kopenhagen', 'Tunis', ];
