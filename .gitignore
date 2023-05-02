@@ -3,5 +3,6 @@
 home.svg
 index_visemo.html
 .idea/.name
+.idea/.gitignore
 venv/**
 *.pyc
