@@ -295,7 +295,7 @@ canvas.rotationCursor = 'col-resize';
 
 //Ausschalten der Gruppenfunktion per "Lasso"
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snappingToChosen-Funktion für Gruppen
-canvas.selection = false;
+canvas.selection = true;
 
 let shiftPressed = false;
 
@@ -862,12 +862,12 @@ canvas.on('mouse:move', function (o) {
     if(lineTypeToDraw == "vector") {
         if(isLineStarted == true) {
 
+            let vectorLine = vectors[vectors.length - 1][1]
+            let vectorHead = vectors[vectors.length - 1][2]
             vectorLine.set({
                 x2: pointer.x,
                 y2: pointer.y
             });
-
-            console.log(vectorLine)
 
             let x1 = vectorLine.x1;
             let y1 = vectorLine.y1;
@@ -887,7 +887,7 @@ canvas.on('mouse:move', function (o) {
 
             vectorLine.setCoords();
             vectorHead.setCoords();
-            canvas.requestRenderAll();
+            canvas.renderAll();
         }
 
     }
@@ -1443,14 +1443,15 @@ canvas.on('mouse:up', function(opt) {
         toolChange('grab')
     }
     if (lineTypeToDraw == 'vector') {
-        console.log(vectorPoint)
+        isLineStarted = false
 
-        vector = new fabric.Group([vectorPoint, vectorLine, vectorHead]);
-        canvas.add(vector);
-        console.log(vector)
-        vector.set({
-            hasBorders: false
-        });
+        console.log(vectors[vectors.length - 1])
+        let vectorPoint = vectors[vectors.length - 1][0]
+        let vectorLine = vectors[vectors.length - 1][1]
+        let vectorHead = vectors[vectors.length - 1][2]
+
+        vectorLine.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
+        vectorHead.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
 
         toolChange('grab')
     }
@@ -1464,8 +1465,15 @@ canvas.on('mouse:up', function(opt) {
     lineTypeToDraw = ""
 });
 
+function getRelationshipForAnyObjecCombination(ObjectToGiveRelation, ObjectRelatedTo) {
+    let objectTransform = ObjectRelatedTo.calcTransformMatrix();
+    let invertedObjectTransform = invert(objectTransform);
+    let desiredTransform = multiply(
+        invertedObjectTransform,
+        ObjectToGiveRelation.calcTransformMatrix());
 
-
+    return desiredTransform;
+}
 
 
 //Abbrechen einer Linie
@@ -1868,6 +1876,8 @@ let slider_max = 100;
 let sectorToSnap = -1;
 
 let snappingToChosenDistance = 0.6;
+
+let vectors = [];
 
 /**
  * automatically snaps all sectors along a chosen geodesic
@@ -3737,26 +3747,80 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                 if (lineTypeToDraw == 'vector'){
 
-                     vectorPoint = new fabric.Circle({
-                        id: "added-vector-point",
+                    let vector = []
+
+                     let vectorPoint = new fabric.Circle({
+                        ID: vectors.length,
                         radius: 5,
                         fill: "blue",
                         left: pointer.x,
                         top: pointer.y,
-                        evented: false,
+                        evented: true,
                         objectCaching: false,
                         lockMovementX: false,
                         lockMovementY: false,
                         lockScalingX: true,
                         lockScalingY: true,
-                        selectable: false,
+                        selectable: true,
                         originX: 'center',
                         originY: 'center',
                         hasBorders: false,
                         hasControls: false
                     });
 
-                    vectorLine = new fabric.Line(points, {
+                    vectorPoint.on('moving', function(o) {
+                        console.log('Ticks')
+                            if (vectors[vectorPoint.ID][1].relationshipToVectorPoint) {
+                                vectors[vectorPoint.ID][1].bringToFront();
+                                let relationship = vectors[vectorPoint.ID][1].relationshipToVectorPoint;
+                                let newTransform = multiply(
+                                    vectorPoint.calcTransformMatrix(),
+                                    relationship
+                                );
+                                let options;
+                                options = fabric.util.qrDecompose(newTransform);
+                                vectors[vectorPoint.ID][1].set({
+                                    flipX: false,
+                                    flipY: false,
+                                });
+                                vectors[vectorPoint.ID][1].setPositionByOrigin(
+                                    {x: options.translateX, y: options.translateY},
+                                    'center',
+                                    'center'
+                                );
+                                vectors[vectorPoint.ID][1].set(options);
+                                vectors[vectorPoint.ID][1].setCoords();
+                            }
+
+                        if (vectors[vectorPoint.ID][2].relationshipToVectorPoint) {
+                            vectors[vectorPoint.ID][2].bringToFront();
+                            let relationship = vectors[vectorPoint.ID][2].relationshipToVectorPoint;
+                            let newTransform = multiply(
+                                vectorPoint.calcTransformMatrix(),
+                                relationship
+                            );
+                            let options;
+                            options = fabric.util.qrDecompose(newTransform);
+                            vectors[vectorPoint.ID][2].set({
+                                flipX: false,
+                                flipY: false,
+                            });
+                            vectors[vectorPoint.ID][2].setPositionByOrigin(
+                                {x: options.translateX, y: options.translateY},
+                                'center',
+                                'center'
+                            );
+                            vectors[vectorPoint.ID][2].set(options);
+                            vectors[vectorPoint.ID][2].setCoords();
+                        }
+
+
+                        vectorPoint.setCoords()
+                    })
+
+                    vector.push(vectorPoint)
+
+                    let vectorLine = new fabric.Line(points, {
                         strokeWidth: 2,
                         stroke: color,
                         fill: color,
@@ -3766,11 +3830,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         objectCaching: false,
                         hasBorders: false,
                         hasControls: false,
-                        evented: true
+                        evented: false
                     });
 
+                    vector.push(vectorLine)
 
-                    vectorHead = new fabric.Polygon([
+                    let vectorHead = new fabric.Polygon([
                         {x: 0, y: 0},
                         {x: -20, y: -10},
                         {x: -20, y: 10}
@@ -3779,15 +3844,61 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         stroke: "blue",
                         strokeWidth: 3,
                         fill: "blue",
-                        selectable: false,
+                        selectable: true,
                         hasControls: false,
                         top: pointer.y,
                         left: pointer.x,
                         originX: "center",
-                        originY: "center"
+                        originY: "center",
+                        evented: true,
                     });
 
-                    canvas.add(vectorPoint, vectorLine, vectorHead);
+                    vectorHead.on('mousedown', function(o) {
+                        console.log('tick')
+                    })
+                    vectorHead.on('moving', function(o) {
+                        console.log('Ticks')
+
+                        pointer = canvas.getPointer(o.e);
+
+                        vectorLine.set({
+                            x2: pointer.x,
+                            y2: pointer.y
+                        });
+
+                        console.log(vectorLine)
+
+                        let x1 = vectorLine.x1;
+                        let y1 = vectorLine.y1;
+                        let x2 = pointer.x;
+                        let y2 = pointer.y;
+
+                        let verticalHeight = y2 - y1;
+                        let horizontalWidth = x2 - x1;
+
+                        let pointerAngle = Math.atan2(verticalHeight, horizontalWidth) * 180 / Math.PI; //Grad
+
+                        vectorHead.set({
+                            left: pointer.x,
+                            top: pointer.y,
+                            angle: pointerAngle
+                        });
+
+                        vectorLine.setCoords();
+                        vectorHead.setCoords();
+
+                        vectorLine.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
+                        vectorHead.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
+                        canvas.renderAll();
+
+                    })
+
+                    vector.push(vectorHead)
+                    vectors.push(vector)
+                    for (let ii = 0; ii < vector.length; ii++){
+                        canvas.add(vector[ii]);
+                    }
+
                     canvas.renderAll();
 
                 }
@@ -4559,6 +4670,8 @@ function drawVector(clickedPoint, parentSectorID){
     canvas.add(vector, vectorDashed);
     canvas.bringToFront(vector, vectorDashed);
     canvas.renderAll();
+
+
 }
 
 function drawVertices() {
