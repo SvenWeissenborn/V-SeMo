@@ -1450,8 +1450,8 @@ canvas.on('mouse:up', function(opt) {
         let vectorLine = vectors[vectors.length - 1][1]
         let vectorHead = vectors[vectors.length - 1][2]
 
-        vectorLine.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-        vectorHead.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
+        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
+        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
 
         toolChange('grab')
     }
@@ -1464,17 +1464,6 @@ canvas.on('mouse:up', function(opt) {
 
     lineTypeToDraw = ""
 });
-
-function getRelationshipForAnyObjecCombination(ObjectToGiveRelation, ObjectRelatedTo) {
-    let objectTransform = ObjectRelatedTo.calcTransformMatrix();
-    let invertedObjectTransform = invert(objectTransform);
-    let desiredTransform = multiply(
-        invertedObjectTransform,
-        ObjectToGiveRelation.calcTransformMatrix());
-
-    return desiredTransform;
-}
-
 
 //Abbrechen einer Linie
 window.addEventListener('keydown',function(event){
@@ -3769,52 +3758,13 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     });
 
                     vectorPoint.on('moving', function(o) {
-                        console.log('Ticks')
-                            if (vectors[vectorPoint.ID][1].relationshipToVectorPoint) {
-                                vectors[vectorPoint.ID][1].bringToFront();
-                                let relationship = vectors[vectorPoint.ID][1].relationshipToVectorPoint;
-                                let newTransform = multiply(
-                                    vectorPoint.calcTransformMatrix(),
-                                    relationship
-                                );
-                                let options;
-                                options = fabric.util.qrDecompose(newTransform);
-                                vectors[vectorPoint.ID][1].set({
-                                    flipX: false,
-                                    flipY: false,
-                                });
-                                vectors[vectorPoint.ID][1].setPositionByOrigin(
-                                    {x: options.translateX, y: options.translateY},
-                                    'center',
-                                    'center'
-                                );
-                                vectors[vectorPoint.ID][1].set(options);
-                                vectors[vectorPoint.ID][1].setCoords();
-                            }
 
-                        if (vectors[vectorPoint.ID][2].relationshipToVectorPoint) {
-                            vectors[vectorPoint.ID][2].bringToFront();
-                            let relationship = vectors[vectorPoint.ID][2].relationshipToVectorPoint;
-                            let newTransform = multiply(
-                                vectorPoint.calcTransformMatrix(),
-                                relationship
-                            );
-                            let options;
-                            options = fabric.util.qrDecompose(newTransform);
-                            vectors[vectorPoint.ID][2].set({
-                                flipX: false,
-                                flipY: false,
-                            });
-                            vectors[vectorPoint.ID][2].setPositionByOrigin(
-                                {x: options.translateX, y: options.translateY},
-                                'center',
-                                'center'
-                            );
-                            vectors[vectorPoint.ID][2].set(options);
-                            vectors[vectorPoint.ID][2].setCoords();
+                        if (vectors[vectorPoint.ID][1].relationship) {
+                            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
                         }
-
-
+                        if (vectors[vectorPoint.ID][2].relationship) {
+                            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
+                        }
                         vectorPoint.setCoords()
                     })
 
@@ -3887,8 +3837,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         vectorLine.setCoords();
                         vectorHead.setCoords();
 
-                        vectorLine.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-                        vectorHead.relationshipToVectorPoint = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
+                        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
+                        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
                         canvas.renderAll();
 
                     })
@@ -5271,6 +5221,16 @@ function getRelationship(ObjectToGiveRelation, parentSectorID) {
     let invertedtrapezTransform = invert(trapezTransform);
     let desiredTransform = multiply(
         invertedtrapezTransform,
+        ObjectToGiveRelation.calcTransformMatrix());
+
+    return desiredTransform;
+}
+
+function getRelationshipForAnyObjecCombination(ObjectToGiveRelation, ObjectRelatedTo) {
+    let objectTransform = ObjectRelatedTo.calcTransformMatrix();
+    let invertedObjectTransform = invert(objectTransform);
+    let desiredTransform = multiply(
+        invertedObjectTransform,
         ObjectToGiveRelation.calcTransformMatrix());
 
     return desiredTransform;
@@ -7500,7 +7460,7 @@ function undoLastAction(){
  * @param boss - ID of a sector
  * @param minion - object that is drawn on a sector (markPoints, lines etc)
  */
-function updateMinionsRelationship(boss, minion) {
+function updateMinionsPosition(boss, minion) {
     if (minion.relationship) {
         minion.bringToFront();
         let relationship = minion.relationship;
@@ -7525,7 +7485,7 @@ function updateMinionsRelationship(boss, minion) {
 }
 
 /**
- * updateMinions applies updateMinionsRelationship on marks, vectors, lines etc which are drawn on a sector
+ * updateMinions applies updateMinionsPosition on marks, vectors, lines etc which are drawn on a sector
  * @param boss - ID of a parent sector
  */
 function updateMinions(boss) {
@@ -7540,41 +7500,41 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.markCircles.length; ii++) {
         let markPoint = boss.parent.markCircles[ii];
-        updateMinionsRelationship(boss, markPoint);
+        updateMinionsPosition(boss, markPoint);
     }
 
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
-        updateMinionsRelationship(boss, vector);
+        updateMinionsPosition(boss, vector);
     }
 
     if (turnLorentzTransformOn === 1){
         for (let ii = 0; ii < boss.parent.slider.length; ii++){
             let slider_move = boss.parent.slider[ii];
-            updateMinionsRelationship(boss, slider_move);
+            updateMinionsPosition(boss, slider_move);
 
         }
     }
 
     for (let ii = 0; ii < boss.parent.ticks.length; ii++) {
         let tick = boss.parent.ticks[ii];
-        updateMinionsRelationship(boss, tick)
+        updateMinionsPosition(boss, tick)
     }
 
     for (let ii = 0; ii < boss.parent.lineSegments.length; ii++) {
         let segment = boss.parent.lineSegments[ii];
-        updateMinionsRelationship(boss, segment);
+        updateMinionsPosition(boss, segment);
 
         if(segment.dragPoint !== undefined){
             let segmentDragPoint = segment.dragPoint;
-            updateMinionsRelationship(boss, segmentDragPoint);
+            updateMinionsPosition(boss, segmentDragPoint);
 
         }
 
         if(segment.geodesicTicks !== undefined){
             for(let jj =0; jj < segment.geodesicTicks.length; jj++){
                 let segmentGeodesicTick = segment.geodesicTicks[jj];
-                updateMinionsRelationship(boss, segmentGeodesicTick);
+                updateMinionsPosition(boss, segmentGeodesicTick);
             }
         }
     }
@@ -7583,16 +7543,16 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.texts.length; ii++) {
         let text = boss.parent.texts[ii];
-        updateMinionsRelationship(boss, text);
+        updateMinionsPosition(boss, text);
     }
 
 
     for (let ii = 0; ii < boss.parent.cornerArcs.length; ii++) {
         let cornerArc = boss.parent.cornerArcs[ii];
-        updateMinionsRelationship(boss, cornerArc);
+        updateMinionsPosition(boss, cornerArc);
     }
 
-    updateMinionsRelationship(boss, boss.parent.ID_text);
+    updateMinionsPosition(boss, boss.parent.ID_text);
 
 
 
