@@ -3757,13 +3757,10 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             hasControls: false
                         });
 
-                    console.log(this.parent)
-
                     vectorPoint.relationship = getRelationship(vectorPoint, this.parent.ID)
-                    console.log(vectorPoint.relationship)
+                    vectorPoint.parentSector = [this.parent.ID, sectors[this.parent.ID].vectors.length]
 
                     vectorPoint.on('moving', function(o) {
-
                         if (vectors[vectorPoint.ID][1].relationship) {
                             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
                         }
@@ -3772,6 +3769,25 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         }
                         vectorPoint.setCoords()
                     })
+
+
+                    vectorPoint.on('modified', function(o) {
+                        let vectorPointParentIDBefore = vectorPoint.parentSector[0];
+
+                        sectors[vectorPointParentIDBefore].vectors.splice(vectorPoint.parentSector[1], 1);
+
+                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint. top);
+                        let vectorPointParentIDNew = getParentSectorOfPoint(vectorPointPosition);
+
+                        if (vectorPointParentIDNew !== undefined){
+                            vectorPoint.parentSector = [vectorPointParentIDNew, sectors[vectorPointParentIDNew].vectors.length];
+                            vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentIDNew);
+                            sectors[vectorPointParentIDNew].vectors.push(vectors[vectorPoint.ID])
+                        }
+
+                    })
+
+
 
                     vector.push(vectorPoint)
 
@@ -7512,6 +7528,9 @@ function updateMinions(boss) {
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
         console.log(vector)
+        console.log('Punkt:', vector[0]);
+        console.log('Linie:', vector[1]);
+        console.log('Dreieck:', vector[2]);
         updateMinionsPosition(boss, vector[0]);
         updateMinionsPosition(vector[0], vector[1])
         updateMinionsPosition(vector[0], vector[2])
