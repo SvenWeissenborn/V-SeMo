@@ -3738,24 +3738,29 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     let vector = []
 
-                     let vectorPoint = new fabric.Circle({
-                        ID: vectors.length,
-                        radius: 5,
-                        fill: "blue",
-                        left: pointer.x,
-                        top: pointer.y,
-                        evented: true,
-                        objectCaching: false,
-                        lockMovementX: false,
-                        lockMovementY: false,
-                        lockScalingX: true,
-                        lockScalingY: true,
-                        selectable: true,
-                        originX: 'center',
-                        originY: 'center',
-                        hasBorders: false,
-                        hasControls: false
-                    });
+                        let vectorPoint = new fabric.Circle({
+                            ID: vectors.length,
+                            radius: 5,
+                            fill: "blue",
+                            left: pointer.x,
+                            top: pointer.y,
+                            evented: true,
+                            objectCaching: false,
+                            lockMovementX: false,
+                            lockMovementY: false,
+                            lockScalingX: true,
+                            lockScalingY: true,
+                            selectable: true,
+                            originX: 'center',
+                            originY: 'center',
+                            hasBorders: false,
+                            hasControls: false
+                        });
+
+                    console.log(this.parent)
+
+                    vectorPoint.relationship = getRelationship(vectorPoint, this.parent.ID)
+                    console.log(vectorPoint.relationship)
 
                     vectorPoint.on('moving', function(o) {
 
@@ -3844,6 +3849,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     })
 
                     vector.push(vectorHead)
+                    sectors[this.parent.ID].vectors.push(vector)
                     vectors.push(vector)
                     for (let ii = 0; ii < vector.length; ii++){
                         canvas.add(vector[ii]);
@@ -7505,7 +7511,10 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
-        updateMinionsPosition(boss, vector);
+        console.log(vector)
+        updateMinionsPosition(boss, vector[0]);
+        updateMinionsPosition(vector[0], vector[1])
+        updateMinionsPosition(vector[0], vector[2])
     }
 
     if (turnLorentzTransformOn === 1){
