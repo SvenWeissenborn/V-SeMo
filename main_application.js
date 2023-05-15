@@ -3785,6 +3785,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentIDNew);
                             sectors[vectorPointParentIDNew].vectors.push(vectors[vectorPoint.ID])
                         }
+                        canvas.bringToFront(vectorPoint) // Vektor-Punkt ist nach Verschieben auf neuen Sektor immer auf dem Sektor, nicht dahinter
 
                     })
 
@@ -3809,8 +3810,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     let vectorHead = new fabric.Polygon([
                         {x: 0, y: 0},
-                        {x: -20, y: -10},
-                        {x: -20, y: 10}
+                        {x: -15, y: -7.5},
+                        {x: -15, y: 7.5}
                     ], {
                         id: "vector-head",
                         stroke: "blue",
@@ -3829,7 +3830,6 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         console.log('tick')
                     })
                     vectorHead.on('moving', function(o) {
-                        console.log('Ticks')
 
                         pointer = canvas.getPointer(o.e);
 
@@ -3838,6 +3838,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             y1: vectorPoint.top,
                             x2: pointer.x,
                             y2: pointer.y,
+                            angle: 0 // Linie behält ihre Beziehung zum Rest des Vektors nach Rotieren des Parentalsektors
                         });
 
                         let x1 = vectorLine.x1;
@@ -6560,8 +6561,8 @@ function Sector() {
 
 /**
  * checks if a segment midpoint of a line is inside a sector (first bounding box, then trapezoid itself)
- * @param trapez
- * @param segmentMittelpunkt
+ * @param trapez -
+ * @param segmentMittelpunkt - midpoint of a line segment
  * @returns {boolean} - true for sector contains point, false for point is outside
  */
 function sectorContainsPoint(trapez,segmentMittelpunkt) {
@@ -7050,6 +7051,15 @@ function startTexts() {
     canvas.renderAll();
 }
 
+/**
+ * gives the sector IDs a line segment intersects with
+ * @param lambdas -
+ * @param xg1 - x coord of the start point of the line segment
+ * @param yg1 - y coord of the start point if the line segment
+ * @param xg2 - x coord of the end point of the line segment
+ * @param yg2 - y coord of the end point of the line segment
+ * @returns {*[]} - an array of the sectors the line segment will intersect on completion through the sector model
+ */
 //Bestimmt die Sektorzugehörigkeit der Liniensegmente einer Geodäte über Mittelpunkte
 function testLocation(lambdas, [xg1,yg1,xg2,yg2]) {
 
