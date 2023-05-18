@@ -2823,10 +2823,52 @@ function distance(point_1, point_2) {
     return Math.sqrt(dx ** 2 + dy ** 2);
 }
 
+/**
+ * calculates the distance between a given point to a given straight line
+ * @param point_x - x coord of the given point
+ * @param point_y - y coord of the given point
+ * @param point_line_x - x coord of the start point of the given line
+ * @param point_line_y - y coord of the start point of the given line
+ * @param direction_x - x difference between start an end point of the line
+ * @param direction_y - y difference between start and end point of the line
+ * @returns {number} - the closest distance between the point and the line
+ */
 function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y, direction_x, direction_y) {
     const dx = point_x - point_line_x;
     const dy = point_y - point_line_y;
     return Math.abs((dx * direction_y - dy * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
+
+}
+
+/**
+ *
+ * @param point
+ * @returns {{sec: number, closestEdge: number, minDistance: number, snapStatusOfClosestEdge: number}}
+ */
+function getClosestEdgeOfPoint (point) {
+
+    let sec = getParentSectorOfPoint(point);
+
+    let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[sec].trapez);
+
+    let distancesToEdges = [];
+
+    for (let kk = 0; kk < 4; kk++) {
+
+        xt1 = trapezPointsAsGlobalCoords[kk].x;
+        xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+        yt1 = trapezPointsAsGlobalCoords[kk].y;
+        yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+
+        let distanceToEdge = distancePointStraightLine(point.x, point.y, xt1, yt1, xt2-xt1, yt2-yt1);
+        distancesToEdges.push(distanceToEdge);
+    }
+
+    let minDistance = Math.min(...distancesToEdges);
+    let closestEdge = distancesToEdges.indexOf(minDistance);
+    let snapStatusOfClosestEdge = sectors[sec].snapStatus[closestEdge];
+
+    return {sec, minDistance, closestEdge, snapStatusOfClosestEdge};
 
 }
 
@@ -3769,6 +3811,26 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
                         }
                         vectorPoint.setCoords()
+
+                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+                        let closestEdgeParameters = getClosestEdgeOfPoint(vectorPointPosition);
+
+                        if(closestEdgeParameters.sec !== undefined) {
+                            if(closestEdgeParameters.snapStatusOfClosestEdge !== 1) {
+                                if(closestEdgeParameters.minDistance <= 10) {
+                                    console.log("zu nah")
+                                    /*vectorPoint.set({
+                                        left: 500,
+                                        top: 100
+                                    });
+                                    vectorPoint.setCoords()
+                                    updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
+                                    updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])*/
+
+                                }
+                            }
+                        }
+
                     })
 
 
@@ -7538,10 +7600,10 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
-        console.log(vector)
-        console.log('Punkt:', vector[0]);
-        console.log('Linie:', vector[1]);
-        console.log('Dreieck:', vector[2]);
+        //console.log(vector)
+        //console.log('Punkt:', vector[0]);
+        //console.log('Linie:', vector[1]);
+        //console.log('Dreieck:', vector[2]);
         updateMinionsPosition(boss, vector[0]);
         updateMinionsPosition(vector[0], vector[1])
         updateMinionsPosition(vector[0], vector[2])
