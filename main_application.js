@@ -2845,7 +2845,7 @@ function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y,
  * @param point
  * @returns {{sec: number, closestEdge: number, minDistance: number, snapStatusOfClosestEdge: number}}
  */
-function getClosestEdgeOfPoint (point) {
+function getClosestEdgeOfPointParameters (point) {
 
     let sec = getParentSectorOfPoint(point);
 
@@ -3813,7 +3813,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         vectorPoint.setCoords()
 
                         let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-                        let closestEdgeParameters = getClosestEdgeOfPoint(vectorPointPosition);
+                        let closestEdgeParameters = getClosestEdgeOfPointParameters(vectorPointPosition);
 
                         if(closestEdgeParameters.sec !== undefined) {
                             if(closestEdgeParameters.snapStatusOfClosestEdge !== 1) {
