@@ -3832,7 +3832,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     let closestEdgeParameters = [];
 
-                    vectorPoint.on('mousedown', function (o) {
+                    vectorPoint.on('moving', function (o) {
                        if (vectors[vectorPoint.ID][1].relationship) {
                             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
                         }
