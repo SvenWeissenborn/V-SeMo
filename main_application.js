@@ -7189,8 +7189,17 @@ function startGeodesics(){
 
 
             lines[ii].operational = startGeodesicOperational[ii];
+
             if (lines[ii].operational === false){
                 continueGeodesic(ii)
+                for (let jj = 0; jj < lines[ii].length; jj++){
+                    console.log(lines[ii][jj].evented)
+                    console.log(lines[ii][jj].selectable)
+                    lines[ii][jj].evented = false;
+                    console.log(lines[ii][jj].evented)
+
+                }
+
             }
 
         }
@@ -7453,8 +7462,11 @@ function toolChange(argument) {
 
         for (let jj = 0; jj < lines[ii].length; jj++) {
 
-            lines[ii][jj].evented = true;
-            lines[ii][jj].hoverCursor = 'pointer';
+            if (lines[ii].operational !== false){
+                lines[ii][jj].evented = true;
+                lines[ii][jj].hoverCursor = 'pointer';
+            }
+
 
             if (selectedTool == 'delete') {
 

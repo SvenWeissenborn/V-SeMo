@@ -6,15 +6,17 @@ import math
 # spacetime: turnLorentzTransformOn = 1
 lorentzTransform = 1
 
-nRowsInModel = 7
-nColumnsInModel = 4
+nRowsInModel = 40
+nColumnsInModel = 3
 
 lengthFactor = 100
-T_0 = 14
-delta_x = 4
-delta_t = 2
+wellenzahl_k = 1
+lambda_0 = 0.6
+x = 0
+delta_y = 0.5 * math.pi
+delta_t = 0.5 * math.pi
 sectorDistance_x = 500
-sectorDistance_y = 10
+sectorDistance_y = 0
 
 fontSize = 15
 
@@ -22,7 +24,7 @@ lineStrokeWidthWhenNotSelected = 2
 lineStrokeWidthWhenSelected = 5
 
 start_x = 150
-start_y = 150
+start_y = 0
 
 #Kameraeinstellungen
 startZoom = 0.6
@@ -34,19 +36,19 @@ startViewportTransform_5 = 600
 #startGeodesicsOffset_x: Versatz entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsSectors = [0, 21, 2, 2]
+startGeodesicsSectors = [0, 80]
 
-startGeodesicsAngle = [180, 180, 135, 135]
+startGeodesicsAngle = [180, 180]
 
-startGeodesicsOffset_x = [0.5, 0.5, 0.5, 0.5]
+startGeodesicsOffset_x = [0.5, 0.5]
 
-startGeodesicsOffset_y = [10, 10, 40, 70]
+startGeodesicsOffset_y = [1, 1]
 
-startGeodesicsOperational = ['false', 'false', 'true', 'true']
+startGeodesicsOperational = ['false', 'false']
 
 def main():
 
-    file = io.open("gravitational_waves.js",'w')
+    file = io.open("gravitational_waves_rz.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -116,15 +118,7 @@ def main():
             #Für die x-Position des Sektors wird die Sektorhöhe des alten Sektors verwendet.
             #Für die y-Position des Sektors wird die Hälfte der Differenz der zeitartigen Sektorkanten benötigt.
             # -> Diese Berechnung folgt weiter unten
-            sectorValues[sectorDict["sec_name"]][zeile + ii * nRowsInModel] = "'%c%d'" % (chr(ii + 97).upper(),(nRowsInModel-zeile))
-            if (ii == 0):
-                if (zeile == 0):
-                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = start_x
-                else:
-                    sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = start_x - sectorwidth/2
-
-            else:
-                sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile + (ii - 1) * nRowsInModel] + sectorDistance_x
+            sectorValues[sectorDict["sec_name"]][zeile + ii * nRowsInModel] = "'%c%d'" % (chr(ii + 97).upper(),(zeile))
 
             sectorValues[sectorDict["sec_angle"]][zeile + ii * nRowsInModel] = 0
 
@@ -132,9 +126,9 @@ def main():
 
             timeEdgeRight = delta_t * lengthFactor
 
-            spaceEdgeBottom = (zeile * delta_t / T_0) * delta_x * lengthFactor
+            spaceEdgeBottom = math.sqrt(1 - lambda_0 * math.sin(wellenzahl_k*(zeile * delta_t -x))) * delta_y * lengthFactor
 
-            spaceEdgeTop = ((zeile + 1) * delta_t / T_0) * delta_x * lengthFactor
+            spaceEdgeTop = math.sqrt(1 - lambda_0 * math.sin(wellenzahl_k * ((zeile + 1) * delta_t - x))) * delta_y * lengthFactor
 
             sectorValues[sectorDict["sec_fill"]][zeile + ii * nRowsInModel] = "'white'"
 
@@ -146,9 +140,20 @@ def main():
             print(timeEdgeLeft)
             print(offset_x)
 
+
+
+
             sectorHeight = math.sqrt(timeEdgeLeft * timeEdgeLeft - offset_x * offset_x)
 
-            sectorwidth = spaceEdgeTop
+            print("zeile", zeile)
+            print("spalte", ii)
+            if (zeile == 0):
+                sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y
+            else:
+                sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y - sectorValues[sectorDict["sec_height"]][zeile-1] + sectorValues[sectorDict["sec_posy"]][zeile-1] - sectorDistance_y
+
+
+            sectorwidth = max(spaceEdgeTop, spaceEdgeBottom)
 
             sectorValues[sectorDict["sec_width"]][zeile + ii * nRowsInModel] = sectorwidth
             sectorValues[sectorDict["sec_height"]][zeile + ii * nRowsInModel] = sectorHeight
@@ -189,16 +194,12 @@ def main():
                sectorValues[sectorDict["sec_neighbour_left"]][zeile + ii * nRowsInModel] = zeile + (ii - 1) * nRowsInModel
 
 
-            if (zeile == 0):
-                if (ii == 0):
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y
-                else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+            if (ii == 0):
+                sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = start_x - sectorwidth/2
             else:
-                if (ii == 0):
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = start_y - zeile * (timeEdgeRight + sectorDistance_y)
-                else:
-                    sectorValues[sectorDict["sec_posy"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posy"]][zeile + (ii - 1) * nRowsInModel] + offset_y
+                sectorValues[sectorDict["sec_posx"]][zeile + ii * nRowsInModel] = sectorValues[sectorDict["sec_posx"]][zeile + (ii - 1) * nRowsInModel] + sectorDistance_x
+
+
 
 
     for ii in range(0,len(variablenamesSectors)):
