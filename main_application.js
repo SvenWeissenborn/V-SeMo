@@ -295,7 +295,7 @@ canvas.rotationCursor = 'col-resize';
 
 //Ausschalten der Gruppenfunktion per "Lasso"
 //updateMinions ist für Gruppen implementiert, es fehlt noch die snappingToChosen-Funktion für Gruppen
-canvas.selection = true;
+canvas.selection = false;
 
 let shiftPressed = false;
 
