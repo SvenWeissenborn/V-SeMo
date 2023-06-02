@@ -5722,8 +5722,6 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
             if ((0 - epsilon) <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1){ // && Math.abs(lambdas[lambdas.length-1] - lambda) >= epsilon) {
 
-                console.log(distancePointStraightLine(xt2, yt2, xg2, yg2, dxg, dyg))
-                console.log('lambda:', lambda)
                 lambdaOfThisLineSegment = lambda;
                 lineOverThisSector = ii;
                 lineOverThisEdge = kk;
