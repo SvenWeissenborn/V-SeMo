@@ -1806,7 +1806,7 @@ let geodreieckScale;
 if (turnLorentzTransformOn == 1){
     geodreieckSnapAngle = 15;
     geodreieckStartAngle = 90;
-    geodreieckScale = 0.0585;
+    geodreieckScale = 0.2//0.0585;
 }else{
     geodreieckSnapAngle = 0.1;
     geodreieckStartAngle = 0;
@@ -4835,6 +4835,9 @@ function drawLightCone(trapez) {
             return
         }
 
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
+
+
         let temporary_offset_y;
         if (trapez.points[2].y > 0){
             temporary_offset_y = trapez.points[2].y
@@ -4843,16 +4846,16 @@ function drawLightCone(trapez) {
         }
 
         let lightConesPoint_0 = [
-            (trapez.points[3].x - trapez.points[0].x) + trapez.left + 0.5,
-            trapez.points[3].y + trapez.top  - temporary_offset_y - 0.5
+            trapezPointsAsGlobalCoords[3].x + 0.5, trapezPointsAsGlobalCoords[3].y - 0.5
         ];
+
 
         let lightConesPoint_1 = [
             lightConesPoint_0[0] + lightConeLength / Math.sqrt(2),
             lightConesPoint_0[1] - lightConeLength / Math.sqrt(2)
         ];
 
-        let   lightCone = new fabric.Line(
+            let   lightCone = new fabric.Line(
             [lightConesPoint_0[0], lightConesPoint_0[1], lightConesPoint_1[0], lightConesPoint_1[1]] ,
             {
                 fill: '#666',
@@ -7193,10 +7196,9 @@ function startGeodesics(){
             if (lines[ii].operational === false){
                 continueGeodesic(ii)
                 for (let jj = 0; jj < lines[ii].length; jj++){
-                    console.log(lines[ii][jj].evented)
-                    console.log(lines[ii][jj].selectable)
+
                     lines[ii][jj].evented = false;
-                    console.log(lines[ii][jj].evented)
+
 
                 }
 
@@ -7451,87 +7453,95 @@ function toolChange(argument) {
             markPoints[ii].hoverCursor = 'crosshair';
             markPoints[ii].evented = true
         }
+
+        for (let ii = 0; ii < lines.length; ii++) {
+            for (let jj = 0; jj < lines[ii].length; jj++) {
+                lines[ii][jj].evented = false;
+                lines[ii][jj].hoverCursor = 'grabbing';
+            }
+        }
     }else{
         for (let ii = 0; ii < markPoints.length; ii++){
             markPoints[ii].hoverCursor = 'grabbing';
             markPoints[ii].evented = false
         }
-    }
+        for (let ii = 0; ii < lines.length; ii++) {
 
-    for (let ii = 0; ii < lines.length; ii++) {
+            for (let jj = 0; jj < lines[ii].length; jj++) {
 
-        for (let jj = 0; jj < lines[ii].length; jj++) {
-
-            if (lines[ii].operational !== false){
-                lines[ii][jj].evented = true;
-                lines[ii][jj].hoverCursor = 'pointer';
-            }
+                if (lines[ii].operational !== false){
+                    lines[ii][jj].evented = true;
+                    lines[ii][jj].hoverCursor = 'pointer';
+                }
 
 
-            if (selectedTool == 'delete') {
+                if (selectedTool == 'delete') {
 
-                showGeodesicButtons(false);
-                lines[ii][jj].evented = false;
-                lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
-                lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
-                lines[ii][lines[ii].length - 1].evented = true;
-                lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
+                    showGeodesicButtons(false);
+                    lines[ii][jj].evented = false;
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                    lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
+                    lines[ii][lines[ii].length - 1].evented = true;
+                    lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
 
-            }
+                }
 
-            if (typeof(lines[ii][jj].__eventListeners)=== 'undefined') {
-                lines[ii][jj].on('mousedown', function () {
-                    chosenLineGlobalID = this.ID[0];
-                    if (showExerciseBox == "1") {
-                        console.log('by tool')
-                        checkCheckBoxCondition()
-                    }
-                    for (let kk = 0; kk < lines.length; kk++){
-                        for (let ll = 0; ll < lines[kk].length; ll++)
-                            lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
-                    }
-                    for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
-                        /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
-                          lines[chosenLineGlobalID][kk].setShadow({  color: 'rgba(0,0,0,0.2)',
-                              blur: 10,
-                              offsetX: 50,
-                              offsetY: 0
-                          })
-                          canvas.renderAll()
-                          */
-                        lines[chosenLineGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
-                    }
-
-                    if (selectedTool !== 'delete') {
-                        showGeodesicButtons(true);
-                        showSectorAreaInfobox(false);
-                        showDeficitAngleInfobox(false);
-                        showVertices(false)
-                    }
-
-                    chosenLineGlobalID = this.ID[0];
-
-
-
-
-                    if (selectedTool == 'delete') {
-                        cursor = 'not-allowed';
-                        lines[this.ID[0]].splice(this.ID[1], 1);
-                        if (this.ID[1] === 0) {
-                            lines[this.ID[0]] = [];
+                if (typeof(lines[ii][jj].__eventListeners)=== 'undefined') {
+                    lines[ii][jj].on('mousedown', function () {
+                        chosenLineGlobalID = this.ID[0];
+                        if (showExerciseBox == "1") {
+                            console.log('by tool')
+                            checkCheckBoxCondition()
                         }
-                        if (this.parentSector[0] >= 0) {
-                            sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
+                        for (let kk = 0; kk < lines.length; kk++){
+                            for (let ll = 0; ll < lines[kk].length; ll++)
+                                lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
                         }
-                        canvas.remove(this);
-                        toolChange(selectedTool);
-                    }
+                        for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
+                            /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
+                              lines[chosenLineGlobalID][kk].setShadow({  color: 'rgba(0,0,0,0.2)',
+                                  blur: 10,
+                                  offsetX: 50,
+                                  offsetY: 0
+                              })
+                              canvas.renderAll()
+                              */
+                            lines[chosenLineGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
+                        }
+
+                        if (selectedTool !== 'delete') {
+                            showGeodesicButtons(true);
+                            showSectorAreaInfobox(false);
+                            showDeficitAngleInfobox(false);
+                            showVertices(false)
+                        }
+
+                        chosenLineGlobalID = this.ID[0];
 
 
-                })
+
+
+                        if (selectedTool == 'delete') {
+                            cursor = 'not-allowed';
+                            lines[this.ID[0]].splice(this.ID[1], 1);
+                            if (this.ID[1] === 0) {
+                                lines[this.ID[0]] = [];
+                            }
+                            if (this.parentSector[0] >= 0) {
+                                sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
+                            }
+                            canvas.remove(this);
+                            toolChange(selectedTool);
+                        }
+
+
+                    })
+                }
             }
         }
     }
+
+
 
     if (selectedTool !== 'delete' && selectedTool !== 'delete_whole') {
 
