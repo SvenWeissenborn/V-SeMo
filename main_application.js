@@ -512,103 +512,113 @@ canvas.on('mouse:move', function (o) {
     pointer = canvas.getPointer(o.e);
 
     if (lineTypeToDraw == 'geodesic') {
-        if (lineContinueAt !== -1) {
-            let segment_end_point = new fabric.Point(lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().x2, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().y2);
-            segment_end_point = fabric.util.transformPoint(segment_end_point, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcTransformMatrix());
 
-            let segment_start_point = new fabric.Point(lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().x1, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().y1);
-            segment_start_point = fabric.util.transformPoint(segment_start_point, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcTransformMatrix());
+        if (geodesicsLightLike == '1') {
 
-            if (Math.abs(segment_end_point.x - segment_start_point.x) > Math.abs(segment_end_point.y - segment_start_point.y)) {
-                let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
-                let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
-
-                if (alpha - beta >= Math.PI){
-                    beta = - beta
-                }
-
-                let geodesicNearToMark = geodesicToMarkCalc();
-
-                if (geodesicNearToMark[0]) {
-                    geodesicToMark(geodesicNearToMark[1]);
-                }else {
-
-                    //Richtung der restlichen Geodäte
-                    if (Math.abs(alpha - beta) <= Math.PI / 36) {
-                        line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
-                    } else {
-
-                        //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-
-                        if (geodesicToGeodreieckCalc()) {
-                            geodesicToGeodreieck();
-                        } else if (geodesicToStartCalc()) {
-                            geodesicToStart();
-
-                            } else {
-                                //Linienende sitzt am Cursor
-                                line.set({x2: pointer.x, y2: pointer.y})
-
-                        }
-                    }
-                }
-            } else {
-                let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
-                let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
-
-                if (alpha - beta >= Math.PI){
-                    beta = - beta
-                }
-
-                let geodesicNearToMark = geodesicToMarkCalc();
-
-                if (geodesicNearToMark[0]) {
-                    geodesicToMark(geodesicNearToMark[1]);
-                } else {
-
-                    if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
-                        line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
-                    } else {
-
-                        //Wenn der Der Geodreieck-Empty-Button sichtbar ist
-
-                        if (geodesicToGeodreieckCalc()) {
-                            geodesicToGeodreieck();
-                        } else if (geodesicToStartCalc()) {
-                            geodesicToStart();
-
-                        } else {
-
-
-                                //Linienende sitzt am Cursor
-                                line.set({x2: pointer.x, y2: pointer.y})
-
-                        }
-
-                    }
-                }
+            if (Math.abs(pointer.x - line.x1) > Math.abs(pointer.y - line.y1)) {
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(-45)) + line.y1});
+            }else{
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(+45)) + line.y1});
             }
-        } else {
-            if (selectedTool == 'paint' || startAtMarkPoint !== -1) {
+        }else {
 
-                //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
+            if (lineContinueAt !== -1) {
+                let segment_end_point = new fabric.Point(lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().x2, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().y2);
+                segment_end_point = fabric.util.transformPoint(segment_end_point, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcTransformMatrix());
 
-                if (geodesicToGeodreieckCalc()) {
-                    geodesicToGeodreieck();
-                } else {
+                let segment_start_point = new fabric.Point(lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().x1, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcLinePoints().y1);
+                segment_start_point = fabric.util.transformPoint(segment_start_point, lines[lineContinueAt][lines[lineContinueAt].length - 1].calcTransformMatrix());
+
+                if (Math.abs(segment_end_point.x - segment_start_point.x) > Math.abs(segment_end_point.y - segment_start_point.y)) {
+                    let alpha = Math.atan2(segment_end_point.y - segment_start_point.y, segment_end_point.x - segment_start_point.x);
+                    let beta = Math.atan2(pointer.y - line.y1, pointer.x - line.x1);
+
+                    if (alpha - beta >= Math.PI) {
+                        beta = -beta
+                    }
+
                     let geodesicNearToMark = geodesicToMarkCalc();
 
                     if (geodesicNearToMark[0]) {
                         geodesicToMark(geodesicNearToMark[1]);
                     } else {
 
-                        //Linienende sitzt am Cursor
-                        line.set({x2: pointer.x, y2: pointer.y})
+                        //Richtung der restlichen Geodäte
+                        if (Math.abs(alpha - beta) <= Math.PI / 36) {
+                            line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(alpha) + line.y1});
+                        } else {
+
+                            //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+
+                            if (geodesicToGeodreieckCalc()) {
+                                geodesicToGeodreieck();
+                            } else if (geodesicToStartCalc()) {
+                                geodesicToStart();
+
+                            } else {
+                                //Linienende sitzt am Cursor
+                                line.set({x2: pointer.x, y2: pointer.y})
+
+                            }
+                        }
+                    }
+                } else {
+                    let alpha = Math.atan2(segment_end_point.x - segment_start_point.x, segment_end_point.y - segment_start_point.y);
+                    let beta = Math.atan2(pointer.x - line.x1, pointer.y - line.y1);
+
+                    if (alpha - beta >= Math.PI) {
+                        beta = -beta
+                    }
+
+                    let geodesicNearToMark = geodesicToMarkCalc();
+
+                    if (geodesicNearToMark[0]) {
+                        geodesicToMark(geodesicNearToMark[1]);
+                    } else {
+
+                        if (Math.abs(alpha - beta) <= Math.PI / 36 /* Hier bin ich nicht sicher, ob das rein muss || Math.abs(alpha + beta) <= Math.PI / 36*/) {
+                            line.set({x2: (pointer.y - line.y1) * Math.tan(alpha) + line.x1, y2: pointer.y});
+                        } else {
+
+                            //Wenn der Der Geodreieck-Empty-Button sichtbar ist
+
+                            if (geodesicToGeodreieckCalc()) {
+                                geodesicToGeodreieck();
+                            } else if (geodesicToStartCalc()) {
+                                geodesicToStart();
+
+                            } else {
+
+
+                                //Linienende sitzt am Cursor
+                                line.set({x2: pointer.x, y2: pointer.y})
+
+                            }
+
+                        }
+                    }
+                }
+            } else {
+                if (selectedTool == 'paint' || startAtMarkPoint !== -1) {
+
+                    //WICHTIG DIE ABFRAGE LAEUFT UEBER DIE SICHTBARKEIT DES BUTTONS!!! AENDERN!!! DIES IST NICHT GUT
+
+                    if (geodesicToGeodreieckCalc()) {
+                        geodesicToGeodreieck();
+                    } else {
+                        let geodesicNearToMark = geodesicToMarkCalc();
+
+                        if (geodesicNearToMark[0]) {
+                            geodesicToMark(geodesicNearToMark[1]);
+                        } else {
+
+                            //Linienende sitzt am Cursor
+                            line.set({x2: pointer.x, y2: pointer.y})
+                        }
                     }
                 }
             }
         }
-
     }
 
     if (lineTypeToDraw == 'geodesic'){
@@ -6936,16 +6946,6 @@ function sectorContainsPoint(trapez,segmentMittelpunkt) {
 
     }
     return isPointInsideSectors;
-}
-
-function setGeodesicMode (){
-    if (geodesicMode === 'normal') {
-        geodesicMode = 'lightLike';
-
-    }else {
-        geodesicMode = 'normal';
-
-    }
 }
 
 /**

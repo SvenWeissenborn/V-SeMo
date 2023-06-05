@@ -90,3 +90,5 @@ let autoSetOnDraw = getUrlVars()["autoSetOnDraw"];
 
 //buildGeodesicTicks=1&
 let buildGeodesicTicks = getUrlVars()["buildGeodesicTicks"];
+
+let geodesicsLightLike = getUrlVars()["geodesicsLightLike"];
