@@ -398,14 +398,13 @@ canvas.on('mouse:move', function (o) {
 
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
 
-    /*
-    if(isVectorPointDragged == true) {
 
-        let vectorPoint = vectors[vectors.length - 1][0];
-        let vectorLine = vectors[vectors.length - 1][1];
-        let vectorHead = vectors[vectors.length - 1][2];
+    if(isVectorPointDragged === true) {
 
-        console.log(vectorPoint)
+        let vectorPoint = vectors[canvas.getActiveObject().ID][0];
+        let vectorLine = vectors[canvas.getActiveObject().ID][1];
+        let vectorHead = vectors[canvas.getActiveObject().ID][2];
+        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
 
         if (vectors[vectorPoint.ID][1].relationship) {
             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
@@ -417,11 +416,7 @@ canvas.on('mouse:move', function (o) {
         vectorLine.setCoords()
         vectorHead.setCoords()
 
-        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-        let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(vectorPointPosition, vectorPoint.parentSector[0]);
-
-         closestEdgeParameters.splice(0, 4, closestEdgeOfPointParameters.pointSectorID, closestEdgeOfPointParameters.closestEdge,
-             closestEdgeOfPointParameters.minDistance, closestEdgeOfPointParameters.snapStatusOfClosestEdge);
+        let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPoint.parentSector[0]);
 
         let inboundParameter = 0.01;
         let inboundPoints = [];
@@ -438,49 +433,44 @@ canvas.on('mouse:move', function (o) {
             inboundLines.push(inboundLine);
         }
 
-        if(closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
-
-            if(closestEdgeOfPointParameters.minDistance <= epsilon) {
-
-                let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
-                let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
-                let pointVectorX = vectorPointPosition.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
-                let pointVectorY = vectorPointPosition.y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
-                let edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
-                let pointVectorLength = Math.sqrt(Math.pow(pointVectorX, 2) + Math.pow(pointVectorY, 2));
-                let dotProduct = edgeVectorX * pointVectorX + edgeVectorY * pointVectorY;
-
-                let alpha = Math.acos(dotProduct / (edgeVectorLength * pointVectorLength));
-
-                let lambda = pointVectorLength * Math.cos(alpha);
-
-                if(lambda <= edgeVectorLength && lambda >= 0) {
-                    vectorPoint.set({
-                        left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
-                        top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength),
-                    });
-                } else if(lambda > edgeVectorLength) {
-                    vectorPoint.set({
-                        left: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x,
-                        top: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y,
-                    })
-                } else {
-                    vectorPoint.set({
-                        left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x,
-                        top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y,
-                    })
-                }
-
-
-                vectorPoint.setCoords()
-                updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
-                updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
-                canvas.renderAll();
+        if(getParentSectorOfPoint(pointer) !== undefined) {
+            if(closestEdgeOfPointParameters.minDistance >= 0.01 || (closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0 && closestEdgeOfPointParameters.minDistance > -50)) {
+                vectorPoint.set({
+                    left: pointer.x,
+                    top: pointer.y
+                });
             }
         }
 
+        if(closestEdgeOfPointParameters.minDistance < 0.01 && closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
+            let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+            let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+            let mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+            let mouseVectorY = pointer.y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+            let edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
+            let mouseVectorLength = Math.sqrt(Math.pow(mouseVectorX, 2) + Math.pow(mouseVectorY, 2));
+            let dotProduct = edgeVectorX * mouseVectorX + edgeVectorY * mouseVectorY;
+
+            let alpha = Math.acos(dotProduct / (edgeVectorLength * mouseVectorLength));
+
+            let lambda = mouseVectorLength * Math.cos(alpha);
+
+            if(lambda <= edgeVectorLength && lambda >= 0) {
+                vectorPoint.set({
+                    left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
+                    top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength),
+                });
+            }
+        }
+
+        vectorPoint.setCoords()
+        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
+        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
+        canvas.renderAll();
+
+        //drawOrientationCirc('green', vectorPointPosition.x, vectorPointPosition.y);
+
         let vectorPointParentIDBefore = vectorPoint.parentSector[0];
-        //let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint. top);
 
         sectors[vectorPointParentIDBefore].vectors.splice(vectorPoint.parentSector[1], 1);
 
@@ -494,7 +484,6 @@ canvas.on('mouse:move', function (o) {
 
         canvas.bringToFront(vectorPoint) // Vektor-Punkt ist nach Verschieben auf neuen Sektor immer auf dem Sektor, nicht dahinter
     }
-    */
 
     if (isLineStarted != true)  {
         return;
@@ -979,7 +968,7 @@ canvas.on('mouse:move', function (o) {
             let dy = y2 - y1;
             let dx = x2 - x1;
 
-            let pointerAngle = Math.atan2(dy, dx) * 180 / Math.PI; //Grad
+            let pointerAngle = toDegree(Math.atan2(dy, dx));
 
             vectorLine.set({
                 x2: pointer.x,
@@ -1816,7 +1805,7 @@ let geodreieckScale;
 if (turnLorentzTransformOn == 1){
     geodreieckSnapAngle = 15;
     geodreieckStartAngle = 90;
-    geodreieckScale = 0.0585;
+    geodreieckScale = 0.2//0.0585;
 }else{
     geodreieckSnapAngle = 0.1;
     geodreieckStartAngle = 0;
@@ -2949,12 +2938,12 @@ function distancePointStraightLine(point_x, point_y, point_line_x, point_line_y,
     return Math.abs((dx * direction_y - dy * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
 }
 
-function distancePointStraightLine2(point_x, point_y, point_line_x, point_line_y, direction_x, direction_y) {
+function distancePointStraightLine2(point_x, point_y, point_line_x, point_line_y, direction_x, direction_y, pointSectorIDBefore) {
     let point = new fabric.Point(point_x, point_y);
     let sec = getParentSectorOfPoint(point);
     const dx = point_x - point_line_x;
     const dy = point_y - point_line_y;
-    if (sec === undefined) {
+    if (sec === undefined || sec !== pointSectorIDBefore) {
         return (dy * direction_x - dx * direction_y) / Math.sqrt(direction_x * direction_x + direction_y * direction_y)
     } else {
         return Math.abs((dx * direction_y - dy * direction_x) / Math.sqrt(direction_x * direction_x + direction_y * direction_y))
@@ -2973,8 +2962,11 @@ function getClosestEdgeOfPointParameters (point, pointSectorIDBefore) {
 
     let sec = getParentSectorOfPoint(point);
     let pointSectorID;
+    let closestEdge;
+    let minDistance;
+    let snapStatusOfClosestEdge;
 
-    if(sec === undefined) {
+    if(sec === undefined || sec !== pointSectorIDBefore) {
         pointSectorID = pointSectorIDBefore;
     } else {
         pointSectorID = sec;
@@ -2986,23 +2978,20 @@ function getClosestEdgeOfPointParameters (point, pointSectorIDBefore) {
 
     for (let kk = 0; kk < 4; kk++) {
 
-        xt1 = trapezPointsAsGlobalCoords[kk].x;
-        xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
-        yt1 = trapezPointsAsGlobalCoords[kk].y;
-        yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
+       let xt1 = trapezPointsAsGlobalCoords[kk].x;
+       let xt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].x;
+       let yt1 = trapezPointsAsGlobalCoords[kk].y;
+       let yt2 = trapezPointsAsGlobalCoords[(kk + 1) % 4].y;
 
-        let distanceToEdge = distancePointStraightLine2(point.x, point.y, xt1, yt1, xt2 - xt1, yt2 - yt1);
-        distancesToEdges.push(distanceToEdge);
+       let distanceToEdge = distancePointStraightLine2(point.x, point.y, xt1, yt1, xt2 - xt1, yt2 - yt1, pointSectorIDBefore);
+       distancesToEdges.push(distanceToEdge);
     }
 
-    let minDistance = Math.min(...distancesToEdges);
-    let closestEdge = distancesToEdges.indexOf(minDistance);
-    let snapStatusOfClosestEdge = sectors[pointSectorID].snapStatus[closestEdge];
-    if(snapStatusOfClosestEdge !== 1) {
-        pointSectorID = pointSectorIDBefore;
-    }
+    minDistance = Math.min(...distancesToEdges);
+    closestEdge = distancesToEdges.indexOf(minDistance);
+    snapStatusOfClosestEdge = sectors[pointSectorID].snapStatus[closestEdge];
 
-    return {closestEdge, pointSectorID, minDistance, snapStatusOfClosestEdge};
+    return {pointSectorID, closestEdge, minDistance, snapStatusOfClosestEdge};
 }
 
 function drawAngleArc(initialSectorID, initialArcID_onSector, deficitAngleRad){
@@ -3917,14 +3906,14 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         let vectorPoint = new fabric.Circle({
                             ID: vectors.length,
                             radius: 5,
-                            fill: "blue",
+                            fill: 'blue',
                             padding: 15,
                             left: pointer.x,
                             top: pointer.y,
                             evented: true,
                             objectCaching: false,
-                            lockMovementX: false,
-                            lockMovementY: false,
+                            lockMovementX: true,
+                            lockMovementY: true,
                             lockScalingX: true,
                             lockScalingY: true,
                             selectable: true,
@@ -3937,116 +3926,21 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     vectorPoint.relationship = getRelationship(vectorPoint, this.parent.ID)
                     vectorPoint.parentSector = [this.parent.ID, sectors[this.parent.ID].vectors.length]
 
-                    let closestEdgeParameters = [];
 
                     vectorPoint.on('mousedown', function (o) {
-                       /* if (vectors[vectorPoint.ID][1].relationship) {
-                            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
-                        }
-                        if (vectors[vectorPoint.ID][2].relationship) {
-                            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
-                        }
-                        vectorPoint.setCoords()
-                        vectorLine.setCoords()
-                        vectorHead.setCoords()
-
-                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-                       // drawOrientationCirc('green', vectorPoint.left, vectorPoint.top)
-                        let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(vectorPointPosition, vectorPoint.parentSector[0]);
-                        closestEdgeParameters.splice(0, 4, closestEdgeOfPointParameters.pointSectorID, closestEdgeOfPointParameters.closestEdge,
-                            closestEdgeOfPointParameters.minDistance, closestEdgeOfPointParameters.snapStatusOfClosestEdge);
-                        console.log(closestEdgeParameters);
-
-                        let inboundParameter = 0.01;
-                        let inboundPoints = [];
-                        let inboundLines = [];
-                        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[closestEdgeOfPointParameters.pointSectorID].trapez);
-
-                        for (let ii = 0; ii < 4; ii++) {
-                              let inboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * inboundParameter,
-                                  trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * inboundParameter);
-                              inboundPoints.push(inboundPoint);
-                        }
-                        for (let ii = 0; ii < 4; ii++) {
-                            let inboundLine = new fabric.Line([inboundPoints[ii].x, inboundPoints[ii].y, inboundPoints[(ii + 1) % 4].x, inboundPoints[(ii + 1) % 4].y], {});
-                            inboundLines.push(inboundLine);
-                        }
-
-                        if(closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
-
-                            if(closestEdgeOfPointParameters.minDistance <= epsilon) {
-
-                                let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
-                                let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
-                                let pointVectorX = vectorPointPosition.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
-                                let pointVectorY = vectorPointPosition.y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
-                                let edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
-                                let pointVectorLength = Math.sqrt(Math.pow(pointVectorX, 2) + Math.pow(pointVectorY, 2));
-                                let dotProduct = edgeVectorX * pointVectorX + edgeVectorY * pointVectorY;
-
-                                let alpha = Math.acos(dotProduct / (edgeVectorLength * pointVectorLength));
-
-                                let lambda = pointVectorLength * Math.cos(alpha);
-
-                                if(lambda <= edgeVectorLength && lambda >= 0) {
-                                    vectorPoint.set({
-                                        left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
-                                        top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength),
-                                    });
-                                } else if(lambda > edgeVectorLength) {
-                                    vectorPoint.set({
-                                        left: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x,
-                                        top: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y,
-                                    })
-                                } else {
-                                    vectorPoint.set({
-                                        left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x,
-                                        top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y,
-                                    })
-                                }
-
-
-                                vectorPoint.setCoords()
-                                updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
-                                updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
-                                canvas.renderAll();
-                            }
-                        } */
-                        if(isVectorPointDragged !== true) {
                             isVectorPointDragged = true;
-                        }
-                        console.log(isVectorPointDragged);
                     })
 
                     vectorPoint.on('mouseup', function() {
                         isVectorPointDragged = false;
-                        console.log(isVectorPointDragged);
                     })
-
-                   /* vectorPoint.on('moving', function(o) {
-                        let vectorPointParentIDBefore = vectorPoint.parentSector[0];
-                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint. top);
-
-                        sectors[vectorPointParentIDBefore].vectors.splice(vectorPoint.parentSector[1], 1);
-
-                        let vectorPointParentIDNew = getParentSectorOfPoint(vectorPointPosition);
-
-                        if (vectorPointParentIDNew !== undefined){
-                                vectorPoint.parentSector = [vectorPointParentIDNew, sectors[vectorPointParentIDNew].vectors.length];
-                                vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentIDNew);
-                                sectors[vectorPointParentIDNew].vectors.push(vectors[vectorPoint.ID])
-                        }
-
-                        canvas.bringToFront(vectorPoint) // Vektor-Punkt ist nach Verschieben auf neuen Sektor immer auf dem Sektor, nicht dahinter
-
-                    }) */
 
                     vector.push(vectorPoint)
 
                     let vectorLine = new fabric.Line(points, {
                         strokeWidth: 3,
-                        stroke: color,
-                        fill: color,
+                        stroke: 'blue',
+                        fill: 'blue',
                         originX: 'center',
                         originY: 'center',
                         perPixelTargetFind: true,
@@ -4178,7 +4072,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         let dy = y2 - y1;
                         let dx = x2 - x1;
 
-                        let pointerAngle = Math.atan2(dy, dx) * 180 / Math.PI; //Grad
+                        let pointerAngle = toDegree(Math.atan2(dy, dx));
 
                         vectorHead.set({
                             left: pointer.x,
@@ -4845,6 +4739,9 @@ function drawLightCone(trapez) {
             return
         }
 
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
+
+
         let temporary_offset_y;
         if (trapez.points[2].y > 0){
             temporary_offset_y = trapez.points[2].y
@@ -4853,16 +4750,16 @@ function drawLightCone(trapez) {
         }
 
         let lightConesPoint_0 = [
-            (trapez.points[3].x - trapez.points[0].x) + trapez.left + 0.5,
-            trapez.points[3].y + trapez.top  - temporary_offset_y - 0.5
+            trapezPointsAsGlobalCoords[3].x + 0.5, trapezPointsAsGlobalCoords[3].y - 0.5
         ];
+
 
         let lightConesPoint_1 = [
             lightConesPoint_0[0] + lightConeLength / Math.sqrt(2),
             lightConesPoint_0[1] - lightConeLength / Math.sqrt(2)
         ];
 
-        let   lightCone = new fabric.Line(
+            let   lightCone = new fabric.Line(
             [lightConesPoint_0[0], lightConesPoint_0[1], lightConesPoint_1[0], lightConesPoint_1[1]] ,
             {
                 fill: '#666',
@@ -5729,8 +5626,6 @@ function getSchnittpunktsparameters(sectors,[xg1,yg1,xg2,yg2]) {
 
             if ((0 - epsilon) <= lambda && lambda <= 1 && epsilon <= alpha && alpha <= 1){ // && Math.abs(lambdas[lambdas.length-1] - lambda) >= epsilon) {
 
-                console.log(distancePointStraightLine(xt2, yt2, xg2, yg2, dxg, dyg))
-                console.log('lambda:', lambda)
                 lambdaOfThisLineSegment = lambda;
                 lineOverThisSector = ii;
                 lineOverThisEdge = kk;
@@ -7189,8 +7084,16 @@ function startGeodesics(){
 
 
             lines[ii].operational = startGeodesicOperational[ii];
+
             if (lines[ii].operational === false){
                 continueGeodesic(ii)
+                for (let jj = 0; jj < lines[ii].length; jj++){
+
+                    lines[ii][jj].evented = false;
+
+
+                }
+
             }
 
         }
@@ -7442,84 +7345,95 @@ function toolChange(argument) {
             markPoints[ii].hoverCursor = 'crosshair';
             markPoints[ii].evented = true
         }
+
+        for (let ii = 0; ii < lines.length; ii++) {
+            for (let jj = 0; jj < lines[ii].length; jj++) {
+                lines[ii][jj].evented = false;
+                lines[ii][jj].hoverCursor = 'grabbing';
+            }
+        }
     }else{
         for (let ii = 0; ii < markPoints.length; ii++){
             markPoints[ii].hoverCursor = 'grabbing';
             markPoints[ii].evented = false
         }
-    }
+        for (let ii = 0; ii < lines.length; ii++) {
 
-    for (let ii = 0; ii < lines.length; ii++) {
+            for (let jj = 0; jj < lines[ii].length; jj++) {
 
-        for (let jj = 0; jj < lines[ii].length; jj++) {
-
-            lines[ii][jj].evented = true;
-            lines[ii][jj].hoverCursor = 'pointer';
-
-            if (selectedTool == 'delete') {
-
-                showGeodesicButtons(false);
-                lines[ii][jj].evented = false;
-                lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
-                lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
-                lines[ii][lines[ii].length - 1].evented = true;
-                lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
-
-            }
-
-            if (typeof(lines[ii][jj].__eventListeners)=== 'undefined') {
-                lines[ii][jj].on('mousedown', function () {
-                    chosenLineGlobalID = this.ID[0];
-                    if (showExerciseBox == "1") {
-                        console.log('by tool')
-                        checkCheckBoxCondition()
-                    }
-                    for (let kk = 0; kk < lines.length; kk++){
-                        for (let ll = 0; ll < lines[kk].length; ll++)
-                            lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
-                    }
-                    for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
-                        /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
-                          lines[chosenLineGlobalID][kk].setShadow({  color: 'rgba(0,0,0,0.2)',
-                              blur: 10,
-                              offsetX: 50,
-                              offsetY: 0
-                          })
-                          canvas.renderAll()
-                          */
-                        lines[chosenLineGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
-                    }
-
-                    if (selectedTool !== 'delete') {
-                        showGeodesicButtons(true);
-                        showSectorAreaInfobox(false);
-                        showDeficitAngleInfobox(false);
-                        showVertices(false)
-                    }
-
-                    chosenLineGlobalID = this.ID[0];
+                if (lines[ii].operational !== false){
+                    lines[ii][jj].evented = true;
+                    lines[ii][jj].hoverCursor = 'pointer';
+                }
 
 
+                if (selectedTool == 'delete') {
 
+                    showGeodesicButtons(false);
+                    lines[ii][jj].evented = false;
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                    lines[ii][lines[ii].length - 1].hoverCursor = 'pointer';
+                    lines[ii][lines[ii].length - 1].evented = true;
+                    lines[ii][lines[ii].length - 1].strokeWidth = lineStrokeWidthWhenSelected;
 
-                    if (selectedTool == 'delete') {
-                        cursor = 'not-allowed';
-                        lines[this.ID[0]].splice(this.ID[1], 1);
-                        if (this.ID[1] === 0) {
-                            lines[this.ID[0]] = [];
+                }
+
+                if (typeof(lines[ii][jj].__eventListeners)=== 'undefined') {
+                    lines[ii][jj].on('mousedown', function () {
+                        chosenLineGlobalID = this.ID[0];
+                        if (showExerciseBox == "1") {
+                            console.log('by tool')
+                            checkCheckBoxCondition()
                         }
-                        if (this.parentSector[0] >= 0) {
-                            sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
+                        for (let kk = 0; kk < lines.length; kk++){
+                            for (let ll = 0; ll < lines[kk].length; ll++)
+                                lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
                         }
-                        canvas.remove(this);
-                        toolChange(selectedTool);
-                    }
+                        for (let kk = lines[chosenLineGlobalID].length - 1; kk >= 0; kk--) {
+                            /*Idee: statt die Linien dicker werden lassen, ihnen einen Schatten geben
+                              lines[chosenLineGlobalID][kk].setShadow({  color: 'rgba(0,0,0,0.2)',
+                                  blur: 10,
+                                  offsetX: 50,
+                                  offsetY: 0
+                              })
+                              canvas.renderAll()
+                              */
+                            lines[chosenLineGlobalID][kk].strokeWidth = lineStrokeWidthWhenSelected ;
+                        }
+
+                        if (selectedTool !== 'delete') {
+                            showGeodesicButtons(true);
+                            showSectorAreaInfobox(false);
+                            showDeficitAngleInfobox(false);
+                            showVertices(false)
+                        }
+
+                        chosenLineGlobalID = this.ID[0];
 
 
-                })
+
+
+                        if (selectedTool == 'delete') {
+                            cursor = 'not-allowed';
+                            lines[this.ID[0]].splice(this.ID[1], 1);
+                            if (this.ID[1] === 0) {
+                                lines[this.ID[0]] = [];
+                            }
+                            if (this.parentSector[0] >= 0) {
+                                sectors[this.parentSector[0]].lineSegments.splice(this.parentSector[1], 1);
+                            }
+                            canvas.remove(this);
+                            toolChange(selectedTool);
+                        }
+
+
+                    })
+                }
             }
         }
     }
+
+
 
     if (selectedTool !== 'delete' && selectedTool !== 'delete_whole') {
 
