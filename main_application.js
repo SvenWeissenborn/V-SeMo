@@ -504,9 +504,17 @@ canvas.on('mouse:move', function (o) {
 
         if (geodesicsLightLike == '1') {
 
-            if (Math.abs(pointer.x - line.x1) > Math.abs(pointer.y - line.y1)) {
+            if ((pointer.x - line.x1) > 0 & (pointer.y - line.y1) < 0) {
+                console.log('1')
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(-45)) + line.y1});
-            }else{
+            }else if ((pointer.x - line.x1) > 0 & (pointer.y - line.y1) > 0) {
+                console.log('2')
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(+45)) + line.y1});
+            }else if ((pointer.x - line.x1) < 0 & (pointer.y - line.y1) > 0) {
+                console.log('3')
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(-45)) + line.y1});
+            }else if ((pointer.x - line.x1) < 0 & (pointer.y - line.y1) < 0) {
+                console.log('4')
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(+45)) + line.y1});
             }
         }else {
@@ -1263,7 +1271,10 @@ canvas.on('mouse:up', function(opt) {
             chosenLineGlobalID = lineSegment.ID[0];
 
             if (buildGeodesicTicks == "1"){
-                drawGeodesicTicks(lineSegment.ID[0])
+                drawGeodesicTicks(chosenLineGlobalID)
+            }
+            if (autoCompleteOnMouseUp == "1"){
+                continueGeodesic(chosenLineGlobalID)
             }
         }
 
