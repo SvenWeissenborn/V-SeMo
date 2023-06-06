@@ -434,7 +434,8 @@ canvas.on('mouse:move', function (o) {
         }
 
         if(getParentSectorOfPoint(pointer) !== undefined) {
-            if(closestEdgeOfPointParameters.minDistance >= 0.01 || (closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0 && closestEdgeOfPointParameters.minDistance > -50)) {
+            if(closestEdgeOfPointParameters.minDistance >= 0.01 || (closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0 &&
+                sectors[getParentSectorOfPoint(pointer)].snapStatus[(closestEdgeOfPointParameters.closestEdge + 2) % 4] !== 0)) {
                 vectorPoint.set({
                     left: pointer.x,
                     top: pointer.y
@@ -442,7 +443,7 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
-        if(closestEdgeOfPointParameters.minDistance < 0.01 && closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
+        if(closestEdgeOfPointParameters.minDistance < 0.01) {
             let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
             let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
             let mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
@@ -455,10 +456,22 @@ canvas.on('mouse:move', function (o) {
 
             let lambda = mouseVectorLength * Math.cos(alpha);
 
-            if(lambda <= edgeVectorLength && lambda >= 0) {
+            console.log(closestEdgeOfPointParameters.closestEdge);
+
+            if(lambda <= edgeVectorLength && lambda >= 0 && closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
                 vectorPoint.set({
                     left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
                     top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength),
+                });
+            } else if(lambda < edgeVectorLength && closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
+                vectorPoint.set({
+                    left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x,
+                    top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y
+                });
+            } else if(lambda > edgeVectorLength && closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
+                vectorPoint.set({
+                   left: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x,
+                   top: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y,
                 });
             }
         }
@@ -1552,15 +1565,24 @@ canvas.on('mouse:up', function(opt) {
     if (lineTypeToDraw == 'vector') {
         isLineStarted = false
 
-        //console.log(vectors[vectors.length - 1])
         let vectorPoint = vectors[vectors.length - 1][0]
         let vectorLine = vectors[vectors.length - 1][1]
         let vectorHead = vectors[vectors.length - 1][2]
+
+        if (distance(new fabric.Point(vectorPoint.left, vectorPoint.top), new fabric.Point(vectorHead.left, vectorHead.top)) < abortLengthVector) {
+            canvas.remove(vectorPoint, vectorLine, vectorHead);
+            lineTypeToDraw = "vector";
+            //toolChange('grab');  //Man hat, nachdem ein Vektor (weil zu kurz) abgebrochen wurde direkt die Möglichkeit einen neuen zu zeichnen, ohne das Zeichnen erneut zu aktivieren.
+            vectors.pop();
+            sectors[getParentSectorOfPoint(new fabric.Point(vectorPoint.left, vectorPoint.top))].vectors.pop();
+            return;
+        }
 
         vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
         vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
 
         toolChange('grab')
+
     }
 
     if (showExerciseBox == "1"){
@@ -1916,6 +1938,7 @@ if (defineLaufContinueGeodesicMax !== undefined){
 }
 
 let abortlength = 20;
+let abortLengthVector = 20;
 
 let dragPointRadius = 5;
 let dragPointPadding = 10;
