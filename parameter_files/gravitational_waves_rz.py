@@ -10,8 +10,8 @@ nRowsInModel = 40
 nColumnsInModel = 3
 
 lengthFactor = 100
-wellenzahl_k = 1
-lambda_0 = 0.6
+wellenzahl_k = 0.25
+lambda_0 = 0.4
 x = 0
 delta_y = 0.5 * math.pi
 delta_t = 0.5 * math.pi
