@@ -8,8 +8,8 @@ import geodesicsTextsMarks as gtm
 lorentzTransform = 0
 
 # Einteilung der Kugeloberfläche
-nSectorRowsFromWormHole = 5
-nSectorColumnsFromWhormhole = 12
+nSectorRowsFromWormHole = 3
+nSectorColumnsFromWhormhole = 8
 
 #Eigenschaften des Ausgangsobjekts
 lmin = - 20/3
@@ -18,8 +18,8 @@ schlundradius = 2
 scaleFactor = 30
 
 #Eigenschaften des Sektormodells
-nRowsInModel = 5
-nColumnsInModel = 12
+nRowsInModel = 3
+nColumnsInModel = 8
 
 #Abstaende der Sektoren zueinander
 sectorDistance_x = 50
@@ -51,10 +51,11 @@ startGeodesicsLength = []
 startGeodesicsOperational = []
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [4, 2, 0, 19, 17, 15, 34, 32, 30, 49, 47, 45]
-startMarksRadius = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
-startMarksOffset_x = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-startMarksOffset_y = [0.9, 0.5, 0.1, 0.9, 0.5, 0.1, 0.9, 0.5, 0.1, 0.9, 0.5, 0.1,]
+startMarksSectors = [int(phii*nRowsInModel*nColumnsInModel/4 + nRowsInModel-1-rii*(nRowsInModel-1)/2)
+                     for phii in range(4) for rii in range(3)]
+startMarksRadius = [5] * 12
+startMarksOffset_x = [0.5] * 12
+startMarksOffset_y = [0.9, 0.5, 0.1] * 4
 
 #Parameter fuer die Starttexte
 startTextsSectors = []
@@ -90,7 +91,7 @@ def main():
     print(zeilestart)
     maxSectorWidth = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(lmin + zeilestart * 4/3 * schlundradius, 2) ) * math.pow(dphi, 2)) * scaleFactor
     print(maxSectorWidth)
-    file = io.open("wormhole_circ.js",'w')
+    file = io.open("wormhole_circ_3_8.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -176,8 +177,9 @@ def main():
     for zeile in range(zeilestart, zeileende):
         for ii in range(0,nColumnsInModel):
 
-            actualL = lmin + zeile * 4/3 * schlundradius
-            nextL = lmin + (zeile + 1) * 4/3 * schlundradius
+            deltaL = (lmax-lmin)/nRowsInModel
+            actualL = lmin + zeile * deltaL
+            nextL = lmin + (zeile + 1) * deltaL
 
             sectorValues[sectorDict["sec_bottom"]][jj + ii * (zeileende - zeilestart)] = math.sqrt( ( math.pow(schlundradius, 2) + math.pow(actualL, 2) ) * math.pow(dphi, 2)) * scaleFactor
 
