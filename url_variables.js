@@ -58,6 +58,9 @@ let showSetSectorsToRing = getUrlVars()["showSetSectorsToRing"];
 //showAddCurvedLine=1& um den Button fuer krumme Linien anzuzeigen
 let showAddCurvedLine = getUrlVars()["showAddCurvedLine"];
 
+//showAddVector=1& um den Button fuer Vektor zeichnen anzuzeigen
+let showAddVector = getUrlVars()['showAddVector'];
+
 //showAreaSector=globe& oder showAreaSector=earth& um den Button fuer die Sektorflaeche anzuzeigen
 let showAreaSector = getUrlVars()["showAreaSector"];
 

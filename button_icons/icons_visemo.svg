@@ -2,36 +2,36 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="icons_visemo.svg"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
    version="1.1"
    id="svg2"
    viewBox="0 0 744.09448819 1052.3622047"
    height="297mm"
    width="210mm"
-   inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_icons/camera_de.png"
+   inkscape:export-filename="..\..\buttons\add_vector_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb">
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="1992"
-     inkscape:window-height="1136"
-     inkscape:window-width="1848"
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:window-height="1377"
+     inkscape:window-width="2560"
      showgrid="true"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="1623.1373"
-     inkscape:cx="7983.6876"
+     inkscape:cy="-704.00001"
+     inkscape:cx="10794"
      inkscape:zoom="0.99999999"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -50,7 +50,10 @@
      inkscape:snap-global="false"
      inkscape:snap-grids="true"
      inkscape:snap-page="true"
-     inkscape:lockguides="false">
+     inkscape:lockguides="false"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
        id="grid17939" />
@@ -1324,7 +1327,8 @@
            id="rect8449"
            style="font-family:sans-serif;fill:#000000" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000"
-         id="flowPara8451">Zurück</flowPara></flowRoot>    <flowRoot
+         id="flowPara8451">Zurück</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot8461"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1341,7 +1345,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara8467"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle8453"
        cx="1052.1877"
@@ -1390,7 +1395,8 @@
            id="rect8449-9"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara8565"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -1894,7 +1900,8 @@
            id="rect8449-9-9"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara8565-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot8731"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1911,7 +1918,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara8739">Neu Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara8739">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle8729"
        cx="1682.4116"
@@ -1961,7 +1969,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara8806">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara8806">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle8808"
        cx="1906.1877"
@@ -2099,7 +2108,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara9040"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle9026"
        cx="2276.1877"
@@ -2205,7 +2215,8 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
          id="flowPara9132">Greifen/</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara9185">Verlängern</flowPara></flowRoot>    <circle
+         id="flowPara9185">Verlängern</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/grab.png"
@@ -2266,7 +2277,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara9229">Richtung</flowPara></flowRoot>    <circle
+         id="flowPara9229">Richtung</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle9231"
        cx="2094.1877"
@@ -2347,7 +2359,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara9229-7">Richtung ändern</flowPara></flowRoot>    <circle
+         id="flowPara9229-7">Richtung ändern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:none;fill-opacity:1;stroke:#e6e6e6;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle10852"
        cx="856.18774"
@@ -2391,7 +2404,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara10866"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -2408,7 +2422,8 @@
            id="rect10872"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara10874">Neustarten</flowPara></flowRoot>    <circle
+         id="flowPara10874">Neustarten</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -2457,7 +2472,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara10890">Rückgängig</flowPara></flowRoot>    <circle
+         id="flowPara10890">Rückgängig</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:none;fill-opacity:1;stroke:#e6e6e6;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle10894"
        cx="1276.1877"
@@ -2522,7 +2538,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara10914">Löschen</flowPara></flowRoot>    <flowRoot
+         id="flowPara10914">Löschen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -2539,7 +2556,8 @@
            id="rect10920"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara10922"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -2585,7 +2603,8 @@
            id="rect10938"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara10940"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>
+    <g
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -2744,7 +2763,8 @@
            id="rect10996"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara10998">Zurücksetzen</flowPara></flowRoot>    <circle
+         id="flowPara10998">Zurücksetzen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/reset.png"
@@ -2850,7 +2870,8 @@
          id="flowPara11028"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Greifen/</flowPara><flowPara
          id="flowPara11030"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:none;fill-opacity:1;stroke:#e6e6e6;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11034"
        cx="2450.1877"
@@ -2892,7 +2913,8 @@
            id="rect11048"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11050"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/direction.png"
@@ -2974,7 +2996,8 @@
            id="rect11078"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11080"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung ändern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung ändern</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/back.png"
@@ -3018,7 +3041,8 @@
            id="rect11094"
            style="font-family:sans-serif;fill:#000000" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000"
-         id="flowPara11096">Zurück</flowPara></flowRoot>    <flowRoot
+         id="flowPara11096">Zurück</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot11098"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -3035,7 +3059,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11104"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>
+    <g
        id="g11106"
        transform="translate(0,722.00002)">
       <circle
@@ -3088,7 +3113,8 @@
            id="rect11118"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11120"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>
+    <g
        id="g11122"
        transform="translate(0,722.00002)">
       <circle
@@ -3163,7 +3189,8 @@
            id="rect11142"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11144"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot11146"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -3180,7 +3207,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11152">Neu Zeichnen</flowPara></flowRoot>    <g
+         id="flowPara11152">Neu Zeichnen</flowPara></flowRoot>
+    <g
        id="g11154"
        transform="translate(0,722.00002)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -3237,7 +3265,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11170">Fertig Zeichnen</flowPara></flowRoot>    <g
+         id="flowPara11170">Fertig Zeichnen</flowPara></flowRoot>
+    <g
        id="g11172"
        transform="translate(0,722.00002)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -3395,7 +3424,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11228"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>
+    <g
        id="g11230"
        transform="translate(1420,522)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/reset.png"
@@ -3481,7 +3511,8 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
          id="flowPara11258">Greifen/</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11260">Verlängern</flowPara></flowRoot>    <g
+         id="flowPara11260">Verlängern</flowPara></flowRoot>
+    <g
        id="g11262"
        transform="translate(1404,522)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/grab.png"
@@ -3546,7 +3577,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11280">Richtung</flowPara></flowRoot>    <g
+         id="flowPara11280">Richtung</flowPara></flowRoot>
+    <g
        id="g11282"
        transform="translate(818,510)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/direction.png"
@@ -3631,7 +3663,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11310">Richtung ändern</flowPara></flowRoot>    <g
+         id="flowPara11310">Richtung ändern</flowPara></flowRoot>
+    <g
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/grab.png"
@@ -3687,7 +3720,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara11445"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -3704,7 +3738,8 @@
            id="rect11451"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara11453">Neustarten</flowPara></flowRoot>    <circle
+         id="flowPara11453">Neustarten</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -3753,7 +3788,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11467">Rückgängig</flowPara></flowRoot>    <circle
+         id="flowPara11467">Rückgängig</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11469"
        cx="1276.1877"
@@ -3820,7 +3856,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11487">Löschen</flowPara></flowRoot>    <flowRoot
+         id="flowPara11487">Löschen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -3837,7 +3874,8 @@
            id="rect11493"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11495"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -3887,7 +3925,8 @@
            id="rect11509"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11511"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -3921,7 +3960,8 @@
            id="rect11521"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara11523">Zurücksetzen</flowPara></flowRoot>    <circle
+         id="flowPara11523">Zurücksetzen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/reset.png"
@@ -4027,7 +4067,8 @@
          id="flowPara11551"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Greifen/</flowPara><flowPara
          id="flowPara11553"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11555"
        cx="2450.1877"
@@ -4088,7 +4129,8 @@
            id="rect11569"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11571"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/direction.png"
@@ -4196,7 +4238,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara11619"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -4213,7 +4256,8 @@
            id="rect11625"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara11627">Neustarten</flowPara></flowRoot>    <circle
+         id="flowPara11627">Neustarten</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -4262,7 +4306,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11641">Rückgängig</flowPara></flowRoot>    <circle
+         id="flowPara11641">Rückgängig</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11643"
        cx="1276.1877"
@@ -4329,7 +4374,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11661">Löschen</flowPara></flowRoot>    <flowRoot
+         id="flowPara11661">Löschen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -4346,7 +4392,8 @@
            id="rect11667"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11669"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add_black.png"
@@ -4396,7 +4443,8 @@
            id="rect11683"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11685"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -4552,7 +4600,8 @@
            id="rect11731"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara11733">Zurücksetzen</flowPara></flowRoot>    <circle
+         id="flowPara11733">Zurücksetzen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/reset.png"
@@ -4658,7 +4707,8 @@
          id="flowPara11761"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Greifen/</flowPara><flowPara
          id="flowPara11763"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11765"
        cx="2450.1877"
@@ -4719,7 +4769,8 @@
            id="rect11779"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11781"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/direction.png"
@@ -4800,7 +4851,8 @@
            id="rect11807"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11809"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung ändern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung ändern</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/back.png"
@@ -4844,7 +4896,8 @@
            id="rect11823"
            style="font-family:sans-serif;fill:#000000" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000"
-         id="flowPara11825">Zurück</flowPara></flowRoot>    <flowRoot
+         id="flowPara11825">Zurück</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot11827"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -4861,7 +4914,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11833"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Neustarten</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11835"
        cx="1052.1877"
@@ -4910,7 +4964,8 @@
            id="rect11845"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11847"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -4977,7 +5032,8 @@
            id="rect11865"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11867"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot11869"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -4994,7 +5050,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11875">Neu Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara11875">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11877"
        cx="1682.4116"
@@ -5044,7 +5101,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11891">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara11891">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11893"
        cx="1906.1877"
@@ -5078,7 +5136,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara11903"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11905"
        cx="2276.1877"
@@ -5184,7 +5243,8 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
          id="flowPara11931">Greifen/</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11933">Verlängern</flowPara></flowRoot>    <circle
+         id="flowPara11933">Verlängern</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/grab.png"
@@ -5245,7 +5305,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara11951">Richtung</flowPara></flowRoot>    <circle
+         id="flowPara11951">Richtung</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle11953"
        cx="2094.1877"
@@ -5353,7 +5414,8 @@
            id="rect5902"
            style="font-family:sans-serif;fill:#000000" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000"
-         id="flowPara5904">Zurück</flowPara></flowRoot>    <flowRoot
+         id="flowPara5904">Zurück</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -5370,7 +5432,8 @@
            id="rect5924"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara5926"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Rückgängig</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -5437,7 +5500,8 @@
            id="rect5944"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara5946"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Löschen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot5948"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -5454,7 +5518,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara5954">Neu Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara5954">Neu Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle5956"
        cx="1682.4116"
@@ -5504,7 +5569,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara5970">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara5970">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle5972"
        cx="1906.1877"
@@ -5678,7 +5744,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara6018"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri">Zurücksetzen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6020"
        cx="2276.1877"
@@ -5706,7 +5773,8 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
          id="flowPara6046">Greifen/</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara6048">Verlängern</flowPara></flowRoot>    <circle
+         id="flowPara6048">Verlängern</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/grab.png"
@@ -5767,7 +5835,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara6066">Richtung</flowPara></flowRoot>    <circle
+         id="flowPara6066">Richtung</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6068"
        cx="2094.1877"
@@ -5848,7 +5917,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara6094">Richtung ändern</flowPara></flowRoot>    <circle
+         id="flowPara6094">Richtung ändern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6096"
        cx="856.18774"
@@ -5874,7 +5944,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara6110"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#000000">Zurück</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart_de.png"
@@ -5891,7 +5962,8 @@
            id="rect6116"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara6118">Neustart</flowPara></flowRoot>    <circle
+         id="flowPara6118">Neustart</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart_de.png"
@@ -5940,7 +6012,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara6132">Rückgängig</flowPara></flowRoot>    <g
+         id="flowPara6132">Rückgängig</flowPara></flowRoot>
+    <g
        id="g3831"
        transform="translate(1151.25,-222.73865)"
        inkscape:export-xdpi="90"
@@ -5994,7 +6067,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara6152">Löschen</flowPara></flowRoot>    <flowRoot
+         id="flowPara6152">Löschen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
@@ -6011,7 +6085,8 @@
            id="rect6158"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara6160"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Neu Zeichnen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -6028,7 +6103,8 @@
            id="rect6174"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara6176"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/autocomplete.png"
@@ -6062,7 +6138,8 @@
            id="rect6186"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri"
-         id="flowPara6188">Zurücksetzen</flowPara></flowRoot>    <g
+         id="flowPara6188">Zurücksetzen</flowPara></flowRoot>
+    <g
        id="g3513"
        transform="translate(2694.0768,-2158.6485)"
        inkscape:export-xdpi="90"
@@ -6256,7 +6333,8 @@
          id="flowPara6216"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Greifen/</flowPara><flowPara
          id="flowPara6218"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:100%;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Verlängern</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6220"
        cx="2450.1877"
@@ -6290,7 +6368,8 @@
            id="rect6234"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara6236"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Richtung</flowPara></flowRoot>
+    <g
        id="g3524"
        transform="translate(3760.0403,-1941.1484)"
        inkscape:export-xdpi="90"
@@ -6466,7 +6545,8 @@
            y="267.36221"
            style="font-family:sans-serif" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle"
-         id="flowPara5970-3">Fertig Zeichnen</flowPara></flowRoot>    <circle
+         id="flowPara5970-3">Fertig Zeichnen</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle5972-6"
        cx="1906.1877"
@@ -6500,7 +6580,8 @@
            id="rect6174-7"
            style="font-family:sans-serif" /></flowRegion><flowPara
          id="flowPara6176-0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:center;text-anchor:middle">Fertig Zeichnen</flowPara></flowRoot>
+    <g
        id="g3459"
        transform="translate(2293.6776,-1541.1485)"
        inkscape:export-xdpi="90"
@@ -6531,7 +6612,8 @@
              x="770"
              y="267.36221" /></flowRegion><flowPara
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666"
-           id="flowPara6176-0-2">AUTO</flowPara></flowRoot>    </g>
+           id="flowPara6176-0-2">AUTO</flowPara></flowRoot>
+    </g>
     <path
        inkscape:connector-curvature="0"
        id="path6026-9"
@@ -7134,7 +7216,8 @@
                x="770"
                y="267.36221" /></flowRegion><flowPara
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666"
-             id="flowPara5528">A</flowPara></flowRoot>      </g>
+             id="flowPara5528">A</flowPara></flowRoot>
+      </g>
     </g>
     <g
        id="g3696"
@@ -8399,7 +8482,8 @@
              x="770"
              y="267.36221" /></flowRegion><flowPara
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666"
-           id="flowPara6176-0-2-0">AUTO</flowPara></flowRoot>    </g>
+           id="flowPara6176-0-2-0">AUTO</flowPara></flowRoot>
+    </g>
     <g
        id="g6817"
        transform="translate(342.0629,-262.51339)">
@@ -9228,7 +9312,8 @@
            id="rect6174-7-4-4-9"
            style="font-family:sans-serif;fill:#ffffff" /></flowRegion><flowPara
          id="flowPara6176-0-2-0-6"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#ffffff">AUTO</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#ffffff">AUTO</flowPara></flowRoot>
+    <g
        id="g5251-4-0"
        transform="translate(207.06061,1018.4459)"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/button_icons_alternative/add.png"
@@ -12010,7 +12095,8 @@
                x="770"
                y="267.36221" /></flowRegion><flowPara
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#ffffff"
-             id="flowPara5528-2">A</flowPara></flowRoot>      </g>
+             id="flowPara5528-2">A</flowPara></flowRoot>
+      </g>
     </g>
     <g
        id="g4585-9-89"
@@ -12154,7 +12240,8 @@
              id="rect5526-1-5"
              style="font-family:sans-serif;fill:#666666;stroke:#666666" /></flowRegion><flowPara
            id="flowPara5528-2-5"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666;stroke:#666666">A</flowPara></flowRoot>    </g>
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666;stroke:#666666">A</flowPara></flowRoot>
+    </g>
     <g
        id="g4585-9-36"
        transform="matrix(1.2617595,0,0,1.2617595,-528.38892,3103.2499)">
@@ -12463,7 +12550,8 @@
            y="844.26971"
            style="fill:none" /></flowRegion><flowPara
          id="flowPara8706"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:none">?</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:none">?</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3353"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:Manjari;-inkscape-font-specification:Manjari;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12477,7 +12565,8 @@
            y="912.86255"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Manjari;-inkscape-font-specification:Manjari;fill:#4d4d4d" /></flowRegion><flowPara
          id="flowPara3359"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi">?</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi">?</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3353-2"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:Manjari;-inkscape-font-specification:Manjari;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12491,7 +12580,8 @@
            y="912.86255"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Manjari;-inkscape-font-specification:Manjari;fill:#ffffff" /></flowRegion><flowPara
          id="flowPara3359-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#ffffff">?</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#ffffff">?</flowPara></flowRoot>
+    <g
        id="g3638"
        transform="translate(4340.7519,-3614.1995)">
       <circle
@@ -12607,7 +12697,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3378"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Rückgängig</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Rückgängig</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12624,7 +12715,8 @@
            id="rect3382"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3386">Löschen</flowPara></flowRoot>    <flowRoot
+         id="flowPara3386">Löschen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3414"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12641,7 +12733,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3412"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Zeichnen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Zeichnen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12658,7 +12751,8 @@
            id="rect3416"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3420">Zeichnen</flowPara></flowRoot>    <flowRoot
+         id="flowPara3420">Zeichnen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3444"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12675,7 +12769,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3442"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Freihandlinie</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Freihandlinie</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12692,7 +12787,8 @@
            id="rect3446"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3450">Freihandlinie</flowPara></flowRoot>    <flowRoot
+         id="flowPara3450">Freihandlinie</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3467"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12709,7 +12805,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3465"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Vervollständigen</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Vervollständigen</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12726,7 +12823,8 @@
            id="rect3469"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3473">Koordinieren</flowPara></flowRoot>    <flowRoot
+         id="flowPara3473">Koordinieren</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3483"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12743,7 +12841,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3481"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Richtung</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Richtung</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12760,7 +12859,8 @@
            id="rect3485"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3489">Zurücksetzen </flowPara></flowRoot>    <flowRoot
+         id="flowPara3489">Zurücksetzen </flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3559"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12777,7 +12877,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3557"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Vollbild</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Vollbild</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12794,7 +12895,8 @@
            id="rect3569"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3573">Vollbild Ende</flowPara></flowRoot>    <flowRoot
+         id="flowPara3573">Vollbild Ende</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3589"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12811,7 +12913,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3587"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Geodreieck</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Geodreieck</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12828,7 +12931,8 @@
            id="rect3599"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3603">Zoomreset</flowPara></flowRoot>    <flowRoot
+         id="flowPara3603">Zoomreset</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3646"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12845,7 +12949,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3644"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#666666">Start verschieben</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#666666">Start verschieben</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3674"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12862,7 +12967,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3672"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Fläche</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Fläche</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -12879,7 +12985,8 @@
            id="rect3682"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3686">eukl. Ring</flowPara></flowRoot>    <flowRoot
+         id="flowPara3686">eukl. Ring</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot3704"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -12896,7 +13003,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3702"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Eckpunkte</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Eckpunkte</flowPara></flowRoot>
+    <g
        id="g4585-9-36-7"
        transform="matrix(1.2617595,0,0,1.2617595,653.86845,-230.99329)">
       <path
@@ -13047,7 +13155,8 @@
              width="115.61196"
              id="rect3357-4" /></flowRegion><flowPara
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#666666"
-           id="flowPara3359-5">?</flowPara></flowRoot>    </g>
+           id="flowPara3359-5">?</flowPara></flowRoot>
+    </g>
     <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
@@ -13065,7 +13174,8 @@
            id="rect3855"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3859">Hilfe</flowPara></flowRoot>    <g
+         id="flowPara3859">Hilfe</flowPara></flowRoot>
+    <g
        id="g3882"
        transform="translate(0,-6.3875123)"
        inkscape:export-xdpi="90"
@@ -13121,7 +13231,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3896"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Snapshot</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Snapshot</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25000095;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6134-7-3"
        cx="7480.3062"
@@ -13147,7 +13258,8 @@
            id="rect3915"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara3919">Geodreieck</flowPara></flowRoot>    <circle
+         id="flowPara3919">Geodreieck</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25000143;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle6134-7-3-4"
        cx="9933.083"
@@ -13313,7 +13425,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara3986"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Restart</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Restart</flowPara></flowRoot>
+    <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="circle3990"
        cx="4921.6089"
@@ -13718,7 +13831,8 @@
              id="rect4086"
              style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
            id="flowPara4090"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666">AUTO</flowPara></flowRoot>    </g>
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666">AUTO</flowPara></flowRoot>
+    </g>
     <g
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
@@ -14116,7 +14230,8 @@
                id="rect4205"
                style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
              id="flowPara4209"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666">A</flowPara></flowRoot>      </g>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;text-anchor:middle;fill:#666666">A</flowPara></flowRoot>
+      </g>
     </g>
     <g
        inkscape:export-ydpi="90"
@@ -14410,7 +14525,8 @@
            id="rect4279"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4283">Undo</flowPara></flowRoot>    <flowRoot
+         id="flowPara4283">Undo</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4293"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14427,7 +14543,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4291"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Delete</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Delete</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14444,7 +14561,8 @@
            id="rect4295"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4299">Draw</flowPara></flowRoot>    <flowRoot
+         id="flowPara4299">Draw</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4309"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14461,7 +14579,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4307"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Draw</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Draw</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14478,7 +14597,8 @@
            id="rect4311"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4315">Freehand Line</flowPara></flowRoot>    <flowRoot
+         id="flowPara4315">Freehand Line</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4325"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14495,7 +14615,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4323"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Freehand Line</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Freehand Line</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14512,7 +14633,8 @@
            id="rect4327"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4331">Complete</flowPara></flowRoot>    <flowRoot
+         id="flowPara4331">Complete</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4341"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14529,7 +14651,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4339"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Set Sectors</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Set Sectors</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14546,7 +14669,8 @@
            id="rect4343"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4347">Direction</flowPara></flowRoot>    <flowRoot
+         id="flowPara4347">Direction</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4357"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14563,7 +14687,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4355"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Reset Sectors </flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Reset Sectors </flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14580,7 +14705,8 @@
            id="rect4359"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4363">Fullscreen</flowPara></flowRoot>    <flowRoot
+         id="flowPara4363">Fullscreen</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4373"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14597,7 +14723,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4371"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Fullscreen off</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Fullscreen off</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14614,7 +14741,8 @@
            id="rect4375"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4379">Triangle Ruler</flowPara></flowRoot>    <flowRoot
+         id="flowPara4379">Triangle Ruler</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4389"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14631,7 +14759,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4387"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Zoomreset</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Zoomreset</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14648,7 +14777,8 @@
            id="rect4391"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;fill:#666666"
-         id="flowPara4395">Start verschieben</flowPara></flowRoot>    <flowRoot
+         id="flowPara4395">Start verschieben</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/area_sector_de.png"
@@ -14665,7 +14795,8 @@
            id="rect4399"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4403">Area</flowPara></flowRoot>    <flowRoot
+         id="flowPara4403">Area</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4413"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14682,7 +14813,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4411"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">eucl. Ring</flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">eucl. Ring</flowPara></flowRoot>
+    <flowRoot
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
@@ -14699,7 +14831,8 @@
            id="rect4415"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4419">Vertices on</flowPara></flowRoot>    <circle
+         id="flowPara4419">Vertices on</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -14736,7 +14869,8 @@
              y="912.86255"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Manjari;-inkscape-font-specification:Manjari;fill:#666666" /></flowRegion><flowPara
            id="flowPara4431"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#666666">?</flowPara></flowRoot>    </g>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:AnjaliOldLipi;-inkscape-font-specification:AnjaliOldLipi;fill:#666666">?</flowPara></flowRoot>
+    </g>
     <flowRoot
        xml:space="preserve"
        id="flowRoot4443"
@@ -14754,7 +14888,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4441"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Help</flowPara></flowRoot>    <g
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Help</flowPara></flowRoot>
+    <g
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        transform="translate(0,469.86249)"
@@ -14810,7 +14945,8 @@
            id="rect4459"
            style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
-         id="flowPara4463">Snapshot</flowPara></flowRoot>    <flowRoot
+         id="flowPara4463">Snapshot</flowPara></flowRoot>
+    <flowRoot
        xml:space="preserve"
        id="flowRoot4473"
        style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -14827,7 +14963,8 @@
            x="770"
            y="267.36221" /></flowRegion><flowPara
          id="flowPara4471"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Triangle Ruler</flowPara></flowRoot>    <circle
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666">Triangle Ruler</flowPara></flowRoot>
+    <circle
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/undo.png"
@@ -14836,5 +14973,261 @@
        cx="9933.083"
        id="circle4475"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25000143;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="..\..\buttons\add_vector_de.png"
+       r="65"
+       cy="-790.19183"
+       cx="10151.844"
+       id="circle6755-5"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:connector-curvature="0"
+       id="path6757-8"
+       d="m 10106.63,-763.22977 18.151,-24.13922"
+       style="fill:#000000;fill-rule:evenodd;stroke:#666666;stroke-width:2.91611;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="path6757" />
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       transform="matrix(0.80934456,0,0,0.80934456,9679.8261,-1087.0249)"
+       id="g6759-04"
+       style="fill:#666666;stroke:#666666">
+      <path
+         style="fill:#666666;stroke:#666666"
+         d="m 555.89804,362.40525 c -0.70814,-0.60923 -1.05112,-1.55719 -0.86375,-2.3873 0.0838,-0.37101 1.00922,-2.38363 2.0566,-4.47248 4.25625,-8.48852 7.6245,-14.06284 9.9295,-16.43291 0.5772,-0.5935 7.77609,-5.22631 25.24502,-16.24633 26.4135,-16.66258 24.99934,-15.84514 27.74971,-16.04027 1.40599,-0.0998 4.1777,0.5302 5.58904,1.27028 1.37422,0.72061 3.32229,2.25091 4.39645,3.45361 1.28037,1.43359 2.81523,4.1624 3.36741,5.98687 0.70055,2.31475 0.81337,4.05253 0.40901,6.29984 -0.41104,2.28435 -0.86588,3.32856 -2.10874,4.84114 -0.9088,1.10603 -1.70711,1.62748 -25.4212,16.6052 -18.54712,11.71427 -24.76384,15.55696 -25.64154,15.84961 -2.33335,0.77799 -6.80385,1.33642 -13.19528,1.64827 -4.28236,0.20895 -9.98072,0.2953 -10.57916,0.1603 -0.23128,-0.0522 -0.65116,-0.29329 -0.93307,-0.53583 z m 12.32664,-4.78887 c 0.73493,-0.0455 2.25564,-0.15356 3.37936,-0.24003 l 2.04314,-0.15722 -0.87106,-0.75489 c -2.50478,-2.17073 -4.2796,-4.9561 -5.09903,-8.00235 -0.34075,-1.26672 -0.20602,-1.36224 -1.6651,1.18046 -0.92545,1.61274 -4.26522,7.87703 -4.31341,8.09049 -0.0267,0.11839 3.85412,0.0491 6.5261,-0.11646 z m 13.45648,-3.19125 c 0.74326,-0.16909 4.58243,-2.52333 19.46203,-11.93444 11.69988,-7.39998 18.45269,-11.77087 18.30989,-11.85143 -2.70057,-1.52358 -4.68263,-3.45273 -6.18955,-6.02432 -1.26451,-2.15791 -1.85728,-3.95789 -2.12794,-6.46166 l -0.12131,-1.1222 -18.56857,11.74754 c -10.21271,6.46114 -18.74803,11.96591 -18.96739,12.23281 -1.91557,2.33082 -1.43262,6.63813 1.11962,9.98565 1.86282,2.44328 4.91622,3.92102 7.08322,3.42805 z m 43.28744,-27.64796 c 3.23902,-0.22816 4.7527,-3.78997 3.41993,-8.04737 -0.49445,-1.57945 -1.99262,-3.71658 -3.405,-4.85719 -2.6242,-2.11926 -4.99747,-2.4907 -6.98066,-1.09254 -3.06503,2.16085 -2.03464,8.58605 1.91704,11.95411 1.74655,1.48861 3.40303,2.15892 5.04869,2.04299 z m -3.6259,-4.86075 c -0.57387,-0.43114 -1.5013,-1.95833 -1.5934,-2.62386 -0.28778,-2.07947 1.87106,-3.59937 3.7248,-2.62239 0.75436,0.39757 1.87362,2.22257 1.91641,3.12477 0.10002,2.10883 -2.35321,3.39458 -4.04781,2.12148 z"
+         id="path6761-1"
+         inkscape:connector-curvature="0" />
+    </g>
+    <path
+       sodipodi:type="star"
+       style="fill:#666666;stroke:#666666;stroke-width:0.265;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3749"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="12.849688"
+       sodipodi:cy="21.504461"
+       sodipodi:r1="2.1923409"
+       sodipodi:r2="1.0961704"
+       sodipodi:arg1="-0.971621"
+       sodipodi:arg2="0.075576547"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 14.086084,19.694024 -0.143355,1.893203 -0.143355,1.893203 -1.567885,-1.07075 -1.567884,-1.070751 1.711239,-0.822452 z"
+       inkscape:transform-center-x="0.47484342"
+       inkscape:transform-center-y="0.082765659"
+       transform="matrix(3.543307,0,0,3.543307,10078.04,-862.19189)" />
+    <circle
+       style="fill:#666666;stroke:#666666;stroke-width:0.938973;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3803"
+       cx="10105.28"
+       cy="-761.23438"
+       r="3.5433071" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       inkscape:connector-curvature="0"
+       id="path6787-7"
+       d="m 10164.52,-781.27883 v 32.63351"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 10148.203,-764.96208 h 32.634"
+       id="path6791-9"
+       inkscape:connector-curvature="0" />
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
+       transform="translate(9340.8826,-983.78104)"
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="flowRoot3921-3"
+       xml:space="preserve"><flowRegion
+         id="flowRegion3917-4"
+         style="font-family:sans-serif;fill:#666666"><rect
+           y="267.36221"
+           x="770"
+           height="43.282501"
+           width="228.22369"
+           id="rect3915-8"
+           style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
+         id="flowPara3919-8">Vektor</flowPara></flowRoot>
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="..\..\buttons\duplicate_vector_de.png"
+       transform="translate(9497.8623,-982.45523)"
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="flowRoot3921-3-9"
+       xml:space="preserve"><flowRegion
+         id="flowRegion3917-4-3"
+         style="font-family:sans-serif;fill:#666666"><rect
+           y="267.36221"
+           x="770"
+           height="43.282501"
+           width="228.22369"
+           id="rect3915-8-1"
+           style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
+         id="flowPara3919-8-6">Spur hinterlassen</flowPara></flowRoot>
+    <circle
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="..\..\buttons\add_vector_en.png"
+       r="65"
+       cy="-316.49686"
+       cx="10150.518"
+       id="circle6755-5-8"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:connector-curvature="0"
+       id="path6757-8-6"
+       d="m 10105.304,-289.53479 18.151,-24.13922"
+       style="fill:#000000;fill-rule:evenodd;stroke:#666666;stroke-width:2.91611;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="path6757" />
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       transform="matrix(0.80934456,0,0,0.80934456,9678.5003,-613.32992)"
+       id="g6759-04-2"
+       style="fill:#666666;stroke:#666666">
+      <path
+         style="fill:#666666;stroke:#666666"
+         d="m 555.89804,362.40525 c -0.70814,-0.60923 -1.05112,-1.55719 -0.86375,-2.3873 0.0838,-0.37101 1.00922,-2.38363 2.0566,-4.47248 4.25625,-8.48852 7.6245,-14.06284 9.9295,-16.43291 0.5772,-0.5935 7.77609,-5.22631 25.24502,-16.24633 26.4135,-16.66258 24.99934,-15.84514 27.74971,-16.04027 1.40599,-0.0998 4.1777,0.5302 5.58904,1.27028 1.37422,0.72061 3.32229,2.25091 4.39645,3.45361 1.28037,1.43359 2.81523,4.1624 3.36741,5.98687 0.70055,2.31475 0.81337,4.05253 0.40901,6.29984 -0.41104,2.28435 -0.86588,3.32856 -2.10874,4.84114 -0.9088,1.10603 -1.70711,1.62748 -25.4212,16.6052 -18.54712,11.71427 -24.76384,15.55696 -25.64154,15.84961 -2.33335,0.77799 -6.80385,1.33642 -13.19528,1.64827 -4.28236,0.20895 -9.98072,0.2953 -10.57916,0.1603 -0.23128,-0.0522 -0.65116,-0.29329 -0.93307,-0.53583 z m 12.32664,-4.78887 c 0.73493,-0.0455 2.25564,-0.15356 3.37936,-0.24003 l 2.04314,-0.15722 -0.87106,-0.75489 c -2.50478,-2.17073 -4.2796,-4.9561 -5.09903,-8.00235 -0.34075,-1.26672 -0.20602,-1.36224 -1.6651,1.18046 -0.92545,1.61274 -4.26522,7.87703 -4.31341,8.09049 -0.0267,0.11839 3.85412,0.0491 6.5261,-0.11646 z m 13.45648,-3.19125 c 0.74326,-0.16909 4.58243,-2.52333 19.46203,-11.93444 11.69988,-7.39998 18.45269,-11.77087 18.30989,-11.85143 -2.70057,-1.52358 -4.68263,-3.45273 -6.18955,-6.02432 -1.26451,-2.15791 -1.85728,-3.95789 -2.12794,-6.46166 l -0.12131,-1.1222 -18.56857,11.74754 c -10.21271,6.46114 -18.74803,11.96591 -18.96739,12.23281 -1.91557,2.33082 -1.43262,6.63813 1.11962,9.98565 1.86282,2.44328 4.91622,3.92102 7.08322,3.42805 z m 43.28744,-27.64796 c 3.23902,-0.22816 4.7527,-3.78997 3.41993,-8.04737 -0.49445,-1.57945 -1.99262,-3.71658 -3.405,-4.85719 -2.6242,-2.11926 -4.99747,-2.4907 -6.98066,-1.09254 -3.06503,2.16085 -2.03464,8.58605 1.91704,11.95411 1.74655,1.48861 3.40303,2.15892 5.04869,2.04299 z m -3.6259,-4.86075 c -0.57387,-0.43114 -1.5013,-1.95833 -1.5934,-2.62386 -0.28778,-2.07947 1.87106,-3.59937 3.7248,-2.62239 0.75436,0.39757 1.87362,2.22257 1.91641,3.12477 0.10002,2.10883 -2.35321,3.39458 -4.04781,2.12148 z"
+         id="path6761-1-6"
+         inkscape:connector-curvature="0" />
+    </g>
+    <path
+       sodipodi:type="star"
+       style="fill:#666666;stroke:#666666;stroke-width:0.265;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3749-3"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="12.849688"
+       sodipodi:cy="21.504461"
+       sodipodi:r1="2.1923409"
+       sodipodi:r2="1.0961704"
+       sodipodi:arg1="-0.971621"
+       sodipodi:arg2="0.075576547"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 14.086084,19.694024 -0.143355,1.893203 -0.143355,1.893203 -1.567885,-1.07075 -1.567884,-1.070751 1.711239,-0.822452 z"
+       inkscape:transform-center-x="0.47484342"
+       inkscape:transform-center-y="0.082765659"
+       transform="matrix(3.543307,0,0,3.543307,10076.714,-388.49691)" />
+    <circle
+       style="fill:#666666;stroke:#666666;stroke-width:0.938973;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3803-0"
+       cx="10103.954"
+       cy="-287.5394"
+       r="3.5433071" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       inkscape:connector-curvature="0"
+       id="path6787-7-1"
+       d="m 10163.194,-307.58385 v 32.63351"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 10146.877,-291.2671 h 32.634"
+       id="path6791-9-2"
+       inkscape:connector-curvature="0" />
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/restart.png"
+       transform="translate(9338.7071,-511.25104)"
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="flowRoot3921-3-2"
+       xml:space="preserve"><flowRegion
+         id="flowRegion3917-4-2"
+         style="font-family:sans-serif;fill:#666666"><rect
+           y="267.36221"
+           x="770"
+           height="43.282501"
+           width="228.22369"
+           id="rect3915-8-3"
+           style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
+         id="flowPara3919-8-4">Vector</flowPara></flowRoot>
+    <circle
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       r="65"
+       cy="-791.5177"
+       cx="10377.234"
+       id="circle6755-7"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       id="path4507"
+       style="fill:#666666;stroke:#666666;stroke-width:0.880286;stroke-dasharray:none;stroke-dashoffset:0"
+       inkscape:transform-center-x="0.8831368"
+       inkscape:transform-center-y="0.1845534"
+       d="m 10385.301,-846.17187 -11.653,5.41992 -11.653,5.41992 8.771,6.15418 -36.198,50.91797 a 5.3149605,5.3149605 0 0 0 -1.562,-0.23622 5.3149605,5.3149605 0 0 0 -5.314,5.31556 5.3149605,5.3149605 0 0 0 5.314,5.31373 5.3149605,5.3149605 0 0 0 5.316,-5.31373 5.3149605,5.3149605 0 0 0 -1.138,-3.28674 l 36.178,-50.88867 9.674,6.78772 1.131,-12.80274 z" />
+    <path
+       id="path4507-6"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:0.880286;stroke-dasharray:3.52114, 0.880286;stroke-dashoffset:0"
+       inkscape:transform-center-x="0.8831368"
+       inkscape:transform-center-y="0.1845534"
+       d="m 10417.98,-814.68282 -11.652,5.41992 -11.653,5.41992 8.771,6.15418 -36.198,50.91797 a 5.3149605,5.3149605 0 0 0 -1.562,-0.23622 5.3149605,5.3149605 0 0 0 -5.314,5.31556 5.3149605,5.3149605 0 0 0 5.314,5.31373 5.3149605,5.3149605 0 0 0 5.315,-5.31373 5.3149605,5.3149605 0 0 0 -1.137,-3.28674 l 36.178,-50.88867 9.674,6.78772 1.131,-12.80274 z" />
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="..\..\buttons\duplicate_vector_en.png"
+       transform="translate(9569.8149,-510.09523)"
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="flowRoot3921-3-9-1"
+       xml:space="preserve"><flowRegion
+         id="flowRegion3917-4-3-0"
+         style="font-family:sans-serif;fill:#666666"><rect
+           y="267.36221"
+           x="770"
+           height="43.282501"
+           width="228.22369"
+           id="rect3915-8-1-1"
+           style="font-family:sans-serif;fill:#666666" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#666666"
+         id="flowPara3919-8-6-2">Trace</flowPara></flowRoot>
+    <circle
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/weisse/promotion/workspace/public_html_wip/add.png"
+       r="65"
+       cy="-315.67255"
+       cx="10373.049"
+       id="circle6755-7-3"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:6.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       id="path4507-4"
+       style="fill:#666666;stroke:#666666;stroke-width:0.880286;stroke-dasharray:none;stroke-dashoffset:0"
+       inkscape:transform-center-x="0.8831368"
+       inkscape:transform-center-y="0.1845534"
+       d="m 10381.116,-370.32671 -11.653,5.41992 -11.653,5.41992 8.771,6.15418 -36.198,50.91797 a 5.3149605,5.3149605 0 0 0 -1.562,-0.23622 5.3149605,5.3149605 0 0 0 -5.314,5.31556 5.3149605,5.3149605 0 0 0 5.314,5.31373 5.3149605,5.3149605 0 0 0 5.316,-5.31373 5.3149605,5.3149605 0 0 0 -1.138,-3.28674 l 36.178,-50.88867 9.674,6.78772 1.131,-12.80274 z" />
+    <path
+       id="path4507-6-5"
+       style="fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:0.880286;stroke-dasharray:3.52114, 0.880286;stroke-dashoffset:0"
+       inkscape:transform-center-x="0.8831368"
+       inkscape:transform-center-y="0.1845534"
+       d="m 10413.795,-338.83766 -11.652,5.41992 -11.653,5.41992 8.771,6.15418 -36.198,50.91797 a 5.3149605,5.3149605 0 0 0 -1.562,-0.23622 5.3149605,5.3149605 0 0 0 -5.314,5.31556 5.3149605,5.3149605 0 0 0 5.314,5.31373 5.3149605,5.3149605 0 0 0 5.315,-5.31373 5.3149605,5.3149605 0 0 0 -1.137,-3.28674 l 36.178,-50.88867 9.674,6.78772 1.131,-12.80274 z" />
   </g>
 </svg>

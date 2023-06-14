@@ -773,6 +773,60 @@ fabric.Image.fromURL(add_dark_curvedLang, function(img) {
     canvas_side_bar_perm.add(add_dark_curved);
 });
 
+let addVectorLang;
+if(language !== 'english'){
+    addVectorLang = 'button_icons/add_vector_de.png'
+} else {
+    addVectorLang = 'button_icons/add_vector_en.png'
+}
+
+let addVector;
+
+fabric.Image.fromURL(addVectorLang, function (img) {
+   addVector =  img.set({
+       left: dist_left,
+       top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
+       opacity: 1,
+       originX: "center",
+       originY: "top",
+       perPixelTargetFind: true,
+       objectCaching: false,
+       hasBorders: false,
+       hasControls: false,
+       evented: true,
+       selectable: false,
+       scaleX: buttonfactor * screenFactor,
+       scaleY: buttonfactor * screenFactor,
+       hoverCursor: "pointer"});
+
+   addVector.buttonType = 'addVector'
+
+    addVector.on('mousedown', function (o) {
+        addVector.set('shadow', new fabric.Shadow(shadowOn));
+        canvas_side_bar_perm.renderAll()
+    });
+
+    addVector.on('mouseout', function (o) {
+        addVector.set('shadow', new fabric.Shadow(shadowOff));
+        canvas_side_bar_perm.renderAll()
+    });
+
+   addVector.on('mouseup', function (){
+       lineTypeToDraw = 'vector';
+       changeGeodesicWidth(2);
+       showGeodesicButtons(false);
+       toolChange('paint');
+       geodreieck.selectable = false;
+       //add.opacity = 0;
+       //add_dark.opacity = 1;
+       canvas_side_bar_perm.renderAll();
+       showVertices(false);
+       showSectorAreaInfobox(false);
+       showDeficitAngleInfobox(false);
+       buttonPressedForExercise(this)
+   });
+});
+
 let undoLang
 if(language !== "english"){
     undoLang = 'button_icons/undo_de.png'
@@ -2280,5 +2334,3 @@ function addInstructionalOverlay(InstructionalOverlayToAdd){
     }
 
 }
-
-let addVector;
