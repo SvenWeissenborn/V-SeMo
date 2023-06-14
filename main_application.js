@@ -529,9 +529,17 @@ canvas.on('mouse:move', function (o) {
 
         if (geodesicsLightLike == '1') {
 
-            if (Math.abs(pointer.x - line.x1) > Math.abs(pointer.y - line.y1)) {
+            if ((pointer.x - line.x1) > 0 & (pointer.y - line.y1) < 0) {
+                console.log('1')
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(-45)) + line.y1});
-            }else{
+            }else if ((pointer.x - line.x1) > 0 & (pointer.y - line.y1) > 0) {
+                console.log('2')
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(+45)) + line.y1});
+            }else if ((pointer.x - line.x1) < 0 & (pointer.y - line.y1) > 0) {
+                console.log('3')
+                line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(-45)) + line.y1});
+            }else if ((pointer.x - line.x1) < 0 & (pointer.y - line.y1) < 0) {
+                console.log('4')
                 line.set({x2: pointer.x, y2: (pointer.x - line.x1) * Math.tan(toRadians(+45)) + line.y1});
             }
         }else {
@@ -1288,7 +1296,10 @@ canvas.on('mouse:up', function(opt) {
             chosenLineGlobalID = lineSegment.ID[0];
 
             if (buildGeodesicTicks == "1"){
-                drawGeodesicTicks(lineSegment.ID[0])
+                drawGeodesicTicks(chosenLineGlobalID)
+            }
+            if (autoCompleteOnMouseUp == "1"){
+                continueGeodesic(chosenLineGlobalID)
             }
         }
 
@@ -3206,10 +3217,11 @@ function drawGeodesicTicks(lineID){
 
                 let geodesicTickStart_point_BL = {x: geodesicTick.left, y: geodesicTick.top};
                 geodesicTick.start_point_BL = getPointCoordsBeforeLorentztransform(geodesicTickStart_point_BL, sectors[lineSegment.parentSector[0]].trapez)
+                geodesicTick.start_pos_BL_x = geodesicTick.start_point_BL.x
+                geodesicTick.start_pos_BL_y = geodesicTick.start_point_BL.y
             }
 
             lineSegment.geodesicTicks.push(geodesicTick);
-            //console.log(lineSegment.geodesicTicks)
 
         }
 
@@ -6292,7 +6304,6 @@ function lorentzTransformLinePoints(lineToTransform, theta, trapezPointsAsGlobal
 function lorentzTransformObjectPosition(object, theta, trapezPointsAsGlobalCoords) {
     object.set('left', object.start_pos_BL_x * Math.cosh(theta) + object.start_pos_BL_y * Math.sinh(theta) + trapezPointsAsGlobalCoords[3].x);
     object.set('top', object.start_pos_BL_x * Math.sinh(theta) + object.start_pos_BL_y * Math.cosh(theta) + trapezPointsAsGlobalCoords[3].y);
-
 }
 
 function lorentzTransform(theta, trapez) {
@@ -6333,7 +6344,6 @@ function lorentzTransform(theta, trapez) {
 
             if (buildGeodesicTicks == "1"){
                 if (trapez.parent.lineSegments[ii].geodesicTicks.length > 0){
-                    console.log(trapez.parent.lineSegments[ii].geodesicTicks);
                     for (let jj = 0; jj < trapez.parent.lineSegments[ii].geodesicTicks.length; jj++) {
                         lorentzTransformObjectPosition(trapez.parent.lineSegments[ii].geodesicTicks[jj], theta, trapezPointsAsGlobalCoords);
                     }

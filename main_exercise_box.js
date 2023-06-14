@@ -814,9 +814,9 @@ function setSectorsToRingsOnR(){
 
             for (let jj = 0; jj < numberOfSectorsPerRing; jj++){
 
-                let sector_position_on_ring_x = (r_ring_row) * Math.sin(Math.PI/6 * (jj))
-                let sector_position_on_ring_y = (r_ring_row) * Math.cos(Math.PI/6 * (jj))
-                let sector_position_on_ring_angle = 30 * jj
+                let sector_position_on_ring_x = (r_ring_row) * Math.sin(2*Math.PI/numberOfSectorsPerRing * (jj))
+                let sector_position_on_ring_y = (r_ring_row) * Math.cos(2*Math.PI/numberOfSectorsPerRing * (jj))
+                let sector_position_on_ring_angle = 360/numberOfSectorsPerRing * jj
 
                 sectors[ii + numberOfRings * jj].trapez.set('left', sector_position_on_ring_x + window.innerWidth / 2)
                 sectors[ii + numberOfRings * jj].trapez.set('top', -sector_position_on_ring_y + (window.innerHeight - window.innerHeight * 0.08) / 2)
