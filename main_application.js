@@ -428,14 +428,25 @@ canvas.on('mouse:move', function (o) {
         }
 
         if(getParentSectorOfPoint(pointer) !== undefined) {
-            if(closestEdgeOfPointParameters.minDistance >= 0.01 || (closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0 &&
-                //noch nicht optimal, Eckenhaenger muss raus!
-                sectors[getParentSectorOfPoint(pointer)].snapStatus[(closestEdgeOfPointParameters.closestEdge + 2) % 4] !== 0)) {
+            if(closestEdgeOfPointParameters.minDistance >= 0.01 || closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0) {
                 vectorPoint.set({
                     left: pointer.x,
                     top: pointer.y
                 });
             }
+        }
+
+        for(let ii = 0; ii < vectorDuplicates.length; ii++) {
+            if(distance(pointer, new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top)) < 10) {
+                vectorPoint.set({
+                    left: vectorDuplicates[ii][0].left,
+                    top: vectorDuplicates[ii][0].top
+                });
+            }
+            vectorPoint.setCoords();
+            updateMinionsPosition(vectorPoint, vectorLine);
+            updateMinionsPosition(vectorPoint, vectorHead);
+            canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
         }
 
             if (closestEdgeOfPointParameters.minDistance < 0.01) {
@@ -1074,6 +1085,7 @@ canvas.on('mouse:down', function(opt) {
         this.lastPosY = YCoord;
 
     }
+
 });
 
 canvas.on('mouse:move', function(opt) {
@@ -1587,7 +1599,7 @@ canvas.on('mouse:up', function(opt) {
             lineTypeToDraw = "vector";
             //toolChange('grab');  //Man hat, nachdem ein Vektor (weil zu kurz) abgebrochen wurde direkt die Möglichkeit einen neuen zu zeichnen, ohne das Zeichnen erneut zu aktivieren.
             vectors.pop();
-            sectors[getParentSectorOfPoint(new fabric.Point(vectorPoint.left, vectorPoint.top))].vectors.pop();
+            sectors[vectorPoint.parentSector[0]].vectors.pop();
             return;
         }
 
@@ -3953,8 +3965,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 if (lineTypeToDraw == 'vector'){
 
                     let vector = [];
-                    let vectorParameters = [];
-                    let immediatehistory = [6];
+                    let vectorParametersOnMouseDown;
 
                         let vectorPoint = new fabric.Circle({
                             ID: vectors.length,
@@ -3973,7 +3984,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             originX: 'center',
                             originY: 'center',
                             hasBorders: false,
-                            hasControls: true,
+                            hasControls: true
                         });
 
                     vectorPoint.setControlsVisibility({
@@ -3995,11 +4006,10 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                         isVectorPointDragged = true;
 
-                        let sectorID = getParentSectorOfPoint(new fabric.Point(vectorPoint.left, vectorPoint.top));
-                        let vectorParameterOnMouseDown = getVectorParameters(sectorID);
-                        vectorParameters.splice(0, 1, vectorParameterOnMouseDown.vectorParameters);
+                        let sectorID = vectorPoint.parentSector[0];
+                        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
 
-                      /*  let cloneIcon = 'button_icons/duplicate_vector.png'
+                        let cloneIcon = 'button_icons/duplicate_vector.png'
                         let cloneImg = document.createElement('img');
                         cloneImg.src = cloneIcon;
 
@@ -4018,7 +4028,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             }
                         }
 
-                        fabric.Circle.prototype.controls.clone = new fabric.Control({
+                        fabric.Circle.prototype.controls.tl = new fabric.Control({
                             x: -0.3,
                             y: -0.3,
                             offsetY: -8,
@@ -4026,22 +4036,25 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             cursorStyle: 'pointer',
                             mouseUpHandler: cloneObject,
                             render: renderIcon(cloneImg),
-                            cornerSize: 30
-                        }); */
+                            cornerSize: 40
+                        });
+
+                        vectorPoint.setControlVisible('tl', true);
                     })
 
-                   /* function cloneObject(eventData, transform) {
+                    function cloneObject(eventData, transform) {
                         let target = transform.target;
                         let canvas = target.canvas;
                         let vectorDuplicate = [];
+                        let immediatehistory = [5, 'duplicate'];
 
                         let vectorPointDuplicate = new fabric.Circle({
-                            ID: vectors.length,
+                            ID: vectorDuplicates.length,
                             radius: 5,
                             fill: "grey",
                             left: vectorPoint.left,
                             top: vectorPoint.top,
-                            evented: false,
+                            evented: true,
                             objectCaching: false,
                             lockMovementX: true,
                             lockMovementY: true,
@@ -4062,6 +4075,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             vectorHead.top
                         ]
                         let vectorLineDuplicate = new fabric.Line(points, {
+                            ID: vectorDuplicates.length,
                             strokeWidth: 3,
                             stroke: 'grey',
                             fill: 'grey',
@@ -4071,7 +4085,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             objectCaching: false,
                             hasBorders: false,
                             hasControls: false,
-                            evented: false,
+                            evented: true,
                             lockMovementX: true,
                             lockMovementY: true,
                         });
@@ -4082,7 +4096,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             {x: -15, y: -7.5},
                             {x: -15, y: 7.5}
                         ], {
-                            id: "vector-head-duplicate",
+                            ID: vectorDuplicates.length,
                             stroke: "grey",
                             strokeWidth: 3,
                             fill: "grey",
@@ -4092,7 +4106,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             top: vectorHead.top,
                             originX: "center",
                             originY: "center",
-                            evented: false,
+                            evented: true,
                             angle: vectorHead.angle
                         });
                         vectorDuplicate.push(vectorHeadDuplicate);
@@ -4107,32 +4121,33 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
                             vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
                         }
-                    } */
+                        immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
+                        history.push(immediatehistory);
+                        canvas.bringForward(vectorPoint, vectorLine, vectorHead);
+
+                    }
 
                     vectorPoint.on('mouseup', function() {
 
                         isVectorPointDragged = false;
 
-                        let sectorID = getParentSectorOfPoint(new fabric.Point(vectorPoint.left, vectorPoint.top));
-                        let vectorGlobalID = vectors.indexOf(vector);
-                        let vectorID = sectors[sectorID].vectors.indexOf(vector);
-                        let vectorParametersOnMouseUp = getVectorParameters(sectorID);
-                        vectorParameters.splice(1, 1, vectorParametersOnMouseUp.vectorParameters); //nicht notwendige Zeile
-                        let differencesBetweenMouseDownAndMouseUp = [sectorID, vectorGlobalID, vectorID];
+                        let immediatehistory = [6];
 
-                        for (let ii = 0; ii < vectorParametersOnMouseUp.vectorParameters.length; ii++) {
+                        let sectorID = vectorPoint.parentSector;
+                        let vectorGlobalID = vectorPoint.ID;
+                        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
 
-                            let difference = [];
-                            if(vectorParametersOnMouseUp.vectorParameters[ii] !== vectorParameters[0][ii]) {
-                                difference.push(ii, vectorParameters[0][ii]);
+                        for (let ii = 0; ii < vectorParametersOnMouseUp.length; ii++) {
+                            let diff = [];
+                            if(vectorParametersOnMouseUp[ii] !== vectorParametersOnMouseDown[ii]) {
+                                diff.push(ii, vectorParametersOnMouseDown[ii]);
                             }
-
-                            differencesBetweenMouseDownAndMouseUp.push(difference);
-
-
+                            if(diff.length !== 0) {
+                                immediatehistory.push(diff);
+                            }
                         }
-                        console.log(differencesBetweenMouseDownAndMouseUp);
-                        immediatehistory.splice(1, 1, differencesBetweenMouseDownAndMouseUp);
+                        console.log(immediatehistory);
+
                         history.push(immediatehistory);
 
 
@@ -4153,19 +4168,21 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         hasControls: false,
                         evented: true,
                         lockMovementX: true,
-                        lockMovementY: true,
+                        lockMovementY: true
                     });
 
                     vectorLine.on('mousedown', function () {
-                        let vectorDuplicate = [];
+
+                      /*  let vectorDuplicate = [];
+                        let immediatehistory = [5, 'duplicate'];
 
                         let vectorPointDuplicate = new fabric.Circle({
-                            ID: vectors.length,
+                            ID: vectorDuplicates.length,
                             radius: 5,
                             fill: "grey",
                             left: vectorPoint.left,
                             top: vectorPoint.top,
-                            evented: false,
+                            evented: true,
                             objectCaching: false,
                             lockMovementX: true,
                             lockMovementY: true,
@@ -4186,6 +4203,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             vectorHead.top
                         ]
                         let vectorLineDuplicate = new fabric.Line(points, {
+                            ID: vectorDuplicates.length,
                             strokeWidth: 3,
                             stroke: 'grey',
                             fill: 'grey',
@@ -4195,7 +4213,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             objectCaching: false,
                             hasBorders: false,
                             hasControls: false,
-                            evented: false,
+                            evented: true,
                             lockMovementX: true,
                             lockMovementY: true,
                         });
@@ -4206,7 +4224,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             {x: -15, y: -7.5},
                             {x: -15, y: 7.5}
                         ], {
-                            id: "vector-head-duplicate",
+                            ID: vectorDuplicates.length,
                             stroke: "grey",
                             strokeWidth: 3,
                             fill: "grey",
@@ -4216,7 +4234,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             top: vectorHead.top,
                             originX: "center",
                             originY: "center",
-                            evented: false,
+                            evented: true,
                             angle: vectorHead.angle
                         });
                         vectorDuplicate.push(vectorHeadDuplicate);
@@ -4231,6 +4249,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
                             vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
                         }
+                        immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
+                        history.push(immediatehistory); */
                     });
 
                     vector.push(vectorLine)
@@ -4254,6 +4274,10 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     });
 
                     vectorHead.on('mousedown', function(o) {
+
+                        let sectorID = vectorPoint.parentSector[0];
+                        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
+
                     })
                     vectorHead.on('moving', function(o) {
 
@@ -4264,7 +4288,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             y1: vectorPoint.top,
                             x2: pointer.x,
                             y2: pointer.y,
-                            angle: 0 // Linie behält ihre Beziehung zum Rest des Vektors nach Rotieren des Parentalsektors
+                            angle: 0
                         });
 
                         let x1 = vectorLine.x1;
@@ -4289,6 +4313,28 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
                         vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
                         canvas.renderAll();
+
+                    })
+
+                    vectorHead.on('mouseup', function(o) {
+
+                        let immediatehistory = [6];
+
+                        let sectorID = vectorPoint.parentSector;
+                        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
+
+                        for (let ii = 0; ii < vectorParametersOnMouseUp.length; ii++) {
+                            let diff = [];
+                            if(vectorParametersOnMouseUp[ii] !== vectorParametersOnMouseDown[ii]) {
+                                diff.push(ii, vectorParametersOnMouseDown[ii]);
+                            }
+                            if(diff.length !== 0) {
+                                immediatehistory.push(diff);
+                            }
+                        }
+
+                        history.push(immediatehistory);
+                        console.log(immediatehistory);
 
                     })
 
@@ -5911,31 +5957,31 @@ function getSectorParameterOnMouseup(initialSectorID){
     return sectorParameterOnMouseup
 }
 
-function getVectorParameters(initialSectorID) {
+function getVectorParameters(initialSectorID, vectorID) {
 
     let stack_idx_of_vectorPoint;
     let stack_idx_of_vectorLine;
     let stack_idx_of_vectorHead;
-    let stackID;
+    //let stackID;
 
-    if(canvas.getActiveObject().ID !== sectors[initialSectorID].vectors.length - 1) {
+    /*if(canvas.getActiveObject().ID !== sectors[initialSectorID].vectors.length - 1) {
         stackID = sectors[initialSectorID].vectors.length - 1;
     } else {
         stackID = canvas.getActiveObject().ID;
-    }
+    } */
 
-    stack_idx_of_vectorPoint = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[stackID][0]);
-    stack_idx_of_vectorLine = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[stackID][1]);
-    stack_idx_of_vectorHead = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[stackID][2]);
+    stack_idx_of_vectorPoint = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[vectorID][0]);
+    stack_idx_of_vectorLine = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[vectorID][1]);
+    stack_idx_of_vectorHead = canvas.getObjects().indexOf(sectors[initialSectorID].vectors[vectorID][2]);
 
     let vectorPoint = canvas.getObjects()[stack_idx_of_vectorPoint];
     let vectorLine = canvas.getObjects()[stack_idx_of_vectorLine];
     let vectorHead = canvas.getObjects()[stack_idx_of_vectorHead];
 
-    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.left, vectorPoint.top, vectorLine.left, vectorLine.top, vectorLine.angle,
-        vectorLine.x1, vectorLine.y1, vectorLine.x2, vectorLine.y2, vectorHead.left, vectorHead.top, vectorHead.angle];
+    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorPoint.ID, vectorPoint.left, vectorPoint.top, vectorLine.x1, vectorLine.y1,
+        vectorLine.x2, vectorLine.y2, vectorHead.left, vectorHead.top, vectorHead.angle];
 
-    return {stackID, vectorParameters};
+    return vectorParameters;
 }
 
 function getStartAndEndPointCoordsBeforeLorentztransform (lineSegment){
@@ -7943,38 +7989,64 @@ function undoLastAction(){
 
         }
     }
-// Zeichnen eines Vektors rückgängig machen
+// Zeichnen von Vektoren und Duplikaten zurueck nehmen
     if(immediatehistory[0] === 5) {
-        canvas.remove(vectors[immediatehistory[1]][0], vectors[immediatehistory[1]][1], vectors[immediatehistory[1]][2]);
-        if(immediatehistory[1].parentSector !== undefined) {
-            sectors[getParentSectorOfPoint(new fabric.Point(immediatehistory[1].left, immediatehistory[1].top))].vectors.splice(immediatehistory[1], 1);
+        if(immediatehistory[1] !== 'duplicate') {
+            canvas.remove(vectors[immediatehistory[1]][0], vectors[immediatehistory[1]][1], vectors[immediatehistory[1]][2]);
+            if(immediatehistory[1].parentSector !== undefined) {
+                sectors[immediatehistory[1].parentSector[0]].vectors.splice(immediatehistory[1], 1);
+            }
+            vectors.splice(immediatehistory[1], 1);
+        } else {
+            canvas.remove(vectorDuplicates[immediatehistory[2]][0], vectorDuplicates[immediatehistory[2]][1], vectorDuplicates[immediatehistory[2]][2]);
+            if(immediatehistory[2].parentSector !== undefined) {
+                sectors[immediatehistory[2].parentSector[0]].vectorDuplicates.splice(immediatehistory[2], 1);
+            }
+            vectorDuplicates.splice(immediatehistory[2], 1);
         }
-        vectors.splice(immediatehistory[1], 1);
 
     }
-    // Bewegen eines Vektors rückgängig machen
+    // Bewegen und Veraendern von Vektoren zurueck nehmen
     if(immediatehistory[0] === 6) {
-        /*let vectorParameters = getVectorParameters(immediatehistory[0]);
-        if(immediatehistory[1][4].length !== 0 && immediatehistory[1][5].length !== 0) {
-            sectors[immediatehistory[1][0]].vectors[immediatehistory[1][2]][0].set({
-                left: immediatehistory[1][4][1],
-                top: immediatehistory[1][5][1]
-            });
-            vectors[immediatehistory[1][1]][0].set({
-                left: immediatehistory[1][4][1],
-                top: immediatehistory[1][5][1]
-            });
-            if(immediatehistory[1][3].length !== 0) {
-                vectors[immediatehistory[1][1]][0].parentSector[0] = immediatehistory[1][3][1];
-            } else {
-                vectors[immediatehistory[1][1]][0].parentSector[0] = immediatehistory[1][0];
-            }
-            vectors[immediatehistory[1][1]][0].setCoords();
-            updateMinionsPosition(vectors[immediatehistory[1][1]][0], vectors[immediatehistory[1][1]][1]);
-            updateMinionsPosition(vectors[immediatehistory[1][1]][0], vectors[immediatehistory[1][1]][2]);
 
-        } */
+       /* let vectorPoint = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][0];
+        let vectorLine = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][1];
+        let vectorHead = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][2];
+        let vector = [vectorPoint, vectorLine, vectorHead];
 
+        sectors[immediatehistory[2][0]].vectors.splice(immediatehistory[2][1], 1);
+        sectors[immediatehistory[3][0][0]].vectors.splice(immediatehistory[3][0][1], 0, vector);
+        vectorPoint.parentSector[0] = immediatehistory[3][0][0];
+
+        vectorPoint.set({
+           left: immediatehistory[3][2],
+           top: immediatehistory[3][3],
+        });
+
+        vectorPoint.setCoords();
+        updateMinionsPosition(vectorPoint, vectorLine);
+        updateMinionsPosition(vectorPoint, vectorHead);
+
+        vectorHead.set({
+           left: immediatehistory[3][8],
+           top: immediatehistory[3][9],
+           angle: immediatehistory[3][10]
+        });
+        vectorHead.setCoords();
+
+        vectorLine.set({
+            x1: immediatehistory[3][4],
+            y1: immediatehistory[3][5],
+            x2: immediatehistory[3][6],
+            y2: immediatehistory[3][7]
+        });
+        vectorLine.setCoords();
+
+        vectorPoint.relationship = getRelationship(vectorPoint, immediatehistory[2][0]);
+        vectorPoint.parentSector = [immediatehistory[2][0], sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1][0]]];
+
+        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
+        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint); */
     }
 
     canvas.renderAll();
