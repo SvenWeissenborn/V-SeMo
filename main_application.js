@@ -3971,7 +3971,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             ID: vectors.length,
                             radius: 5,
                             fill: 'blue',
-                            padding: 15,
+                            padding: 5,
                             left: pointer.x,
                             top: pointer.y,
                             evented: true,
@@ -4026,13 +4026,14 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                 ctx.drawImage(icon, -size/2, -size/2, size, size);
                                 ctx.restore();
                             }
+
                         }
 
                         fabric.Circle.prototype.controls.tl = new fabric.Control({
-                            x: -0.3,
-                            y: -0.3,
-                            offsetY: -8,
-                            offsetX: -8,
+                            x: -0.5,
+                            y: -0.5,
+                            offsetY: -10,
+                            offsetX: -15,
                             cursorStyle: 'pointer',
                             mouseUpHandler: cloneObject,
                             render: renderIcon(cloneImg),
@@ -4123,7 +4124,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         }
                         immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
                         history.push(immediatehistory);
-                        canvas.bringForward(vectorPoint, vectorLine, vectorHead);
+                        canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
 
                     }
 
@@ -4134,22 +4135,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         let immediatehistory = [6];
 
                         let sectorID = vectorPoint.parentSector;
-                        let vectorGlobalID = vectorPoint.ID;
                         let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
 
-                        for (let ii = 0; ii < vectorParametersOnMouseUp.length; ii++) {
-                            let diff = [];
-                            if(vectorParametersOnMouseUp[ii] !== vectorParametersOnMouseDown[ii]) {
-                                diff.push(ii, vectorParametersOnMouseDown[ii]);
-                            }
-                            if(diff.length !== 0) {
-                                immediatehistory.push(diff);
-                            }
+                        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
+                            immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
+                            history.push(immediatehistory);
                         }
-                        console.log(immediatehistory);
-
-                        history.push(immediatehistory);
-
 
                     })
 
@@ -4323,18 +4314,10 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         let sectorID = vectorPoint.parentSector;
                         let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
 
-                        for (let ii = 0; ii < vectorParametersOnMouseUp.length; ii++) {
-                            let diff = [];
-                            if(vectorParametersOnMouseUp[ii] !== vectorParametersOnMouseDown[ii]) {
-                                diff.push(ii, vectorParametersOnMouseDown[ii]);
-                            }
-                            if(diff.length !== 0) {
-                                immediatehistory.push(diff);
-                            }
+                        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
+                            immediatehistory.push(vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorParametersOnMouseDown);
+                            history.push(immediatehistory);
                         }
-
-                        history.push(immediatehistory);
-                        console.log(immediatehistory);
 
                     })
 
@@ -5978,10 +5961,30 @@ function getVectorParameters(initialSectorID, vectorID) {
     let vectorLine = canvas.getObjects()[stack_idx_of_vectorLine];
     let vectorHead = canvas.getObjects()[stack_idx_of_vectorHead];
 
-    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorPoint.ID, vectorPoint.left, vectorPoint.top, vectorLine.x1, vectorLine.y1,
-        vectorLine.x2, vectorLine.y2, vectorHead.left, vectorHead.top, vectorHead.angle];
+    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorPoint.left, vectorPoint.top, vectorHead.left, vectorHead.top, vectorHead.angle];
 
     return vectorParameters;
+}
+
+function areArraysDifferent(array1, array2) {
+
+    let arraysAreDifferent = false;
+    let diff = [];
+    if(array1.length !== array2.length) {
+        arraysAreDifferent = true;
+    } else {
+        for (let ii = 0; ii < array1.length; ii++) {
+            if(array1[ii] !== array2[ii]) {
+                diff.push(ii);
+            }
+        }
+        if(diff.length !== 0) {
+            arraysAreDifferent = true;
+        }
+    }
+
+    return arraysAreDifferent;
+
 }
 
 function getStartAndEndPointCoordsBeforeLorentztransform (lineSegment){
@@ -8006,47 +8009,47 @@ function undoLastAction(){
         }
 
     }
-    // Bewegen und Veraendern von Vektoren zurueck nehmen
+    // Position, Laenge und Richtung von Vektoren zurueck nehmen
     if(immediatehistory[0] === 6) {
 
-       /* let vectorPoint = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][0];
-        let vectorLine = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][1];
-        let vectorHead = sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1]][2];
+        let vectorPoint = sectors[immediatehistory[1]].vectors[immediatehistory[2]][0];
+        let vectorLine = sectors[immediatehistory[1]].vectors[immediatehistory[2]][1];
+        let vectorHead = sectors[immediatehistory[1]].vectors[immediatehistory[2]][2];
         let vector = [vectorPoint, vectorLine, vectorHead];
 
-        sectors[immediatehistory[2][0]].vectors.splice(immediatehistory[2][1], 1);
-        sectors[immediatehistory[3][0][0]].vectors.splice(immediatehistory[3][0][1], 0, vector);
-        vectorPoint.parentSector[0] = immediatehistory[3][0][0];
+        sectors[immediatehistory[1]].vectors.splice(immediatehistory[2], 1);
+        sectors[immediatehistory[3][0]].vectors.splice(immediatehistory[3][1], 0, vector);
+        vectorPoint.parentSector[0] = immediatehistory[3][0];
 
         vectorPoint.set({
            left: immediatehistory[3][2],
-           top: immediatehistory[3][3],
+           top: immediatehistory[3][3]
         });
-
         vectorPoint.setCoords();
         updateMinionsPosition(vectorPoint, vectorLine);
         updateMinionsPosition(vectorPoint, vectorHead);
 
-        vectorHead.set({
-           left: immediatehistory[3][8],
-           top: immediatehistory[3][9],
-           angle: immediatehistory[3][10]
-        });
-        vectorHead.setCoords();
+        vectorPoint.relationship = getRelationship(vectorPoint, immediatehistory[3][0]);
+        vectorPoint.parentSector = [immediatehistory[3][0], immediatehistory[3][1]];
 
         vectorLine.set({
-            x1: immediatehistory[3][4],
-            y1: immediatehistory[3][5],
-            x2: immediatehistory[3][6],
-            y2: immediatehistory[3][7]
+            x1: immediatehistory[3][2],
+            y1: immediatehistory[3][3],
+            x2: immediatehistory[3][4],
+            y2: immediatehistory[3][5],
         });
         vectorLine.setCoords();
 
-        vectorPoint.relationship = getRelationship(vectorPoint, immediatehistory[2][0]);
-        vectorPoint.parentSector = [immediatehistory[2][0], sectors[immediatehistory[2][0]].vectors[immediatehistory[2][1][0]]];
+        vectorHead.set({
+            left: immediatehistory[3][4],
+            top: immediatehistory[3][5],
+            angle: immediatehistory[3][6]
+        });
+        vectorHead.setCoords();
 
         vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
-        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint); */
+        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint);
+
     }
 
     canvas.renderAll();
