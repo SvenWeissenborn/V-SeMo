@@ -4157,7 +4157,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         objectCaching: false,
                         hasBorders: false,
                         hasControls: false,
-                        evented: true,
+                        evented: false,
                         lockMovementX: true,
                         lockMovementY: true
                     });
@@ -8037,6 +8037,7 @@ function undoLastAction(){
             y1: immediatehistory[3][3],
             x2: immediatehistory[3][4],
             y2: immediatehistory[3][5],
+            angle: 0
         });
         vectorLine.setCoords();
 
