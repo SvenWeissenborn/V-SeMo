@@ -4029,11 +4029,24 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                         }
 
+                        let controlOffsetX;
+                        let controlOffsetY;
+                        if(vectorHead.left - vectorPoint.left < 0) {
+                            controlOffsetX = 35;
+                        } else {
+                            controlOffsetX = -15;
+                        }
+                        if(vectorHead.top - vectorPoint.top > 0) {
+                            controlOffsetY = 30;
+                        } else {
+                            controlOffsetY = -10;
+                        }
+
                         fabric.Circle.prototype.controls.tl = new fabric.Control({
                             x: -0.5,
                             y: -0.5,
-                            offsetY: -10,
-                            offsetX: -15,
+                            offsetY: controlOffsetY,
+                            offsetX: controlOffsetX,
                             cursorStyle: 'pointer',
                             mouseUpHandler: cloneObject,
                             render: renderIcon(cloneImg),
