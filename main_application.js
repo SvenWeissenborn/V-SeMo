@@ -4022,7 +4022,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                 let size = this.cornerSize;
                                 ctx.save();
                                 ctx.translate(left, top);
-                                ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+                               // ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
                                 ctx.drawImage(icon, -size/2, -size/2, size, size);
                                 ctx.restore();
                             }
@@ -4031,7 +4031,36 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                         let controlOffsetX;
                         let controlOffsetY;
-                        if(vectorHead.left - vectorPoint.left < 0) {
+                        let outboundParameter = 10;
+                        let outboundPoints = [];
+                        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPoint.parentSector[0]].trapez);
+
+                        for (let ii = 0; ii < 4; ii++) {
+                            let outboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * outboundParameter,
+                                trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * outboundParameter);
+                            outboundPoints.push(outboundPoint);
+                        }
+
+                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+                        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
+
+                        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+                            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+                            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y)) {
+                            controlOffsetX = 35;
+                        } else {
+                            controlOffsetX = -15;
+                        }
+
+                        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[2].x, outboundPoints[2].y,
+                            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+                            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y)) {
+                            controlOffsetY = -10;
+                        } else {
+                            controlOffsetY = 30;
+                        }
+
+                      /*  if(vectorHead.left - vectorPoint.left < 0) {
                             controlOffsetX = 35;
                         } else {
                             controlOffsetX = -15;
@@ -4040,7 +4069,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             controlOffsetY = 30;
                         } else {
                             controlOffsetY = -10;
-                        }
+                        } */
 
                         fabric.Circle.prototype.controls.tl = new fabric.Control({
                             x: -0.5,
