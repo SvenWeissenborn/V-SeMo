@@ -15,7 +15,9 @@ let canvasSize = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
+
 let screenFactor = Math.min(containerSize.width / canvasSize.width, containerSize.height / canvasSize.height);
+console.log(screenFactor)
 let buttonfactor = 0.4;
 //let buttonwidth = buttonfactor * win_width;
 //let buttonheight = win_height * 0.5;

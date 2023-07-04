@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width">
+  <title>Virtuelle Sektormodelle</title>
+  <link rel="stylesheet" href="main.css" type="text/css">
+  <link rel="icon" href="v-semo_logo.png">
+</head>
+
+<body onresize="fitResponsiveCanvas()">
+
+<div id="drop-zone" style="display: flex; align-items: center; justify-content: center; width: 300px; height: 200px; border: 2px dashed #ccc; border-radius: 8px; font-size: 18px;">
+  <span>Ziehen Sie die Datei hierhin</span>
+</div>
+
+<div id="canvas-overAll">
+
+  <!--<canvas id="canvas_buttons" class = "part"></canvas>-->
+
+  <div
+          id="container_side_bar_perm" class = "part">
+    <canvas id="canvas_side_bar_perm" class = "part"></canvas>
+  </div>
+
+  <div
+          id="container_side_tools_right" class = "part">
+    <canvas id="canvas_side_tools_right" class = "part"></canvas>
+  </div>
+
+  <div
+          id="container_exercise_box" class = "part">
+    <canvas id="canvas_exercise_box" class = "part"></canvas>
+  </div>
+
+  <div id="container_canvas" class = "part">
+    <canvas id="canvas" ></canvas>
+  </div>
+
+</div>
+
+
+<script src="url_variables.js"></script>
+<script src="drag_drop_and_load_applet.js"></script>
+
+<script src="fabric.js"></script>
+<script src="hammer.js"></script>
+
+
+
+
+
+
+
+</body>
+
+</html>

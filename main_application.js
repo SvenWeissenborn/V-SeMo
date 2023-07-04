@@ -7012,6 +7012,162 @@ function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 
 }
 
+
+function saveCanvasAsJs(canvas, filename) {
+    var data = {
+        buildStartGeodesics: 0,
+        turnLorentzTransformOn: 0,
+        buildStartMarks: 0,
+        buildStartTexts: 0,
+        showResetSectors: 0,
+        showAutoSet: 0,
+        showChangeDirection: 0,
+        showAutoComplete: 0,
+        showChangeStartPoint: 0,
+        startZoom: canvas.getZoom(),
+        startViewportTransform_4: canvas.viewportTransform[4],
+        startViewportTransform_5: canvas.viewportTransform[5],
+        turnLorentzTransformOn: turnLorentzTransformOn,
+        line_colors: line_colors,
+        mark_colors: mark_colors,
+        lineStrokeWidthWhenNotSelected: lineStrokeWidthWhenNotSelected,
+        lineStrokeWidthWhenSelected: lineStrokeWidthWhenSelected,
+        sec_name: sec_name,
+        sec_fill: sec_fill,
+        sec_ID: sec_ID,
+        sec_type: sec_type,
+        sec_fontSize: sec_fontSize,
+        sec_top: sec_top,
+        sec_bottom: sec_bottom,
+        sec_height: sec_height,
+        sec_width: sec_width,
+        sec_offset: sec_offset,
+        sec_coords: sec_coords,
+        sec_neighbour_top: sec_neighbour_top,
+        sec_neighbour_right: sec_neighbour_right,
+        sec_neighbour_bottom: sec_neighbour_bottom,
+        sec_neighbour_left: sec_neighbour_left,
+        sec_posx: [],
+        sec_posy: [],
+        sec_angle: [],
+        startSectors: [],
+        x_Start: [],
+        y_Start: [],
+        x_End: [],
+        y_End: [],
+        startStrokeWidth: [],
+        startFill: [],
+        startStroke: [],
+        startParentSector: [],
+        startLineID: [],
+        markStart_x: [],
+        markStart_y: [],
+        markStartStrokeWidth: [],
+        markStartRadius: [],
+        markStartFill: [],
+        markStartStroke: [],
+        markStartParentSector: [],
+        markStartID: [],
+        textStart_x: [],
+        textStart_y: [],
+        textStartContent: [],
+        textStartFontSize: [],
+        textStartParentSector: [],
+        textStartID: [],
+        textStartAngle: []
+    };
+
+    console.log(data.startViewportTransform_4)
+
+    //Sektoren
+    for (let ii = 0; ii < sectors.length; ii++){
+        data.sec_posx.push(sectors[ii].trapez.left - window.innerWidth / 2);
+        data.sec_posy.push(sectors[ii].trapez.top - (window.innerHeight - window.innerHeight * 0.08) / 2);
+        data.sec_angle.push(sectors[ii].trapez.angle);
+    }
+    //Linien
+    for (let ii = 0; ii < lines.length; ii++){
+        for (let jj = 0; jj < lines[ii].length; jj++) {
+            data.startSectors.push(lines[ii][jj].parentSector[0])
+
+            let line_start_point = new fabric.Point(lines[ii][jj].calcLinePoints().x1, lines[ii][jj].calcLinePoints().y1);
+            line_start_point = fabric.util.transformPoint(line_start_point, lines[ii][jj].calcTransformMatrix());
+            let line_end_point = new fabric.Point(lines[ii][jj].calcLinePoints().x2, lines[ii][jj].calcLinePoints().y2);
+            line_end_point = fabric.util.transformPoint(line_end_point, lines[ii][jj].calcTransformMatrix());
+
+            data.x_Start.push(line_start_point.x - window.innerWidth / 2)
+            data.y_Start.push(line_start_point.y - (window.innerHeight - window.innerHeight * 0.08) / 2)
+            data.x_End.push(line_end_point.x - window.innerWidth / 2)
+            data.y_End.push(line_end_point.y - (window.innerHeight - window.innerHeight * 0.08) / 2)
+
+            data.startStrokeWidth.push(lines[ii][jj].strokeWidth)
+            data.startFill.push(lines[ii][jj].fill)
+            data.startStroke.push(lines[ii][jj].stroke)
+            data.startParentSector.push(lines[ii][jj].parentSector)
+
+            console.log(lines[ii][jj].ID)
+            data.startLineID.push(lines[ii][jj].ID)
+        }
+    }
+    //Marks
+    for (let ii = 0; ii < markPoints.length; ii++){
+        data.markStart_x.push(markPoints[ii].left - window.innerWidth / 2)
+        data.markStart_y.push(markPoints[ii].top - (window.innerHeight - window.innerHeight * 0.08) / 2)
+        data.markStartStrokeWidth.push(markPoints[ii].strokeWidth)
+        data.markStartRadius.push(markPoints[ii].radius)
+        data.markStartFill.push(markPoints[ii].fill)
+        data.markStartStroke.push(markPoints[ii].stroke)
+        data.markStartParentSector.push(markPoints[ii].parentSector)
+        data.markStartID.push(markPoints[ii].ID)
+    }
+
+
+
+    //URL-Parameter
+    const URL_ParameterToUpdate = [
+        'buildStartGeodesics',
+        'turnLorentzTransformOn',
+        'buildStartMarks',
+        'buildStartTexts',
+        'showResetSectors',
+        'showAutoSet',
+        'showChangeDirection',
+        'showAutoComplete',
+        'showChangeStartPoint'
+    ];
+
+    for (let property of URL_ParameterToUpdate) {
+            if (eval(property) == 1) {
+                data[property] = 1;
+            }
+    }
+
+        let text = '';
+    for (let key in data) {
+        text += key + ' = ' + JSON.stringify(data[key]) + '\n';
+    }
+
+    let blob = new Blob([text], { type: 'text/plain' });
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+
+    // Open the save as window
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'd') {
+        saveCanvasAsJs(canvas, 'captureObjectProperties.js');
+    }
+});
+
+
 /**
  * blueprint for the sector objects which contains the function to draw the trapezoids on the canvas
  * @constructor
@@ -7346,13 +7502,40 @@ function startGeodesics(){
         let lineEnd_x = x_End[ii] + window.innerWidth / 2;
         let lineEnd_y = y_End[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2;
 
-        lineSegment = drawLineSegment(startFill[ii], lineStrokeWidthWhenNotSelected, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y);
+        let lineSegment = drawLineSegment(startFill[ii], lineStrokeWidthWhenNotSelected, parentSectorID, lineStart_x, lineStart_y, lineEnd_x, lineEnd_y);
 
         lineSegment.ID = startLineID[ii];
 
         //sec.lineSegments.push(lineSegment);
 
-        lines.push([lineSegment]);
+        if (lines.length !== 0) {
+
+            let foundMatch = false;
+
+            for (let jj = 0; jj < lines.length; jj++) {
+                if (lineSegment.ID[0] === lines[jj][0].ID[0]) {
+                    lines[jj].push(lineSegment);
+                    foundMatch = true;
+
+                    if (foundMatch) {
+                        console.log('check')
+                        console.log(lines[jj][lines[jj].length-2])
+                        canvas.remove(lines[jj][lines[jj].length-2].dragPoint);
+                        delete lines[jj][lines[jj].length-2].dragPoint;
+                    }
+
+                    break; // Sobald ein Match gefunden wurde, wird die Schleife abgebrochen
+                }
+            }
+
+            if (!foundMatch) {
+                lines.push([lineSegment]);
+            }
+        } else {
+            lines.push([lineSegment]);
+        }
+
+
 
         if (buildGeodesicTicks == "1"){
             drawGeodesicTicks(lineSegment.ID[0])
@@ -7375,6 +7558,7 @@ function startGeodesics(){
             }
 
         }
+
 
         drawDragPoint(lineSegment.ID[0])
 
