@@ -5376,7 +5376,7 @@ function fitResponsiveCanvas() {
     canvas_side_bar_perm.setWidth(100 * scaleRatio);
     canvas_side_bar_perm.setHeight(containerSize.height);
 
-    canvas_side_tools_right.setWidth(300 * scaleRatio);
+    canvas_side_tools_right.setWidth(360 * scaleRatio);
     canvas_side_tools_right.setHeight(80 * scaleRatio);
 
     if (showExerciseBox == "1"){
