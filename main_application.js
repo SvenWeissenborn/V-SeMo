@@ -6955,13 +6955,23 @@ function resetSectors() {
             }
         }
 
-        sectors[rr].trapez.left = sec_posx[rr] + window.innerWidth/2;
-        sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight*0.08)/2;
-        sectors[rr].trapez.setCoords();
-        sectors[rr].trapez.angle = sec_angle[rr];
 
-        updateMinions(sectors[rr].trapez);
-        //updateMinions(sectors[rr].trapez);
+        if (typeof sec_posx_sym === 'undefined') {
+            sectors[rr].trapez.left = sec_posx[rr] + window.innerWidth / 2;
+            sectors[rr].trapez.top = sec_posy[rr] + (window.innerHeight - window.innerHeight * 0.08) / 2;
+            sectors[rr].trapez.setCoords();
+            sectors[rr].trapez.angle = sec_angle[rr];
+
+            updateMinions(sectors[rr].trapez);
+        } else {
+            sectors[rr].trapez.left = sec_posx_sym[rr] + window.innerWidth / 2;
+            sectors[rr].trapez.top = sec_posy_sym[rr] + (window.innerHeight - window.innerHeight * 0.08) / 2;
+            sectors[rr].trapez.setCoords();
+            sectors[rr].trapez.angle = sec_angle_sym[rr];
+
+            updateMinions(sectors[rr].trapez);
+        }
+
 
 
     }
@@ -7122,7 +7132,7 @@ function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
 
 
 function saveCanvasAsJs(canvas, filename) {
-    var data = {
+    let data = {
         buildStartGeodesics: 0,
         turnLorentzTransformOn: 0,
         buildStartMarks: 0,
@@ -7158,6 +7168,9 @@ function saveCanvasAsJs(canvas, filename) {
         sec_posx: [],
         sec_posy: [],
         sec_angle: [],
+        sec_posx_sym: [],
+        sec_posy_sym: [],
+        sec_angle_sym: [],
         startSectors: [],
         x_Start: [],
         y_Start: [],
@@ -7185,13 +7198,20 @@ function saveCanvasAsJs(canvas, filename) {
         textStartAngle: []
     };
 
-    console.log(data.startViewportTransform_4)
-
     //Sektoren
     for (let ii = 0; ii < sectors.length; ii++){
         data.sec_posx.push(sectors[ii].trapez.left - window.innerWidth / 2);
         data.sec_posy.push(sectors[ii].trapez.top - (window.innerHeight - window.innerHeight * 0.08) / 2);
         data.sec_angle.push(sectors[ii].trapez.angle);
+        if (typeof sec_posx_sym === 'undefined' || sec_posx_sym.length === 0) {
+            data.sec_posx_sym.push(sec_posx[ii]);
+            data.sec_posy_sym.push(sec_posy[ii]);
+            data.sec_angle_sym.push(sec_angle[ii]);
+        } else {
+            data.sec_posx_sym.push(sec_posx_sym[ii]);
+            data.sec_posy_sym.push(sec_posy_sym[ii]);
+            data.sec_angle_sym.push(sec_angle_sym[ii]);
+        }
     }
     //Linien
     for (let ii = 0; ii < lines.length; ii++){
