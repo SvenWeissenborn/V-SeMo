@@ -436,7 +436,7 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
-        for(let ii = 0; ii < vectorDuplicates.length; ii++) {
+        for (let ii = 0; ii < vectorDuplicates.length; ii++) {
             if(distance(pointer, new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top)) < 10) {
                 vectorPoint.set({
                     left: vectorDuplicates[ii][0].left,
@@ -508,7 +508,28 @@ canvas.on('mouse:move', function (o) {
         updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
         canvas.renderAll();
 
-        let vectorPointParentIDBefore = vectorPoint.parentSector[0];
+        for (let ii = 0; ii < vectors.length; ii++) {
+            let vectorPointPosition = new fabric.Point(vectors[ii][0].left, vectors[ii][0].top);
+            let vectorPoint = vectors[ii][0];
+            let vectorPointParentID = getParentSectorOfPoint(vectorPointPosition);
+            if(sectors[vectorPointParentID].vectors.includes(vectors[vectorPoint.ID]) !== true) {
+                sectors[vectorPoint.parentSector[0]].vectors.splice(vectorPoint.parentSector[1], 1);
+                if (vectorPointParentID !== undefined) {
+                    sectors[vectorPointParentID].vectors.push(vectors[vectorPoint.ID]);
+                    vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.length];
+                    vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentID);
+                }
+            } else {
+                vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
+                vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentID);
+            }
+        }
+
+        for (let ii = 0; ii < sectors.length; ii++) {
+            console.log(sectors[ii].ID, sectors[ii].vectors)
+        }
+
+      /*  let vectorPointParentIDBefore = vectorPoint.parentSector[0];
         let vectorPointParentIDNew = getParentSectorOfPoint(vectorPointPosition);
 
         sectors[vectorPointParentIDBefore].vectors.splice(vectorPoint.parentSector[1], 1);
@@ -517,10 +538,9 @@ canvas.on('mouse:move', function (o) {
             vectorPoint.parentSector = [vectorPointParentIDNew, sectors[vectorPointParentIDNew].vectors.length];
             vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentIDNew);
             sectors[vectorPointParentIDNew].vectors.push(vectors[vectorPoint.ID]);
-        }
+        } */
 
         canvas.bringToFront(vectorPoint) // Vektor-Punkt ist nach Verschieben auf neuen Sektor immer auf dem Sektor, nicht dahinter
-        console.log(vectorPoint.parentSector)
     }
 
     if (isLineStarted != true)  {
@@ -4074,6 +4094,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                         vectorPointParentOnMouseDown = vectorPoint.parentSector;
 
+                        console.log(vectorPoint.parentSector);
+
                         showGeodesicButtons(true);
 
                         canvas.bringToFront(vectorPoint.parentSector[0].trapez);
@@ -4240,20 +4262,19 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     }
 
+                    vectorPoint.on('mousemove', function () {
+
+                    })
+
                     vectorPoint.on('mouseup', function() {
-
                         isVectorPointDragged = false;
-
                         let immediatehistory = [6];
-
                         let sectorID = vectorPoint.parentSector;
                         let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-
                         if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
                             immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
                             history.push(immediatehistory);
                         }
-
                     })
 
                     vector.push(vectorPoint)
