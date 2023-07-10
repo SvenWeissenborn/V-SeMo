@@ -525,21 +525,6 @@ canvas.on('mouse:move', function (o) {
             }
         }
 
-        for (let ii = 0; ii < sectors.length; ii++) {
-            console.log(sectors[ii].ID, sectors[ii].vectors)
-        }
-
-      /*  let vectorPointParentIDBefore = vectorPoint.parentSector[0];
-        let vectorPointParentIDNew = getParentSectorOfPoint(vectorPointPosition);
-
-        sectors[vectorPointParentIDBefore].vectors.splice(vectorPoint.parentSector[1], 1);
-
-        if (vectorPointParentIDNew !== undefined) {
-            vectorPoint.parentSector = [vectorPointParentIDNew, sectors[vectorPointParentIDNew].vectors.length];
-            vectorPoint.relationship = getRelationship(vectorPoint, vectorPointParentIDNew);
-            sectors[vectorPointParentIDNew].vectors.push(vectors[vectorPoint.ID]);
-        } */
-
         canvas.bringToFront(vectorPoint) // Vektor-Punkt ist nach Verschieben auf neuen Sektor immer auf dem Sektor, nicht dahinter
     }
 
@@ -1669,12 +1654,25 @@ canvas.on('mouse:up', function(opt) {
         toolChange('grab')
     }
     if (lineTypeToDraw == 'vector') {
+
         isLineStarted = false
         let immediatehistory = [5];
 
-        let vectorPoint = vectors[vectors.length - 1][0]
-        let vectorLine = vectors[vectors.length - 1][1]
-        let vectorHead = vectors[vectors.length - 1][2]
+        let vectorPoint = vectors[vectors.length - 1][0];
+        let vectorLine = vectors[vectors.length - 1][1];
+        let vectorHead = vectors[vectors.length - 1][2];
+
+        //let vector = vectors.pop();
+        //let vectorPoint = vector[0];
+        //let vectorLine = vector[1];
+        //let vectorHead = vector[2];
+        //let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+        //let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
+        //let vectorParentID = getParentSectorOfPoint(vectorPointPosition)
+
+         //drawVector(vectorPointPosition, vectorHeadPosition, vectorHead.angle, vectorParentID, vectors.length, sectors[vectorParentID].vectors.length);
+
+        //canvas.setActiveObject(vectorPoint);
 
         if (distance(new fabric.Point(vectorPoint.left, vectorPoint.top), new fabric.Point(vectorHead.left, vectorHead.top)) < abortLengthVector) {
             canvas.remove(vectorPoint, vectorLine, vectorHead);
@@ -2050,7 +2048,7 @@ if (defineLaufContinueGeodesicMax !== undefined){
 let abortlength = 20;
 let abortLengthVector = 30;
 let maxLengthVector = 250;
-let vectorPointParentOnMouseDown;
+let chosenVectorGlobalID = -1;
 
 let dragPointRadius = 5;
 let dragPointPadding = 10;
@@ -2970,91 +2968,155 @@ function continueGeodesic(geodesicToContinue) {
 
 /**
  * removes a geodesic including its drag points and ticks from the canvas
- * @param geodesicToDelete - the ID of the geodesic that must be removed
+ * @param geodesicToDelete - the ID of the geodesic that is removed
  */
 function deleteWholeGeodesic(geodesicToDelete) {
 
-    let immediatehistory = [2, geodesicToDelete];
+    let immediatehistory = [2];
 
-    for (let ii = lines[geodesicToDelete].length - 1; ii >= 0; ii--) {
+    if(chosenLineGlobalID !== -1) {
 
-        if(lines[geodesicToDelete][ii].parentSector[0] !== -1) {
+        immediatehistory.push(geodesicToDelete);
 
-            let entryToSplice_tmp = sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[lines[geodesicToDelete][ii].parentSector[1]].parentSector[1];
+        for (let ii = lines[geodesicToDelete].length - 1; ii >= 0; ii--) {
 
-            sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments.splice(sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[lines[geodesicToDelete][ii].parentSector[1]].parentSector[1], 1);
+            if(lines[geodesicToDelete][ii].parentSector[0] !== -1) {
 
-            for (let jj = 0; jj < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments.length; jj++) {
+                let entryToSplice_tmp = sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[lines[geodesicToDelete][ii].parentSector[1]].parentSector[1];
 
-                if (entryToSplice_tmp < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1]) {
+                sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments.splice(sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[lines[geodesicToDelete][ii].parentSector[1]].parentSector[1], 1);
 
-                    sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1] -= 1
+                for (let jj = 0; jj < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments.length; jj++) {
+
+                    if (entryToSplice_tmp < sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1]) {
+
+                        sectors[lines[geodesicToDelete][ii].parentSector[0]].lineSegments[jj].parentSector[1] -= 1
+
+                    }
 
                 }
+            }
 
+            let lineSegment = lines[geodesicToDelete][ii];
+            //console.log(lineSegment)
+
+            if(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint!==undefined){
+                canvas.remove(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint);
+                delete lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint;
+            }
+
+            if (buildGeodesicTicks == "1"){
+
+                //console.log(lineSegment.geodesicTicks)
+
+                if(lineSegment.geodesicTicks.length > 0){
+                    for (let jj = lineSegment.geodesicTicks.length; jj >= 0; jj--){
+                        canvas.remove(lineSegment.geodesicTicks[jj]);
+                        delete lineSegment.geodesicTicks[jj]
+                    }
+
+                }
+            }
+
+            if (lineSegment.lineType == 'geodesic'){
+                let geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
+                geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
+
+                let xg1 = geodesic_start_point.x;
+                let yg1 = geodesic_start_point.y;
+
+                let geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
+                geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
+
+                let xg2 = geodesic_end_point.x;
+                let yg2 = geodesic_end_point.y;
+
+                lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], xg1, yg1, xg2, yg2];
+
+                immediatehistory.push(lineSegmentParameter);
+            }
+
+            if (lineSegment.lineType == 'polyline'){
+
+                lineSegment.points = getPolylinePointsImGlobalCoords(lineSegment);
+
+                lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], lineSegment.points];
+
+                immediatehistory.push(lineSegmentParameter);
+            }
+
+
+
+            canvas.remove(lineSegment)
+
+        }
+
+
+
+        history.push(immediatehistory);
+
+        lines[geodesicToDelete] = [];
+
+    } else {
+
+        let vectorPart = canvas.getActiveObject();
+        let vectorGlobalID = vectorPart.ID;
+
+        let isVector = false;
+        for (let ii = 0; ii < vectors.length; ii++) {
+            if(vectors[ii].includes(vectorPart) !== false) {
+                isVector = true;
+                break;
             }
         }
 
-        let lineSegment = lines[geodesicToDelete][ii];
-        //console.log(lineSegment)
+        if(isVector !== false) {
+            immediatehistory.push('vector', vectorGlobalID, vectors[vectorGlobalID][0].parentSector[1]);
+            let vectorPointX = vectors[vectorGlobalID][0].left;
+            let vectorPointY = vectors[vectorGlobalID][0].top;
+            let vectorHeadX = vectors[vectorGlobalID][2].left;
+            let vectorHeadY = vectors[vectorGlobalID][2].top;
+            let vectorHeadAngle = vectors[vectorGlobalID][2].angle;
+            immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
+            canvas.remove(vectors[vectorGlobalID][0], vectors[vectorGlobalID][1], vectors[vectorGlobalID][2]);
+            if(vectors[vectorGlobalID][0].parentSector !== undefined) {
+                sectors[vectors[vectorGlobalID][0].parentSector[0]].vectors.splice(vectors[vectorGlobalID][0].parentSector[1], 1);
+            }
+            vectors.splice(vectorGlobalID, 1);
 
-        if(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint!==undefined){
-            canvas.remove(lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint);
-            delete lines[geodesicToDelete][lines[geodesicToDelete].length-1].dragPoint;
-        }
+            for (let ii = 0; ii < vectors.length; ii++) {
+                let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectors[ii][0].left, vectors[ii][0].top));
+                vectors[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
+                vectors[ii][0].ID = vectors.indexOf(vectors[ii]);
+                vectors[ii][1].ID = vectors.indexOf(vectors[ii]);
+                vectors[ii][2].ID = vectors.indexOf(vectors[ii]);
+            }
+        } else {
+            immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector[1]);
+            let vectorPointX = vectorDuplicates[vectorGlobalID][0].left;
+            let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
+            let vectorHeadX = vectorDuplicates[vectorGlobalID][2].left;
+            let vectorHeadY = vectorDuplicates[vectorGlobalID][2].top;
+            let vectorHeadAngle = vectorDuplicates[vectorGlobalID][2].angle;
+            immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
+            canvas.remove(vectorDuplicates[vectorGlobalID][0], vectorDuplicates[vectorGlobalID][1], vectorDuplicates[vectorGlobalID][2]);
+            if(vectorDuplicates[vectorGlobalID][0].parentSector !== undefined) {
+                sectors[vectorDuplicates[vectorGlobalID][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[vectorGlobalID][0].parentSector[1], 1);
+            }
+            vectorDuplicates.splice(vectorGlobalID, 1);
 
-        if (buildGeodesicTicks == "1"){
-
-            //console.log(lineSegment.geodesicTicks)
-
-            if(lineSegment.geodesicTicks.length > 0){
-                for (let jj = lineSegment.geodesicTicks.length; jj >= 0; jj--){
-                    canvas.remove(lineSegment.geodesicTicks[jj]);
-                    delete lineSegment.geodesicTicks[jj]
-                }
-
+            for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+                let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top));
+                vectorDuplicates[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectorDuplicates.indexOf(vectorDuplicates[ii])];
+                vectorDuplicates[ii][0].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                vectorDuplicates[ii][1].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                vectorDuplicates[ii][2].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
             }
         }
-
-        if (lineSegment.lineType == 'geodesic'){
-            let geodesic_start_point = new fabric.Point(lineSegment.calcLinePoints().x1, lineSegment.calcLinePoints().y1);
-            geodesic_start_point = fabric.util.transformPoint(geodesic_start_point, lineSegment.calcTransformMatrix());
-
-            let xg1 = geodesic_start_point.x;
-            let yg1 = geodesic_start_point.y;
-
-            let geodesic_end_point = new fabric.Point(lineSegment.calcLinePoints().x2, lineSegment.calcLinePoints().y2);
-            geodesic_end_point = fabric.util.transformPoint(geodesic_end_point, lineSegment.calcTransformMatrix());
-
-            let xg2 = geodesic_end_point.x;
-            let yg2 = geodesic_end_point.y;
-
-            lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], xg1, yg1, xg2, yg2];
-
-            immediatehistory.push(lineSegmentParameter);
-        }
-
-        if (lineSegment.lineType == 'polyline'){
-
-            lineSegment.points = getPolylinePointsImGlobalCoords(lineSegment);
-
-            lineSegmentParameter = [lineSegment.lineType, lineSegment.stroke, lineSegment.strokeWidth, lineSegment.parentSector[0], lineSegment.points];
-
-            immediatehistory.push(lineSegmentParameter);
-        }
-
-
-
-        canvas.remove(lineSegment)
+        console.log(immediatehistory);
+        history.push(immediatehistory);
 
     }
-
-
-
-    history.push(immediatehistory);
-
-    lines[geodesicToDelete] = [];
-
 
 }
 
@@ -4092,13 +4154,9 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                         isVectorPointDragged = true;
 
-                        vectorPointParentOnMouseDown = vectorPoint.parentSector;
-
-                        console.log(vectorPoint.parentSector);
+                        console.log(vectorPoint.parentSector, vectorPoint.ID);
 
                         showGeodesicButtons(true);
-
-                        canvas.bringToFront(vectorPoint.parentSector[0].trapez);
 
                         let sectorID = vectorPoint.parentSector[0];
                         vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
@@ -4154,7 +4212,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             controlOffsetY = 30;
                         }
 
-                      /*  if(vectorHead.left - vectorPoint.left < 0) {
+                        if(vectorHead.left - vectorPoint.left < 0) {
                             controlOffsetX = 35;
                         } else {
                             controlOffsetX = -15;
@@ -4163,7 +4221,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             controlOffsetY = 30;
                         } else {
                             controlOffsetY = -10;
-                        } */
+                        }
 
                         fabric.Circle.prototype.controls.tl = new fabric.Control({
                             x: -0.5,
@@ -4197,13 +4255,16 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             lockMovementY: true,
                             lockScalingX: true,
                             lockScalingY: true,
-                            selectable: false,
+                            selectable: true,
                             originX: 'center',
                             originY: 'center',
                             hasBorders: false,
                             hasControls: false
                         });
                         vectorDuplicate.push(vectorPointDuplicate);
+                        vectorPointDuplicate.on('mousedown', function() {
+                            console.log(vectorPointDuplicate.parentSector, vectorPointDuplicate.ID);
+                        })
 
                         let points = [
                             vectorPoint.left,
@@ -4235,6 +4296,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             fill: "grey",
                             selectable: false,
                             hasControls: false,
+                            hasBorders: false,
                             left: vectorHead.left,
                             top: vectorHead.top,
                             originX: "center",
@@ -4245,6 +4307,16 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                             height: 15
                         });
                         vectorDuplicate.push(vectorHeadDuplicate);
+
+                        for (let ii = 0; ii < vectorDuplicate.length; ii++) {
+                            vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
+                            vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
+                            vectorDuplicate[ii].on('mousedown', function() {
+                                canvas.setActiveObject(vectorDuplicate[ii]);
+                                showGeodesicButtons(true);
+                            })
+                        }
+
                         vectorPointDuplicate.setCoords()
                         vectorLineDuplicate.setCoords()
                         vectorHeadDuplicate.setCoords()
@@ -4252,19 +4324,11 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         sectors[vectorPoint.parentSector[0]].vectorDuplicates.push(vectorDuplicate)
                         vectorDuplicates.push(vectorDuplicate)
 
-                        for (let ii = 0; ii < vectorDuplicate.length; ii++) {
-                            vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
-                            vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
-                        }
                         immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
                         history.push(immediatehistory);
                         canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
 
                     }
-
-                    vectorPoint.on('mousemove', function () {
-
-                    })
 
                     vectorPoint.on('mouseup', function() {
                         isVectorPointDragged = false;
@@ -4277,7 +4341,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         }
                     })
 
-                    vector.push(vectorPoint)
+                    vector.push(vectorPoint);
 
                     let vectorLine = new fabric.Line(points, {
                         ID: vectors.length,
@@ -4388,7 +4452,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                     angle: vectorHeadAngleOnMouseDown
                                 });
 
-                        } else if(distance(pointer, vectorPointPosition) >= abortLengthVector /*&& distance(pointer, vectorPointPosition) <= maxLengthVector*/) {
+                        } else if(distance(pointer, vectorPointPosition) >= abortLengthVector && distance(pointer, vectorPointPosition) <= maxLengthVector) {
                             vectorLine.set({
                                 x1: vectorPoint.left,
                                 y1: vectorPoint.top,
@@ -4415,7 +4479,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                 top: vectorPoint.top + unitVectorMouseY * abortLengthVector,
                                 angle: pointerAngle
                             });
-                        } /*else {
+                        } else {
                             vectorLine.set({
                                 x1: vectorPoint.left,
                                 y1: vectorPoint.top,
@@ -4428,7 +4492,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                                 top: vectorPoint.top + unitVectorMouseY * maxLengthVector,
                                 angle: pointerAngle
                             });
-                        } */
+                        }
 
 
 
@@ -4455,9 +4519,9 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     })
 
-                    vector.push(vectorHead)
-                    sectors[this.parent.ID].vectors.push(vector)
-                    vectors.push(vector)
+                    vector.push(vectorHead);
+                    vectors.push(vector);
+                    sectors[this.parent.ID].vectors.push(vector);
                     for (let ii = 0; ii < vector.length; ii++){
                         canvas.add(vector[ii]);
                     }
@@ -5172,71 +5236,425 @@ window.addEventListener('keydown',function(event){
 
 });
 
-function drawVector(clickedPoint, parentSectorID){
+function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, vectorParentID, vectorGlobalID, vectorLocalID) {
 
-    let vectorlength = 60;
+    let pointer = canvas.getPointer(o.e);
+    let vector = [];
+    let vectorParametersOnMouseDown;
 
-    let vectorDashed = new fabric.Line([clickedPoint.x-vectorlength/2,clickedPoint.y-vectorlength/2,clickedPoint.x+vectorlength/2,clickedPoint.y+vectorlength/2], {
-        strokeWidth: 4,
-        strokeDashArray: [2, 2],
-        stroke: 'black',
-        fill: 'black',
+    let vectorPoint = new fabric.Circle({
+        ID: vectorGlobalID,
+        radius: 5,
+        fill: 'blue',
+        padding: 5,
+        left: vectorPointCoords.x,
+        top: vectorPointCoords.y,
+        evented: true,
+        objectCaching: false,
+        lockMovementX: true,
+        lockMovementY: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        selectable: true,
         originX: 'center',
         originY: 'center',
-        perPixelTargetFind: false,
+        hasBorders: false,
+        hasControls: true
+    });
+
+    vectorPoint.setControlsVisibility({
+        tl: false,
+        mt: false,
+        tr: false,
+        mr: false,
+        ml: false,
+        bl: false,
+        mb: false,
+        br: false,
+        mtr: false
+    });
+
+    vectorPoint.relationship = getRelationship(vectorPoint, vectorParentID);
+    vectorPoint.parentSector = [vectorParentID, vectorLocalID];
+
+    vectorPoint.on('mousedown', function (o) {
+
+        isVectorPointDragged = true;
+
+        console.log(vectorPoint.parentSector, vectorPoint.ID);
+
+        showGeodesicButtons(true);
+
+        let sectorID = vectorPoint.parentSector[0];
+        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
+
+        let cloneIcon = 'button_icons/duplicate_vector.png'
+        let cloneImg = document.createElement('img');
+        cloneImg.src = cloneIcon;
+
+        fabric.Circle.prototype.transparentCorners = true;
+        fabric.Circle.prototype.cornerColor = 'blue';
+        fabric.Circle.prototype.cornerStyle = 'circle';
+
+        function renderIcon(icon) {
+            return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+                let size = this.cornerSize;
+                ctx.save();
+                ctx.translate(left, top);
+                // ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+                ctx.drawImage(icon, -size/2, -size/2, size, size);
+                ctx.restore();
+            }
+
+        }
+
+        let controlOffsetX;
+        let controlOffsetY;
+        let outboundParameter = 10;
+        let outboundPoints = [];
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPoint.parentSector[0]].trapez);
+
+        for (let ii = 0; ii < 4; ii++) {
+            let outboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * outboundParameter,
+                trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * outboundParameter);
+            outboundPoints.push(outboundPoint);
+        }
+
+        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
+
+        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y)) {
+            controlOffsetX = 35;
+        } else {
+            controlOffsetX = -15;
+        }
+
+        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[2].x, outboundPoints[2].y,
+            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
+            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y)) {
+            controlOffsetY = -10;
+        } else {
+            controlOffsetY = 30;
+        }
+
+        /*  if(vectorHead.left - vectorPoint.left < 0) {
+              controlOffsetX = 35;
+          } else {
+              controlOffsetX = -15;
+          }
+          if(vectorHead.top - vectorPoint.top > 0) {
+              controlOffsetY = 30;
+          } else {
+              controlOffsetY = -10;
+          } */
+
+        fabric.Circle.prototype.controls.tl = new fabric.Control({
+            x: -0.5,
+            y: -0.5,
+            offsetY: controlOffsetY,
+            offsetX: controlOffsetX,
+            cursorStyle: 'pointer',
+            mouseUpHandler: cloneObject,
+            render: renderIcon(cloneImg),
+            cornerSize: 40
+        });
+
+        vectorPoint.setControlVisible('tl', true);
+    })
+
+    function cloneObject(eventData, transform) {
+        let target = transform.target;
+        let canvas = target.canvas;
+        let vectorDuplicate = [];
+        let immediatehistory = [5, 'duplicate'];
+
+        let vectorPointDuplicate = new fabric.Circle({
+            ID: vectorDuplicates.length,
+            radius: 5,
+            fill: "grey",
+            left: vectorPoint.left,
+            top: vectorPoint.top,
+            evented: true,
+            objectCaching: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            selectable: true,
+            originX: 'center',
+            originY: 'center',
+            hasBorders: false,
+            hasControls: false
+        });
+        vectorDuplicate.push(vectorPointDuplicate);
+        vectorPointDuplicate.on('mousedown', function() {
+            console.log(vectorPointDuplicate.parentSector, vectorPointDuplicate.ID);
+        })
+
+        let points = [
+            vectorPoint.left,
+            vectorPoint.top,
+            vectorHead.left,
+            vectorHead.top
+        ]
+        let vectorLineDuplicate = new fabric.Line(points, {
+            ID: vectorDuplicates.length,
+            strokeWidth: 3,
+            stroke: 'grey',
+            fill: 'grey',
+            originX: 'center',
+            originY: 'center',
+            perPixelTargetFind: true,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            evented: true,
+            lockMovementX: true,
+            lockMovementY: true,
+        });
+        vectorDuplicate.push(vectorLineDuplicate);
+
+        let vectorHeadDuplicate = new fabric.Triangle({
+            ID: vectorDuplicates.length,
+            stroke: "grey",
+            strokeWidth: 3,
+            fill: "grey",
+            selectable: false,
+            hasControls: false,
+            hasBorders: false,
+            left: vectorHead.left,
+            top: vectorHead.top,
+            originX: "center",
+            originY: "center",
+            evented: true,
+            angle: vectorHead.angle,
+            width: 12,
+            height: 15
+        });
+        vectorDuplicate.push(vectorHeadDuplicate);
+
+        for (let ii = 0; ii < vectorDuplicate.length; ii++) {
+            vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
+            vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
+            vectorDuplicate[ii].on('mousedown', function() {
+                canvas.setActiveObject(vectorDuplicate[ii]);
+                showGeodesicButtons(true);
+            })
+        }
+
+        vectorPointDuplicate.setCoords()
+        vectorLineDuplicate.setCoords()
+        vectorHeadDuplicate.setCoords()
+        canvas.add(vectorPointDuplicate, vectorLineDuplicate, vectorHeadDuplicate)
+        sectors[vectorPoint.parentSector[0]].vectorDuplicates.push(vectorDuplicate)
+        vectorDuplicates.push(vectorDuplicate)
+
+        immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
+        history.push(immediatehistory);
+        canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
+
+    }
+
+    vectorPoint.on('mouseup', function() {
+        isVectorPointDragged = false;
+        let immediatehistory = [6];
+        let sectorID = vectorPoint.parentSector;
+        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
+        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
+            immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
+            history.push(immediatehistory);
+        }
+    })
+
+    vector.push(vectorPoint);
+
+    let points = [vectorPoint.left, vectorPoint.top, pointer.x, pointer.y];
+    let vectorLine = new fabric.Line(points, {
+        ID: vectors.length,
+        strokeWidth: 3,
+        stroke: 'blue',
+        fill: 'blue',
+        originX: 'center',
+        originY: 'center',
+        perPixelTargetFind: true,
         objectCaching: false,
         hasBorders: false,
         hasControls: false,
-        evented: false,
-        padding: 5
+        evented: true,
+        lockMovementX: true,
+        lockMovementY: true
     });
 
-    vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID);
-    vectorDashed.relationship = getRelationship(vectorDashed, parentSectorID);
-    vectorDashed.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
+    vectorLine.on('mousedown', function () {
+        showGeodesicButtons(true);
+    });
 
-    if (turnLorentzTransformOn == 1){
-        getStartAndEndPointCoordsBeforeLorentztransform(vectorDashed)
+    vector.push(vectorLine)
+
+    let vectorHead = new fabric.Triangle({
+        ID: vectors.length,
+        stroke: "blue",
+        strokeWidth: 3,
+        fill: "blue",
+        selectable: true,
+        hasControls: false,
+        top: pointer.y,
+        left: pointer.x,
+        originX: "center",
+        originY: "center",
+        evented: true,
+        hasBorders: false,
+        width: 12,
+        height: 15,
+        angle: vectorHeadOrientation
+    });
+
+    vectorHead.on('mousedown', function(o) {
+
+        let sectorID = vectorPoint.parentSector[0];
+        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
+
+        showGeodesicButtons(true);
+
+    })
+    vectorHead.on('moving', function(o) {
+
+        let x1 = vectorLine.x1;
+        let y1 = vectorLine.y1;
+        let x2 = pointer.x;
+        let y2 = pointer.y;
+
+        let dy = y2 - y1;
+        let dx = x2 - x1;
+
+        let pointerAngle = toDegree(Math.atan2(dy, dx)) + 90;
+        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
+        let pointerVectorX = pointer.x - vectorPoint.left;
+        let pointerVectorY = pointer.y - vectorPoint.top;
+        let pointerVectorLength = Math.sqrt(Math.pow(pointerVectorX, 2) + Math.pow(pointerVectorY, 2));
+        let unitVectorMouseX = pointerVectorX / pointerVectorLength;
+        let unitVectorMouseY = pointerVectorY / pointerVectorLength;
+
+        let vectorPointPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[2], vectorParametersOnMouseDown[3]);
+        let vectorHeadPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[4], vectorParametersOnMouseDown[5]);
+        let vectorLengthOnMouseDown = distance(vectorPointPositionOnMouseDown, vectorHeadPositionOnMouseDown);
+        let rotateEnvironment = 10;
+
+        let vectorHeadAngleOnMouseDown = vectorParametersOnMouseDown[6];
+        let scaleEnvironment = 5;
+        let unitVectorHeadX = (vectorHeadPositionOnMouseDown.x - vectorPointPositionOnMouseDown.x) / vectorLengthOnMouseDown;
+        let unitVectorHeadY = (vectorHeadPositionOnMouseDown.y - vectorPointPositionOnMouseDown.y) / vectorLengthOnMouseDown;
+        let alpha = toRadians(pointerAngle) - toRadians(vectorHeadAngleOnMouseDown);
+        let lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha);
+        if(distance(pointer, vectorPointPositionOnMouseDown) <= distance(vectorHeadPositionOnMouseDown, vectorPointPositionOnMouseDown)) {
+            lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha) * (-1);
+        }
+
+        if(distance(pointer, vectorPointPositionOnMouseDown) >= vectorLengthOnMouseDown - rotateEnvironment && distance(pointer, vectorPointPositionOnMouseDown) <= vectorLengthOnMouseDown + rotateEnvironment) {
+            vectorLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
+                y2: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
+                angle: 0
+            });
+            vectorHead.set({
+                left: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
+                top: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
+                angle: pointerAngle
+            });
+        } else if(pointerAngle >= vectorHeadAngleOnMouseDown - scaleEnvironment && pointerAngle <= vectorHeadAngleOnMouseDown + scaleEnvironment) {
+            vectorLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
+                y2: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
+                angle: 0
+            });
+            vectorHead.set({
+                left: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
+                top: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
+                angle: vectorHeadAngleOnMouseDown
+            });
+
+        } else if(distance(pointer, vectorPointPosition) >= abortLengthVector /*&& distance(pointer, vectorPointPosition) <= maxLengthVector*/) {
+            vectorLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: pointer.x,
+                y2: pointer.y,
+                angle: 0
+            });
+
+            vectorHead.set({
+                left: pointer.x,
+                top: pointer.y,
+                angle: pointerAngle
+            });
+        } else if(distance(pointer, vectorPointPosition) < abortLengthVector) {
+            vectorLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: vectorPoint.left + unitVectorMouseX * abortLengthVector,
+                y2: vectorPoint.top + unitVectorMouseY * abortLengthVector,
+                angle: 0
+            });
+            vectorHead.set({
+                left: vectorPoint.left + unitVectorMouseX * abortLengthVector,
+                top: vectorPoint.top + unitVectorMouseY * abortLengthVector,
+                angle: pointerAngle
+            });
+        } /*else {
+                            vectorLine.set({
+                                x1: vectorPoint.left,
+                                y1: vectorPoint.top,
+                                x2: vectorPoint.left + unitVectorMouseX * maxLengthVector,
+                                y2: vectorPoint.top + unitVectorMouseY * maxLengthVector,
+                                angle: 0
+                            });
+                            vectorHead.set({
+                                left: vectorPoint.left + unitVectorMouseX * maxLengthVector,
+                                top: vectorPoint.top + unitVectorMouseY * maxLengthVector,
+                                angle: pointerAngle
+                            });
+                        } */
+
+
+
+        vectorLine.setCoords();
+        vectorHead.setCoords();
+
+        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
+        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
+        canvas.renderAll();
+
+    })
+
+    vectorHead.on('mouseup', function(o) {
+
+        let immediatehistory = [6];
+
+        let sectorID = vectorPoint.parentSector;
+        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
+
+        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
+            immediatehistory.push(vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorParametersOnMouseDown);
+            history.push(immediatehistory);
+        }
+
+    })
+
+    vector.push(vectorHead);
+    sectors[this.parent.ID].vectors.push(vector);
+    vectors.push(vector);
+    for (let ii = 0; ii < vector.length; ii++){
+        canvas.add(vector[ii]);
     }
 
-    sectors[parentSectorID].vectors.push(vectorDashed);
-
-
-
-    vector.on('mousedown',function() {
-        vector.bringToFront()
-    });
-
-    vector.on('modified',function() {
-        let vectorParentIDBefore = vector.parentSector[0];
-        sectors[vectorParentIDBefore].vectors.splice(vector.parentSector[1], 1);
-        console.log(sectors[vectorParentIDBefore].vectors);
-        let vectorMidPoint = new fabric.Point(vector.left, vector. top);
-        let vectorParentIDNew = getParentSectorOfPoint(vectorMidPoint);
-        console.log(vectorParentIDNew);
-        if (vectorParentIDNew !== undefined){
-            vector.parentSector = [vectorParentIDNew, sectors[vectorParentIDNew].vectors.length];
-            vector.relationship = getRelationship(vector, vectorParentIDNew);
-            sectors[vectorParentIDNew].vectors.push(vector)
-        }
-        if (turnLorentzTransformOn == 1){
-            getStartAndEndPointCoordsBeforeLorentztransform(vector)
-        }
-    });
-
-    vector.relationship = getRelationship(vector, parentSectorID);
-    vector.parentSector = [parentSectorID, sectors[parentSectorID].vectors.length];
-
-    if (turnLorentzTransformOn == 1){
-        getStartAndEndPointCoordsBeforeLorentztransform(vector)
-    }
-
-    sectors[parentSectorID].vectors.push(vector);
-
-    canvas.add(vector, vectorDashed);
-    canvas.bringToFront(vector, vectorDashed);
     canvas.renderAll();
-
 
 }
 
@@ -8257,36 +8675,44 @@ function undoLastAction(){
 
     if (immediatehistory[0] === 2) {
         //Löschen einer Linie rückgängig
-        let line = [];
+        if(immediatehistory[1] !== 'vector' && immediatehistory[1] !== 'duplicate') {
+            let line = [];
 
-        for (let jj = immediatehistory.length - 1; jj > 1; jj--) {
-            let lineSegment;
+            for (let jj = immediatehistory.length - 1; jj > 1; jj--) {
+                let lineSegment;
 
-            let lineSegmentParameter = immediatehistory[jj];
+                let lineSegmentParameter = immediatehistory[jj];
 
-            if (lineSegmentParameter[0] == 'geodesic'){
-                lineSegment = drawLineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4], lineSegmentParameter[5], lineSegmentParameter[6], lineSegmentParameter[7])
+                if (lineSegmentParameter[0] == 'geodesic'){
+                    lineSegment = drawLineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4], lineSegmentParameter[5], lineSegmentParameter[6], lineSegmentParameter[7])
+                }
+
+                if (lineSegmentParameter[0] == 'polyline'){
+                    lineSegment = drawPolylineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4])
+                }
+
+
+                lineSegment.ID = [immediatehistory[1], line.length];
+                line.push(lineSegment);
+            }
+            for (let jj = 0; jj < line.length; jj++){
+                lines[immediatehistory[1]].push(line[jj])
             }
 
-            if (lineSegmentParameter[0] == 'polyline'){
-                lineSegment = drawPolylineSegment(lineSegmentParameter[1], lineSegmentParameter[2], lineSegmentParameter[3], lineSegmentParameter[4])
+            drawDragPoint(line[line.length - 1].ID[0]);
+
+            if (buildGeodesicTicks == "1"){
+                drawGeodesicTicks(immediatehistory[1])
             }
 
+        } else if(immediatehistory[1] === 'vector') {
 
-            lineSegment.ID = [immediatehistory[1], line.length];
-            line.push(lineSegment);
-            }
-        for (let jj = 0; jj < line.length; jj++){
-            lines[immediatehistory[1]].push(line[jj])
-        }
-
-        drawDragPoint(line[line.length - 1].ID[0]);
-
-        if (buildGeodesicTicks == "1"){
-            drawGeodesicTicks(immediatehistory[1])
-        }
+        } else {
 
         }
+
+    }
+
 
     if (immediatehistory[0] === 3) {
         for (let jj = 0; jj < immediatehistory[1]; jj++) {
@@ -8329,14 +8755,14 @@ function undoLastAction(){
     if(immediatehistory[0] === 5) {
         if(immediatehistory[1] !== 'duplicate') {
             canvas.remove(vectors[immediatehistory[1]][0], vectors[immediatehistory[1]][1], vectors[immediatehistory[1]][2]);
-            if(immediatehistory[1].parentSector !== undefined) {
-                sectors[immediatehistory[1].parentSector[0]].vectors.splice(immediatehistory[1], 1);
+            if(vectors[immediatehistory[1]][0].parentSector !== undefined) {
+                sectors[vectors[immediatehistory[1]][0].parentSector[0]].vectors.splice(vectors[immediatehistory[1]][0].parentSector[1], 1);
             }
             vectors.splice(immediatehistory[1], 1);
         } else {
             canvas.remove(vectorDuplicates[immediatehistory[2]][0], vectorDuplicates[immediatehistory[2]][1], vectorDuplicates[immediatehistory[2]][2]);
-            if(immediatehistory[2].parentSector !== undefined) {
-                sectors[immediatehistory[2].parentSector[0]].vectorDuplicates.splice(immediatehistory[2], 1);
+            if(vectorDuplicates[immediatehistory[2]][0].parentSector !== undefined) {
+                sectors[vectorDuplicates[immediatehistory[2]][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[immediatehistory[2]][0].parentSector[1], 1);
             }
             vectorDuplicates.splice(immediatehistory[2], 1);
         }
