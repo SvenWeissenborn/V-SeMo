@@ -30,7 +30,7 @@ let turnBackwardOff = true;
 let slideContent = [
     {
         id: 0,
-        text_de: 'Vektortext',
+        text_de: 'VektortextSattel',
         text_en: 'Vectortext',
         sectorsToHide: [2, 5, 6, 7, 8],
     },
