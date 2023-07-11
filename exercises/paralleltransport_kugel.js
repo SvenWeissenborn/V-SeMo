@@ -32,7 +32,6 @@ let slideContent = [
         id: 0,
         text_de: 'Vektortext',
         text_en: 'Vectortext',
-        marksToHide: [0, 1],
         sectorsToHide: [2, 5, 6, 7, 8],
     },
 
