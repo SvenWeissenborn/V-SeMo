@@ -38,8 +38,13 @@ if (showSetSectorsToRing == "1"){
 
 let dist_to_add_curved_line_button_number = dist_to_top_add_button_number + 1;
 
-let dist_to_top_undo_button_number = dist_to_add_curved_line_button_number;
+let dist_to_add_vector_button_number = dist_to_add_curved_line_button_number
 if (showAddCurvedLine == "1") {
+    dist_to_add_vector_button_number += 1;
+}
+
+let dist_to_top_undo_button_number = dist_to_add_vector_button_number;
+if (showAddVector == "1") {
     dist_to_top_undo_button_number += 1;
 }
 
@@ -775,6 +780,11 @@ fabric.Image.fromURL(add_dark_curvedLang, function(img) {
     canvas_side_bar_perm.add(add_dark_curved);
 });
 
+let add_vectorOpacity = 0
+if (showAddVector == "1") {
+    add_vectorOpacity = 1 ;
+}
+
 let addVectorLang;
 if(language !== 'english'){
     addVectorLang = 'button_icons/add_vector_de.png'
@@ -787,8 +797,8 @@ let addVector;
 fabric.Image.fromURL(addVectorLang, function (img) {
    addVector =  img.set({
        left: dist_left,
-       top: dist_to_top + dist_to_top_undo_button_number * (136 * buttonfactor * screenFactor + buttondist),
-       opacity: 1,
+       top: dist_to_top + dist_to_add_vector_button_number * (136 * buttonfactor * screenFactor + buttondist),
+       opacity: add_vectorOpacity,
        originX: "center",
        originY: "top",
        perPixelTargetFind: true,
@@ -827,6 +837,8 @@ fabric.Image.fromURL(addVectorLang, function (img) {
        showDeficitAngleInfobox(false);
        buttonPressedForExercise(this)
    });
+
+    canvas_side_bar_perm.add(addVector);
 });
 
 let undoLang
