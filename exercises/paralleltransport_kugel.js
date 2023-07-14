@@ -37,53 +37,50 @@ let slideContent = [
 
     {
         id: 1,
-        text_de: 'Du siehst nun eine Fläche, welche durch 4 Sektoren dargestellt wird, welche frei beweglich und drehbar sind. Probiere es mal aus.',
+        text_de: 'Du siehst nun eine Fläche, welche durch 4 Sektoren (weiße Vierecke) dargestellt wird, welche frei beweglich und drehbar sind. Probiere es mal aus.',
         text_en: 'Vectortext 2',
         sectorsToShow: [0, 1, 3, 4],
     },
 
     {
         id: 2,
-        text_de: 'Zeichne auf einen dieser Sektoren einen Zeiger, welcher auch als Vektor bezeichnet wird. Klicke anschließend wieder auf den Pfeil,' +
-            'um fortzufahren.',
+        text_de: 'Du siehst auf der linken Seite eine Reihe verschiedener Buttons. Erkunde gern einmal deren Funktion. Betätige erneute den Pfeil, wenn du jeden Button ausprobiert hast.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 3,
-        text_de: 'Du kannst den gezeichneten Zeiger (Vektor) an seinem Fußpunkt verschieben. Probiere es mal.',
+        text_de: 'Nutze nun den Vektor-Button, um einen Vektor innerhalb eines beliebigen Sektors zu zeichnen.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 4,
-        text_de: 'Es ist auch möglich, den Vektor an seiner Spitze zu greifen, um seine Richtung und Länge zu verändern. Teste es einmal.',
+        text_de: 'Auch hier kannst du nun die einzelnen Funktionen des Vektors ausprobieren. Was kannst du mit dem Vektor anstellen? Hinweis: Es gibt 3 grundlegende Funktionen.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 5,
-        text_de: 'Sobald du den Fußpunkt des Vektors klickst, erscheint in seiner Nähe ein Button. Wenn du diesen betätigst, hinterlässt der Vektor einen Schatten, um seine vorherige Position, Ausrichtung und Länge' +
-            'anzuzeigen. Erzeuge nun einen Schatten deines gezeichneten Vektors.',
+        text_de: 'Nutze nun den Button, welcher in der Nähe des Fußpunktes erscheint, sobald du den Fußpunkt des Vektors klickst, um einen Schatten zu erzeugen.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 6,
-        text_de: 'Deine Aufgabe ist es nun, den Vektor am Fußpunkt einmal in einen angrenzenden Sektor zu bewegen, ohne dabei seine Richtung an der Vektorspitze zu verändern.',
+        text_de: 'Du solltest jetzt den Schatten als graues Duplikat deines gezeichneten Vektors sehen. Versuche nun, den Fußpunkt des Vektors in ein angrenzendes Viereck zu verschieben. Dazu musst du zunächst die Lücke zwischen beiden Vierecken schließen.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 7,
-        text_de: 'Vom neuen Sektor kannst du ihn weiter in den nächsten Sektor verschieben. Wiederhole dieses Vorgehen, bis du wieder im Ausgangssektor, welcher den Vektorschatten beinhaltet, angekommen bist.' +
-            'Merke dir dabei, ob den Vektor im oder gegen den Uhrzeigersinn bewegst.',
+        text_de: 'Wenn sich der Fußpunkt deines Vektors in einem anderen Viereck befindet, wiederhole dieses Vorgehen, bis du den Vektor einmal durch alle Vierecke bewegt hast, sodass er wieder im selben Viereck ist, indem sich auch sein Schatten befindet.',
         text_en: 'Vectortext 2',
     },
 
     {
         id: 8,
-        text_de: 'Vergleiche nun den Vektor mit seinem Schatten. Was kannst du feststellen?',
+        text_de: 'Versuche nun deinen Vektor mit seinem ursprünglichen Schatten zu vergleichen. Was kannst du feststellen?',
         text_en: 'Vectortext 2',
     },
 ];
