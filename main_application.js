@@ -509,8 +509,8 @@ canvas.on('mouse:move', function (o) {
         canvas.renderAll();
 
         for (let ii = 0; ii < vectors.length; ii++) {
-            let vectorPointPosition = new fabric.Point(vectors[ii][0].left, vectors[ii][0].top);
             let vectorPoint = vectors[ii][0];
+            let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
             let vectorPointParentID = getParentSectorOfPoint(vectorPointPosition);
             if(sectors[vectorPointParentID].vectors.includes(vectors[vectorPoint.ID]) !== true) {
                 sectors[vectorPoint.parentSector[0]].vectors.splice(vectorPoint.parentSector[1], 1);
@@ -1656,38 +1656,20 @@ canvas.on('mouse:up', function(opt) {
     if (lineTypeToDraw == 'vector') {
 
         isLineStarted = false
-        let immediatehistory = [5];
 
-        let vectorPoint = vectors[vectors.length - 1][0];
-        let vectorLine = vectors[vectors.length - 1][1];
-        let vectorHead = vectors[vectors.length - 1][2];
+        let vector = vectors.pop();
+        let vectorPoint = vector[0];
+        let vectorLine = vector[1];
+        let vectorHead = vector[2];
+        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
+        let vectorParentID = getParentSectorOfPoint(vectorPointPosition);
 
-        //let vector = vectors.pop();
-        //let vectorPoint = vector[0];
-        //let vectorLine = vector[1];
-        //let vectorHead = vector[2];
-        //let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-        //let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
-        //let vectorParentID = getParentSectorOfPoint(vectorPointPosition)
+        canvas.remove(vectorPoint, vectorLine, vectorHead);
 
-         //drawVector(vectorPointPosition, vectorHeadPosition, vectorHead.angle, vectorParentID, vectors.length, sectors[vectorParentID].vectors.length);
-
-        //canvas.setActiveObject(vectorPoint);
-
-        if (distance(new fabric.Point(vectorPoint.left, vectorPoint.top), new fabric.Point(vectorHead.left, vectorHead.top)) < abortLengthVector) {
-            canvas.remove(vectorPoint, vectorLine, vectorHead);
-            lineTypeToDraw = "vector";
-            //toolChange('grab');  //Man hat, nachdem ein Vektor (weil zu kurz) abgebrochen wurde direkt die Möglichkeit einen neuen zu zeichnen, ohne das Zeichnen erneut zu aktivieren.
-            vectors.pop();
-            sectors[vectorPoint.parentSector[0]].vectors.pop();
-            return;
+        if(distance(vectorPointPosition, vectorHeadPosition) >= abortLengthVector) {
+            drawVector(vectorPointPosition, vectorHeadPosition, vectorHead.angle, vectorParentID, vectors.length, sectors[vectorParentID].vectors.length);
         }
-
-        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
-
-        immediatehistory.push(vectorPoint.ID, vectorLine.ID, vectorHead.ID);
-        history.push(immediatehistory);
 
         toolChange('grab')
 
@@ -3061,6 +3043,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
         let vectorPart = canvas.getActiveObject();
         let vectorGlobalID = vectorPart.ID;
+        console.log(vectorPart);
 
         let isVector = false;
         for (let ii = 0; ii < vectors.length; ii++) {
@@ -3071,7 +3054,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
         }
 
         if(isVector !== false) {
-            immediatehistory.push('vector', vectorGlobalID, vectors[vectorGlobalID][0].parentSector[1]);
+            immediatehistory.push('vector', vectorGlobalID, vectors[vectorGlobalID][0].parentSector);
             let vectorPointX = vectors[vectorGlobalID][0].left;
             let vectorPointY = vectors[vectorGlobalID][0].top;
             let vectorHeadX = vectors[vectorGlobalID][2].left;
@@ -3092,7 +3075,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
                 vectors[ii][2].ID = vectors.indexOf(vectors[ii]);
             }
         } else {
-            immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector[1]);
+            immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector);
             let vectorPointX = vectorDuplicates[vectorGlobalID][0].left;
             let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
             let vectorHeadX = vectorDuplicates[vectorGlobalID][2].left;
@@ -4059,11 +4042,11 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                 showGeodesicButtons(true);
 
-                if ( startStrokeWidth[0] == undefined){
+                if (startStrokeWidth[0] == undefined) {
                     startStrokeWidth[0] = lineStrokeWidthWhenNotSelected
                 }
 
-                if (lineTypeToDraw == 'geodesic'){
+                if (lineTypeToDraw == 'geodesic') {
                     line = new fabric.Line(points, {
                         strokeWidth: lineStrokeWidthWhenNotSelected,
                         stroke: color,
@@ -4083,7 +4066,7 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
                     canvas.renderAll();
                 }
-                if (lineTypeToDraw == 'polyline'){
+                if (lineTypeToDraw == 'polyline') {
 
                     pathCoords.push({x: points[0], y: points[1]});
                     pathCoords.push({x: points[2], y: points[3]});
@@ -4110,238 +4093,29 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                     canvas.renderAll();
                 }
 
-                if (lineTypeToDraw == 'vector'){
+                if (lineTypeToDraw == 'vector') {
 
                     let vector = [];
-                    let vectorParametersOnMouseDown;
 
-                        let vectorPoint = new fabric.Circle({
-                            ID: vectors.length,
-                            radius: 5,
-                            fill: 'blue',
-                            padding: 5,
-                            left: pointer.x,
-                            top: pointer.y,
-                            evented: true,
-                            objectCaching: false,
-                            lockMovementX: true,
-                            lockMovementY: true,
-                            lockScalingX: true,
-                            lockScalingY: true,
-                            selectable: true,
-                            originX: 'center',
-                            originY: 'center',
-                            hasBorders: false,
-                            hasControls: true
-                        });
-
-                    vectorPoint.setControlsVisibility({
-                        tl: false,
-                        mt: false,
-                        tr: false,
-                        mr: false,
-                        ml: false,
-                        bl: false,
-                        mb: false,
-                        br: false,
-                        mtr: false
+                    let vectorPoint = new fabric.Circle({
+                        ID: vectors.length,
+                        radius: 5,
+                        fill: 'blue',
+                        padding: 5,
+                        left: pointer.x,
+                        top: pointer.y,
+                        evented: true,
+                        objectCaching: false,
+                        lockMovementX: true,
+                        lockMovementY: true,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        selectable: true,
+                        originX: 'center',
+                        originY: 'center',
+                        hasBorders: false,
+                        hasControls: true
                     });
-
-                    vectorPoint.relationship = getRelationship(vectorPoint, this.parent.ID)
-                    vectorPoint.parentSector = [this.parent.ID, sectors[this.parent.ID].vectors.length]
-
-                    vectorPoint.on('mousedown', function (o) {
-
-                        isVectorPointDragged = true;
-
-                        console.log(vectorPoint.parentSector, vectorPoint.ID);
-
-                        showGeodesicButtons(true);
-
-                        let sectorID = vectorPoint.parentSector[0];
-                        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
-
-                        let cloneIcon = 'button_icons/duplicate_vector.png'
-                        let cloneImg = document.createElement('img');
-                        cloneImg.src = cloneIcon;
-
-                        fabric.Circle.prototype.transparentCorners = true;
-                        fabric.Circle.prototype.cornerColor = 'blue';
-                        fabric.Circle.prototype.cornerStyle = 'circle';
-
-                        function renderIcon(icon) {
-                            return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-                                let size = this.cornerSize;
-                                ctx.save();
-                                ctx.translate(left, top);
-                               // ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-                                ctx.drawImage(icon, -size/2, -size/2, size, size);
-                                ctx.restore();
-                            }
-
-                        }
-
-                        let controlOffsetX;
-                        let controlOffsetY;
-                        let outboundParameter = 10;
-                        let outboundPoints = [];
-                        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPoint.parentSector[0]].trapez);
-
-                        for (let ii = 0; ii < 4; ii++) {
-                            let outboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * outboundParameter,
-                                trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * outboundParameter);
-                            outboundPoints.push(outboundPoint);
-                        }
-
-                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-                        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
-
-                        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-                            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-                            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y)) {
-                            controlOffsetX = 35;
-                        } else {
-                            controlOffsetX = -15;
-                        }
-
-                        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[2].x, outboundPoints[2].y,
-                            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-                            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y)) {
-                            controlOffsetY = -10;
-                        } else {
-                            controlOffsetY = 30;
-                        }
-
-                        if(vectorHead.left - vectorPoint.left < 0) {
-                            controlOffsetX = 35;
-                        } else {
-                            controlOffsetX = -15;
-                        }
-                        if(vectorHead.top - vectorPoint.top > 0) {
-                            controlOffsetY = 30;
-                        } else {
-                            controlOffsetY = -10;
-                        }
-
-                        fabric.Circle.prototype.controls.tl = new fabric.Control({
-                            x: -0.5,
-                            y: -0.5,
-                            offsetY: controlOffsetY,
-                            offsetX: controlOffsetX,
-                            cursorStyle: 'pointer',
-                            mouseUpHandler: cloneObject,
-                            render: renderIcon(cloneImg),
-                            cornerSize: 40
-                        });
-
-                        vectorPoint.setControlVisible('tl', true);
-                    })
-
-                    function cloneObject(eventData, transform) {
-                        let target = transform.target;
-                        let canvas = target.canvas;
-                        let vectorDuplicate = [];
-                        let immediatehistory = [5, 'duplicate'];
-
-                        let vectorPointDuplicate = new fabric.Circle({
-                            ID: vectorDuplicates.length,
-                            radius: 5,
-                            fill: "grey",
-                            left: vectorPoint.left,
-                            top: vectorPoint.top,
-                            evented: true,
-                            objectCaching: false,
-                            lockMovementX: true,
-                            lockMovementY: true,
-                            lockScalingX: true,
-                            lockScalingY: true,
-                            selectable: true,
-                            originX: 'center',
-                            originY: 'center',
-                            hasBorders: false,
-                            hasControls: false
-                        });
-                        vectorDuplicate.push(vectorPointDuplicate);
-                        vectorPointDuplicate.on('mousedown', function() {
-                            console.log(vectorPointDuplicate.parentSector, vectorPointDuplicate.ID);
-                        })
-
-                        let points = [
-                            vectorPoint.left,
-                            vectorPoint.top,
-                            vectorHead.left,
-                            vectorHead.top
-                        ]
-                        let vectorLineDuplicate = new fabric.Line(points, {
-                            ID: vectorDuplicates.length,
-                            strokeWidth: 3,
-                            stroke: 'grey',
-                            fill: 'grey',
-                            originX: 'center',
-                            originY: 'center',
-                            perPixelTargetFind: true,
-                            objectCaching: false,
-                            hasBorders: false,
-                            hasControls: false,
-                            evented: true,
-                            lockMovementX: true,
-                            lockMovementY: true,
-                        });
-                        vectorDuplicate.push(vectorLineDuplicate);
-
-                        let vectorHeadDuplicate = new fabric.Triangle({
-                            ID: vectorDuplicates.length,
-                            stroke: "grey",
-                            strokeWidth: 3,
-                            fill: "grey",
-                            selectable: false,
-                            hasControls: false,
-                            hasBorders: false,
-                            left: vectorHead.left,
-                            top: vectorHead.top,
-                            originX: "center",
-                            originY: "center",
-                            evented: true,
-                            angle: vectorHead.angle,
-                            width: 12,
-                            height: 15
-                        });
-                        vectorDuplicate.push(vectorHeadDuplicate);
-
-                        for (let ii = 0; ii < vectorDuplicate.length; ii++) {
-                            vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
-                            vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
-                            vectorDuplicate[ii].on('mousedown', function() {
-                                canvas.setActiveObject(vectorDuplicate[ii]);
-                                showGeodesicButtons(true);
-                            })
-                        }
-
-                        vectorPointDuplicate.setCoords()
-                        vectorLineDuplicate.setCoords()
-                        vectorHeadDuplicate.setCoords()
-                        canvas.add(vectorPointDuplicate, vectorLineDuplicate, vectorHeadDuplicate)
-                        sectors[vectorPoint.parentSector[0]].vectorDuplicates.push(vectorDuplicate)
-                        vectorDuplicates.push(vectorDuplicate)
-
-                        immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
-                        history.push(immediatehistory);
-                        canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
-
-                    }
-
-                    vectorPoint.on('mouseup', function() {
-                        isVectorPointDragged = false;
-                        let immediatehistory = [6];
-                        let sectorID = vectorPoint.parentSector;
-                        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-                        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
-                            immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
-                            history.push(immediatehistory);
-                        }
-                    })
-
-                    vector.push(vectorPoint);
 
                     let vectorLine = new fabric.Line(points, {
                         ID: vectors.length,
@@ -4359,12 +4133,6 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         lockMovementY: true
                     });
 
-                    vectorLine.on('mousedown', function () {
-                        showGeodesicButtons(true);
-                    });
-
-                    vector.push(vectorLine)
-
                     let vectorHead = new fabric.Triangle({
                         ID: vectors.length,
                         stroke: "blue",
@@ -4379,153 +4147,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                         evented: true,
                         hasBorders: false,
                         width: 12,
-                        height: 15,
+                        height: 15
                     });
 
-                    vectorHead.on('mousedown', function(o) {
-
-                        let sectorID = vectorPoint.parentSector[0];
-                        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
-
-                        showGeodesicButtons(true);
-
-                    })
-                    vectorHead.on('moving', function(o) {
-
-                        pointer = canvas.getPointer(o.e);
-                        let x1 = vectorLine.x1;
-                        let y1 = vectorLine.y1;
-                        let x2 = pointer.x;
-                        let y2 = pointer.y;
-
-                        let dy = y2 - y1;
-                        let dx = x2 - x1;
-
-                        let pointerAngle = toDegree(Math.atan2(dy, dx)) + 90;
-                        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-                        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
-                        let pointerVectorX = pointer.x - vectorPoint.left;
-                        let pointerVectorY = pointer.y - vectorPoint.top;
-                        let pointerVectorLength = Math.sqrt(Math.pow(pointerVectorX, 2) + Math.pow(pointerVectorY, 2));
-                        let unitVectorMouseX = pointerVectorX / pointerVectorLength;
-                        let unitVectorMouseY = pointerVectorY / pointerVectorLength;
-
-                        let vectorPointPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[2], vectorParametersOnMouseDown[3]);
-                        let vectorHeadPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[4], vectorParametersOnMouseDown[5]);
-                        let vectorLengthOnMouseDown = distance(vectorPointPositionOnMouseDown, vectorHeadPositionOnMouseDown);
-                        let rotateEnvironment = 10;
-
-                        let vectorHeadAngleOnMouseDown = vectorParametersOnMouseDown[6];
-                        let scaleEnvironment = 5;
-                        let unitVectorHeadX = (vectorHeadPositionOnMouseDown.x - vectorPointPositionOnMouseDown.x) / vectorLengthOnMouseDown;
-                        let unitVectorHeadY = (vectorHeadPositionOnMouseDown.y - vectorPointPositionOnMouseDown.y) / vectorLengthOnMouseDown;
-                        let alpha = toRadians(pointerAngle) - toRadians(vectorHeadAngleOnMouseDown);
-                        let lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha);
-                        if(distance(pointer, vectorPointPositionOnMouseDown) <= distance(vectorHeadPositionOnMouseDown, vectorPointPositionOnMouseDown)) {
-                            lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha) * (-1);
-                        }
-
-                        if(distance(pointer, vectorPointPositionOnMouseDown) >= vectorLengthOnMouseDown - rotateEnvironment && distance(pointer, vectorPointPositionOnMouseDown) <= vectorLengthOnMouseDown + rotateEnvironment) {
-                            vectorLine.set({
-                                x1: vectorPoint.left,
-                                y1: vectorPoint.top,
-                                x2: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
-                                y2: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
-                                angle: 0
-                            });
-                            vectorHead.set({
-                                left: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
-                                top: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
-                                angle: pointerAngle
-                            });
-                        } else if(pointerAngle >= vectorHeadAngleOnMouseDown - scaleEnvironment && pointerAngle <= vectorHeadAngleOnMouseDown + scaleEnvironment) {
-                                vectorLine.set({
-                                    x1: vectorPoint.left,
-                                    y1: vectorPoint.top,
-                                    x2: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
-                                    y2: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
-                                    angle: 0
-                                });
-                                vectorHead.set({
-                                    left: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
-                                    top: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
-                                    angle: vectorHeadAngleOnMouseDown
-                                });
-
-                        } else if(distance(pointer, vectorPointPosition) >= abortLengthVector && distance(pointer, vectorPointPosition) <= maxLengthVector) {
-                            vectorLine.set({
-                                x1: vectorPoint.left,
-                                y1: vectorPoint.top,
-                                x2: pointer.x,
-                                y2: pointer.y,
-                                angle: 0
-                            });
-
-                            vectorHead.set({
-                                left: pointer.x,
-                                top: pointer.y,
-                                angle: pointerAngle
-                            });
-                        } else if(distance(pointer, vectorPointPosition) < abortLengthVector) {
-                            vectorLine.set({
-                                x1: vectorPoint.left,
-                                y1: vectorPoint.top,
-                                x2: vectorPoint.left + unitVectorMouseX * abortLengthVector,
-                                y2: vectorPoint.top + unitVectorMouseY * abortLengthVector,
-                                angle: 0
-                            });
-                            vectorHead.set({
-                                left: vectorPoint.left + unitVectorMouseX * abortLengthVector,
-                                top: vectorPoint.top + unitVectorMouseY * abortLengthVector,
-                                angle: pointerAngle
-                            });
-                        } else {
-                            vectorLine.set({
-                                x1: vectorPoint.left,
-                                y1: vectorPoint.top,
-                                x2: vectorPoint.left + unitVectorMouseX * maxLengthVector,
-                                y2: vectorPoint.top + unitVectorMouseY * maxLengthVector,
-                                angle: 0
-                            });
-                            vectorHead.set({
-                                left: vectorPoint.left + unitVectorMouseX * maxLengthVector,
-                                top: vectorPoint.top + unitVectorMouseY * maxLengthVector,
-                                angle: pointerAngle
-                            });
-                        }
-
-
-
-                        vectorLine.setCoords();
-                        vectorHead.setCoords();
-
-                        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-                        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
-                        canvas.renderAll();
-
-                    })
-
-                    vectorHead.on('mouseup', function(o) {
-
-                        let immediatehistory = [6];
-
-                        let sectorID = vectorPoint.parentSector;
-                        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-
-                        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
-                            immediatehistory.push(vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorParametersOnMouseDown);
-                            history.push(immediatehistory);
-                        }
-
-                    })
-
-                    vector.push(vectorHead);
+                    vector.push(vectorPoint, vectorLine, vectorHead);
                     vectors.push(vector);
-                    sectors[this.parent.ID].vectors.push(vector);
-                    for (let ii = 0; ii < vector.length; ii++){
-                        canvas.add(vector[ii]);
-                    }
-
+                    canvas.add(vectorPoint, vectorLine, vectorHead);
                     canvas.renderAll();
 
                 }
@@ -5238,8 +4865,8 @@ window.addEventListener('keydown',function(event){
 
 function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, vectorParentID, vectorGlobalID, vectorLocalID) {
 
-    let pointer = canvas.getPointer(o.e);
     let vector = [];
+    let immediatehistory = [5];
     let vectorParametersOnMouseDown;
 
     let vectorPoint = new fabric.Circle({
@@ -5431,7 +5058,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, 
             evented: true,
             angle: vectorHead.angle,
             width: 12,
-            height: 15
+            height: 15,
+            lockMovementX: true,
+            lockMovementY: true
         });
         vectorDuplicate.push(vectorHeadDuplicate);
 
@@ -5491,7 +5120,8 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, 
         showGeodesicButtons(true);
     });
 
-    vector.push(vectorLine)
+    vector.push(vectorLine);
+    vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
 
     let vectorHead = new fabric.Triangle({
         ID: vectors.length,
@@ -5513,6 +5143,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, 
 
     vectorHead.on('mousedown', function(o) {
 
+        pointer = canvas.getPointer(o.e);
         let sectorID = vectorPoint.parentSector[0];
         vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
 
@@ -5648,11 +5279,15 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, 
     })
 
     vector.push(vectorHead);
-    sectors[this.parent.ID].vectors.push(vector);
-    vectors.push(vector);
-    for (let ii = 0; ii < vector.length; ii++){
+    vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint);
+    sectors[vectorParentID].vectors.splice(vectorLocalID, 0, vector);
+    vectors.splice(vectorGlobalID, 0, vector);
+    for (let ii = 0; ii < vector.length; ii++) {
         canvas.add(vector[ii]);
     }
+
+    immediatehistory.push(vectorPoint.ID, vectorLine.ID, vectorHead.ID);
+    history.push(immediatehistory);
 
     canvas.renderAll();
 
@@ -8706,7 +8341,9 @@ function undoLastAction(){
             }
 
         } else if(immediatehistory[1] === 'vector') {
-
+            let vectorPointPosition = new fabric.Point(immediatehistory[4], immediatehistory[5]);
+            let vectorHeadPosition = new fabric.Point(immediatehistory[6], immediatehistory[7])
+            drawVector(vectorPointPosition, vectorHeadPosition, immediatehistory[8], immediatehistory[3][0], immediatehistory[2], immediatehistory[3][1]);
         } else {
 
         }
@@ -8778,7 +8415,12 @@ function undoLastAction(){
 
         sectors[immediatehistory[1]].vectors.splice(immediatehistory[2], 1);
         sectors[immediatehistory[3][0]].vectors.splice(immediatehistory[3][1], 0, vector);
-        vectorPoint.parentSector[0] = immediatehistory[3][0];
+        //vectorPoint.parentSector[0] = immediatehistory[3][0];
+        for (let ii = 0; ii < vectors.length; ii++) {
+            let vectorPoint = vectors[ii][0];
+            let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectors[ii][0].left, vectors[ii][0].top));
+            vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
+        }
 
         vectorPoint.set({
            left: immediatehistory[3][2],
