@@ -5703,6 +5703,19 @@ function geodreieckMove(geodreieckToMove){
         }
     }
 
+    for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+        if(vectorDuplicates[ii][0] !== undefined) {
+            let vectorPointPosition = new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top);
+            let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
+            if(distance(vectorPointPosition, geodreieckMidKante) < snap_geodreieck_on_mark) {
+                let dist_x = vectorPointPosition.x - geodreieckMidKante.x;
+                let dist_y = vectorPointPosition.y - geodreieckMidKante.y;
+                geodreieckToMove.left += dist_x;
+                geodreieckToMove.top += dist_y;
+            }
+        }
+    }
+
     if (markPoints.length < 1) {
         return
     }
@@ -5799,6 +5812,18 @@ function geodreieckRotate(geodreieckToRotate){
         if(distance(geodreieckMidPoint, vectorPointPosition) < 5) {
             let delta_x = vectors[ii][2].left - vectors[ii][0].left;
             let delta_y = vectors[ii][2].top - vectors[ii][0].top;
+            let vectorLineAngle = toDegree(Math.atan2(delta_y, delta_x));
+            if (Math.abs((vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180) < 5) {
+                geodreieckToRotate.angle += (vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180
+            }
+        }
+    }
+
+    for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+        let vectorPointPosition = new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top);
+        if(distance(geodreieckMidPoint, vectorPointPosition) < 5) {
+            let delta_x = vectorDuplicates[ii][2].left - vectorDuplicates[ii][0].left;
+            let delta_y = vectorDuplicates[ii][2].top - vectorDuplicates[ii][0].top;
             let vectorLineAngle = toDegree(Math.atan2(delta_y, delta_x));
             if (Math.abs((vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180) < 5) {
                 geodreieckToRotate.angle += (vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180
