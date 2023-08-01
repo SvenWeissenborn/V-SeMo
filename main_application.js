@@ -404,6 +404,7 @@ canvas.on('mouse:move', function (o) {
         let vectorLine = vectors[canvas.getActiveObject().ID][1];
         let vectorHead = vectors[canvas.getActiveObject().ID][2];
         let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
+        let vectorPointParentID = vectorPoint.parentSector[0];
 
         if (vectors[vectorPoint.ID][1].relationship) {
             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
@@ -415,7 +416,7 @@ canvas.on('mouse:move', function (o) {
         vectorLine.setCoords()
         vectorHead.setCoords()
 
-        let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPoint.parentSector[0]);
+        let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentID);
 
         let inboundParameter = 0.01;
         let inboundPoints = [];
@@ -446,7 +447,6 @@ canvas.on('mouse:move', function (o) {
             vectorPoint.setCoords();
             updateMinionsPosition(vectorPoint, vectorLine);
             updateMinionsPosition(vectorPoint, vectorHead);
-            canvas.bringToFront(vectorPoint);
         }
 
             if (closestEdgeOfPointParameters.minDistance < 0.01) {
@@ -457,23 +457,22 @@ canvas.on('mouse:move', function (o) {
                 let edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
                 let mouseVectorLength = Math.sqrt(Math.pow(mouseVectorX, 2) + Math.pow(mouseVectorY, 2));
                 let dotProduct = edgeVectorX * mouseVectorX + edgeVectorY * mouseVectorY;
-
                 let alpha = Math.acos(dotProduct / (edgeVectorLength * mouseVectorLength));
-
-                let lambda = mouseVectorLength * Math.cos(alpha);
+                let lambda = mouseVectorLength * Math.cos(alpha) / edgeVectorLength;
 
                 if(closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
-                    if (lambda <= edgeVectorLength && lambda >= 0) {
+
+                    if (lambda <= 1 && lambda >= 0) {
                         vectorPoint.set({
-                            left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
-                            top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                            left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * lambda,
+                            top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * lambda
                         });
                     } else if (lambda < 0) {
                         if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 3) % 4] !== 0) {
                             closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 3) % 4];
                             vectorPoint.set({
-                               left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
-                               top:  inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                               left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * lambda,
+                               top:  inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * lambda
                             });
                         } else {
                             vectorPoint.set({
@@ -486,8 +485,8 @@ canvas.on('mouse:move', function (o) {
                         if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 1) % 4] !== 0) {
                             closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 1) % 4];
                             vectorPoint.set({
-                                left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
-                                top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                                left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * lambda,
+                                top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * lambda
                             });
                         } else {
                             vectorPoint.set({
@@ -496,12 +495,10 @@ canvas.on('mouse:move', function (o) {
                             });
                         }
                     }
-
                 }
-
             }
 
-        /*if (closestEdgeOfPointParameters.minDistance < 0.01) {
+       /* if (closestEdgeOfPointParameters.minDistance < 0.01) {
             let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
             let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
             let mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
@@ -509,29 +506,57 @@ canvas.on('mouse:move', function (o) {
             let edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
             let mouseVectorLength = Math.sqrt(Math.pow(mouseVectorX, 2) + Math.pow(mouseVectorY, 2));
             let dotProduct = edgeVectorX * mouseVectorX + edgeVectorY * mouseVectorY;
-
             let alpha = Math.acos(dotProduct / (edgeVectorLength * mouseVectorLength));
-
-            let lambda = mouseVectorLength * Math.cos(alpha);
+            let beta = Math.atan2(mouseVectorY, mouseVectorX);
+            let gamma = Math.PI / 2 - alpha - beta;
+            let lambda;
+            if(Math.abs(toDegree(gamma)) > 85 && Math.abs(toDegree(gamma)) < 95) {
+                lambda = Math.abs(mouseVectorY) / Math.tan(alpha);
+            } else {
+                lambda = mouseVectorY / Math.cos(gamma);
+            }
 
             if(closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 1) {
-                if(lambda >= 0 && lambda <= edgeVectorLength) {
-                    vectorPoint.left = inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength);
-                    vectorPoint.top = inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength);
-                } else if(lambda < 0) {
-                    vectorPoint.left = inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
-                    vectorPoint.top = inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+
+                if (lambda <= edgeVectorLength && lambda >= 0) {
+                    vectorPoint.set({
+                        left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
+                        top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                    });
+                } else if (lambda < 0) {
+                    if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 3) % 4] !== 0) {
+                        closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 3) % 4];
+                        vectorPoint.set({
+                            left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
+                            top:  inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                        });
+                    } else {
+                        vectorPoint.set({
+                            left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x,
+                            top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y
+                        });
+                    }
+
                 } else {
-                    vectorPoint.left = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x;
-                    vectorPoint.top = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y;
+                    if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 1) % 4] !== 0) {
+                        closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 1) % 4];
+                        vectorPoint.set({
+                            left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * (lambda / edgeVectorLength),
+                            top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * (lambda / edgeVectorLength)
+                        });
+                    } else {
+                        vectorPoint.set({
+                            left: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x,
+                            top: inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y
+                        });
+                    }
                 }
             }
         } */
 
-
-        vectorPoint.setCoords()
-        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
-        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
+        vectorPoint.setCoords();
+        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1]);
+        updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2]);
         canvas.renderAll();
 
         for (let ii = 0; ii < vectors.length; ii++) {
@@ -2005,7 +2030,7 @@ fabric.Image.fromURL('geodreieck.png', function(img) {
 
     geodreieck.snapAngle = geodreieckSnapAngle;
 
-    geodreieck.on('moving',function(){geodreieckRotate(this); geodreieckMove(this)});
+    geodreieck.on('moving',function(){geodreieckRotate(this); geodreieckMove(this);});
     geodreieck.on('rotating',function(){geodreieckRotate(this); geodreieckMove(this)});
 
     geodreieck.on('mousedown', function () {geodreieckIsClicked = true;});
@@ -3178,7 +3203,7 @@ function distancePointStraightLine2(point_x, point_y, point_line_x, point_line_y
  * @param point
  * @param pointSectorIDBefore
  * @returns {{closestEdge: number, pointSectorID: number, minDistance: number, snapStatusOfClosestEdge: number}}
- */
+ */ 
 function getClosestEdgeOfPointParameters (point, pointSectorIDBefore) {
 
     let sec = getParentSectorOfPoint(point);
@@ -3755,7 +3780,7 @@ function drawLongEdgeLine(initialSectorID, initialArcID_onSector, constructClock
 function drawOrientationCirc(color, pos_x, pos_y){
     let orientationCirc;
 
-    orientationCirc = new fabric.Circle({ radius: 5, originX: 'center', originY: 'center', fill: color, left: pos_x, top:  pos_y});
+    orientationCirc = new fabric.Circle({ radius: 1, originX: 'center', originY: 'center', fill: color, left: pos_x, top:  pos_y});
 
     canvas.add(orientationCirc);
 
@@ -4891,436 +4916,6 @@ window.addEventListener('keydown',function(event){
 
 });
 
-/*function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, vectorParentID, vectorGlobalID, vectorLocalID) {
-
-    let vector = [];
-    let immediatehistory = [5];
-    let vectorParametersOnMouseDown;
-
-    let vectorPoint = new fabric.Circle({
-        ID: vectorGlobalID,
-        radius: 5,
-        fill: 'blue',
-        padding: 5,
-        left: vectorPointCoords.x,
-        top: vectorPointCoords.y,
-        evented: true,
-        objectCaching: false,
-        lockMovementX: true,
-        lockMovementY: true,
-        lockScalingX: true,
-        lockScalingY: true,
-        selectable: true,
-        originX: 'center',
-        originY: 'center',
-        hasBorders: false,
-        hasControls: true
-    });
-
-    vectorPoint.setControlsVisibility({
-        tl: false,
-        mt: false,
-        tr: false,
-        mr: false,
-        ml: false,
-        bl: false,
-        mb: false,
-        br: false,
-        mtr: false
-    });
-
-    vectorPoint.relationship = getRelationship(vectorPoint, vectorParentID);
-    vectorPoint.parentSector = [vectorParentID, vectorLocalID];
-
-    vectorPoint.on('mousedown', function (o) {
-
-        isVectorPointDragged = true;
-
-        console.log(vectorPoint.parentSector, vectorPoint.ID);
-
-        showGeodesicButtons(true);
-
-        let sectorID = vectorPoint.parentSector[0];
-        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
-
-        let cloneIcon = 'button_icons/duplicate_vector.png'
-        let cloneImg = document.createElement('img');
-        cloneImg.src = cloneIcon;
-
-        fabric.Circle.prototype.transparentCorners = true;
-        fabric.Circle.prototype.cornerColor = 'blue';
-        fabric.Circle.prototype.cornerStyle = 'circle';
-
-        function renderIcon(icon) {
-            return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-                let size = this.cornerSize;
-                ctx.save();
-                ctx.translate(left, top);
-                // ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-                ctx.drawImage(icon, -size/2, -size/2, size, size);
-                ctx.restore();
-            }
-
-        }
-
-        let controlOffsetX;
-        let controlOffsetY;
-        let outboundParameter = 10;
-        let outboundPoints = [];
-        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPoint.parentSector[0]].trapez);
-
-        for (let ii = 0; ii < 4; ii++) {
-            let outboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * outboundParameter,
-                trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * outboundParameter);
-            outboundPoints.push(outboundPoint);
-        }
-
-        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
-
-        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-            outboundPoints[2].x - outboundPoints[1].x, outboundPoints[2].y - outboundPoints[1].y)) {
-            controlOffsetX = 35;
-        } else {
-            controlOffsetX = -15;
-        }
-
-        if(distancePointStraightLine(vectorPointPosition.x, vectorPointPosition.y, outboundPoints[2].x, outboundPoints[2].y,
-            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y) >= distancePointStraightLine(vectorHeadPosition.x, vectorHeadPosition.y, outboundPoints[1].x, outboundPoints[1].y,
-            outboundPoints[3].x - outboundPoints[2].x, outboundPoints[3].y - outboundPoints[2].y)) {
-            controlOffsetY = -10;
-        } else {
-            controlOffsetY = 30;
-        }
-
-          if(vectorHead.left - vectorPoint.left < 0) {
-              controlOffsetX = 35;
-          } else {
-              controlOffsetX = -15;
-          }
-          if(vectorHead.top - vectorPoint.top > 0) {
-              controlOffsetY = 30;
-          } else {
-              controlOffsetY = -10;
-          }
-
-        fabric.Circle.prototype.controls.tl = new fabric.Control({
-            x: -0.5,
-            y: -0.5,
-            offsetY: controlOffsetY,
-            offsetX: controlOffsetX,
-            cursorStyle: 'pointer',
-            mouseUpHandler: cloneObject,
-            render: renderIcon(cloneImg),
-            cornerSize: 40
-        });
-
-        vectorPoint.setControlVisible('tl', true);
-    })
-
-    function cloneObject(eventData, transform) {
-        let target = transform.target;
-        let canvas = target.canvas;
-        let vectorDuplicate = [];
-        let immediatehistory = [5, 'duplicate'];
-
-        let vectorPointDuplicate = new fabric.Circle({
-            ID: vectorDuplicates.length,
-            radius: 5,
-            fill: "grey",
-            left: vectorPoint.left,
-            top: vectorPoint.top,
-            evented: true,
-            objectCaching: false,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            selectable: true,
-            originX: 'center',
-            originY: 'center',
-            hasBorders: false,
-            hasControls: false
-        });
-        vectorDuplicate.push(vectorPointDuplicate);
-        vectorPointDuplicate.on('mousedown', function() {
-            console.log(vectorPointDuplicate.parentSector, vectorPointDuplicate.ID);
-        })
-
-        let points = [
-            vectorPoint.left,
-            vectorPoint.top,
-            vectorHead.left,
-            vectorHead.top
-        ]
-        let vectorLineDuplicate = new fabric.Line(points, {
-            ID: vectorDuplicates.length,
-            strokeWidth: 3,
-            stroke: 'grey',
-            fill: 'grey',
-            originX: 'center',
-            originY: 'center',
-            perPixelTargetFind: true,
-            objectCaching: false,
-            hasBorders: false,
-            hasControls: false,
-            evented: true,
-            lockMovementX: true,
-            lockMovementY: true,
-        });
-        vectorDuplicate.push(vectorLineDuplicate);
-
-        let vectorHeadDuplicate = new fabric.Triangle({
-            ID: vectorDuplicates.length,
-            stroke: "grey",
-            strokeWidth: 3,
-            fill: "grey",
-            selectable: false,
-            hasControls: false,
-            hasBorders: false,
-            left: vectorHead.left,
-            top: vectorHead.top,
-            originX: "center",
-            originY: "center",
-            evented: true,
-            angle: vectorHead.angle,
-            width: 12,
-            height: 15,
-            lockMovementX: true,
-            lockMovementY: true
-        });
-        vectorDuplicate.push(vectorHeadDuplicate);
-
-        for (let ii = 0; ii < vectorDuplicate.length; ii++) {
-            vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorPoint.parentSector[0]].ID);
-            vectorDuplicate[ii].parentSector = [sectors[vectorPoint.parentSector[0]].ID, sectors[vectorPoint.parentSector[0]].vectorDuplicates.length];
-            vectorDuplicate[ii].on('mousedown', function() {
-                canvas.setActiveObject(vectorDuplicate[ii]);
-                showGeodesicButtons(true);
-            })
-        }
-
-        vectorPointDuplicate.setCoords()
-        vectorLineDuplicate.setCoords()
-        vectorHeadDuplicate.setCoords()
-        canvas.add(vectorPointDuplicate, vectorLineDuplicate, vectorHeadDuplicate)
-        sectors[vectorPoint.parentSector[0]].vectorDuplicates.push(vectorDuplicate)
-        vectorDuplicates.push(vectorDuplicate)
-
-        immediatehistory.push(vectorPointDuplicate.ID, vectorLineDuplicate.ID, vectorHeadDuplicate.ID);
-        history.push(immediatehistory);
-        canvas.bringToFront(vectorPoint, vectorLine, vectorHead);
-
-    }
-
-    vectorPoint.on('mouseup', function() {
-        isVectorPointDragged = false;
-        let immediatehistory = [6];
-        let sectorID = vectorPoint.parentSector;
-        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
-            immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
-            history.push(immediatehistory);
-        }
-    })
-
-    vector.push(vectorPoint);
-
-    let points = [vectorPoint.left, vectorPoint.top, vectorHeadCoords.x, vectorHeadCoords.y];
-    let vectorLine = new fabric.Line(points, {
-        ID: vectors.length,
-        strokeWidth: 3,
-        stroke: 'blue',
-        fill: 'blue',
-        originX: 'center',
-        originY: 'center',
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        lockMovementX: true,
-        lockMovementY: true
-    });
-
-    vectorLine.on('mousedown', function () {
-        showGeodesicButtons(true);
-    });
-
-    vector.push(vectorLine);
-    vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
-
-    let vectorHead = new fabric.Triangle({
-        ID: vectors.length,
-        stroke: "blue",
-        strokeWidth: 3,
-        fill: "blue",
-        selectable: true,
-        hasControls: false,
-        top: vectorHeadCoords.y,
-        left: vectorHeadCoords.x,
-        originX: "center",
-        originY: "center",
-        evented: true,
-        hasBorders: false,
-        width: 12,
-        height: 15,
-        angle: vectorHeadOrientation
-    });
-
-    vectorHead.on('mousedown', function(o) {
-
-        pointer = canvas.getPointer(o.e);
-        let sectorID = vectorPoint.parentSector[0];
-        vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
-
-        showGeodesicButtons(true);
-
-    })
-    vectorHead.on('moving', function(o) {
-
-        let x1 = vectorLine.x1;
-        let y1 = vectorLine.y1;
-        let x2 = pointer.x;
-        let y2 = pointer.y;
-
-        let dy = y2 - y1;
-        let dx = x2 - x1;
-
-        let pointerAngle = toDegree(Math.atan2(dy, dx)) + 90;
-        let vectorPointPosition = new fabric.Point(vectorPoint.left, vectorPoint.top);
-        let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
-        let pointerVectorX = pointer.x - vectorPoint.left;
-        let pointerVectorY = pointer.y - vectorPoint.top;
-        let pointerVectorLength = Math.sqrt(Math.pow(pointerVectorX, 2) + Math.pow(pointerVectorY, 2));
-        let unitVectorMouseX = pointerVectorX / pointerVectorLength;
-        let unitVectorMouseY = pointerVectorY / pointerVectorLength;
-
-        let vectorPointPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[2], vectorParametersOnMouseDown[3]);
-        let vectorHeadPositionOnMouseDown = new fabric.Point(vectorParametersOnMouseDown[4], vectorParametersOnMouseDown[5]);
-        let vectorLengthOnMouseDown = distance(vectorPointPositionOnMouseDown, vectorHeadPositionOnMouseDown);
-        let rotateEnvironment = 10;
-
-        let vectorHeadAngleOnMouseDown = vectorParametersOnMouseDown[6];
-        let scaleEnvironment = 5;
-        let unitVectorHeadX = (vectorHeadPositionOnMouseDown.x - vectorPointPositionOnMouseDown.x) / vectorLengthOnMouseDown;
-        let unitVectorHeadY = (vectorHeadPositionOnMouseDown.y - vectorPointPositionOnMouseDown.y) / vectorLengthOnMouseDown;
-        let alpha = toRadians(pointerAngle) - toRadians(vectorHeadAngleOnMouseDown);
-        let lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha);
-        if(distance(pointer, vectorPointPositionOnMouseDown) <= distance(vectorHeadPositionOnMouseDown, vectorPointPositionOnMouseDown)) {
-            lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha) * (-1);
-        }
-
-        if(distance(pointer, vectorPointPositionOnMouseDown) >= vectorLengthOnMouseDown - rotateEnvironment && distance(pointer, vectorPointPositionOnMouseDown) <= vectorLengthOnMouseDown + rotateEnvironment) {
-            vectorLine.set({
-                x1: vectorPoint.left,
-                y1: vectorPoint.top,
-                x2: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
-                y2: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
-                angle: 0
-            });
-            vectorHead.set({
-                left: vectorPoint.left + unitVectorMouseX * vectorLengthOnMouseDown,
-                top: vectorPoint.top + unitVectorMouseY * vectorLengthOnMouseDown,
-                angle: pointerAngle
-            });
-        } else if(pointerAngle >= vectorHeadAngleOnMouseDown - scaleEnvironment && pointerAngle <= vectorHeadAngleOnMouseDown + scaleEnvironment) {
-            vectorLine.set({
-                x1: vectorPoint.left,
-                y1: vectorPoint.top,
-                x2: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
-                y2: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
-                angle: 0
-            });
-            vectorHead.set({
-                left: vectorPoint.left + unitVectorHeadX * (vectorLengthOnMouseDown + lambda),
-                top: vectorPoint.top + unitVectorHeadY * (vectorLengthOnMouseDown + lambda),
-                angle: vectorHeadAngleOnMouseDown
-            });
-
-        } else if(distance(pointer, vectorPointPosition) >= abortLengthVector && distance(pointer, vectorPointPosition) <= maxLengthVector) {
-            vectorLine.set({
-                x1: vectorPoint.left,
-                y1: vectorPoint.top,
-                x2: pointer.x,
-                y2: pointer.y,
-                angle: 0
-            });
-
-            vectorHead.set({
-                left: pointer.x,
-                top: pointer.y,
-                angle: pointerAngle
-            });
-        } else if(distance(pointer, vectorPointPosition) < abortLengthVector) {
-            vectorLine.set({
-                x1: vectorPoint.left,
-                y1: vectorPoint.top,
-                x2: vectorPoint.left + unitVectorMouseX * abortLengthVector,
-                y2: vectorPoint.top + unitVectorMouseY * abortLengthVector,
-                angle: 0
-            });
-            vectorHead.set({
-                left: vectorPoint.left + unitVectorMouseX * abortLengthVector,
-                top: vectorPoint.top + unitVectorMouseY * abortLengthVector,
-                angle: pointerAngle
-            });
-        } else {
-                            vectorLine.set({
-                                x1: vectorPoint.left,
-                                y1: vectorPoint.top,
-                                x2: vectorPoint.left + unitVectorMouseX * maxLengthVector,
-                                y2: vectorPoint.top + unitVectorMouseY * maxLengthVector,
-                                angle: 0
-                            });
-                            vectorHead.set({
-                                left: vectorPoint.left + unitVectorMouseX * maxLengthVector,
-                                top: vectorPoint.top + unitVectorMouseY * maxLengthVector,
-                                angle: pointerAngle
-                            });
-                        }
-
-
-
-        vectorLine.setCoords();
-        vectorHead.setCoords();
-
-        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
-        canvas.renderAll();
-
-    })
-
-    vectorHead.on('mouseup', function(o) {
-
-        let immediatehistory = [6];
-
-        let sectorID = vectorPoint.parentSector;
-        let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-
-        if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
-            immediatehistory.push(vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorParametersOnMouseDown);
-            history.push(immediatehistory);
-        }
-
-    })
-
-    vector.push(vectorHead);
-    vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint);
-    sectors[vectorParentID].vectors.splice(vectorLocalID, 0, vector);
-    vectors.splice(vectorGlobalID, 0, vector);
-    for (let ii = 0; ii < vector.length; ii++) {
-        canvas.add(vector[ii]);
-    }
-
-    immediatehistory.push(vectorPoint.ID, vectorLine.ID, vectorHead.ID);
-    history.push(immediatehistory);
-
-    canvas.renderAll();
-
-} */
-
 function drawVector(vectorPointCoords, vectorHeadCoords, vectorHeadOrientation, vectorParentID, vectorGlobalID, vectorLocalID, type, pushHistoryToSet) {
 
     if(type === 'vector') {
@@ -6095,7 +5690,20 @@ function geodreieckMove(geodreieckToMove){
         }
     }
 
-    if (markPoints.length < 1){
+    for (let ii = 0; ii < vectors.length; ii++) {
+        if(vectors[ii][0] !== undefined) {
+            let vectorPointPosition = new fabric.Point(vectors[ii][0].left, vectors[ii][0].top);
+            let geodreieckMidKante = new fabric.Point(geodreieck.left, geodreieck.top);
+            if(distance(vectorPointPosition, geodreieckMidKante) < snap_geodreieck_on_mark) {
+                let dist_x = vectorPointPosition.x - geodreieckMidKante.x;
+                let dist_y = vectorPointPosition.y - geodreieckMidKante.y;
+                geodreieckToMove.left += dist_x;
+                geodreieckToMove.top += dist_y;
+            }
+        }
+    }
+
+    if (markPoints.length < 1) {
         return
     }
 
@@ -6116,14 +5724,14 @@ function geodreieckMove(geodreieckToMove){
 
 function geodreieckRotate(geodreieckToRotate){
 
-    let geodreieckWdithHalf = geodreieckToRotate.width / 2 * 0.12;
+    let geodreieckWidthHalf = geodreieckToRotate.width / 2 * 0.12;
     let geodreieckHeightHalf = geodreieckToRotate.height / 2 * 0.12;
     let geodreieckMidPoint = new fabric.Point(geodreieckToRotate.left, geodreieckToRotate.top);
 
     //gEL1 = geodreieckEdgeLocal1
     //gEL2 = geodreieckEdgeLocal2
-    let gEL1 = new fabric.Point(geodreieckToRotate.left - geodreieckWdithHalf, geodreieckToRotate.top);
-    let gEL2 = new fabric.Point(geodreieckToRotate.left + geodreieckWdithHalf, geodreieckToRotate.top);
+    let gEL1 = new fabric.Point(geodreieckToRotate.left - geodreieckWidthHalf, geodreieckToRotate.top);
+    let gEL2 = new fabric.Point(geodreieckToRotate.left + geodreieckWidthHalf, geodreieckToRotate.top);
 
     let translation_x = geodreieckToRotate.left;
     let translation_y = geodreieckToRotate.top;
@@ -6168,7 +5776,7 @@ function geodreieckRotate(geodreieckToRotate){
 
             //Float-Modulo: verschiebt die Winkeldifferenz so lange um 180, dass der Zielwert zwischen -90 und +90 liegt
             // -> Math.abs((geodesicAngle - geodreieck.angle ) - Math.round((geodesicAngle - geodreieck.angle )/ 180) * 180)
-            if (Math.abs((geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180) < 5 & distancePointStraightLine(geodreieckEdgeMidPoint.x, geodreieckEdgeMidPoint.y, xg1, yg1, delta_x, delta_y) < 10 & distance(geodreieckEdgeMidPoint, lineSegmentMidPoint) < geodreieckWdithHalf - Math.sqrt(delta_x * delta_x + delta_y * delta_y)/2){
+            if (Math.abs((geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180) < 5 & distancePointStraightLine(geodreieckEdgeMidPoint.x, geodreieckEdgeMidPoint.y, xg1, yg1, delta_x, delta_y) < 10 & distance(geodreieckEdgeMidPoint, lineSegmentMidPoint) < geodreieckWidthHalf - Math.sqrt(delta_x * delta_x + delta_y * delta_y)/2){
 
                 geodreieckToRotate.angle += (geodesicAngle - geodreieckToRotate.angle ) - Math.round((geodesicAngle - geodreieckToRotate.angle )/ 180) * 180
 
@@ -6184,6 +5792,18 @@ function geodreieckRotate(geodreieckToRotate){
 
 
 
+    }
+
+    for (let ii = 0; ii < vectors.length; ii++) {
+        let vectorPointPosition = new fabric.Point(vectors[ii][0].left, vectors[ii][0].top);
+        if(distance(geodreieckMidPoint, vectorPointPosition) < 5) {
+            let delta_x = vectors[ii][2].left - vectors[ii][0].left;
+            let delta_y = vectors[ii][2].top - vectors[ii][0].top;
+            let vectorLineAngle = toDegree(Math.atan2(delta_y, delta_x));
+            if (Math.abs((vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180) < 5) {
+                geodreieckToRotate.angle += (vectorLineAngle - geodreieckToRotate.angle) - Math.round((vectorLineAngle - geodreieckToRotate.angle) / 180) * 180
+            }
+        }
     }
 
 }
