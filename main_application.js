@@ -2151,7 +2151,7 @@ let isVectorPointDragged = false;
  * automatically snaps all sectors along a chosen geodesic
  * @param chosenGeodesicToSetSectors - the ID of the geodesic that is to be continued
  */
-function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
+async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
 
     if (chosenGeodesicToSetSectors == -1){
@@ -2333,9 +2333,13 @@ function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     //Heransnappen des NachbarSektors an den statischen Sektor (dies ist nur im ersten Durchlauf der InitialSektor)
 
-                    rotateSectorToAlignAngle(neighbourSector, staticSector);
+                    //rotateSectorToAlignAngle(neighbourSector, staticSector);
 
-                    translateInitialSectorToTargetSector(neighbourSector, staticSector);
+                    //translateInitialSectorToTargetSector(neighbourSector, staticSector);
+
+                    animateRotation(neighbourSector, staticSector)
+                    await wait(1500)
+
                 }
 
 
@@ -2344,8 +2348,6 @@ function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                 drawSnapEdges(staticSector);
                 drawSnapEdges(neighbourSector);
-
-
 
                 //Übergangsrichtung ermitteln
 
@@ -2719,6 +2721,8 @@ function changeSnapStatus(initialSectorID) {
     const initialSector = sectors[initialSectorID];
     const { neighbourhood, snapStatus } = initialSector;
 
+    console.log("Sektor:", initialSectorID)
+
     for (let ii = 0; ii < 4; ii++) {
         const nbh = neighbourhood[ii];
         if (nbh > -1) {
@@ -2728,10 +2732,14 @@ function changeSnapStatus(initialSectorID) {
             const dist_1a = distance(point_1, point_a);
             const dist_2b = distance(point_2, point_b);
 
+            console.log(ii, dist_1a)
+            console.log(ii, dist_2b)
+
             //snap gets o or 1 when both dists are lower than epsilon ? 1 : 0 shorter for double ifs
             const snapvalue = dist_1a < epsilon && dist_2b < epsilon ? 1 : 0;
 
             snapStatus[ii] = snapvalue;
+
             sectors[nbh].snapStatus[(ii + 2) % 4] = snapvalue;
         }
     }
@@ -7792,6 +7800,194 @@ function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) {
         checkCheckBoxCondition();
     }
 
+}
+
+window.addEventListener('keydown', function(event) {
+    if (event.key === 'q') {
+        console.log('q')
+
+        animateSelf(2, 5)
+
+    /*let sectorArrayToSnap = [[1,2],[4,1],[3,4], [6, 3]]
+
+
+        // Function to animate a single sector and return a promise
+        function animateSector(sector) {
+            return new Promise((resolve) => {
+                animateRotation(sector[0], sector[1]);
+                // Assuming animatedSnapInitialSectorToTargetSector has a callback or some way to determine when the animation is complete
+                // In this example, we use a setTimeout to simulate the completion of the animation after 1000ms.
+                setTimeout(() => {
+                    resolve(); // Resolve the promise to indicate animation completion
+                }, 1000);
+            });
+        }
+
+        // Loop through each sector and animate them sequentially using async/await
+        async function animateAllSectors() {
+            for (let ii = 0; ii < sectorArrayToSnap.length; ii++) {
+                await animateSector(sectorArrayToSnap[ii]);
+            }
+        }
+
+        animateAllSectors(); // Start the sequential animation*/
+    }
+});
+
+
+function animateRotation(initialSectorID, targetSectorID) {
+
+    console.log(initialSectorID, targetSectorID)
+
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+    let dxs_tmp;
+    let dys_tmp;
+    let gamma_target;
+    let gamma_initial;
+
+    dxs_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].x - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].x;
+    dys_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].y - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_target = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_target = 0.0
+    }
+
+    dxs_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].x - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].x;
+    dys_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].y - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_initial = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_initial = 0.0
+    }
+
+    let new_sectors_angle = sectors[targetSectorID].trapez.angle + gamma_target / Math.PI * 180 - gamma_initial / Math.PI * 180
+
+    sectors[initialSectorID].trapez.animate('angle', new_sectors_angle, {
+        onChange: function () {
+            canvas.renderAll();
+            updateMinions(sectors[initialSectorID].trapez);
+        },
+        onComplete: function() {
+            animateTranslation(initialSectorID, targetSectorID);
+        }
+    });
+
+    sectors[initialSectorID].trapez.setCoords()
+
+}
+
+function animateTranslation(initialSectorID, targetSectorID){
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+    let initialTrapezPointsAsGlobalCoordsBeforeRotating = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+    let targetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
+
+    let point_1 = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+
+    let point_a = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+
+    let new_sectors_x = sectors[initialSectorID].trapez.left + (point_a.x - point_1.x);
+    let new_sectors_y = sectors[initialSectorID].trapez.top + (point_a.y - point_1.y);
+
+    updateMinions(sectors[initialSectorID].trapez)
+
+    sectors[initialSectorID].trapez.animate({ 'left': new_sectors_x, 'top': new_sectors_y }, {
+        onChange: function (){
+            canvas.renderAll.bind(canvas),
+                updateMinions(sectors[initialSectorID].trapez)
+        },
+    });
+
+}
+
+function wait(ms){
+    return new Promise(resolve => {
+        setTimeout(() =>{
+            resolve();
+        }, ms);
+    })
+}
+
+function animateSelf(initialSectorID, targetSectorID){
+
+
+
+    let progress = 0;
+
+    let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+    let dxs_tmp;
+    let dys_tmp;
+    let gamma_target;
+    let gamma_initial;
+
+    dxs_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].x - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].x;
+    dys_tmp = sectors[targetSectorID].trapez.points[commonEdgeNumber].y - sectors[targetSectorID].trapez.points[(commonEdgeNumber + 1) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_target = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_target = 0.0
+    }
+
+    dxs_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].x - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].x;
+    dys_tmp = sectors[initialSectorID].trapez.points[(commonEdgeNumber + 2) % 4].y - sectors[initialSectorID].trapez.points[(commonEdgeNumber + 3) % 4].y;
+
+    if (Math.abs(dys_tmp) > epsilon) {
+        gamma_initial = Math.atan(dxs_tmp / dys_tmp);
+    } else {
+        gamma_initial = 0.0
+    }
+
+    let new_sectors_angle = sectors[targetSectorID].trapez.angle + gamma_target / Math.PI * 180 - gamma_initial / Math.PI * 180
+
+
+
+    const totalFrames = 50;
+
+    function animateFrame(index) {
+        progress = index / totalFrames;
+
+        let initialTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
+        let targetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
+
+        let point_1 = initialTrapezPointsAsGlobalCoords[commonEdgeNumber];
+
+        let point_a = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+
+        let initialTrapezOriginBeforeRotating_X = sectors[initialSectorID].trapez.left
+        let initialTrapezOriginBeforeRotating_Y = sectors[initialSectorID].trapez.top
+
+
+
+        let deltaX = point_a.x - point_1.x;
+        let deltaY = point_a.y - point_1.y;
+
+        let new_sectors_x = initialTrapezOriginBeforeRotating_X + deltaX * progress;
+        let new_sectors_y = initialTrapezOriginBeforeRotating_Y + deltaY * progress;
+
+
+
+
+        sectors[initialSectorID].trapez.set({
+            angle: new_sectors_angle  * progress,
+            left: new_sectors_x,
+            top: new_sectors_y,
+            //angle: 360 * progress // 360 Grad Drehung für eine volle Umdrehung
+        });
+        sectors[initialSectorID].trapez.setCoords()
+
+        updateMinions(sectors[initialSectorID].trapez)
+
+        canvas.renderAll();
+
+        if (index < totalFrames) {
+            requestAnimationFrame(() => animateFrame(index + 1));
+
+        }
+    }
+    animateFrame(0);
 }
 
 /**
