@@ -425,7 +425,7 @@ canvas.on('mouse:move', function (o) {
         for (let ii = 0; ii < 4; ii++) {
             let inboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * inboundParameter,
                 trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * inboundParameter);
-            inboundPoints.push(inboundPoint);
+            inboundPoints.splice(ii, 1, inboundPoint);
         }
 
         if(getParentSectorOfPoint(pointer) !== undefined) {
@@ -469,7 +469,23 @@ canvas.on('mouse:move', function (o) {
                         });
                     } else if (lambda < 0) {
                         if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 3) % 4] !== 0) {
-                            closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 3) % 4];
+                            vectorPointParentID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 3) % 4];
+                            closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentID);
+                            trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPointParentID].trapez);
+                            for (let ii = 0; ii < 4; ii++) {
+                                let inboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * inboundParameter,
+                                    trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * inboundParameter);
+                                inboundPoints.splice(ii, 1, inboundPoint);
+                            }
+                            edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+                            edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+                            mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+                            mouseVectorY = pointer.y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+                            edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
+                            mouseVectorLength = Math.sqrt(Math.pow(mouseVectorX, 2) + Math.pow(mouseVectorY, 2));
+                            dotProduct = edgeVectorX * mouseVectorX + edgeVectorY * mouseVectorY;
+                            alpha = Math.acos(dotProduct / (edgeVectorLength * mouseVectorLength));
+                            lambda = mouseVectorLength * Math.cos(alpha) / edgeVectorLength;
                             vectorPoint.set({
                                left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * lambda,
                                top:  inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * lambda
@@ -481,9 +497,25 @@ canvas.on('mouse:move', function (o) {
                             });
                         }
 
-                    } else {
+                    } else if(lambda > 1) {
                         if(sectors[closestEdgeOfPointParameters.pointSectorID].snapStatus[(closestEdgeOfPointParameters.closestEdge + 1) % 4] !== 0) {
-                            closestEdgeOfPointParameters.pointSectorID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 1) % 4];
+                            vectorPointParentID = sectors[closestEdgeOfPointParameters.pointSectorID].neighbourhood[(closestEdgeOfPointParameters.closestEdge + 1) % 4];
+                            closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentID);
+                            trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[vectorPointParentID].trapez);
+                            for (let ii = 0; ii < 4; ii++) {
+                                let inboundPoint = new fabric.Point(trapezPointsAsGlobalCoords[ii].x + (trapezPointsAsGlobalCoords[(ii + 2) % 4].x - trapezPointsAsGlobalCoords[ii].x) * inboundParameter,
+                                    trapezPointsAsGlobalCoords[ii].y + (trapezPointsAsGlobalCoords[(ii + 2) % 4].y - trapezPointsAsGlobalCoords[ii].y) * inboundParameter);
+                                inboundPoints.splice(ii, 1, inboundPoint);
+                            }
+                            edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+                            edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+                            mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
+                            mouseVectorY = pointer.y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
+                            edgeVectorLength = Math.sqrt(Math.pow(edgeVectorX, 2) + Math.pow(edgeVectorY, 2));
+                            mouseVectorLength = Math.sqrt(Math.pow(mouseVectorX, 2) + Math.pow(mouseVectorY, 2));
+                            dotProduct = edgeVectorX * mouseVectorX + edgeVectorY * mouseVectorY;
+                            alpha = Math.acos(dotProduct / (edgeVectorLength * mouseVectorLength));
+                            lambda = mouseVectorLength * Math.cos(alpha) / edgeVectorLength;
                             vectorPoint.set({
                                 left: inboundPoints[closestEdgeOfPointParameters.closestEdge].x + edgeVectorX * lambda,
                                 top: inboundPoints[closestEdgeOfPointParameters.closestEdge].y + edgeVectorY * lambda
@@ -2721,7 +2753,7 @@ function changeSnapStatus(initialSectorID) {
     const initialSector = sectors[initialSectorID];
     const { neighbourhood, snapStatus } = initialSector;
 
-    console.log("Sektor:", initialSectorID)
+    //console.log("Sektor:", initialSectorID)
 
     for (let ii = 0; ii < 4; ii++) {
         const nbh = neighbourhood[ii];
@@ -2732,8 +2764,8 @@ function changeSnapStatus(initialSectorID) {
             const dist_1a = distance(point_1, point_a);
             const dist_2b = distance(point_2, point_b);
 
-            console.log(ii, dist_1a)
-            console.log(ii, dist_2b)
+            //console.log(ii, dist_1a)
+            //console.log(ii, dist_2b)
 
             //snap gets o or 1 when both dists are lower than epsilon ? 1 : 0 shorter for double ifs
             const snapvalue = dist_1a < epsilon && dist_2b < epsilon ? 1 : 0;
@@ -5838,6 +5870,7 @@ function geodreieckRotate(geodreieckToRotate){
             }
         }
     }
+
 
 }
 
