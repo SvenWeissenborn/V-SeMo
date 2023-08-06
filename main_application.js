@@ -1096,30 +1096,9 @@ canvas.on('mouse:move', function (o) {
             let vectorLine = vectors[vectors.length - 1][1]
             let vectorHead = vectors[vectors.length - 1][2]
 
-           /* let x1 = vectorLine.x1;
-            let y1 = vectorLine.y1;
-            let x2 = pointer.x;
-            let y2 = pointer.y;
-
-            let dy = y2 - y1;
-            let dx = x2 - x1;
-
-            let pointerAngle = toDegree(Math.atan2(dy, dx));
-
-            vectorLine.set({
-                x2: pointer.x,
-                y2: pointer.y
-            });
-
-            vectorHead.set({
-                left: pointer.x,
-                top: pointer.y,
-                angle: pointerAngle
-            }); */
-
             pointer = canvas.getPointer(o.e);
-            let x1 = vectorLine.x1;
-            let y1 = vectorLine.y1;
+            let x1 = vectorPoint.left;
+            let y1 = vectorPoint.top;
             let x2 = pointer.x;
             let y2 = pointer.y;
 
@@ -1134,47 +1113,32 @@ canvas.on('mouse:move', function (o) {
             let unitVectorX = pointerVectorX / pointerVectorLength;
             let unitVectorY = pointerVectorY / pointerVectorLength;
 
-            if(distance(pointer, vectorPointPosition) >= abortLengthVector /*&& distance(pointer, vectorPointPosition) <= maxLengthVector*/ ) {
-                vectorLine.set({
-                    x1: vectorPoint.left,
-                    y1: vectorPoint.top,
-                    x2: pointer.x,
-                    y2: pointer.y,
-                    angle: 0
-                });
-
+            if(distance(pointer, vectorPointPosition) >= abortLengthVector && distance(pointer, vectorPointPosition) <= maxLengthVector) {
                 vectorHead.set({
                     left: pointer.x,
                     top: pointer.y,
                     angle: pointerAngle + 90
                 });
             } else if(distance(pointer, vectorPointPosition) < abortLengthVector) {
-                vectorLine.set({
-                    x1: vectorPoint.left,
-                    y1: vectorPoint.top,
-                    x2: vectorPoint.left + unitVectorX * abortLengthVector,
-                    y2: vectorPoint.top + unitVectorY * abortLengthVector,
-                    angle: 0
-                });
                 vectorHead.set({
                     left: vectorPoint.left + unitVectorX * abortLengthVector,
                     top: vectorPoint.top + unitVectorY * abortLengthVector,
                     angle: pointerAngle + 90
                 });
-            } /*else {
-                vectorLine.set({
-                    x1: vectorPoint.left,
-                    y1: vectorPoint.top,
-                    x2: vectorPoint.left + unitVectorX * maxLengthVector,
-                    y2: vectorPoint.top + unitVectorY * maxLengthVector,
-                    angle: 0
-                });
+            } else {
                 vectorHead.set({
                     left: vectorPoint.left + unitVectorX * maxLengthVector,
                     top: vectorPoint.top + unitVectorY * maxLengthVector,
                     angle: pointerAngle + 90
                 });
-            } */
+            }
+
+            vectorLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: vectorHead.left,
+                y2: vectorHead.top
+            });
 
             vectorLine.setCoords();
             vectorHead.setCoords();
@@ -1751,7 +1715,7 @@ canvas.on('mouse:up', function(opt) {
 
         canvas.remove(vectorPoint, vectorLine, vectorHead);
 
-        if(distance(vectorPointPosition, vectorHeadPosition) >= abortLengthVector) {
+        if(distance(vectorPointPosition, vectorHeadPosition) >= abortLengthVector - epsilon) {
             let vectorLocalID = sectors[vectorParentID].vectors.length
             drawVector(vectorPointPosition, vectorHeadPosition, vectorHead.angle, vectorParentID, vectors.length, vectorLocalID, 'vector', true);
         }
