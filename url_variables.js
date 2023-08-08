@@ -97,5 +97,11 @@ let buildGeodesicTicks = getUrlVars()["buildGeodesicTicks"];
 //geodesicsLightLike=1&
 let geodesicsLightLike = getUrlVars()["geodesicsLightLike"];
 
+//animationOn=1&
+let animationOn = getUrlVars()["animationOn"];
+
+//lineEndsAtUnsnappedBorder=1&
+let lineEndsAtUnsnappedBorder = getUrlVars()["lineEndsAtUnsnappedBorder"];
+
 //autoCompleteOnMouseUp=1&
 let autoCompleteOnMouseUp = getUrlVars()["autoCompleteOnMouseUp"];
