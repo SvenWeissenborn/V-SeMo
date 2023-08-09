@@ -2325,7 +2325,8 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     //-----------------------------------------------
 
-                    translateInitialSectorToTargetSector(neighbourSector, staticSector);
+                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+                    await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
                 }else{
 
@@ -2333,9 +2334,12 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
 
 
-                    await rotateSectorToAlignAngle(neighbourSector, staticSector);
-                    await translateInitialSectorToTargetSector(neighbourSector, staticSector);
 
+                    let newSectorAngle = getSectorAngleToAlign(neighbourSector, staticSector)
+                    await rotateSector(neighbourSector, newSectorAngle)
+
+                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+                    await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
                 }
 
@@ -6531,7 +6535,7 @@ function init() {
  * checks if it is time to snap a sector to another one
  * @param trapez - the trapezoid to snap
  */
-function isItTimeToSnap(trapez) {
+async function isItTimeToSnap(trapez) {
     let midpointSectorMoved = new fabric.Point(trapez.left, trapez.top);
     let midpointpotentialSnappingPartnerID;
     let distanceMidPoints;
@@ -6651,7 +6655,8 @@ function isItTimeToSnap(trapez) {
                         return
                     }else{
 
-                        rotateSectorToAlignAngle(trapez.parent.ID, potentialSnappingPartnerID);
+                        let newSectorAngle = getSectorAngleToAlign(trapez.parent.ID, potentialSnappingPartnerID)
+                        await rotateSector(trapez.parent.ID, newSectorAngle)
 
                         return
                     }
@@ -7353,7 +7358,7 @@ function rotatePoint(point, rotationAngle, trapez_left, trapez_top){
  * @param initialSectorID - the ID of the sector that is to be rotated
  * @param targetSectorID - the ID of the other sector
  */
-async function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
+function getSectorAngleToAlign(initialSectorID, targetSectorID) {
 
         let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
         let dxs_tmp;
@@ -7380,10 +7385,11 @@ async function rotateSectorToAlignAngle(initialSectorID, targetSectorID) {
         }
 
         let newSectorAngle = sectors[targetSectorID].trapez.angle + gamma_target / Math.PI * 180 - gamma_initial / Math.PI * 180;
-        await rotateSector(initialSectorID, newSectorAngle)
-
+        return newSectorAngle
 
 }
+
+
 
 function rotateSector(SectorToRotate, newSectorAngle){
 
@@ -7915,12 +7921,15 @@ async function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) 
 
     if (turnLorentzTransformOn == 1){
 
-        translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+        let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+        await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
     }else{
-        await rotateSectorToAlignAngle(initialSectorID, targetSectorID);
+        let newSectorAngle = getSectorAngleToAlign(initialSectorID, targetSectorID)
+        await rotateSector(initialSectorID, newSectorAngle)
 
-        await translateInitialSectorToTargetSector(initialSectorID, targetSectorID);
+        let newSectorPos = getSectorPosToAlign(initialSectorID, targetSectorID)
+        await translateSector(initialSectorID, newSectorPos.x, newSectorPos.y)
     }
 
     updateMinions(sectors[initialSectorID].trapez);
@@ -8482,7 +8491,7 @@ function toRadians(deg) {
  * @param initialSectorID - ID of the sector that has to be moved to snap to the target sector.
  * @param targetSectorID - ID of the sector the initial sector is snapped to.
  */
-async function translateInitialSectorToTargetSector(initialSectorID, targetSectorID){
+function getSectorPosToAlign(initialSectorID, targetSectorID){
 
     let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
 
@@ -8496,13 +8505,9 @@ async function translateInitialSectorToTargetSector(initialSectorID, targetSecto
     let newSectorX = sectors[initialSectorID].trapez.left + (point_a.x - point_1.x)
     let newSectorY = sectors[initialSectorID].trapez.top + (point_a.y - point_1.y)
 
-    await translateSector(initialSectorID, newSectorX, newSectorY)
+    let NewSectorPos = new fabric.Point(newSectorX, newSectorY)
 
-
-    sectors[initialSectorID].trapez.setCoords();
-
-    updateMinions(sectors[initialSectorID].trapez)
-
+    return NewSectorPos
 
 }
 
@@ -8520,6 +8525,8 @@ function translateSector(SectorToTRanslate, newSectorX, newSectorY){
             });
         }else{
             sectors[SectorToTRanslate].trapez.set({ 'left': newSectorX, 'top': newSectorY })
+            sectors[SectorToTRanslate].trapez.setCoords();
+            updateMinions(sectors[SectorToTRanslate].trapez)
             resolve();
         }
     })
