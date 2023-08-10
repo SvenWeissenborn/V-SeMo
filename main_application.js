@@ -2325,7 +2325,7 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     //-----------------------------------------------
 
-                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector, 0)
                     await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
                 }else{
@@ -2336,9 +2336,11 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
 
                     let newSectorAngle = getSectorAngleToAlign(neighbourSector, staticSector)
-                    await rotateSector(neighbourSector, newSectorAngle)
 
-                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+                    console.log('testetst')
+
+                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector, newSectorAngle)
+                     rotateSector(neighbourSector, newSectorAngle)
                     await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
                 }
@@ -7066,7 +7068,6 @@ function removeDeficitAngleVisualize() {
 
 function removeSnapEdges(initialSectorID) {
 
-    console.log('huhu')
     for (let ii = 0; ii < 4; ii++) {
 
         let neighbourSectorID = sectors[initialSectorID].neighbourhood[ii];
@@ -7074,7 +7075,6 @@ function removeSnapEdges(initialSectorID) {
         if (sectors[initialSectorID].snapEdges[ii] !== 0) {
             let edgeToRemove = sectors[initialSectorID].snapEdges[ii];
             canvas.remove(edgeToRemove);
-            console.log(edgeToRemove)
             sectors[initialSectorID].snapEdges[ii] = [0];
         }
 
@@ -7117,8 +7117,6 @@ async function resetSectors() {
 
     for (let rr = 0; rr < sectors.length; rr++){
         removeSnapEdges(sectors[rr].ID);
-
-        console.log(sectors[rr].snapEdges)
 
         sectorParameterOnMousedown = getSectorParameterOnMousedown(sectors[rr].ID);
         immediatehistory.push(sectorParameterOnMousedown);
@@ -7243,7 +7241,6 @@ async function resetSectors() {
         if (turnOverlapControllOn == "1"){
             overlapControll(sectors[rr].trapez);
         }
-        console.log(sectors[rr].snapStatus)
 
     }
 
@@ -7385,6 +7382,7 @@ function getSectorAngleToAlign(initialSectorID, targetSectorID) {
         }
 
         let newSectorAngle = sectors[targetSectorID].trapez.angle + gamma_target / Math.PI * 180 - gamma_initial / Math.PI * 180;
+
         return newSectorAngle
 
 }
@@ -7401,13 +7399,18 @@ function rotateSector(SectorToRotate, newSectorAngle){
 
     return new Promise((resolve) => {
         if (animationOn == "1") {
-            if(Math.abs(sectors[SectorToRotate].trapez.angle) < 180 ) {
 
+            console.log(sectors[SectorToRotate].trapez.angle)
+            console.log(newSectorAngle)
+
+            if(Math.abs(sectors[SectorToRotate].trapez.angle) < 180 ) {
 
 
                 if (Math.abs(newSectorAngle - sectors[SectorToRotate].trapez.angle) > 180){
                     newSectorAngle-=360
                 }
+
+                console.log(newSectorAngle)
 
                 /* console.log('Weg 1')
 
@@ -7921,15 +7924,16 @@ async function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) 
 
     if (turnLorentzTransformOn == 1){
 
-        let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector)
+        let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector, 0)
         await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
     }else{
         let newSectorAngle = getSectorAngleToAlign(initialSectorID, targetSectorID)
-        await rotateSector(initialSectorID, newSectorAngle)
 
-        let newSectorPos = getSectorPosToAlign(initialSectorID, targetSectorID)
-        await translateSector(initialSectorID, newSectorPos.x, newSectorPos.y)
+
+        let newSectorPos = getSectorPosToAlign(initialSectorID, targetSectorID, newSectorAngle)
+        translateSector(initialSectorID, newSectorPos.x, newSectorPos.y)
+        await rotateSector(initialSectorID, newSectorAngle)
     }
 
     updateMinions(sectors[initialSectorID].trapez);
@@ -8491,19 +8495,46 @@ function toRadians(deg) {
  * @param initialSectorID - ID of the sector that has to be moved to snap to the target sector.
  * @param targetSectorID - ID of the sector the initial sector is snapped to.
  */
-function getSectorPosToAlign(initialSectorID, targetSectorID){
+function getSectorPosToAlign(initialSectorID, targetSectorID, newSectorAngle){
 
     let commonEdgeNumber = getCommonEdgeNumber(initialSectorID, targetSectorID);
+    console.log("new:", newSectorAngle)
+    if(Math.abs(newSectorAngle - sectors[initialSectorID].trapez.angle) < epsilon){
+        newSectorAngle = sectors[initialSectorID].trapez.angle
+    }
 
     let initialTrapezPointsAsGlobalCoordsBeforeRotating = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
     let targetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
 
-    let point_1 = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+    //console.log("new:", newSectorAngle)
+    //console.log("old:", sectors[initialSectorID].trapez.angle)
+    //console.log("sum:", newSectorAngle +sectors[initialSectorID].trapez.angle)
+
+    let point_1_temp = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+    let point_1_rotated = rotatePoint(
+        [
+            initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber].x,
+            initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber].y
+            ],
+        newSectorAngle - sectors[initialSectorID].trapez.angle,
+        sectors[initialSectorID].trapez.left,
+        sectors[initialSectorID].trapez.top,
+    )
+    let point_1 = new fabric.Point(point_1_rotated[0], point_1_rotated[1])
+    //drawOrientationCirc('red', point_1_rotated[0], point_1_rotated[1])
 
     let point_a = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
 
+    //drawOrientationCirc('blue', point_a.x, point_a.y)
+
+    //drawOrientationCirc('yellow', sectors[initialSectorID].trapez.left, sectors[initialSectorID].trapez.top)
+
     let newSectorX = sectors[initialSectorID].trapez.left + (point_a.x - point_1.x)
     let newSectorY = sectors[initialSectorID].trapez.top + (point_a.y - point_1.y)
+
+    //drawOrientationCirc('green', newSectorX, newSectorY)
+
+
 
     let NewSectorPos = new fabric.Point(newSectorX, newSectorY)
 
