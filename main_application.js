@@ -2455,7 +2455,7 @@ function rotateAndTranslateWithWaitOnIt(sectorArrayToAlignIDAnglePos){
             //drawOrientationCirc("green", sectorArrayToAlignIDAnglePos[ii][2].x, sectorArrayToAlignIDAnglePos[ii][2].y)
 
         }
-        setTimeout(resolve, 500)
+        setTimeout(resolve, 1000)
     })
 }
 
