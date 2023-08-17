@@ -20,7 +20,7 @@ variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textSta
 
 textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
 
-variablenamesVectors = ["vectorStartSectors", "vectorStart_x", "vectorStart_y", "vectorEnd_x", "vectorEnd_y", "vectorStartStrokeWidth", "vectorStartFill", "vectorStartStroke"]
+variablenamesVectors = ["vectorStartSectors", "vectorStart_x", "vectorStart_y", "vectorEnd_x", "vectorEnd_y", "vectorStartStrokeWidth", "vectorStartFill", "vectorStartStroke", "vectorStartParentSector", "vectorStartstartID"]
 
 vectorDict = dict(zip(variablenamesVectors, range(len(variablenamesVectors))))
 
@@ -252,6 +252,10 @@ def startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle,
                 for jj in range(0, startVector):
                     if (vectorStartSectors[jj] == vectorStartSectors[startVector]):
                         vectorNumberInSector += 1
+
+        vectorValues[vectorDict["vectorStartParentSector"]][startVector] = "[" + str(vectorStartSectors[startVector]) + "," + str(vectorNumberInSector) + "]"
+
+        vectorValues[vectorDict["vectorStartstartID"]][startVector] = str(startVector)
 
         vectorValues[vectorDict["vectorStartStrokeWidth"]][startVector] = 2
 
