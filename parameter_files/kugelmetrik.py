@@ -59,6 +59,20 @@ startTextContent = ['Reykjavik', 'Dublin', 'Casablanca', 'Helsinki', 'Monaco', '
 startTextsOffset_x = [0.5, 0.62, 0.42, 0.65, 0.45, 0.62, 0.55]
 startTextsOffset_y = [0.37, 0.68, 0.68, 0.8, 0.2, 0.8, 0.84]
 
+#Parameter fuer die Startvektoren
+vectorStartSectors = [2]
+#Winkel in Grad
+vectorStartAngle = [45]
+#Startpunkt der Geodaete liegt in der unteren linken Ecke
+#Versatz Anteilig der Sektorbreite
+vectorStartOffset_x = [0.5]
+#Versatz Anteilig der Sektorhoehe
+vectorStartOffset_y = [0.2]
+#Laenge der Geodaete in Pixel
+vectorStartLength = [30]
+#operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
+vectorStartType = []
+
 
 def main():
 
@@ -84,7 +98,7 @@ def main():
     zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
     zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
-    file = io.open("kugelmetrik_tutorial_map_v2.js",'w')
+    file = io.open("kugelmetrik_vektoren.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -138,6 +152,9 @@ def main():
     file.write("\n")
     file.write(
         "let mark_colors = ['black', 'black','black','black','black','black','black','black','black', 'grey', 'grey', 'grey'];")
+    file.write("\n")
+    file.write(
+        "let vector_colors = ['blue', 'black'];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
@@ -234,7 +251,9 @@ def main():
     gtm.startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle, startGeodesicsLength,
                  startGeodesicsOffset_x,startGeodesicsOffset_y,
                  startMarksSectors,startMarksOffset_x,startMarksOffset_y,startMarksRadius,
-                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent)
+                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent,
+                 vectorStartSectors,vectorStartAngle, vectorStartLength,
+                 vectorStartOffset_x, vectorStartOffset_y)
 
 
     file.close()

@@ -37,6 +37,9 @@ let textureColored = getUrlVars()["textureColored"];
 //buildStartGeodesics=1& um die Startgeodaeten einzuschalten
 let buildStartGeodesics = getUrlVars()["buildStartGeodesics"];
 
+//buildStartVectors=1& um die Startgeodaeten einzuschalten
+let buildStartVectors = getUrlVars()["buildStartVectors"];
+
 //buildStartMarks=1& um die Markierungen zu Anfang einzuschalten
 let buildStartMarks = getUrlVars()["buildStartMarks"];
 

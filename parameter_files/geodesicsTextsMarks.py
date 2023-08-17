@@ -20,6 +20,10 @@ variablenamesTexts = ["textStart_x", "textStart_y", "textStartContent", "textSta
 
 textDict = dict(zip(variablenamesTexts, range(len(variablenamesTexts))))
 
+variablenamesVectors = ["vectorStartSectors", "vectorStart_x", "vectorStart_y", "vectorEnd_x", "vectorEnd_y", "vectorStartStrokeWidth", "vectorStartFill", "vectorStartStroke"]
+
+vectorDict = dict(zip(variablenamesVectors, range(len(variablenamesVectors))))
+
 
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
@@ -37,7 +41,9 @@ def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x,
 def startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle, startGeodesicsLength,
                  startGeodesicsOffset_x,startGeodesicsOffset_y,
                  startMarksSectors,startMarksOffset_x,startMarksOffset_y,startMarksRadius,
-                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent):
+                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent,
+                 vectorStartSectors,vectorStartAngle, vectorStartLength,
+                 vectorStartOffset_x, vectorStartOffset_y):
 
     geodesicValues = [[[] for ii in range(len(startGeodesicsSectors))] for jj in range(len(variablenamesGeodesics))]
 
@@ -201,4 +207,61 @@ def startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle,
         file.write(variablenamesTexts[ii] + "= [ ")
         for jj in range(0, len(startTextsSectors)):
             file.write(str(textValues[ii][jj]) + ', ')
+        file.write("];\n")
+
+
+    vectorValues = [[[] for ii in range(len(vectorStartSectors))] for jj in range(len(variablenamesVectors))]
+
+    for startVector in range(0, len(vectorStartSectors)):
+        vectorValues[vectorDict["vectorStartSectors"]][startVector] = vectorStartSectors[startVector]
+
+        sector_angle = sectorValues[sectorDict["sec_angle"]][vectorStartSectors[startVector]]
+
+        sector_width = sectorValues[sectorDict["sec_width"]][vectorStartSectors[startVector]]
+
+        sector_height = sectorValues[sectorDict["sec_height"]][vectorStartSectors[startVector]]
+
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][vectorStartSectors[startVector]]
+
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][vectorStartSectors[startVector]]
+
+        vectorStart_x_tmp = sector_center_x - sector_width / 2 + vectorStartOffset_x[startVector] * sector_width
+
+        vectorStart_y_tmp = sector_center_y + sector_height / 2 - vectorStartOffset_y[startVector] * sector_height
+
+        vectorEnd_x_tmp = vectorStart_x_tmp + math.cos( - vectorStartAngle[startVector] * math.pi / 180) * vectorStartLength[startVector]
+
+        vectorEnd_y_tmp = vectorStart_y_tmp + math.sin( - vectorStartAngle[startVector] * math.pi / 180) * vectorStartLength[startVector]
+
+        vectorStartPoint = rotationAroundPoint(vectorStart_x_tmp, vectorStart_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        vectorEndPoint = rotationAroundPoint(vectorEnd_x_tmp, vectorEnd_y_tmp, sector_angle, sector_center_x, sector_center_y)
+
+        vectorValues[vectorDict["vectorStart_x"]][startVector] = vectorStartPoint[0]
+
+        vectorValues[vectorDict["vectorStart_y"]][startVector] = vectorStartPoint[1]
+
+        vectorValues[vectorDict["vectorEnd_x"]][startVector] = vectorEndPoint[0]
+
+        vectorValues[vectorDict["vectorEnd_y"]][startVector] = vectorEndPoint[1]
+
+        vectorNumberInSector = 0
+
+        if (startVector > 0):
+            if (len(vectorStartSectors) > 0):
+                for jj in range(0, startVector):
+                    if (vectorStartSectors[jj] == vectorStartSectors[startVector]):
+                        vectorNumberInSector += 1
+
+        vectorValues[vectorDict["vectorStartStrokeWidth"]][startVector] = 2
+
+        vectorValues[vectorDict["vectorStartFill"]][startVector] = "vector_colors["+str(startVector)+"]"
+
+        vectorValues[vectorDict["vectorStartStroke"]][startVector] = "vector_colors["+str(startVector)+"]"
+
+
+    for ii in range(0, len(variablenamesVectors)):
+        file.write(variablenamesVectors[ii] + "= [ ")
+        for jj in range(0, len(vectorStartSectors)):
+            file.write(str(vectorValues[ii][jj]) + ', ')
         file.write("];\n")

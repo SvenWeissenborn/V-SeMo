@@ -8153,6 +8153,15 @@ function startGeodesics(){
 
 }
 
+function startVectors(){
+
+    for (let ii = 0; ii < vectorStartSectors.length; ii++) {
+        console.log(ii)
+    }
+
+}
+
+
 /**
  * adds mark objects and defines their parent sector objects
  * additionally enables drawing geodesic- and polylines when clicking on a mark
@@ -9085,6 +9094,8 @@ if (buildStartGeodesics == "1"){startGeodesics();}
 if (buildStartMarks == "1"){startMarks();}
 
 if (buildStartTexts == "1"){startTexts();}
+
+if (buildStartVectors == "1"){startVectors();}
 
 if (showVerticesOn == "1"){drawVertices();}
 
