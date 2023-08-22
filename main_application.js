@@ -394,7 +394,6 @@ canvas.on('mouse:move', function (o) {
 
     let color;
     pointer = canvas.getPointer(o.e);
-
     //Abstandsprüfung zum Geodätenende -> Pfeil mit Richtung setzen
 
 
@@ -417,7 +416,7 @@ canvas.on('mouse:move', function (o) {
 
         let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentSector);
 
-        let inboundParameter = 0.01;
+        let inboundParameter = 0.003;
         let inboundPoints = [];
         let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[closestEdgeOfPointParameters.pointSectorID].trapez);
 
@@ -427,7 +426,7 @@ canvas.on('mouse:move', function (o) {
             inboundPoints.splice(ii, 1, inboundPoint);
         }
 
-        if(getParentSectorOfPoint(pointer) !== undefined) {
+        if(getParentSectorOfPoint(pointer) !== undefined && (sectors[vectorPointParentSector].neighbourhood.includes(getParentSectorOfPoint(pointer)) || getParentSectorOfPoint(pointer) === vectorPointParentSector)) {
             if(closestEdgeOfPointParameters.minDistance >= 0.01 || closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0) {
                 vectorPoint.set({
                     left: pointer.x,
@@ -460,7 +459,7 @@ canvas.on('mouse:move', function (o) {
             updateMinionsPosition(vectorPoint, vectorHead);
         }
 
-            if (closestEdgeOfPointParameters.minDistance < 0.01) {
+            if (closestEdgeOfPointParameters.minDistance < 0.003) {
                 let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
                 let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
                 let mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
@@ -2089,7 +2088,6 @@ if (defineLaufContinueGeodesicMax !== undefined){
 let abortlength = 20;
 let abortLengthVector = 30;
 let maxLengthVector = 250;
-let chosenVectorGlobalID = -1;
 
 let dragPointRadius = 5;
 let dragPointPadding = 10;
@@ -7355,6 +7353,8 @@ function resetAppliction() {
     resetSectors();
     if (buildStartGeodesics == "1"){startGeodesics();}
 
+    if(buildStartVectors == "1"){startVectors();}
+
     if (buildStartMarks == "1"){startMarks();}
 
     if (showVerticesOn == "1"){drawVertices();}
@@ -8156,7 +8156,10 @@ function startGeodesics(){
 function startVectors(){
 
     for (let ii = 0; ii < vectorStartSectors.length; ii++) {
-        console.log(ii)
+        let vectorParentID = vectorStartSectors[ii];
+        let vectorPointPosition = new fabric.Point(vectorStart_x[ii] + window.innerWidth / 2, vectorStart_y[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2);
+        let vectorHeadPosition = new fabric.Point(vectorEnd_x[ii] + window.innerWidth / 2, vectorEnd_y[ii] + (window.innerHeight - window.innerHeight * 0.08) / 2);
+        drawVector(vectorPointPosition, vectorHeadPosition, vectorParentID, vectors.length, sectors[vectorParentID].vectors.length, 'vector', false);
     }
 
 }

@@ -39,7 +39,7 @@ let slideContent = [
         id: 1,
         text_de: 'Du siehst nun eine Fläche, welche durch 4 Sektoren (weiße Vierecke) dargestellt wird, welche frei beweglich und drehbar sind. Probiere es mal aus.',
         text_en: 'Vectortext 2',
-        sectorsToShow: [0, 1, 3, 4],
+        sectorsToShow: [0, 1, 2, 3, 4, 5, 6, 7, 8],
     },
 
     {
