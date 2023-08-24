@@ -405,11 +405,12 @@ canvas.on('mouse:move', function (o) {
         let vectorPointParentSector = vectorPoint.parentSector[0];
 
         if (vectors[vectorPoint.ID][1].relationship) {
-            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1])
+            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][1]);
         }
         if (vectors[vectorPoint.ID][2].relationship) {
-            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2])
+            updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2]);
         }
+
         vectorPoint.setCoords()
         vectorLine.setCoords()
         vectorHead.setCoords()
@@ -3200,7 +3201,6 @@ function deleteWholeGeodesic(geodesicToDelete) {
 
         let vectorPart = canvas.getActiveObject();
         let vectorGlobalID = vectorPart.ID;
-        console.log(vectorPart);
 
         let isVector = false;
         for (let ii = 0; ii < vectors.length; ii++) {
@@ -3232,28 +3232,36 @@ function deleteWholeGeodesic(geodesicToDelete) {
                 vectors[ii][2].ID = vectors.indexOf(vectors[ii]);
             }
         } else {
-            immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector);
-            let vectorPointX = vectorDuplicates[vectorGlobalID][0].left;
-            let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
-            let vectorHeadX = vectorDuplicates[vectorGlobalID][2].left;
-            let vectorHeadY = vectorDuplicates[vectorGlobalID][2].top;
-            let vectorHeadAngle = vectorDuplicates[vectorGlobalID][2].angle;
-            immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
-            canvas.remove(vectorDuplicates[vectorGlobalID][0], vectorDuplicates[vectorGlobalID][1], vectorDuplicates[vectorGlobalID][2]);
-            if(vectorDuplicates[vectorGlobalID][0].parentSector !== undefined) {
-                sectors[vectorDuplicates[vectorGlobalID][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[vectorGlobalID][0].parentSector[1], 1);
-            }
-            vectorDuplicates.splice(vectorGlobalID, 1);
-
+            let isVectorDuplicate = false;
             for (let ii = 0; ii < vectorDuplicates.length; ii++) {
-                let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top));
-                vectorDuplicates[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectorDuplicates.indexOf(vectorDuplicates[ii])];
-                vectorDuplicates[ii][0].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
-                vectorDuplicates[ii][1].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
-                vectorDuplicates[ii][2].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                if(vectorDuplicates[ii].includes(vectorPart) !== false) {
+                    isVectorDuplicate = true;
+                    break;
+                }
+            }
+            if(isVectorDuplicate !== false) {
+                immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector);
+                let vectorPointX = vectorDuplicates[vectorGlobalID][0].left;
+                let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
+                let vectorHeadX = vectorDuplicates[vectorGlobalID][2].left;
+                let vectorHeadY = vectorDuplicates[vectorGlobalID][2].top;
+                let vectorHeadAngle = vectorDuplicates[vectorGlobalID][2].angle;
+                immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
+                canvas.remove(vectorDuplicates[vectorGlobalID][0], vectorDuplicates[vectorGlobalID][1], vectorDuplicates[vectorGlobalID][2]);
+                if(vectorDuplicates[vectorGlobalID][0].parentSector !== undefined) {
+                    sectors[vectorDuplicates[vectorGlobalID][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[vectorGlobalID][0].parentSector[1], 1);
+                }
+                vectorDuplicates.splice(vectorGlobalID, 1);
+
+                for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+                    let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectorDuplicates[ii][0].left, vectorDuplicates[ii][0].top));
+                    vectorDuplicates[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectorDuplicates.indexOf(vectorDuplicates[ii])];
+                    vectorDuplicates[ii][0].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                    vectorDuplicates[ii][1].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                    vectorDuplicates[ii][2].ID = vectorDuplicates.indexOf(vectorDuplicates[ii]);
+                }
             }
         }
-        console.log(immediatehistory);
         history.push(immediatehistory);
 
     }
@@ -4219,6 +4227,8 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
                 lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
         }
 
+        changeVectorWidth();
+
 
         chosenLineGlobalID = -1;
 
@@ -5127,6 +5137,8 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
 
             isVectorPointDragged = true;
 
+            changeVectorWidth();
+
             console.log(vectorPoint.parentSector, vectorPoint.ID);
 
             showGeodesicButtons(true);
@@ -5241,6 +5253,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
 
         vectorLine.on('mousedown', function () {
             showGeodesicButtons(true);
+            changeVectorWidth();
         });
 
         vector.push(vectorLine);
@@ -5269,6 +5282,8 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             pointer = canvas.getPointer(o.e);
             let sectorID = vectorPoint.parentSector[0];
             vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
+
+            changeVectorWidth();
 
             showGeodesicButtons(true);
 
@@ -5410,7 +5425,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         });
         vectorDuplicate.push(vectorPointDuplicate);
         vectorPointDuplicate.on('mousedown', function() {
-            console.log(vectorPointDuplicate.parentSector, vectorPointDuplicate.ID);
+            changeVectorWidth();
         })
 
         let points = [
@@ -5434,6 +5449,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             lockMovementX: true,
             lockMovementY: true,
         });
+        vectorLineDuplicate.on('mousedown', function() {
+            changeVectorWidth();
+        })
         vectorDuplicate.push(vectorLineDuplicate);
 
         let vectorHeadDuplicate = new fabric.Triangle({
@@ -5455,6 +5473,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             lockMovementX: true,
             lockMovementY: true
         });
+        vectorHeadDuplicate.on('mousedown', function() {
+            changeVectorWidth();
+        })
         vectorDuplicate.push(vectorHeadDuplicate);
 
         for (let ii = 0; ii < vectorDuplicate.length; ii++) {
@@ -5477,6 +5498,25 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             history.push(immediatehistory);
         }
     }
+}
+
+function changeVectorWidth() {
+
+    for (let ii = 0; ii < vectors.length; ii++) {
+        if(vectors[ii].includes(canvas.getActiveObject()) !== true) {
+            vectors[ii][1].strokeWidth = 3;
+        } else {
+            vectors[ii][1].strokeWidth = 4.5;
+        }
+    }
+    for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+        if(vectorDuplicates[ii].includes(canvas.getActiveObject()) !== true) {
+            vectorDuplicates[ii][1].strokeWidth = 3;
+        } else {
+            vectorDuplicates[ii][1].strokeWidth = 4.5;
+        }
+    }
+
 }
 
 function drawVertices() {
@@ -6372,7 +6412,7 @@ function getVectorParameters(initialSectorID, vectorID) {
     let vectorPoint = canvas.getObjects()[stack_idx_of_vectorPoint];
     let vectorHead = canvas.getObjects()[stack_idx_of_vectorHead];
 
-    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorPoint.left, vectorPoint.top, vectorHead.left, vectorHead.top, vectorHead.angle];
+    let vectorParameters = [vectorPoint.parentSector[0], vectorPoint.parentSector[1], vectorPoint.left, vectorPoint.top, vectorHead.left, vectorHead.top];
 
     return vectorParameters;
 
@@ -8868,15 +8908,19 @@ function undoLastAction(){
         if(immediatehistory[1] !== 'duplicate') {
             canvas.remove(vectors[immediatehistory[1]][0], vectors[immediatehistory[1]][1], vectors[immediatehistory[1]][2]);
             if(vectors[immediatehistory[1]][0].parentSector !== undefined) {
-                sectors[vectors[immediatehistory[1]][0].parentSector[0]].vectors.splice(vectors[immediatehistory[1]][0].parentSector[1], 1);
+                //sectors[vectors[immediatehistory[1]][0].parentSector[0]].vectors.splice(vectors[immediatehistory[1]][0].parentSector[1], 1);
+                sectors[vectors[immediatehistory[1]][0].parentSector[0]].vectors.pop();
             }
-            vectors.splice(immediatehistory[1], 1);
+            //vectors.splice(immediatehistory[1], 1);
+            vectors.pop();
         } else {
             canvas.remove(vectorDuplicates[immediatehistory[2]][0], vectorDuplicates[immediatehistory[2]][1], vectorDuplicates[immediatehistory[2]][2]);
             if(vectorDuplicates[immediatehistory[2]][0].parentSector !== undefined) {
-                sectors[vectorDuplicates[immediatehistory[2]][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[immediatehistory[2]][0].parentSector[1], 1);
+                //sectors[vectorDuplicates[immediatehistory[2]][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[immediatehistory[2]][0].parentSector[1], 1);
+                sectors[vectorDuplicates[immediatehistory[2]][0].parentSector[0]].vectorDuplicates.pop();
             }
-            vectorDuplicates.splice(immediatehistory[2], 1);
+            //vectorDuplicates.splice(immediatehistory[2], 1);
+            vectorDuplicates.pop();
         }
 
     }
@@ -8886,7 +8930,6 @@ function undoLastAction(){
         let vectorPoint = sectors[immediatehistory[1]].vectors[immediatehistory[2]][0];
         let vectorLine = sectors[immediatehistory[1]].vectors[immediatehistory[2]][1];
         let vectorHead = sectors[immediatehistory[1]].vectors[immediatehistory[2]][2];
-        //let vector = [vectorPoint, vectorLine, vectorHead];
 
         canvas.remove(vectorPoint, vectorLine, vectorHead);
         sectors[immediatehistory[1]].vectors.splice(immediatehistory[2], 1);
@@ -8898,45 +8941,6 @@ function undoLastAction(){
             let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectors[ii][0].left, vectors[ii][0].top));
             vectors[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
         }
-
-        /*vectorPoint.set({
-            left: immediatehistory[3][2],
-            top: immediatehistory[3][3]
-        });
-        vectorPoint.setCoords();
-        updateMinionsPosition(vectorPoint, vectorLine);
-        updateMinionsPosition(vectorPoint, vectorHead);
-
-        sectors[immediatehistory[1]].vectors.splice(immediatehistory[2], 1);
-        sectors[immediatehistory[3][0]].vectors.splice(immediatehistory[3][1], 0, vector);
-        for (let ii = 0; ii < vectors.length; ii++) {
-            let vectorPointParentID = getParentSectorOfPoint(new fabric.Point(vectors[ii][0].left, vectors[ii][0].top));
-            vectors[ii][0].parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
-            // vectors[ii][0].ID = vectors.indexOf(vectors[ii]);
-            //vectors[ii][1].ID = vectors.indexOf(vectors[ii]);
-            //vectors[ii][2].ID = vectors.indexOf(vectors[ii]);
-        }
-        vectorPoint.relationship = getRelationship(vectorPoint, immediatehistory[3][0]);
-        vectorPoint.parentSector = [immediatehistory[3][0], immediatehistory[3][1]];
-
-        vectorLine.set({
-            x1: immediatehistory[3][2],
-            y1: immediatehistory[3][3],
-            x2: immediatehistory[3][4],
-            y2: immediatehistory[3][5],
-            angle: 0
-        });
-        vectorLine.setCoords();
-
-        vectorHead.set({
-            left: immediatehistory[3][4],
-            top: immediatehistory[3][5],
-            angle: immediatehistory[3][6]
-        });
-        vectorHead.setCoords();
-
-        vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
-        vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint); */
 
     }
 
