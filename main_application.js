@@ -417,7 +417,7 @@ canvas.on('mouse:move', function (o) {
 
         let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentSector);
 
-        let inboundParameter = 0.003;
+        let inboundParameter = epsilon;
         let inboundPoints = [];
         let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[closestEdgeOfPointParameters.pointSectorID].trapez);
 
@@ -2099,7 +2099,6 @@ let pathCoords = [];
 
 let paddingFactor = 0.00001;
 
-
 let multiply = fabric.util.multiplyTransformMatrices;
 let invert = fabric.util.invertTransform;
 
@@ -3216,8 +3215,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
             let vectorPointY = vectors[vectorGlobalID][0].top;
             let vectorHeadX = vectors[vectorGlobalID][2].left;
             let vectorHeadY = vectors[vectorGlobalID][2].top;
-            let vectorHeadAngle = vectors[vectorGlobalID][2].angle;
-            immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
+            immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY);
             canvas.remove(vectors[vectorGlobalID][0], vectors[vectorGlobalID][1], vectors[vectorGlobalID][2]);
             if(vectors[vectorGlobalID][0].parentSector !== undefined) {
                 sectors[vectors[vectorGlobalID][0].parentSector[0]].vectors.splice(vectors[vectorGlobalID][0].parentSector[1], 1);
@@ -3245,8 +3243,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
                 let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
                 let vectorHeadX = vectorDuplicates[vectorGlobalID][2].left;
                 let vectorHeadY = vectorDuplicates[vectorGlobalID][2].top;
-                let vectorHeadAngle = vectorDuplicates[vectorGlobalID][2].angle;
-                immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY, vectorHeadAngle);
+                immediatehistory.push(vectorPointX, vectorPointY, vectorHeadX, vectorHeadY);
                 canvas.remove(vectorDuplicates[vectorGlobalID][0], vectorDuplicates[vectorGlobalID][1], vectorDuplicates[vectorGlobalID][2]);
                 if(vectorDuplicates[vectorGlobalID][0].parentSector !== undefined) {
                     sectors[vectorDuplicates[vectorGlobalID][0].parentSector[0]].vectorDuplicates.splice(vectorDuplicates[vectorGlobalID][0].parentSector[1], 1);
@@ -3751,6 +3748,8 @@ function drawDragPoint(lineToGivePoint) {
 
             canvas.renderAll();
         }
+
+        changeVectorWidth();
 
 
 
@@ -5136,13 +5135,16 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         vectorPoint.on('mousedown', function (o) {
 
             isVectorPointDragged = true;
-
             changeVectorWidth();
 
-            console.log(vectorPoint.parentSector, vectorPoint.ID);
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
 
+            chosenLineGlobalID = -1;
             showGeodesicButtons(true);
-
             let sectorID = vectorPoint.parentSector[0];
             vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
 
@@ -5254,6 +5256,12 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         vectorLine.on('mousedown', function () {
             showGeodesicButtons(true);
             changeVectorWidth();
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
+            chosenLineGlobalID = -1;
         });
 
         vector.push(vectorLine);
@@ -5284,6 +5292,12 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
 
             changeVectorWidth();
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
+            chosenLineGlobalID = -1;
 
             showGeodesicButtons(true);
 
@@ -5426,6 +5440,12 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         vectorDuplicate.push(vectorPointDuplicate);
         vectorPointDuplicate.on('mousedown', function() {
             changeVectorWidth();
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
+            chosenLineGlobalID = -1;
         })
 
         let points = [
@@ -5451,6 +5471,12 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         });
         vectorLineDuplicate.on('mousedown', function() {
             changeVectorWidth();
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
+            chosenLineGlobalID = -1;
         })
         vectorDuplicate.push(vectorLineDuplicate);
 
@@ -5475,6 +5501,12 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
         });
         vectorHeadDuplicate.on('mousedown', function() {
             changeVectorWidth();
+            for (let ii = 0; ii < lines.length; ii++) {
+                for (let jj = 0; jj < lines[ii].length; jj++) {
+                    lines[ii][jj].strokeWidth = lineStrokeWidthWhenNotSelected;
+                }
+            }
+            chosenLineGlobalID = -1;
         })
         vectorDuplicate.push(vectorHeadDuplicate);
 
@@ -8506,7 +8538,8 @@ function toolChange(argument) {
                             showGeodesicButtons(true);
                             showSectorAreaInfobox(false);
                             showDeficitAngleInfobox(false);
-                            showVertices(false)
+                            showVertices(false);
+                            changeVectorWidth();
                         }
 
                         chosenLineGlobalID = this.ID[0];
