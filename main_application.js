@@ -410,6 +410,9 @@ canvas.on('mouse:move', function (o) {
         if (vectors[vectorPoint.ID][2].relationship) {
             updateMinionsPosition(vectorPoint, vectors[vectorPoint.ID][2]);
         }
+        if (vectors[vectorPoint.ID][0].orientationLine.relationship) {
+            updateMinionsPosition(vectors[vectorPoint.ID][0], vectors[vectorPoint.ID][0].orientationLine);
+        }
 
         vectorPoint.setCoords()
         vectorLine.setCoords()
@@ -417,7 +420,7 @@ canvas.on('mouse:move', function (o) {
 
         let closestEdgeOfPointParameters = getClosestEdgeOfPointParameters(pointer, vectorPointParentSector);
 
-        let inboundParameter = epsilon;
+        let inboundParameter = epsilon*5;
         let inboundPoints = [];
         let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[closestEdgeOfPointParameters.pointSectorID].trapez);
 
@@ -428,7 +431,7 @@ canvas.on('mouse:move', function (o) {
         }
 
         if(getParentSectorOfPoint(pointer) !== undefined && (sectors[vectorPointParentSector].neighbourhood.includes(getParentSectorOfPoint(pointer)) || getParentSectorOfPoint(pointer) === vectorPointParentSector)) {
-            if(closestEdgeOfPointParameters.minDistance >= 0.01 || closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0) {
+            if(closestEdgeOfPointParameters.minDistance >= epsilon || closestEdgeOfPointParameters.snapStatusOfClosestEdge !== 0) {
                 vectorPoint.set({
                     left: pointer.x,
                     top: pointer.y
@@ -460,7 +463,7 @@ canvas.on('mouse:move', function (o) {
             updateMinionsPosition(vectorPoint, vectorHead);
         }
 
-            if (closestEdgeOfPointParameters.minDistance < 0.003) {
+            if (closestEdgeOfPointParameters.minDistance < epsilon) {
                 let edgeVectorX = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
                 let edgeVectorY = inboundPoints[(closestEdgeOfPointParameters.closestEdge + 1) % 4].y - inboundPoints[closestEdgeOfPointParameters.closestEdge].y;
                 let mouseVectorX = pointer.x - inboundPoints[closestEdgeOfPointParameters.closestEdge].x;
@@ -610,8 +613,8 @@ canvas.on('mouse:move', function (o) {
                 sectors[vectorPoint.parentSector[0]].vectors.splice(vectorPoint.parentSector[1], 1);
                 if (vectorPointParentID !== undefined) {
                     sectors[vectorPointParentID].vectors.push(vectors[vectorPoint.ID]);
-                    //vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.length];
-                    //vectorPoint.relationship = getRelationship(vectorPoint, vectorPoint.parentSector[0]);
+                    vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.length];
+                    vectorPoint.relationship = getRelationship(vectorPoint, vectorPoint.parentSector[0]);
                 }
             } else {
                 vectorPoint.parentSector = [vectorPointParentID, sectors[vectorPointParentID].vectors.indexOf(vectors[ii])];
@@ -3209,7 +3212,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
             }
         }
 
-        if(isVector !== false) {
+        if(isVector === true) {
             immediatehistory.push('vector', vectorGlobalID, vectors[vectorGlobalID][0].parentSector);
             let vectorPointX = vectors[vectorGlobalID][0].left;
             let vectorPointY = vectors[vectorGlobalID][0].top;
@@ -3237,7 +3240,7 @@ function deleteWholeGeodesic(geodesicToDelete) {
                     break;
                 }
             }
-            if(isVectorDuplicate !== false) {
+            if(isVectorDuplicate === true) {
                 immediatehistory.push('duplicate', vectorGlobalID, vectorDuplicates[vectorGlobalID][0].parentSector);
                 let vectorPointX = vectorDuplicates[vectorGlobalID][0].left;
                 let vectorPointY = vectorDuplicates[vectorGlobalID][0].top;
@@ -4207,7 +4210,6 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
 
     //Setzen/Verlängern einer Linie; nur zulässig auf Trapezen
     this.trapez.on('mousedown', function (o) {
-        console.log(this.parent.vectors)
 
         //console.log(this.parent.neighbourhood)
 
@@ -4224,6 +4226,12 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         for (let kk = 0; kk < lines.length; kk++){
             for (let ll = 0; ll < lines[kk].length; ll++)
                 lines[kk][ll].strokeWidth = lineStrokeWidthWhenNotSelected ;
+        }
+        for (let ii = 0; ii < vectors.length; ii++) {
+            vectors[ii][0].orientationLine.opacity = 0;
+        }
+        for (let ii = 0; ii < vectorDuplicates.length; ii++) {
+            vectorDuplicates[ii][0].orientationLine.opacity = 0;
         }
 
         changeVectorWidth();
@@ -5092,7 +5100,7 @@ window.addEventListener('keydown',function(event){
 function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorGlobalID, vectorLocalID, type, pushHistoryToSet) {
 
     let vectorHeadOrientation = toDegree(Math.atan2(vectorHeadCoords.y - vectorPointCoords.y, vectorHeadCoords.x - vectorPointCoords.x)) + 90;
-    if(type === 'vector') {
+    if (type === 'vector') {
         let vector = [];
         let immediatehistory = [5];
         let vectorParametersOnMouseDown;
@@ -5116,6 +5124,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             hasBorders: false,
             hasControls: true
         });
+        vectorPoint.duplicateGlobalIDs = [];
 
         vectorPoint.setControlsVisibility({
             tl: false,
@@ -5147,6 +5156,10 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             showGeodesicButtons(true);
             let sectorID = vectorPoint.parentSector[0];
             vectorParametersOnMouseDown = getVectorParameters(sectorID, vectorPoint.parentSector[1]);
+            //Hier wird verhindert, dass ein Vektor in einen überlappenden Sektor bewegt wird.
+            canvas.bringToFront(sectors[vectorPoint.parentSector[0]].trapez);
+            updateMinions(sectors[vectorPoint.parentSector[0]].trapez);
+            drawSnapEdges(sectors[vectorPoint.parentSector[0]].ID);
 
             let cloneIcon = 'button_icons/duplicate_vector.png'
             let cloneImg = document.createElement('img');
@@ -5211,6 +5224,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             });
 
             vectorPoint.setControlVisible('tl', true);
+            canvas.bringToFront(vectors[vectorPoint.ID][1]);
+            canvas.bringToFront(vectors[vectorPoint.ID][2]);
+            console.log(vectorPoint.duplicateGlobalIDs);
         })
 
         function cloneObject(eventData, transform) {
@@ -5220,18 +5236,32 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             let vectorHeadPosition = new fabric.Point(vectorHead.left, vectorHead.top);
             let vectorLocalID = sectors[vectorPoint.parentSector[0]].vectorDuplicates.length;
             drawVector(vectorPointPosition, vectorHeadPosition, vectorPoint.parentSector[0], vectorDuplicates.length, vectorLocalID, 'duplicate', true);
+            vectorPoint.duplicateGlobalIDs.push(vectorDuplicates.length - 1);
             canvas.bringToFront(vectorPoint);
         }
 
         vectorPoint.on('mouseup', function() {
             isVectorPointDragged = false;
-                let immediatehistory = [6];
-                let sectorID = vectorPoint.parentSector;
-                let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
-                if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
-                    immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
-                    history.push(immediatehistory);
+
+            let vectorParentIDs = [];
+            for (let ii = 0; ii < sectors.length; ii++) {
+                if(sectors[ii].vectors.includes(vectors[vectorPoint.ID]) !== false) {
+                    vectorParentIDs.push([ii, sectors[ii].vectors.indexOf(vectors[vectorPoint.ID])]);
                 }
+            }
+            for (let ii = 0; ii < vectorParentIDs.length; ii++) {
+                if(vectorParentIDs[ii][0] !== getParentSectorOfPoint(new fabric.Point(vectorPoint.left, vectorPoint.top))) {
+                    sectors[vectorParentIDs[ii][0]].vectors.splice(vectorParentIDs[ii][1], 1);
+                }
+            }
+
+            let immediatehistory = [6];
+            let sectorID = vectorPoint.parentSector;
+            let vectorParametersOnMouseUp = getVectorParameters(sectorID[0], vectorPoint.parentSector[1]);
+            if(areArraysDifferent(vectorParametersOnMouseDown, vectorParametersOnMouseUp) !== false) {
+                immediatehistory.push(sectorID[0], sectorID[1], vectorParametersOnMouseDown);
+                history.push(immediatehistory);
+            }
         })
 
         vector.push(vectorPoint);
@@ -5262,6 +5292,8 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 }
             }
             chosenLineGlobalID = -1;
+            canvas.bringToFront(vectors[vectorLine.ID][1]);
+            canvas.bringToFront(vectors[vectorLine.ID][2]);
         });
 
         vector.push(vectorLine);
@@ -5284,6 +5316,31 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             height: 15,
             angle: vectorHeadOrientation
         });
+
+        let dx = vectorHead.left - vectorPoint.left;
+        let dy = vectorHead.top - vectorPoint.top;
+        let unitVectorX_orientationLine = dx / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        let unitVectorY_orientationLine = dy / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        let orientationLineLength = 250;
+        let orientationLinePoints = [vectorPoint.left, vectorPoint.top,
+            vectorPoint.left + orientationLineLength * unitVectorX_orientationLine, vectorPoint.top + orientationLineLength * unitVectorY_orientationLine];
+        vectorPoint.orientationLine = new fabric.Line(orientationLinePoints, {
+            strokeWidth: 1,
+            stroke: 'blue',
+            fill: 'blue',
+            originX: 'center',
+            originY: 'center',
+            perPixelTargetFind: true,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            evented: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            opacity: 0
+        })
+        canvas.add(vectorPoint.orientationLine);
+        vectorPoint.orientationLine.relationship = getRelationshipForAnyObjecCombination(vectorPoint.orientationLine, vectorPoint);
 
         vectorHead.on('mousedown', function(o) {
 
@@ -5343,11 +5400,11 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 });
             }
 
-            let vectorHeadAngleOnMouseDown = vectorParametersOnMouseDown[6];
+            let vectorHeadAngleOnMouseDown = toDegree(Math.atan2(vectorParametersOnMouseDown[5] - vectorParametersOnMouseDown[3], vectorParametersOnMouseDown[4] - vectorParametersOnMouseDown[2])) + 90;
             let scaleEnvironment = 5;
             let unitVectorHeadX = (vectorHeadPositionOnMouseDown.x - vectorPointPositionOnMouseDown.x) / vectorLengthOnMouseDown;
             let unitVectorHeadY = (vectorHeadPositionOnMouseDown.y - vectorPointPositionOnMouseDown.y) / vectorLengthOnMouseDown;
-            let alpha = toRadians(vectorAngle) - toRadians(vectorHeadAngleOnMouseDown);
+            let alpha = toRadians(vectorAngle - vectorHeadAngleOnMouseDown);
             let lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha);
             if(distance(pointer, vectorPointPositionOnMouseDown) <= distance(vectorHeadPositionOnMouseDown, vectorPointPositionOnMouseDown)) {
                 lambda = distance(vectorHeadPositionOnMouseDown, pointer) * Math.cos(alpha) * (-1);
@@ -5372,7 +5429,6 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                         angle: vectorHeadAngleOnMouseDown
                     });
                 }
-
             }
 
             vectorLine.set({
@@ -5382,11 +5438,20 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 y2: vectorHead.top,
                 angle: 0
             });
+            vectorPoint.orientationLine.set({
+                x1: vectorPoint.left,
+                y1: vectorPoint.top,
+                x2: vectorPoint.left + orientationLineLength * (vectorHead.left - vectorPoint.left) / Math.sqrt(Math.pow(vectorHead.left - vectorPoint.left, 2) + Math.pow(vectorHead.top - vectorPoint.top, 2)),
+                y2: vectorPoint.top + orientationLineLength * (vectorHead.top - vectorPoint.top) / Math.sqrt(Math.pow(vectorHead.left - vectorPoint.left, 2) + Math.pow(vectorHead.top - vectorPoint.top, 2)),
+                angle: 0
+            });
 
             vectorLine.setCoords();
             vectorHead.setCoords();
-            vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint)
-            vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint)
+            vectorPoint.orientationLine.setCoords();
+            vectorPoint.orientationLine.relationship = getRelationshipForAnyObjecCombination(vectorPoint.orientationLine, vectorPoint);
+            vectorLine.relationship = getRelationshipForAnyObjecCombination(vectorLine, vectorPoint);
+            vectorHead.relationship = getRelationshipForAnyObjecCombination(vectorHead, vectorPoint);
             canvas.renderAll();
 
         })
@@ -5412,6 +5477,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             immediatehistory.push(vectorPoint.ID, vectorLine.ID, vectorHead.ID);
             history.push(immediatehistory);
         }
+
         canvas.renderAll();
     }
 
@@ -5437,8 +5503,10 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             hasBorders: false,
             hasControls: false
         });
+
         vectorDuplicate.push(vectorPointDuplicate);
         vectorPointDuplicate.on('mousedown', function() {
+            canvas.setActiveObject(vectorPointDuplicate);
             changeVectorWidth();
             for (let ii = 0; ii < lines.length; ii++) {
                 for (let jj = 0; jj < lines[ii].length; jj++) {
@@ -5446,6 +5514,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 }
             }
             chosenLineGlobalID = -1;
+            canvas.bringToFront(vectorDuplicates[vectorPointDuplicate.ID][1]);
+            canvas.bringToFront(vectorDuplicates[vectorPointDuplicate.ID][2]);
+            showGeodesicButtons(true);
         })
 
         let points = [
@@ -5470,6 +5541,7 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             lockMovementY: true,
         });
         vectorLineDuplicate.on('mousedown', function() {
+            canvas.setActiveObject(vectorLineDuplicate);
             changeVectorWidth();
             for (let ii = 0; ii < lines.length; ii++) {
                 for (let jj = 0; jj < lines[ii].length; jj++) {
@@ -5477,6 +5549,9 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 }
             }
             chosenLineGlobalID = -1;
+            showGeodesicButtons(true);
+            canvas.bringToFront(vectorDuplicates[vectorPointDuplicate.ID][1]);
+            canvas.bringToFront(vectorDuplicates[vectorPointDuplicate.ID][2]);
         })
         vectorDuplicate.push(vectorLineDuplicate);
 
@@ -5499,7 +5574,34 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
             lockMovementX: true,
             lockMovementY: true
         });
+
+        let dx = vectorHeadDuplicate.left - vectorPointDuplicate.left;
+        let dy = vectorHeadDuplicate.top - vectorPointDuplicate.top;
+        let unitVectorX = dx / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        let unitVectorY = dy / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        let orientationLineLength = 250;
+        let orientationLinePoints = [vectorPointDuplicate.left, vectorPointDuplicate.top,
+            vectorPointDuplicate.left + orientationLineLength * unitVectorX, vectorPointDuplicate.top + orientationLineLength * unitVectorY];
+        vectorPointDuplicate.orientationLine = new fabric.Line(orientationLinePoints, {
+            strokeWidth: 1,
+            stroke: 'grey',
+            fill: 'grey',
+            originX: 'center',
+            originY: 'center',
+            perPixelTargetFind: true,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            evented: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            opacity: 0
+        })
+        canvas.add(vectorPointDuplicate.orientationLine);
+        vectorPointDuplicate.orientationLine.relationship = getRelationshipForAnyObjecCombination(vectorPointDuplicate.orientationLine, vectorPointDuplicate);
+
         vectorHeadDuplicate.on('mousedown', function() {
+            canvas.setActiveObject(vectorHeadDuplicate);
             changeVectorWidth();
             for (let ii = 0; ii < lines.length; ii++) {
                 for (let jj = 0; jj < lines[ii].length; jj++) {
@@ -5507,16 +5609,13 @@ function drawVector(vectorPointCoords, vectorHeadCoords, vectorParentID, vectorG
                 }
             }
             chosenLineGlobalID = -1;
+            showGeodesicButtons(true);
         })
         vectorDuplicate.push(vectorHeadDuplicate);
 
         for (let ii = 0; ii < vectorDuplicate.length; ii++) {
             vectorDuplicate[ii].relationship = getRelationship(vectorDuplicate[ii], sectors[vectorParentID].ID);
             vectorDuplicate[ii].parentSector = [sectors[vectorParentID].ID, vectorLocalID];
-            vectorDuplicate[ii].on('mousedown', function() {
-                canvas.setActiveObject(vectorDuplicate[ii]);
-                showGeodesicButtons(true);
-            })
         }
 
         vectorPointDuplicate.setCoords();
@@ -5901,6 +6000,11 @@ function geodreieckMove(geodreieckToMove){
                 let dist_y = vectorPointPosition.y - geodreieckMidKante.y;
                 geodreieckToMove.left += dist_x;
                 geodreieckToMove.top += dist_y;
+                if(distance(vectorPointPosition, new fabric.Point(vectors[ii][2].left, vectors[ii][2].top)) <= 95) {
+                    vectors[ii][0].orientationLine.opacity = 1;
+                }
+            } else {
+                vectors[ii][0].orientationLine.opacity = 0;
             }
         }
     }
@@ -5914,6 +6018,11 @@ function geodreieckMove(geodreieckToMove){
                 let dist_y = vectorPointPosition.y - geodreieckMidKante.y;
                 geodreieckToMove.left += dist_x;
                 geodreieckToMove.top += dist_y;
+                if(distance(vectorPointPosition, new fabric.Point(vectorDuplicates[ii][2].left, vectorDuplicates[ii][2].top)) <= 95) {
+                    vectorDuplicates[ii][0].orientationLine.opacity = 1;
+                }
+            } else {
+                vectorDuplicates[ii][0].orientationLine.opacity = 0;
             }
         }
     }
@@ -9035,16 +9144,18 @@ function updateMinions(boss) {
 
     for (let ii = 0; ii < boss.parent.vectorDuplicates.length; ii++) {
         let vectorDuplicate = boss.parent.vectorDuplicates[ii];
-        updateMinionsPosition(boss, vectorDuplicate[0])
-        updateMinionsPosition(boss, vectorDuplicate[1])
-        updateMinionsPosition(boss, vectorDuplicate[2])
+        updateMinionsPosition(boss, vectorDuplicate[0]);
+        updateMinionsPosition(boss, vectorDuplicate[1]);
+        updateMinionsPosition(boss, vectorDuplicate[2]);
+        updateMinionsPosition(vectorDuplicate[0], vectorDuplicate[0].orientationLine);
     }
 
     for (let ii = 0; ii < boss.parent.vectors.length; ii++) {
         let vector = boss.parent.vectors[ii];
         updateMinionsPosition(boss, vector[0]);
-        updateMinionsPosition(vector[0], vector[1])
-        updateMinionsPosition(vector[0], vector[2])
+        updateMinionsPosition(vector[0], vector[1]);
+        updateMinionsPosition(vector[0], vector[2]);
+        updateMinionsPosition(vector[0], vector[0].orientationLine);
     }
 
 
