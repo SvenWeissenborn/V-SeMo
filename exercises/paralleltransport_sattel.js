@@ -32,14 +32,12 @@ let slideContent = [
         id: 0,
         text_de: 'Willkommen in der online-Lernumgebung V-SeMo, in der Flächen auf ihre geometrischen Eigenschaften untersucht werden können. Klicke auf den Pfeil, um zu beginnen.',
         text_en: 'Vectortext',
-        sectorsToHide: [0, 1, 2, 3, 4, 5, 6, 7, 8],
     },
 
     {
         id: 1,
         text_de: 'Du siehst nun eine Fläche, welche durch 4 Sektoren (weiße Vierecke) dargestellt wird, welche frei beweglich und drehbar sind. Probiere es mal aus.',
         text_en: 'Vectortext 2',
-        sectorsToShow: [0, 1, 3, 4],
     },
 
     {

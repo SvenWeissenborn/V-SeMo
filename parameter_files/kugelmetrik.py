@@ -62,14 +62,14 @@ startTextsOffset_y = [0.37, 0.68, 0.68, 0.8, 0.2, 0.8, 0.84]
 #Parameter fuer die Startvektoren
 vectorStartSectors = [2]
 #Winkel in Grad
-vectorStartAngle = [45]
+vectorStartAngle = [65]
 #Startpunkt der Geodaete liegt in der unteren linken Ecke
 #Versatz Anteilig der Sektorbreite
 vectorStartOffset_x = [0.5]
 #Versatz Anteilig der Sektorhoehe
 vectorStartOffset_y = [0.2]
 #Laenge der Geodaete in Pixel
-vectorStartLength = [30]
+vectorStartLength = [100]
 #operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 vectorStartType = []
 
