@@ -55,6 +55,20 @@ startTextContent = []
 startTextsOffset_x = []
 startTextsOffset_y = []
 
+#Parameter fuer die Startvektoren
+vectorStartSectors = [2]
+#Winkel in Grad
+vectorStartAngle = [65]
+#Startpunkt der Geodaete liegt in der unteren linken Ecke
+#Versatz Anteilig der Sektorbreite
+vectorStartOffset_x = [0.5]
+#Versatz Anteilig der Sektorhoehe
+vectorStartOffset_y = [0.2]
+#Laenge der Geodaete in Pixel
+vectorStartLength = [100]
+#operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
+vectorStartType = []
+
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
 
     rotatedPoint_x = sector_center_x + (point_x_tmp - sector_center_x) * math.cos(sector_angle * math.pi / 180) - (point_y_tmp - sector_center_y) * math.sin(sector_angle * math.pi / 180)
@@ -74,7 +88,7 @@ def main():
 
 
 
-    file = io.open("sattelflaeche.js",'w')
+    file = io.open("sattelflaeche_vektoren.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -229,7 +243,9 @@ def main():
     gtm.startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle, startGeodesicsLength,
                  startGeodesicsOffset_x,startGeodesicsOffset_y,
                  startMarksSectors,startMarksOffset_x,startMarksOffset_y,startMarksRadius,
-                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent)
+                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent,
+                 vectorStartSectors,vectorStartAngle, vectorStartLength,
+                 vectorStartOffset_x, vectorStartOffset_y)
 
     file.close()
 
