@@ -2360,7 +2360,15 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     //-----------------------------------------------
 
-                    let NewSectorPos = getSectorPosToAlign(neighbourSector, staticSector, 0)
+                    let NewSectorPos = getSectorPosToAlign(neighbourSector, 0, sectorArrayToAlignIDAnglePos[lauf])
+
+                    let newSectorParameterIDAnglePos = [
+                        neighbourSector,
+                        0,
+                        NewSectorPos
+                    ]
+
+                    sectorArrayToAlignIDAnglePos.push(newSectorParameterIDAnglePos)
                     await translateSector(neighbourSector, NewSectorPos.x, NewSectorPos.y)
 
                 }else{
@@ -2474,6 +2482,7 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
  * @returns {Promise} - A Promise that resolves after all sector transformations are completed with the specified delay.
  */
 function rotateAndTranslateWithWaitOnIt(sectorArrayToAlignIDAnglePos){
+
     return new Promise((resolve) => {
         for (let ii = 1; ii < sectorArrayToAlignIDAnglePos.length; ii++) {
 
@@ -2990,9 +2999,6 @@ async function continueGeodesic(geodesicToContinue) {
             }
 
             for (lauf = 0; lauf < laufContinueGeodesicMax; lauf++) {
-
-
-                console.log(animationOn, lineEndsAtUnsnappedBorder)
 
 
                 if (animationOn === "1" && lineEndsAtUnsnappedBorder === "1") {
@@ -8630,8 +8636,14 @@ async function snapInitialSectorToTargetSector(initialSectorID, targetSectorID) 
     }
 
     if (turnLorentzTransformOn == 1){
+        let staticSectorPos = new fabric.Point(sectors[targetSectorID].trapez.left, sectors[targetSectorID].trapez.top)
 
-        let NewSectorPos = getSectorPosToAlign(initialSectorID, targetSectorID, 0)
+        let targetSectorIDAnglePos = [
+            targetSectorID,
+            sectors[targetSectorID].trapez.angle,
+            staticSectorPos
+        ]
+        let NewSectorPos = getSectorPosToAlign(initialSectorID, targetSectorID, targetSectorIDAnglePos)
         await translateSector(initialSectorID, NewSectorPos.x, NewSectorPos.y)
 
     }else{
@@ -9255,50 +9267,65 @@ function getSectorPosToAlign(initialSectorID, newSectorAngle, targetSectorIDAngl
         newSectorAngle = sectors[initialSectorID].trapez.angle
     }
 
+    console.log(targetSectorID)
+
     let initialTrapezPointsAsGlobalCoordsBeforeRotating = getTrapezPointsAsGlobalCoords(sectors[initialSectorID].trapez);
     let targetTrapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[targetSectorID].trapez);
+
+    let point_1
+    let point_a
 
     //console.log("new:", newSectorAngle)
     //console.log("old:", sectors[initialSectorID].trapez.angle)
     //console.log("sum:", newSectorAngle +sectors[initialSectorID].trapez.angle)
 
-    let point_1_temp = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+    if (turnLorentzTransformOn==1){
+        point_1 = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
 
-    //drawOrientationCirc("yellow", point_1_temp.x, point_1_temp.y)
-    let point_1_rotated = rotatePoint(
-        [
-            point_1_temp.x,
-            point_1_temp.y
+        point_a = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+
+        //drawOrientationCirc('green', point_1.x, point_1.y)
+        //drawOrientationCirc('red', point_a.x, point_a.y)
+
+    }else {
+
+        let point_1_temp = initialTrapezPointsAsGlobalCoordsBeforeRotating[commonEdgeNumber];
+
+        //drawOrientationCirc("yellow", point_1_temp.x, point_1_temp.y)
+        let point_1_rotated = rotatePoint(
+            [
+                point_1_temp.x,
+                point_1_temp.y
             ],
-        newSectorAngle - sectors[initialSectorID].trapez.angle,
-        sectors[initialSectorID].trapez.left,
-        sectors[initialSectorID].trapez.top,
-    )
+            newSectorAngle - sectors[initialSectorID].trapez.angle,
+            sectors[initialSectorID].trapez.left,
+            sectors[initialSectorID].trapez.top,
+        )
 
-    let point_1 = new fabric.Point(point_1_rotated[0], point_1_rotated[1])
-    //drawOrientationCirc('red', point_1_rotated[0], point_1_rotated[1])
+        point_1 = new fabric.Point(point_1_rotated[0], point_1_rotated[1])
+        //drawOrientationCirc('red', point_1_rotated[0], point_1_rotated[1])
 
-    let point_a_tmp = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
+        let point_a_tmp = targetTrapezPointsAsGlobalCoords[(commonEdgeNumber + 3) % 4];
 
-    let point_a_tmp_rotated = rotatePoint(
-        [point_a_tmp.x, point_a_tmp.y],
-        targetSectorIDAnglePos[1] - sectors[targetSectorID].trapez.angle,
-        sectors[targetSectorID].trapez.left,
-        sectors[targetSectorID].trapez.top,
-    )
+        let point_a_tmp_rotated = rotatePoint(
+            [point_a_tmp.x, point_a_tmp.y],
+            targetSectorIDAnglePos[1] - sectors[targetSectorID].trapez.angle,
+            sectors[targetSectorID].trapez.left,
+            sectors[targetSectorID].trapez.top,
+        )
 
-    //drawOrientationCirc('blue', point_a_tmp_rotated[0], point_a_tmp_rotated[1])
+        //drawOrientationCirc('red', point_a_tmp_rotated[0], point_a_tmp_rotated[1])
 
-    let point_a = new fabric.Point(
-        point_a_tmp_rotated[0] - (sectors[targetSectorID].trapez.left - targetSectorIDAnglePos[2].x),
-        point_a_tmp_rotated[1] - (sectors[targetSectorID].trapez.top - targetSectorIDAnglePos[2].y),
+        point_a = new fabric.Point(
+            point_a_tmp_rotated[0] - (sectors[targetSectorID].trapez.left - targetSectorIDAnglePos[2].x),
+            point_a_tmp_rotated[1] - (sectors[targetSectorID].trapez.top - targetSectorIDAnglePos[2].y),
+        )
 
-    )
-
-    //drawOrientationCirc('blue', point_a.x, point_a.y)
-
+        //drawOrientationCirc('blue', point_a.x, point_a.y)
+    }
     let newSectorX = sectors[initialSectorID].trapez.left + (point_a.x - point_1.x)
     let newSectorY = sectors[initialSectorID].trapez.top + (point_a.y - point_1.y)
+
 
     let NewSectorPos = new fabric.Point(newSectorX, newSectorY)
     //drawOrientationCirc('yellow', NewSectorPos.x, NewSectorPos.y)
