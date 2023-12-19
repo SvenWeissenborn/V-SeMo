@@ -885,6 +885,7 @@ function deleteChosenGeodesics() {
     if (currentSlide.geodesicsToDelete !== undefined) {
         showGeodesicButtons(false)
         for (let ii = 0; ii < currentSlide.geodesicsToDelete.length; ii++) {
+            chosenLineGlobalID = currentSlide.geodesicsToDelete[ii]
             deleteWholeGeodesic(currentSlide.geodesicsToDelete[ii])
         }
         chosenLineGlobalID = -1
