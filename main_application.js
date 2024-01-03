@@ -7001,6 +7001,173 @@ function init() {
                         'textures/panel-9.5.jpg'
                     ];
             }
+            if (textureColored == "big") {
+                panels =
+                    [
+                        'textures/panel-0.0.jpg',
+                        'textures/panel-0.1.jpg',
+                        'textures/panel-0.2.jpg',
+                        'textures/panel-0.3.jpg',
+                        'textures/panel-0.4.jpg',
+                        'textures/panel-0.5.jpg',
+                        'textures/panel-0.6.jpg',
+                        'textures/panel-0.7.jpg',
+                        'textures/panel-0.8.jpg',
+                        'textures/panel-1.0.jpg',
+                        'textures/panel-1.1.jpg',
+                        'textures/panel-1.2.jpg',
+                        'textures/panel-1.3.jpg',
+                        'textures/panel-1.4.jpg',
+                        'textures/panel-1.5.jpg',
+                        'textures/panel-1.6.jpg',
+                        'textures/panel-1.7.jpg',
+                        'textures/panel-1.8.jpg',
+                        'textures/panel-2.0.jpg',
+                        'textures/panel-2.1.jpg',
+                        'textures/panel-2.2.jpg',
+                        'textures/panel-2.3.jpg',
+                        'textures/panel-2.4.jpg',
+                        'textures/panel-2.5.jpg',
+                        'textures/panel-2.6.jpg',
+                        'textures/panel-2.7.jpg',
+                        'textures/panel-2.8.jpg',
+                        'textures/panel-3.0.jpg',
+                        'textures/panel-3.1.jpg',
+                        'textures/panel-3.2.jpg',
+                        'textures/panel-3.3.jpg',
+                        'textures/panel-3.4.jpg',
+                        'textures/panel-3.5.jpg',
+                        'textures/panel-3.6.jpg',
+                        'textures/panel-3.7.jpg',
+                        'textures/panel-3.8.jpg',
+                        'textures/panel-4.0.jpg',
+                        'textures/panel-4.1.jpg',
+                        'textures/panel-4.2.jpg',
+                        'textures/panel-4.3.jpg',
+                        'textures/panel-4.4.jpg',
+                        'textures/panel-4.5.jpg',
+                        'textures/panel-4.6.jpg',
+                        'textures/panel-4.7.jpg',
+                        'textures/panel-4.8.jpg',
+                        'textures/panel-5.0.jpg',
+                        'textures/panel-5.1.jpg',
+                        'textures/panel-5.2.jpg',
+                        'textures/panel-5.3.jpg',
+                        'textures/panel-5.4.jpg',
+                        'textures/panel-5.5.jpg',
+                        'textures/panel-5.6.jpg',
+                        'textures/panel-5.7.jpg',
+                        'textures/panel-5.8.jpg',
+                        'textures/panel-6.0.jpg',
+                        'textures/panel-6.1.jpg',
+                        'textures/panel-6.2.jpg',
+                        'textures/panel-6.3.jpg',
+                        'textures/panel-6.4.jpg',
+                        'textures/panel-6.5.jpg',
+                        'textures/panel-6.6.jpg',
+                        'textures/panel-6.7.jpg',
+                        'textures/panel-6.8.jpg',
+                        'textures/panel-7.0.jpg',
+                        'textures/panel-7.1.jpg',
+                        'textures/panel-7.2.jpg',
+                        'textures/panel-7.3.jpg',
+                        'textures/panel-7.4.jpg',
+                        'textures/panel-7.5.jpg',
+                        'textures/panel-7.6.jpg',
+                        'textures/panel-7.7.jpg',
+                        'textures/panel-7.8.jpg',
+                        'textures/panel-8.0.jpg',
+                        'textures/panel-8.1.jpg',
+                        'textures/panel-8.2.jpg',
+                        'textures/panel-8.3.jpg',
+                        'textures/panel-8.4.jpg',
+                        'textures/panel-8.5.jpg',
+                        'textures/panel-8.6.jpg',
+                        'textures/panel-8.7.jpg',
+                        'textures/panel-8.8.jpg',
+                        'textures/panel-9.0.jpg',
+                        'textures/panel-9.1.jpg',
+                        'textures/panel-9.2.jpg',
+                        'textures/panel-9.3.jpg',
+                        'textures/panel-9.4.jpg',
+                        'textures/panel-9.5.jpg',
+                        'textures/panel-9.6.jpg',
+                        'textures/panel-9.7.jpg',
+                        'textures/panel-9.8.jpg',
+                        'textures/panel-10.0.jpg',
+                        'textures/panel-10.1.jpg',
+                        'textures/panel-10.2.jpg',
+                        'textures/panel-10.3.jpg',
+                        'textures/panel-10.4.jpg',
+                        'textures/panel-10.5.jpg',
+                        'textures/panel-10.6.jpg',
+                        'textures/panel-10.7.jpg',
+                        'textures/panel-10.8.jpg',
+                        'textures/panel-11.0.jpg',
+                        'textures/panel-11.1.jpg',
+                        'textures/panel-11.2.jpg',
+                        'textures/panel-11.3.jpg',
+                        'textures/panel-11.4.jpg',
+                        'textures/panel-11.5.jpg',
+                        'textures/panel-11.6.jpg',
+                        'textures/panel-11.7.jpg',
+                        'textures/panel-11.8.jpg',
+                        'textures/panel-12.0.jpg',
+                        'textures/panel-12.1.jpg',
+                        'textures/panel-12.2.jpg',
+                        'textures/panel-12.3.jpg',
+                        'textures/panel-12.4.jpg',
+                        'textures/panel-12.5.jpg',
+                        'textures/panel-12.6.jpg',
+                        'textures/panel-12.7.jpg',
+                        'textures/panel-12.8.jpg',
+                        'textures/panel-13.0.jpg',
+                        'textures/panel-13.1.jpg',
+                        'textures/panel-13.2.jpg',
+                        'textures/panel-13.3.jpg',
+                        'textures/panel-13.4.jpg',
+                        'textures/panel-13.5.jpg',
+                        'textures/panel-13.6.jpg',
+                        'textures/panel-13.7.jpg',
+                        'textures/panel-13.8.jpg',
+                        'textures/panel-14.0.jpg',
+                        'textures/panel-14.1.jpg',
+                        'textures/panel-14.2.jpg',
+                        'textures/panel-14.3.jpg',
+                        'textures/panel-14.4.jpg',
+                        'textures/panel-14.5.jpg',
+                        'textures/panel-14.6.jpg',
+                        'textures/panel-14.7.jpg',
+                        'textures/panel-14.8.jpg',
+                        'textures/panel-15.0.jpg',
+                        'textures/panel-15.1.jpg',
+                        'textures/panel-15.2.jpg',
+                        'textures/panel-15.3.jpg',
+                        'textures/panel-15.4.jpg',
+                        'textures/panel-15.5.jpg',
+                        'textures/panel-15.6.jpg',
+                        'textures/panel-15.7.jpg',
+                        'textures/panel-15.8.jpg',
+                        'textures/panel-16.0.jpg',
+                        'textures/panel-16.1.jpg',
+                        'textures/panel-16.2.jpg',
+                        'textures/panel-16.3.jpg',
+                        'textures/panel-16.4.jpg',
+                        'textures/panel-16.5.jpg',
+                        'textures/panel-16.6.jpg',
+                        'textures/panel-16.7.jpg',
+                        'textures/panel-16.8.jpg',
+                        'textures/panel-17.0.jpg',
+                        'textures/panel-17.1.jpg',
+                        'textures/panel-17.2.jpg',
+                        'textures/panel-17.3.jpg',
+                        'textures/panel-17.4.jpg',
+                        'textures/panel-17.5.jpg',
+                        'textures/panel-17.6.jpg',
+                        'textures/panel-17.7.jpg',
+                        'textures/panel-17.8.jpg'
+                    ];
+            }
 
 
             /*
@@ -7018,7 +7185,27 @@ function init() {
 
             fabric.Image.fromURL(panels[ii], function (img) {
 
-                img.scaleToWidth(sec_width[ii]+ 4);
+                let patternOffset_x
+
+                if (ii % 9 == 3 | ii % 9 == 4 | ii % 9 == 5){
+                    img.scaleToWidth(sec_width[ii]+ 4);
+                    patternOffset_x = -2
+                }else{
+                    if (ii % 9 == 2 |ii % 9 == 6){
+                        img.scaleToWidth(sec_width[ii]+ 24);
+                        patternOffset_x = -12
+                    }
+                    if (ii % 9 == 1 |ii % 9 == 7){
+                        img.scaleToWidth(sec_width[ii]+ 64);
+                        patternOffset_x = -32
+                    }
+                    if (ii % 9 == 0 |ii % 9 == 8){
+                        img.scaleToWidth(sec_width[ii]+ 116);
+                        patternOffset_x = -58
+                    }
+                }
+
+
 
                 let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
                 patternSourceCanvas.add(img);
@@ -7037,7 +7224,7 @@ function init() {
                     repeat: 'no-repeat'
                 });
 
-                pattern.offsetX = - 2;
+                pattern.offsetX = patternOffset_x;
 
                 sec.trapez.set('fill', pattern);
                 canvas.renderAll();
