@@ -15,8 +15,8 @@ nSectorColumnsFromSphere = 18
 radius = 500
 
 #Eigenschaften des Sektormodells
-nRowsInModel = 3
-nColumnsInModel = 3
+nRowsInModel = 9
+nColumnsInModel = 18
 
 #Abstaende der Sektoren zueinander
 sectorDistance_x = 30
@@ -98,7 +98,7 @@ def main():
     zeilestart = math.floor((nSectorRowsFromSphere-nRowsInModel)/2)
     zeileende = nSectorRowsFromSphere-round((nSectorRowsFromSphere-nRowsInModel)/2)
 
-    file = io.open("kugelmetrik_vektoren.js",'w')
+    file = io.open("kugelmetrik_big.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -225,7 +225,10 @@ def main():
                 sectorValues[sectorDict["sec_neighbour_top"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) - 1
 
             if (ii == (nColumnsInModel-1)):
-                sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = -1
+                if(nColumnsInModel == nSectorColumnsFromSphere):
+                    sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile
+                else:
+                    sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
                 sectorValues[sectorDict["sec_neighbour_right"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) + nRowsInModel
 
@@ -235,7 +238,10 @@ def main():
                 sectorValues[sectorDict["sec_neighbour_bottom"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) +1
 
             if (ii == 0):
-                sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = -1
+                if (nColumnsInModel == nSectorColumnsFromSphere):
+                    sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * nColumnsInModel - nRowsInModel
+                else:
+                    sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = -1
             else:
                 sectorValues[sectorDict["sec_neighbour_left"]][jj + ii * (zeileende - zeilestart)] = zeile + nRowsInModel * ii - round((nSectorRowsFromSphere-nRowsInModel) / 2) - nRowsInModel
 
