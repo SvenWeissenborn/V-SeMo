@@ -4293,7 +4293,10 @@ function drawSector(x0, y0, x1, y1, x2, y2, x3, y3) {
         if (turnLorentzTransformOn == 1){
 
             for(let ii = 0; ii < this.parent.slider.length; ii++){
-                this.parent.slider[ii].opacity = 1.00;
+                if (lockAllSectors!=="1"){
+                    this.parent.slider[ii].opacity = 1.00;
+                }
+
                 //canvas.sendToBack(this.parent.slider[ii]);
                 canvas.bringToFront(this.parent.slider[ii]);
                 canvas.bringToFront(this.parent.slider[0]);
@@ -9418,8 +9421,13 @@ function toolChange(argument) {
             }
         }
     }
-
-
+    if (lockAllSectors=="1") {
+        for (let ii = 0; ii < sectors.length; ii++) {
+            sectors[ii].trapez.hasControls = false;
+            sectors[ii].trapez.lockMovementX = true;
+            sectors[ii].trapez.lockMovementY = true;
+        }
+    }
 
     canvas.renderAll()
 }

@@ -771,7 +771,7 @@ function autoSetSectorsAlongStartGeodesics(){
 
 }
 
-function sectorsToSnapTogether(){
+async function sectorsToSnapTogether(){
 
     if (currentSlide.sectorsToSnapTogether !== undefined){
 
@@ -785,12 +785,17 @@ function sectorsToSnapTogether(){
 
             removeSnapEdges(initialSectorID);
             //removeSnapEdges(targetSectorID);
-            snapInitialSectorToTargetSector(initialSectorID, targetSectorID);
+            await snapInitialSectorToTargetSector(initialSectorID, targetSectorID);
+
+            console.log(sectors[initialSectorID].snapStatus)
+
             drawSnapEdges(initialSectorID);
             //drawSnapEdges(targetSectorID);
 
 
         }
+
+        canvas.renderAll()
     }
 
 }

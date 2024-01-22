@@ -108,3 +108,6 @@ let lineEndsAtUnsnappedBorder = getUrlVars()["lineEndsAtUnsnappedBorder"];
 
 //autoCompleteOnMouseUp=1&
 let autoCompleteOnMouseUp = getUrlVars()["autoCompleteOnMouseUp"];
+
+//lockAllSectors=1&
+let lockAllSectors = getUrlVars()["lockAllSectors"];
