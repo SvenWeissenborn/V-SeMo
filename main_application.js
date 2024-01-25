@@ -2329,7 +2329,7 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     rapid_sum = rapid_base - rapid_target;
 
-
+                    let rapidBefore = sectors[neighbourSector].rapidity
 
                     sectors[neighbourSector].rapidity += rapid_sum;
 
@@ -2337,7 +2337,11 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
                     let dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
                     let dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
 
-                    lorentzTransform(sectors[neighbourSector].rapidity, sectors[neighbourSector].trapez);
+                    if (animationOn=="1"){
+                        await animateLorentzTransform(rapidBefore, sectors[neighbourSector].rapidity, sectors[neighbourSector].trapez)
+                    }else{
+                        lorentzTransform(sectors[neighbourSector].rapidity, sectors[neighbourSector].trapez);
+                    }
 
                     reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, neighbourSector);
 
@@ -2469,6 +2473,34 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
         }
 
     }
+}
+
+function animateLorentzTransform(rapidityBefore, rapidityEnd, trapez, steps = 20) {
+    let rapidityDiff = rapidityEnd - rapidityBefore;
+    let transformIncrement = rapidityDiff / steps;
+
+    let currentStep = 0;
+
+    function animationStep(resolve) {
+        let newRapidity = rapidityBefore + currentStep * transformIncrement;
+
+        lorentzTransform(newRapidity, trapez);
+
+        currentStep++;
+
+        // Verwende eine Toleranz (z.B., 0.0001) für die Gleitkommavergleich
+        if (currentStep <= steps) {
+            requestAnimationFrame(() => animationStep(resolve));
+        } else {
+            console.log("Animation abgeschlossen");
+            resolve(); // Signalisiere, dass die Animation abgeschlossen ist
+        }
+    }
+
+    // Erzeuge ein Promise und starte die Animation erst, wenn das Promise erfüllt ist
+    return new Promise((resolve) => {
+        animationStep(resolve);
+    });
 }
 
 /**
@@ -7449,12 +7481,16 @@ function lorentzTransform(theta, trapez) {
     let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
     //**** !!!! Beachte, dass 'sector' das übergegebene Trapez ist !!!!
 
+    console.log(theta)
 
     for (let ii = 0; ii < 4; ii++){
         trapez.points[ii].x= sec_coords[trapez.parent.ID][ii*2] * Math.cosh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.sinh(theta);
         trapez.points[ii].y= sec_coords[trapez.parent.ID][ii*2] * Math.sinh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.cosh(theta);
 
     }
+
+    console.log(trapez.points[0])
+
 
     lorentzTransformObjectPosition(trapez.parent.ID_text, theta, trapezPointsAsGlobalCoords);
 
@@ -7500,6 +7536,8 @@ function lorentzTransform(theta, trapez) {
             lorentzTransformLinePoints(trapez.parent.vectors[ii], theta, trapezPointsAsGlobalCoords)
         }
     }
+
+
     canvas.renderAll();
 
 
