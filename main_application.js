@@ -2333,6 +2333,7 @@ async function autoSetSectorsAlongGeodesic(chosenGeodesicToSetSectors) {
 
                     sectors[neighbourSector].rapidity += rapid_sum;
 
+                    console.log(sectors[neighbourSector].rapidity)
 
                     let dist_inv_min_x_old = Math.min(sectors[neighbourSector].trapez.points[0].x, sectors[neighbourSector].trapez.points[1].x, sectors[neighbourSector].trapez.points[2].x, sectors[neighbourSector].trapez.points[3].x);
                     let dist_inv_max_y_old = Math.max(sectors[neighbourSector].trapez.points[0].y, sectors[neighbourSector].trapez.points[1].y, sectors[neighbourSector].trapez.points[2].y, sectors[neighbourSector].trapez.points[3].y);
@@ -4915,9 +4916,7 @@ function drawSlider(pos_x, pos_y) {
         let theta = (startValueSlider - lastValueSlider) / slider_max; // '-' damit der Sektor nach oben verscheert wird
         this.parent.rapidity = theta;
 
-
         lorentzTransform(theta, this.parent.trapez);
-
 
     });
 
@@ -4926,7 +4925,6 @@ function drawSlider(pos_x, pos_y) {
         this.opacity = 1.0;
 
         sectorParameterOnMouseup = getSectorParameterOnMouseup(this.parent.ID);
-
 
         if (sectorParameterOnMousedown.length > 0){
 
@@ -4959,7 +4957,6 @@ function drawSlider(pos_x, pos_y) {
     });
 
 
-
     //Berechnung der relativen Position von Objekten im lokalen Koordinatensystem der Parentalsektoren
     //wichtig für updateMinions
     let trapezTransform = this.trapez.calcTransformMatrix();
@@ -4989,7 +4986,6 @@ function drawSnapEdges(initialSectorID) {
 
             let neighbourSectorID = sectors[initialSectorID].neighbourhood[ii];
 
-
             if (sectors[initialSectorID].snapEdges[ii] !== 0) {
 
                 let edgeToRemove = sectors[initialSectorID].snapEdges[ii];
@@ -4997,7 +4993,6 @@ function drawSnapEdges(initialSectorID) {
                 sectors[initialSectorID].snapEdges[ii] = [0];
 
             }
-
 
             if (sectors[initialSectorID].snapStatus[ii] !== 0) {
 
@@ -5080,7 +5075,6 @@ function drawTicks(trapez) {
         //FALSCH --> Durch das neu initialisieren werden sie ja bereits passend lorentztransformiert ;-)
         //WICHTIG! Trotzdem müssen sie mit lorentztransformiert werden!!!
 
-
         let directions = [
             [3, 0],
             [0, 1],
@@ -5090,12 +5084,10 @@ function drawTicks(trapez) {
 
         dist_corners = distance(trapez.points[directions[ii][0]], trapez.points[directions[ii][1]]);
 
-
         let dx = (trapez.points[directions[ii][1]].x - trapez.points[directions[ii][0]].x);
         let dy = (trapez.points[directions[ii][1]].y - trapez.points[directions[ii][0]].y);
         let dx_normiert = dx / dist_corners;
         let dy_normiert = dy / dist_corners;
-
 
         for (let jj = 1; jj < 1000; jj++) {
 
@@ -5181,7 +5173,6 @@ function drawTicks(trapez) {
 
             canvas.add(tick);
 
-
         }
 
     }
@@ -5202,8 +5193,8 @@ function drawLightCone(trapez) {
 
         let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
 
-
         let temporary_offset_y;
+
         if (trapez.points[2].y > 0){
             temporary_offset_y = trapez.points[2].y
         } else {
@@ -7222,24 +7213,28 @@ function init() {
 
                 let patternOffset_x
 
-                if (ii % 9 == 3 | ii % 9 == 4 | ii % 9 == 5){
+                if (textureColored == "big") {
+                    if (ii % 9 == 3 | ii % 9 == 4 | ii % 9 == 5) {
+                        img.scaleToWidth(sec_width[ii] + 4);
+                        patternOffset_x = -2
+                    } else {
+                        if (ii % 9 == 2 | ii % 9 == 6) {
+                            img.scaleToWidth(sec_width[ii] + 24);
+                            patternOffset_x = -12
+                        }
+                        if (ii % 9 == 1 | ii % 9 == 7) {
+                            img.scaleToWidth(sec_width[ii] + 64);
+                            patternOffset_x = -32
+                        }
+                        if (ii % 9 == 0 | ii % 9 == 8) {
+                            img.scaleToWidth(sec_width[ii] + 116);
+                            patternOffset_x = -58
+                        }
+                    }
+                }else{
                     img.scaleToWidth(sec_width[ii]+ 4);
                     patternOffset_x = -2
-                }else{
-                    if (ii % 9 == 2 |ii % 9 == 6){
-                        img.scaleToWidth(sec_width[ii]+ 24);
-                        patternOffset_x = -12
-                    }
-                    if (ii % 9 == 1 |ii % 9 == 7){
-                        img.scaleToWidth(sec_width[ii]+ 64);
-                        patternOffset_x = -32
-                    }
-                    if (ii % 9 == 0 |ii % 9 == 8){
-                        img.scaleToWidth(sec_width[ii]+ 116);
-                        patternOffset_x = -58
-                    }
                 }
-
 
 
                 let patternSourceCanvas = new fabric.StaticCanvas(null, {enableRetinaScaling: false});
@@ -7481,16 +7476,11 @@ function lorentzTransform(theta, trapez) {
     let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(trapez);
     //**** !!!! Beachte, dass 'sector' das übergegebene Trapez ist !!!!
 
-    console.log(theta)
-
     for (let ii = 0; ii < 4; ii++){
         trapez.points[ii].x= sec_coords[trapez.parent.ID][ii*2] * Math.cosh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.sinh(theta);
         trapez.points[ii].y= sec_coords[trapez.parent.ID][ii*2] * Math.sinh(theta) + sec_coords[trapez.parent.ID][ii*2+1] * Math.cosh(theta);
 
     }
-
-    console.log(trapez.points[0])
-
 
     lorentzTransformObjectPosition(trapez.parent.ID_text, theta, trapezPointsAsGlobalCoords);
 

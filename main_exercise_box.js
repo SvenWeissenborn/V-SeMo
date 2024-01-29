@@ -481,6 +481,8 @@ function showNextSlide() {
 
     setMarksUnvisible();
 
+    setSectorsToOrigin();
+
     setSectorsToRingsOnR();
 
     setTextsVisible();
@@ -840,6 +842,18 @@ function setSectorsToRingsOnR(){
 
 
         canvas.renderAll()
+    }
+}
+
+function setSectorsToOrigin(){
+
+    console.log(currentSlide.sectorsToSetToOrigin)
+
+    if (currentSlide.sectorsToSetToOrigin !== undefined) {
+        console.log('hier')
+        if (currentSlide.sectorsToSetToOrigin) {
+            resetSectors()
+        }
     }
 }
 

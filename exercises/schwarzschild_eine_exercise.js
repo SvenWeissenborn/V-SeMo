@@ -30,25 +30,96 @@ let turnBackwardOff = true;
 let slideContent = [
     {
         id: 0,
-        text_de: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
+        text_de: 'Wir wollen einen Startstrich als Geodäte über das Sektormodell hinweg verlängern.',
         text_en: 'Together we want to become familiar with the sector model.',
-
+        geodesicsToHide: [1],
     },
 
     {
         id: 1,
-        text_de: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
+        text_de: 'Dazu setzen wir zunächst alle Sektoren zusammen, durch die unsere Geodäte verlaufen wird.',
         text_en: 'Together we want to become familiar with the sector model.',
-        sectorsToSnapTogether: [[3, 0], [4, 3], [7, 4], [8, 7]]
+        geodesicsToAutoSetAlong: [0],
+
     },
 
     {
         id: 2,
-        text_de: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
+        text_de: 'Anschließend vervollständigen wir die Geodäte über das gesamte Modell.\n Die Geodäte hält an jedem Punkt ihre Richtung bei.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToComplete: [0]
+    },
+
+    {
+        id: 2,
+        text_de: 'In der symmetrischen Anordnung kann es den Eindruck machen, dass der Verlauf der Geodäten gekrümmt ist.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        sectorsToSetToOrigin: true
+    },
+
+    {
+        id: 2,
+        text_de: 'Die zusammenhängende Anordnung der Sektoren widerlegt dies eindeutig. Die Geodäte verläuft gerade.',
         text_en: 'Together we want to become familiar with the sector model.',
         geodesicsToAutoSetAlong: [0]
     },
 
+    {
+        id: 2,
+        text_de: 'Die Täuschung des gekrümmten Verlaufs liegt nur an der Anordnung der Sektoren.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        sectorsToSetToOrigin: true
+    },
+
+    {
+        id: 2,
+        text_de: 'Nun wollen wir eine zweite Geodäte vom selben Punkt aus in eine andere Richtung starten lassen',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToShow: [1],
+    },
+
+    {
+        id: 2,
+        text_de: 'Dazu setzen wir die Sektoren zunächst zusammen...',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToAutoSetAlong: [1]
+    },
+
+    {
+        id: 2,
+        text_de: 'und vervollständigen die Linie als Geodäte über das Sektormodell hinweg.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToComplete: [1]
+    },
+
+    {
+        id: 2,
+        text_de: 'In der symmetrischen Anordnung der Sektoren kann man deutlich erkennen, dass sich die Geodäten hinter dem Schwarzen Loch treffen.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        sectorsToSetToOrigin: true
+    },
+
+    {
+        id: 2,
+        text_de: 'Owohl beide Geodäten...',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToAutoSetAlong: [0]
+    },
+
+    {
+        id: 2,
+        text_de: 'eindeutig gerade verlaufen...',
+        text_en: 'Together we want to become familiar with the sector model.',
+        sectorsToSetToOrigin: true,
+        geodesicsToAutoSetAlong: [1]
+    },
+
+    {
+        id: 2,
+        text_de: 'bildet sich ein sogenanntes Zweieck.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        sectorsToSetToOrigin: true,
+    },
 ];
 
 
