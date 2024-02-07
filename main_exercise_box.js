@@ -847,8 +847,6 @@ function setSectorsToRingsOnR(){
 
 function setSectorsToOrigin(){
 
-    console.log(currentSlide.sectorsToSetToOrigin)
-
     if (currentSlide.sectorsToSetToOrigin !== undefined) {
         console.log('hier')
         if (currentSlide.sectorsToSetToOrigin) {
@@ -1239,11 +1237,40 @@ function checkCheckBoxCondition() {
 
                 let mark1ID = currentSlide.checkBoxesWithText[ii].condition[1][1]
 
+                let point_1_x = markPoints[mark1ID].left;
+                let point_1_y = markPoints[mark1ID].top;
+
                 let check_1 = false;
 
                 let lineEndPoint = new fabric.Point(lines[lineID][lines[lineID].length - 1].x2, lines[lineID][lines[lineID].length - 1].y2)
 
+
+
+                for (let jj = 0; jj < lines[lineID].length; jj++) {
+                    if (lines[lineID][jj].parentSector[0] == markPoints[mark1ID].parentSector[0]) {
+
+                        console.log()
+
+                        if (Math.abs(lineEndPoint.x - point_1_x) < 5 && Math.abs(lineEndPoint.y - point_1_y) < 5) {
+                            check_1 = true
+                        }
+                    }
+                }
+                console.log(check_1)
+
                 console.log(mark1ID, lineEndPoint)
+
+                if (check_1 == true) {
+                    currentCheckBoxWithText.conditionIsFullfilled = true;
+                    currentCheckBoxWithText._objects[1].set('opacity', 1);
+
+                    if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
+                        if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
+                            markPoints[currentSlide.checkBoxesWithText[ii].result.mark].set('opacity', 1)
+                            texts[currentSlide.checkBoxesWithText[ii].result.text].set('opacity', 1)
+                        }
+                    }
+                }
             }
         }
 

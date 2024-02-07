@@ -29,18 +29,43 @@
 let turnBackwardOff = true;
 let slideContent = [
     {
-        id: 0,
-        text_de: 'Vervollständige die beiden Geodäten bis zum Rand des Sektormodells.',
-        text_en: 'Together we want to become familiar with the sector model.',
+        text_de: '',
+        text_en: '',
+
+        geodesicsToHide: [0],
         marksToHide: [0, 1],
-        slideCondition: [['linesTouchMarks', [0, 0], [1, 1]]],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Setze die blaue Linie als Geodäte über das Sektormodells fort.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', [1, 1]],
+            }
+            ]
     },
 
     {
-        id: 1,
-        text_de: 'Kehre wieder zum Kurs zurück.',
-        text_en: 'Go back to the cours.',
+        text_de: '',
+        text_en: '',
+        geodesicsToShow: [0],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Gut gemacht! Setze nun die schwarze Linie als Geodäte über das Sektormodells fort.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', [0, 0]],
+            }
+        ]
     },
-];
+
+    {
+        text_de: 'Sehr schön. Wie du sehen solltest treffen sich die Geodäten erneut, nachdem sie den Raum um das Schwarze Loch passiert haben.',
+        text_en: '',
+
+    },
+
+]
 
 
