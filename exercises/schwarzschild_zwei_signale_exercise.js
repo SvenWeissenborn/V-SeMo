@@ -37,7 +37,7 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Setze die blaue Linie als Geodäte über das Sektormodells fort.',
+                text_de: 'Setze die blaue Linie als Geodäte über das Sektormodell fort.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
                 condition: ['lineTouchesOneMark', [1, 1]],
@@ -52,7 +52,7 @@ let slideContent = [
 
         checkBoxesWithText: [
             {
-                text_de: 'Gut gemacht! Setze nun die schwarze Linie als Geodäte über das Sektormodells fort.',
+                text_de: 'Gut gemacht! Setze nun die schwarze Linie als Geodäte über das Sektormodell fort.',
                 text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
                 type: 'tracker',
                 condition: ['lineTouchesOneMark', [0, 0]],
@@ -61,7 +61,7 @@ let slideContent = [
     },
 
     {
-        text_de: 'Sehr schön. Wie du sehen solltest treffen sich die Geodäten erneut, nachdem sie den Raum um das Schwarze Loch passiert haben.',
+        text_de: 'Sehr schön. Wie du sehen solltest, treffen sich die Geodäten erneut, nachdem sie den Raum um das Schwarze Loch passiert haben.',
         text_en: '',
 
     },
