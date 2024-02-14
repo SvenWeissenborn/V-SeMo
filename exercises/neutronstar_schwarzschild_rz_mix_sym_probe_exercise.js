@@ -29,11 +29,61 @@
 let turnBackwardOff = true;
 
 let slideContent = [
+
     {
         id: 0,
-        text_de: 'Karl befindet sich in seinem Raumschiff (schwarze Weltlinie) weit von der Sternenoberfläche entfernt. Er hält mit Hilfe der Schubdüsen den Abstand zur Sternenoberfläche konstant.',
+        text_de: 'Lisa setzt ein unbeschleunigtes Testobjekt in Sektor P1 aus. Wir wollen uns seine Weltlinie genauer anschauen.',
         text_en: 'Together we want to become familiar with the sector model.',
-        geodesicsToHide: [1],
+        geodesicsToHide: [0,1],
+        marksToHide: [0],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Vervollständige hierzu die Weltlinie des Objektes ohne die Verwendung der automatischen Vervollständigung.',
+                text_en: 'Help Lisa orientate her transmitter correctly. First select the blue geodesic. Use the compass button to change her starting direction.',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', ['chosenLineGlobalID', 0]],
+            }
+        ]
+    },
+
+    {
+        id: 0,
+        text_de: 'Sehr gut gemacht! \nWelches Schicksal ereilt das Objekt?.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        checkBoxesWithText: [
+            {
+                text_de: 'a) Es schlägt auf die Sternenoberfläche.',
+                text_en: 'a) Floater 1',
+                type: 'quiz',
+                answerIs: true,
+                result: {
+                    type: 'showMarkAndText',
+                    mark: 4,
+                    text: 5
+                }
+            },
+            {
+                text_de: 'b) Es entfernt sich von der Sternenoberfläche.',
+                text_en: 'b) Floater 2',
+                type: 'quiz',
+                answerIs: false,
+                result: {
+                    type: 'showMarkAndText',
+                    mark: 4,
+                    text: 5
+                }
+            },
+        ],
+    },
+
+    {
+        id: 0,
+        text_de: 'Währenddessen befindet sich Karl in seinem Raumschiff (schwarze Weltlinie) weit von der Sternenoberfläche entfernt. Er hält mit Hilfe der Schubdüsen den Abstand zur Sternenoberfläche konstant.',
+        text_en: 'Together we want to become familiar with the sector model.',
+        geodesicsToShow: [0, 1],
+        setZoomAndPanTo: [1.5, -4400, -8000]
+
     },
 
     {
@@ -41,7 +91,6 @@ let slideContent = [
         text_de: 'Er möchte Lisa ein Verpflegungspaket zukommen lassen. Dieses (blaue Linie) verlässt durch eine Schleuse das Raumschiff und befindet sich zunächst in Ruhe (Sektor X1).',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
         geodesicsToShow: [1],
-
     },
 
     {
@@ -54,9 +103,8 @@ let slideContent = [
 
     {
         id: 3,
-        text_de: 'Bestimme die Geschwindigkeit, mit der das Verpflegungspaket auf der Sternenoberfläche auftrifft.\n\nTipp: Erinnere Dich, wie man die Geschwindigkeit eines Objektes anhand dessen Weltlinie bestimmen kann. Solltest Du Dir unsicher sein, blättere etwas im Kurs zurück.',
+        text_de: 'Bestimme die Geschwindigkeit, mit der das Verpflegungspaket auf der Sternenoberfläche auftrifft.\n\nTipp: Erinnere Dich, wie man die Geschwindigkeit eines Objektes anhand dessen Weltlinie bestimmen kann.',
         text_en: 'Join the sectors',
-
     },
 
 ];

@@ -2763,6 +2763,15 @@ function changeRelationShipAfterTransform(initialSectorTrapez, rapid_sum){
     initialSectorTrapez.parent.ID_text.relationship[4] = initialSectorTrapez.parent.ID_text.left - midpoint_boundingbox_before_global.x - 1;
     initialSectorTrapez.parent.ID_text.relationship[5] = initialSectorTrapez.parent.ID_text.top - midpoint_boundingbox_before_global.y + 1;
 
+
+    for (let jj = 0; jj < initialSectorTrapez.parent.markCircles.length; jj++) {
+        initialSectorTrapez.parent.markCircles[jj].set('left', initialSectorTrapez.parent.markCircles[jj].start_pos_BL_x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.markCircles[jj].start_pos_BL_y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x);
+        initialSectorTrapez.parent.markCircles[jj].set('top', initialSectorTrapez.parent.markCircles[jj].start_pos_BL_x * Math.sinh(rapid_sum) + initialSectorTrapez.parent.markCircles[jj].start_pos_BL_y * Math.cosh(rapid_sum) + trapezPointsAsGlobalCoords[3].y);
+
+        initialSectorTrapez.parent.markCircles[jj].relationship[4] = initialSectorTrapez.parent.markCircles[jj].left - midpoint_boundingbox_before_global.x - 1;
+        initialSectorTrapez.parent.markCircles[jj].relationship[5] = initialSectorTrapez.parent.markCircles[jj].top - midpoint_boundingbox_before_global.y + 1;
+    }
+
     for (let jj = 0; jj < initialSectorTrapez.parent.ticks.length; jj++) {
         let tick_start_point_calc = new fabric.Point(
             initialSectorTrapez.parent.ticks[jj].start_point_BL.x * Math.cosh(rapid_sum) + initialSectorTrapez.parent.ticks[jj].start_point_BL.y * Math.sinh(rapid_sum) + trapezPointsAsGlobalCoords[3].x,
@@ -7484,6 +7493,12 @@ function lorentzTransform(theta, trapez) {
 
     lorentzTransformObjectPosition(trapez.parent.ID_text, theta, trapezPointsAsGlobalCoords);
 
+    if (trapez.parent.markCircles.length > 0) {
+        for (let ii = 0; ii < trapez.parent.markCircles.length; ii++) {
+            lorentzTransformObjectPosition(trapez.parent.markCircles[ii], theta, trapezPointsAsGlobalCoords);
+        }
+    }
+
     if (trapez.parent.lineSegments.length > 0) {
         for (let ii = 0; ii < trapez.parent.lineSegments.length; ii++) {
             if (trapez.parent.lineSegments[ii].lineType == "geodesic"){
@@ -7826,6 +7841,16 @@ function reinitialiseSector(dist_inv_min_x_old, dist_inv_max_y_old, initialSecto
         }
     }
 
+    if (sectors[initialSectorID].markCircles.length > 0) {
+        for (let ii = 0; ii < sectors[initialSectorID].markCircles.length; ii++) {
+            canvas.bringToFront(sectors[initialSectorID].markCircles[ii]);
+        }
+
+        for (let ii = 0; ii < sectors[initialSectorID].markCircles.length; ii++) {
+            sectors[initialSectorID].markCircles[ii].relationship = getRelationship(sectors[initialSectorID].markCircles[ii], sectors[initialSectorID].ID);
+        }
+    }
+
     if (sectors[initialSectorID].vectors.length > 0) {
         for (let ii = 0; ii < sectors[initialSectorID].vectors.length; ii++) {
             canvas.bringToFront(sectors[initialSectorID].vectors[ii]);
@@ -8013,6 +8038,16 @@ async function resetSectors() {
                     }
                     for (let ss = 0; ss < sectors[rr].ticks.length; ss++) {
                         sectors[rr].ticks[ss].relationship = getRelationship(sectors[rr].ticks[ss], sectors[rr].ID);
+                    }
+                }
+
+                if (sectors[rr].markCircles.length > 0) {
+                    for (let ss = 0; ss < sectors[rr].markCircles.length; ss++) {
+                        canvas.bringToFront(sectors[rr].markCircles[ss]);
+
+                    }
+                    for (let ss = 0; ss < sectors[rr].markCircles.length; ss++) {
+                        sectors[rr].markCircles[ss].relationship = getRelationship(sectors[rr].markCircles[ss], sectors[rr].ID);
                     }
                 }
 
@@ -9066,6 +9101,14 @@ function startMarks() {
 
         mark.relationship = getRelationship(mark, sec.ID);
         mark.ID = markStartID[ii];
+
+        let trapezPointsAsGlobalCoords = getTrapezPointsAsGlobalCoords(sectors[markStartParentSector[ii][0]].trapez);
+
+        if (turnLorentzTransformOn == 1){
+            mark.start_pos_BL_x = mark.left - trapezPointsAsGlobalCoords[3].x;
+            mark.start_pos_BL_y = mark.top - trapezPointsAsGlobalCoords[3].y;
+        }
+
         sec.markCircles.push(mark);
         let stackIdx = canvas.getObjects().indexOf(sectors[mark.parentSector[0]].ID_text);
         canvas.insertAt(mark,stackIdx);

@@ -6,7 +6,7 @@ import math
 # spacetime: turnLorentzTransformOn = 1
 lorentzTransform = 1
 
-nRowsInModel = 10
+nRowsInModel = 40
 nColumnsInModel = 24
 
 nColumnsOfStar = 6
@@ -26,30 +26,38 @@ start_x = 300
 start_y = 100
 
 startZoom = 1.5
-startViewportTransform_4 = -3200
-startViewportTransform_5 = -1800
+startViewportTransform_4 =-3400
+startViewportTransform_5 =-8000
 
 #startGeodesicsAngle: 180 Grad fuer Geodaeten, die senkrecht nach oben verlaufen
 #startGeodesicsAngle: 135 Grad fuer Geodaeten im 45 Grad Winkel (Licht)
 #startGeodesicsOffset_x: Versatz in % entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz in px entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsAngle = [180]
+startGeodesicsAngle = [180, 180, 180]
 
 #WICHTIG, wenn in einem Sektor mehrere Geodäten starten sollen, so müssen sie in startGeodesicsSectors direkt auf einander folgen
 
-startGeodesicsSectors = [159]
+startGeodesicsSectors = [959, 959, 639]
 
 
-startGeodesicsOffset_x = [0.4]
+startGeodesicsOffset_x = [0.8, 0.78, 0.6]
 
-startGeodesicsOffset_y = [0]
+startGeodesicsOffset_y = [0, 0, 0]
 
-startGeodesicsOperational = ['true']
+startGeodesicsOperational = ['false', 'true', 'true']
+
+
+#Parameter fuer die Startmarkierungen
+startMarksSectors = [635]
+startMarksRadius = [2.5]
+startMarksOffset_x = [0.0]
+startMarksOffset_y = [0.5]
+
 
 def main():
 
-    file = io.open("neutronstar_schwarzschild_rz_mix_sym_leer.js",'w')
+    file = io.open("neutronstar_schwarzschild_rz_mix_sym_probe.js",'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -90,7 +98,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "line_colors = [ 'grey', 'black', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
+        "line_colors = [ 'black', 'blue', 'green', 'green', 'grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey','grey'];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
@@ -99,6 +107,9 @@ def main():
     file.write(
         "let lineStrokeWidthWhenSelected =" + str(lineStrokeWidthWhenSelected)
     )
+    file.write("\n")
+    file.write(
+            "let mark_colors = ['black', 'black','black','black','black','black','black','black','black', 'grey', 'grey', 'grey'];")
     file.write("\n")
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))
@@ -285,6 +296,62 @@ def main():
         file.write(variablenamesGeodesics[ii] + "= [ ")
         for jj in range(0, len(startGeodesicsAngle)):
             file.write(str(geodesicValues[ii][jj]) + ', ')
+        file.write("];\n")
+
+
+    variablenamesMarks = ["markStart_x", "markStart_y", "markStartStrokeWidth", "markStartRadius", "markStartFill", "markStartStroke", "markStartParentSector", "markStartID"]
+
+    markDict = dict(zip(variablenamesMarks, range(len(variablenamesMarks))))
+
+    markValues = [[[] for ii in range(len(startMarksSectors))] for jj in range(len(variablenamesMarks))]
+
+    for startMark in range(0, len(startMarksSectors)):
+
+        sector_angle = sectorValues[sectorDict["sec_angle"]][startMarksSectors[startMark]]
+
+        sector_width = sectorValues[sectorDict["sec_width"]][startMarksSectors[startMark]]
+
+        sector_height = sectorValues[sectorDict["sec_height"]][startMarksSectors[startMark]]
+
+        sector_center_x = sectorValues[sectorDict["sec_posx"]][startMarksSectors[startMark]]
+
+        sector_center_y = sectorValues[sectorDict["sec_posy"]][startMarksSectors[startMark]]
+
+        markStart_x_tmp = sector_center_x + startMarksOffset_x[startMark] * sector_width
+
+        markStart_y_tmp = sector_center_y - startMarksOffset_y[startMark] * sector_height
+
+        markStartPoint = [markStart_x_tmp, markStart_y_tmp]
+
+        markValues[markDict["markStart_x"]][startMark] = markStartPoint[0]
+
+        markValues[markDict["markStart_y"]][startMark] = markStartPoint[1]
+
+        markNumberInSector = 0
+
+        if (startMark > 0):
+            if (len(startMarksSectors) > 0):
+                for jj in range(0, startMark):
+                    if(startMarksSectors[jj] == startMarksSectors[startMark]):
+                        markNumberInSector +=1
+
+
+        markValues[markDict["markStartParentSector"]][startMark] = "[" + str(startMarksSectors[startMark]) + "," + str(markNumberInSector) + "]"
+
+        markValues[markDict["markStartID"]][startMark] = "[" + str(startMark) + "]"
+
+        markValues[markDict["markStartStrokeWidth"]][startMark] = 2
+
+        markValues[markDict["markStartRadius"]][startMark] = startMarksRadius[startMark]
+
+        markValues[markDict["markStartFill"]][startMark] = "mark_colors[" + str(startMark) + "]"
+
+        markValues[markDict["markStartStroke"]][startMark] = "mark_colors[" + str(startMark) + "]"
+
+    for ii in range(0, len(variablenamesMarks)):
+        file.write(variablenamesMarks[ii] + "= [ ")
+        for jj in range(0, len(startMarksSectors)):
+            file.write(str(markValues[ii][jj]) + ', ')
         file.write("];\n")
 
 
