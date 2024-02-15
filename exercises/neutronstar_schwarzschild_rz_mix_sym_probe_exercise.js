@@ -41,7 +41,7 @@ let slideContent = [
 
     {
         id: 0,
-        text_de: 'Lisa setzt ein unbeschleunigtes Testobjekt in Sektor P1 aus. Wir wollen uns seine Weltlinie genauer anschauen.',
+        text_de: 'Lisa setzt dazu ein unbeschleunigtes Testobjekt in Sektor P1 aus. Wir wollen uns seine Weltlinie genauer anschauen.',
         text_en: 'Together we want to become familiar with the sector model.',
         checkBoxesWithText: [
             {
