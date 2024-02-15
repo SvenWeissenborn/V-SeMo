@@ -970,7 +970,7 @@ function checkSlideCondition() {
                     lineEndPoint = fabric.util.transformPoint(lineEndPoint, lines[lineID][lines[lineID].length - 1].calcTransformMatrix());
 
                     if (lines[lineID][lines[lineID].length - 1].parentSector[0] == markPoints[markID].parentSector[0]) {
-                        if (Math.abs(lineEndPoint.x - markPoints[markID].left) < 10 && Math.abs(lineEndPoint.y - markPoints[markID].top) < 10) {
+                        if (Math.abs(lineEndPoint.x - markPoints[markID].left) < 15 && Math.abs(lineEndPoint.y - markPoints[markID].top) < 15) {
                             lineTouchesMark = true
                         }
                         else{
