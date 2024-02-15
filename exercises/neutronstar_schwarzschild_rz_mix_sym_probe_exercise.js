@@ -32,11 +32,17 @@ let slideContent = [
 
     {
         id: 0,
-        text_de: 'Lisa setzt ein unbeschleunigtes Testobjekt in Sektor P1 aus. Wir wollen uns seine Weltlinie genauer anschauen.',
+        text_de: 'Nachdem unsere Astronauten Karl und Lisa viel über die Geometrie des Raumes um einen Neutronenstern herausgefunden haben, wurden sie beauftragt weitere Eigenschaften des Neutronensterns zu untersuchen.',
         text_en: 'Together we want to become familiar with the sector model.',
         geodesicsToHide: [0,1],
         marksToHide: [0],
 
+    },
+
+    {
+        id: 0,
+        text_de: 'Lisa setzt ein unbeschleunigtes Testobjekt in Sektor P1 aus. Wir wollen uns seine Weltlinie genauer anschauen.',
+        text_en: 'Together we want to become familiar with the sector model.',
         checkBoxesWithText: [
             {
                 text_de: 'Vervollständige hierzu die Weltlinie des Objektes ohne die Verwendung der automatischen Vervollständigung.',
