@@ -30,8 +30,11 @@ let turnBackwardOff = true;
 let slideContent = [
     {
         id: 0,
-        text_de: 'Wir wollen eine neue Funktion von ViSeMo kennenlernen.',
+        text_de: 'Wir wollen eine neue Funktion von V-SeMo kennenlernen.',
         text_en: 'We want to learn about a new feature of ViSeMo.',
+
+        geodesicsToHide: [0],
+        marksToHide: [0, 1],
     },
 
     {
@@ -40,8 +43,8 @@ let slideContent = [
         text_en: '',
         checkBoxesWithText: [
             {
-                text_de: 'Tippe dazu einen Teil einer Geodäte oder ihren Endpunkt an.',
-                text_en: 'Click on a part of a geodesic or its end point.',
+                text_de: 'Tippe dazu einen Teil der blauen Linie oder ihren Endpunkt an.',
+                text_en: 'Click on a part of the blue line or its end point.',
                 type: 'tracker',
                 condition: ['choseGeodesic'],
             },
@@ -50,29 +53,47 @@ let slideContent = [
 
     {
         id: 2,
-        text_de: 'Wenn Du eine Geodäte auswählst, erscheinen in der linken Werkzeugleiste weitere Buttons.',
-        text_en: 'When you select a geodesic, more buttons appear in the left toolbar.',
+        text_de: 'Wenn Du eine Linie auswählst, erscheinen in der linken Werkzeugleiste weitere Buttons.',
+        text_en: 'When you select a line, more buttons appear in the left toolbar.',
     },
 
     {
         id: 3,
-        text_de: 'Du kannst die Konstruktion einer Geodäte beschleunigen, indem Du ViSeMo alle notwendigen Sektoren automatisch zusammensetzen lässt. Tippe dazu auf diesen Button:',
-        text_en: 'You can speed up the construction of a geodesic by letting ViSeMo automatically assemble all necessary sectors. Click on this button to do so:',
+        text_de: 'Du kannst die Konstruktion einer Geodäte beschleunigen, indem Du V-SeMo alle notwendigen Sektoren automatisch zusammensetzen lässt. Tippe dazu auf diesen Button:',
+        text_en: 'You can speed up the construction of a geodesic by letting V-SeMo automatically assemble all necessary sectors. Click on this button to do so:',
         slideCondition: [['buttonPressed', 'set_sectors']],
         imageToAdd: ['button_icons/set_sectors.png', buttonfactor, 125],
     },
 
     {
-        id: 4,
-        text_de: 'Vervollständige jetzt die Geodäte.',
-        text_en: 'Complete the geodesic.',
-
+        id: 2,
+        text_de: '',
+        text_en: '',
+        checkBoxesWithText: [
+            {
+                text_de: 'Vervollständige jetzt die Linie als Geodäte.',
+                text_en: 'Complete the line as a geodesic.',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', [1, 0]],
+            },
+        ]
     },
 
     {
         id: 4,
-        text_de: 'Wiederhole diesen Vorgang für die zweite Geodäte.',
-        text_en: 'Repeat this process for the secon geodesic.',
+        text_de: '',
+        text_en: '',
+
+        geodesicsToShow: [0],
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Wiederhole dieses Vorgehen für die zweite Linie.',
+                text_en: 'Repeat this process for the second line.',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', [0, 1]],
+            },
+        ]
 
     },
 

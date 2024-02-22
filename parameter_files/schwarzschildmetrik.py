@@ -30,21 +30,21 @@ lineStrokeWidthWhenSelected = 5
 # Parameter fuer die Startgeodaeten
 startGeodesicsSectors = [29, 29]
 # Winkel in Grad
-startGeodesicsAngle = [-70, -120]
+startGeodesicsAngle = [-112, -112]
 # Startpunkt der Geodaete liegt in der unteren linken Ecke
 # Versatz Anteilig der Sektorbreite
-startGeodesicsOffset_x = [0.5, 0.5]
+startGeodesicsOffset_x = [0.5, 0.7]
 # Versatz Anteilig der Sektorhoehe
-startGeodesicsOffset_y = [0.7, 0.7]
+startGeodesicsOffset_y = [1, 1]
 # Laenge der Geodaete in Pixel
 startGeodesicsLength = [50, 50]
 # operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
 startGeodesicsOperational = ['true', 'true']
 
 # Parameter fuer die Startmarkierungen
-startMarksSectors = [14, 11]
+startMarksSectors = [8, 11]
 startMarksRadius = [5, 5]
-startMarksOffset_x = [0.22, 0.9]
+startMarksOffset_x = [0.45, 0.145]
 startMarksOffset_y = [0.99, 0.99]
 
 # Parameter fuer die Starttexte
@@ -52,6 +52,20 @@ startTextsSectors = []
 startTextContent = []
 startTextsOffset_x = []
 startTextsOffset_y = []
+
+#Parameter fuer die Startvektoren
+vectorStartSectors = []
+#Winkel in Grad
+vectorStartAngle = []
+#Startpunkt der Geodaete liegt in der unteren linken Ecke
+#Versatz Anteilig der Sektorbreite
+vectorStartOffset_x = []
+#Versatz Anteilig der Sektorhoehe
+vectorStartOffset_y = []
+#Laenge der Geodaete in Pixel
+vectorStartLength = []
+#operational bedeutet, dass sie wie eine echte Geodaete behandelt werden
+vectorStartType = []
 
 
 def rotationAroundPoint(point_x_tmp, point_y_tmp, sector_angle, sector_center_x, sector_center_y):
@@ -73,10 +87,10 @@ def main():
 
 
 
-    #file = io.open("schwarzschildmetrik_parallel.js",'w')
+    file = io.open("schwarzschildmetrik_parallel.js",'w')
     #file = io.open("schwarzschildmetrik_big_model.js", 'w')
     #file = io.open("schwarzschildmetrik_eine.js", 'w')
-    file = io.open("schwarzschildmetrik_zwei_signale.js", 'w')
+    #file = io.open("schwarzschildmetrik_zwei_signale.js", 'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" +"\n"
@@ -307,7 +321,9 @@ def main():
     gtm.startprocess(file, sectorValues, startGeodesicsSectors, startGeodesicsAngle, startGeodesicsLength,
                  startGeodesicsOffset_x,startGeodesicsOffset_y,
                  startMarksSectors,startMarksOffset_x,startMarksOffset_y,startMarksRadius,
-                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent)
+                 startTextsSectors,startTextsOffset_x,startTextsOffset_y, startTextContent,
+                 vectorStartSectors,vectorStartAngle, vectorStartLength,
+                 vectorStartOffset_x, vectorStartOffset_y)
 
     file.close()
 
