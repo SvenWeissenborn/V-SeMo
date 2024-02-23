@@ -290,13 +290,56 @@ let shadowOff = {
 
 let back_language;
 if(language !== "english"){
-    back_language = 'german.html'
-    help_language = 'help_de.html'
+    back_language = 'german.html?'
+    help_language = 'help_de.html?'
 }else{
-    back_language = 'english.html'
-    help_language = 'help_en.html'
+    back_language = 'english.html?'
+    help_language = 'help_en.html?'
 }
 
+if (showResetSectors == "1"){
+    help_language += "showResetSectors=1&"
+}
+
+if (showSetSectorsToRing == "1"){
+    help_language += "showSetSectorsToRing=1&"
+}
+
+if (showAddCurvedLine == "1"){
+    help_language += "showAddCurvedLine=1&"
+}
+
+if (showAddVector == "1"){
+    help_language += "showAddVector=1&"
+}
+
+if (showAreaSector == "globe"){
+    help_language += "showAreaSector=globe&"
+}
+
+if (showAreaSector == "earth"){
+    help_language += "showAreaSector=earth&"
+}
+
+if (showVerticesOn == "1"){
+    help_language += "showVerticesOn=1&"
+}
+
+if (showAutoSet == "1"){
+    help_language += "showAutoSet=1&"
+}
+
+if (showChangeDirection == "1"){
+    help_language += "showChangeDirection=1&"
+}
+
+if (showAutoComplete == "1"){
+    help_language += "showAutoComplete=1&"
+}
+
+if (showChangeStartPoint == "1"){
+    help_language += "showChangeStartPoint=1&"
+}
 
 /*
 fabric.Image.fromURL('back.png', function(img) {

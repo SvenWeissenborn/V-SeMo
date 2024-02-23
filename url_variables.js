@@ -24,7 +24,7 @@ let sectorIDText = getUrlVars()["sectorIDText"];
 //setPositionAndAngleRandomly=1& um die Startposition und den Startwinkel der Sektoren zufaellig einzurichten
 let setPositionAndAngleRandomly = getUrlVars()["setPositionAndAngleRandomly"];
 
-//showExerciseBox=1& um den Button fuer das automatische Zusammensetzen entlang einer Geodaete einzuschalten
+//showExerciseBox=1& um die ExerciseBox einzuschalten
 let showExerciseBox = getUrlVars()["showExerciseBox"];
 
 //textured=1& um die Texturen der Erdkarte einzuschalten (nur fuer die Kugel)
