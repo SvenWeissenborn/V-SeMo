@@ -80,7 +80,7 @@
                     <td>Zeichne ein neues Liniensegment oder setze ein bestehendes fort</td>
                 </tr>
 
-                <tr class="spaceUnder" id="add_curved" style="display: none">
+                <tr class="spaceUnder" id="addCurved" style="display: none">
                     <td class="text-center"><img src="button_icons/add_curved.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Zeichne ein neues gekrümmtes Liniensegment oder setze ein bestehendes fort</td>
                 </tr>
@@ -90,7 +90,7 @@
                     <td>Füge ein Geodreieck ein</td>
                 </tr>
 
-                <tr class="spaceUnder" id="area_sector" style="display: none">
+                <tr class="spaceUnder" id="areaSector" style="display: none">
                     <td class="text-center"><img src="button_icons/area_sector.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Berechne die Fläche eines Sektors</td>
                 </tr>
@@ -105,7 +105,7 @@
                     <td>Lösche die ausgewählte Linie</td>
                 </tr>
 
-                <tr class="spaceUnder" id="set_sectors" style="display: none">
+                <tr class="spaceUnder" id="setSectors" style="display: none">
                     <td class="text-center"><img src="button_icons/set_sectors.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Setze die Sektoren entlang der Startrichtung der gewählten Geodäten zusammen</td>
                 </tr>
@@ -115,7 +115,7 @@
                     <td>Vervollständige die gewählte Linie als Geodäte</td>
                 </tr>
 
-                <tr class="spaceUnder" id="direction" style="display: none">
+                <tr class="spaceUnder" id="changeDirection" style="display: none">
                     <td class="text-center"><img src="button_icons/direction.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Verändere die Startrichtung der ausgewählten Linie – sie wird automatisch als Geodäte vervollständigt</td>
                 </tr>
@@ -187,8 +187,8 @@
     }
 
     if (showAutoSet == "1"){
-        let autoSetRow = document.getElementById("autoSet")
-        autoSetRow.style.display = "table-row"
+        let setSectorsRow = document.getElementById("setSectors")
+        setSectorsRow.style.display = "table-row"
     }
 
     if (showChangeDirection == "1"){

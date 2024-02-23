@@ -84,7 +84,7 @@
                     <td>Draw a new line segment or continue an existing one</td>
                 </tr>
 
-                <tr class="spaceUnder" id="add_curved" style="display: none">
+                <tr class="spaceUnder" id="addCurved" style="display: none">
                     <td class="text-center"><img src="button_icons/add.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Draw a new curved line segment or continue an existing one</td>
                 </tr>
@@ -94,7 +94,7 @@
                     <td>Insert a triangle</td>
                 </tr>
 
-                <tr class="spaceUnder" id="area_sector" style="display: none">
+                <tr class="spaceUnder" id="areaSector" style="display: none">
                     <td class="text-center"><img src="button_icons/area_sector.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Calculate the area of a sector</td>
                 </tr>
@@ -109,7 +109,7 @@
                     <td>Delete the selected line</td>
                 </tr>
 
-                <tr class="spaceUnder" id="set_sectors" style="display: none">
+                <tr class="spaceUnder" id="setSectors" style="display: none">
                     <td class="text-center"><img src="button_icons/set_sectors.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Set the sectors along the chosen geodesic start direction together</td>
                 </tr>
@@ -119,7 +119,7 @@
                     <td>Complete the line as a geodesic</td>
                 </tr>
 
-                <tr class="spaceUnder" id="direction" style="display: none">
+                <tr class="spaceUnder" id="changeDirection" style="display: none">
                     <td class="text-center"><img src="button_icons/direction.png" width="30%" height="auto" class="img-fluid" alt="..."></td>
                     <td>Change the starting direction of the selected geodesic and complete it</td>
                 </tr>
@@ -186,8 +186,8 @@
     }
 
     if (showAutoSet == "1"){
-        let autoSetRow = document.getElementById("autoSet")
-        autoSetRow.style.display = "table-row"
+        let setSectorsRow = document.getElementById("setSectors")
+        setSectorsRow.style.display = "table-row"
     }
 
     if (showChangeDirection == "1"){
