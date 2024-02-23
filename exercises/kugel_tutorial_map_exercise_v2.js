@@ -158,7 +158,7 @@ let slideContent = [
 
     {
         id: 8,
-        text_de: 'Gut gemacht. Warte nun auf weitere Instruktionen.',
+        text_de: 'Gut gemacht. Kehre nun wieder zur Kursseite zurück.',
         text_en: 'Well done. Return to the course.',
 
     },

@@ -61,7 +61,7 @@ let slideContent = [
     },
 
     {
-        text_de: 'Sehr schön. Wie du sehen solltest, treffen sich die Geodäten erneut, nachdem sie den Raum um das Schwarze Loch passiert haben.',
+        text_de: 'Sehr schön. Wie du sehen solltest, treffen sich die Geodäten erneut, nachdem sie den Raum um das Schwarze Loch passiert haben.\nKehre nun wieder zum Kurs zurück.',
         text_en: '',
 
     },
