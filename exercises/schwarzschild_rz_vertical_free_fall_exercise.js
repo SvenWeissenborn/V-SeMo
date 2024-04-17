@@ -26,51 +26,81 @@
     von Anfang an sichtbar sein sollen
 */
 
-
+let turnBackwardOff = true;
 let slideContent = [
-    {
-        id: 0,
-        text_de: 'Gemeinsam wollen wir uns mit dem Sektormodell vertraut machen.',
-        text_en: 'Together we want to become familiar with the sector model.',
-        sectorsToShow: [1, 2, 5,],
-        sectorsToHide: [0, 3, 4, 6, 7, 8],
-        geodesicsToHide: [0, 1],
-        marksToHide: [0, 1, 2],
-        textsToHide: [0, 1, 2],
-    },
 
     {
         id: 1,
-        text_de: 'Beginnen wir mit etwas einfachem: Drehe und Verschiebe die Sektoren.',
+        text_de: 'Geodäten in diesem Modell',
         text_en: 'Let\'s start with something simple: rotate and move the sectors.',
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Vervollständige die Geodäte bis zum Rand des Sektors.',
+                text_en: '2 and 3 &',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', ['chosenLineGlobalID', 0]],
+            }
+        ]
     },
 
+    {
+        id: 0,
+        text_de: 'Klicke den Sektor (A2) an. Mit Hilfe des Schiebereglers kannst du ihn lorentztransformieren.',
+        text_en: 'Together we want to become familiar with the sector model.',
+
+        checkBoxesWithText: [
+            {
+                text_de: 'Lege Sektor A2 an Sektor A1 an. Verwende den Schieberegler, um ihn ausreichend zu transformieren.',
+                text_en: '6 and 7 &',
+                type: 'tracker',
+                condition: ['snappedSectors', [5, 6]]
+            },
+
+
+        ]
+    },
 
     {
         id: 2,
-        text_de: 'Setze die Sektoren',
+        text_de: 'Gut gemacht.',
         text_en: 'Join the sectors',
         checkBoxesWithText: [
             {
-                text_de: '2 und 3 &',
+                text_de: 'Setze die Geodäte wieder bis zum Rand des Sektors fort.',
                 text_en: '2 and 3 &',
-                condition: ['snappedSectors', [1, 2]]
-            },
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', ['chosenLineGlobalID', 1]],
+            }
+        ]
+    },
 
+    {
+        id: 2,
+        text_de: 'Setze nun die Geodäte in Sektor A3 fort: und ',
+        text_en: 'Join the sectors',
+        checkBoxesWithText: [
             {
-                text_de: '3 und 6 zusammen.',
-                text_en: '3 and 6.',
-                condition: ['snappedSectors', [2, 5]]
+                text_de: ' Transformiere dazu zuerst Sektor A3 und lege ihn bündig an Sektor A2.',
+                text_en: '2 and 3 &',
+                type: 'tracker',
+                condition: ['snappedSectors', [4, 5]]
             },
+            {
+                text_de: ' Zeichne dann die Geodäte wieder bis zum Rand des Sektors.',
+                text_en: '2 and 3 &',
+                type: 'tracker',
+                condition: ['lineTouchesOneMark', ['chosenLineGlobalID', 2]],
+            }
         ]
     },
 
     {
         id: 3,
-        text_de: 'Setze Sektor 9 passend an.',
-        text_en: 'Set sector 9 suitably.',
-        sectorsToShow: [8],
-        slideCondition: [['snappedSectors', [2, 5]], ['snappedSectors', [5, 8]]],
+        text_de: 'Du kannst die Konstruktion einer Geodäte beschleunigen, indem Du V-SeMo alle notwendigen Sektoren automatisch zusammensetzen lässt. Tippe dazu auf den Koodinieren-Button:',
+        text_en: 'You can speed up the construction of a geodesic by letting V-SeMo automatically assemble all necessary sectors. Click on this button to do so:',
+        slideCondition: [['buttonPressed', 'set_sectors']],
+        imageToAdd: ['button_icons/set_sectors.png', buttonfactor, 125],
     },
 
     {

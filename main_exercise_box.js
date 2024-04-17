@@ -588,7 +588,11 @@ function setGeodesicsVisible(){
             for (let jj = 0; jj < lines[geodesicID].length; jj++){
 
                 if (lines[geodesicID][jj].dragPoint !== undefined){
-                    lines[geodesicID][jj].dragPoint.opacity = 1;
+                    if (buildTicks == "1"){
+                        lines[geodesicID][jj].dragPoint.opacity = 0.5
+                    }else {
+                        lines[geodesicID][jj].dragPoint.opacity = 1;
+                    }
                     lines[geodesicID][jj].dragPoint.perPixelTargetFind = false;
                 }
 
@@ -1084,6 +1088,8 @@ function checkCheckBoxCondition() {
 
             if (currentSlide.checkBoxesWithText[ii].condition[0] == 'snappedSectors') {
 
+                console.log('test')
+
                 let firstSectorID = currentSlide.checkBoxesWithText[ii].condition[1][0];
                 let secondSectorID = currentSlide.checkBoxesWithText[ii].condition[1][1];
 
@@ -1094,7 +1100,9 @@ function checkCheckBoxCondition() {
 
                         if (sectors[firstSectorID].snapStatus[jj] !== 0) {
                             currentCheckBoxWithText.conditionIsFullfilled = true;
+                            console.log(currentCheckBoxWithText)
                             currentCheckBoxWithText._objects[1].set('opacity', 1);
+                            canvas_exercise_box.renderAll()
                         }
                     }
                 }
@@ -1105,6 +1113,7 @@ function checkCheckBoxCondition() {
                 if (chosenLineGlobalID !== -1){
                     currentCheckBoxWithText.conditionIsFullfilled = true;
                     currentCheckBoxWithText._objects[1].set('opacity', 1);
+                    canvas_exercise_box.renderAll()
                 }
             }
 
@@ -1140,6 +1149,8 @@ function checkCheckBoxCondition() {
                     let direction_y = lines[lineID][jj].y2 - lines[lineID][jj].y1;
 
                     if (lines[lineID][jj].parentSector[0] == markPoints[mark1ID].parentSector[0]) {
+                        console.log('gogogogo')
+                        console.log(distancePointStraightLine(point_1_x, point_1_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y))
                         if (distancePointStraightLine(point_1_x, point_1_y, lineStartPoint.x, lineStartPoint.y, direction_x, direction_y) < currentSlide.checkBoxesWithText[ii].condition[1][3]) {
                             check_1 = true
                         }
@@ -1154,6 +1165,7 @@ function checkCheckBoxCondition() {
                     if (check_1 == true && check_2 == true) {
                         currentCheckBoxWithText.conditionIsFullfilled = true;
                         currentCheckBoxWithText._objects[1].set('opacity', 1);
+                        canvas_exercise_box.renderAll()
 
                         if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
                             if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
@@ -1213,6 +1225,7 @@ function checkCheckBoxCondition() {
                 if (check_1 == true && check_2 == true) {
                     currentCheckBoxWithText.conditionIsFullfilled = true;
                     currentCheckBoxWithText._objects[1].set('opacity', 1);
+                    canvas_exercise_box.renderAll()
 
                     if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
                         if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
@@ -1263,6 +1276,7 @@ function checkCheckBoxCondition() {
                 if (check_1 == true) {
                     currentCheckBoxWithText.conditionIsFullfilled = true;
                     currentCheckBoxWithText._objects[1].set('opacity', 1);
+                    canvas_exercise_box.renderAll()
 
                     if (currentSlide.checkBoxesWithText[ii].result !== undefined) {
                         if (currentSlide.checkBoxesWithText[ii].result.type == 'showMarkAndText') {
@@ -1273,7 +1287,6 @@ function checkCheckBoxCondition() {
                 }
             }
         }
-
 
         for (let ii = 0; ii < currentSlide.checkBoxesWithText.length; ii++){
             let currentCheckBoxWithText = listOfCheckBoxesWithText[ii];
