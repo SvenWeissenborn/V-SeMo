@@ -44,10 +44,10 @@ startGeodesicsOffset_y = [0.1]
 startGeodesicsOperational = ['true']
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [6, 5, 4]
-startMarksRadius = [2.5, 2.5, 2.5]
-startMarksOffset_x = [0.53, 0.705, 0.805]
-startMarksOffset_y = [0.9, 0.92, 0.94]
+startMarksSectors = [6, 5, 4, 0]
+startMarksRadius = [2.5, 2.5, 2.5, 2.5]
+startMarksOffset_x = [0.53, 0.705, 0.805, 0.285]
+startMarksOffset_y = [0.9, 0.92, 0.94, 0.83]
 
 def main():
 
