@@ -26,63 +26,62 @@
     von Anfang an sichtbar sein sollen
 */
 
-let turnBackwardOff = true;
+let turnBackwardOff = true
 
 let slideContent = [
     {
-        id: 0,
-        text_de: 'Lisa berichtet Karl, dass sie hinter dem Stern zwei Schweber (S1 & S2) gestartet hat. Beide senden kontinuierlich Signale.',
-        text_en: 'Lisa tells Karl that she has launched two floaters (F1 & F2) behind the star. Both are continuously sending signals.',
-        sectorsToSnapTogether: [[43, 42]]
-    },
-
-    {
-        id: 1,
-        text_de: 'Lisa versucht ihren Empfänger passend auszurichten. Doch egal was sie macht, sie empfängt nur das Signal eines Schwebers.',
-        text_en: 'Let\'s start with something simple: rotate and move the sectors.',
-
-    },
-
-
-    {
-        id: 2,
-        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann. \nPrüfe dein Ergebnis durch Antippen der entsprechenden Box.',
-        text_en: 'Determine from which floater Lisa can receive a signal by constructing suitable geodesics. \nCheck your result by ticking the corresponding box.',
-        checkBoxesWithText: [
+        id: 7,
+        text_de: 'Parallel startende Geodäten laufen auf dem Sektormodell der Sattelfläche...',
+        text_en: '',
+        answerBoxesWithText: [
             {
-                text_de: 'a) Schweber 1',
+                text_de: 'a) aufeinander zu.',
                 text_en: 'a) Floater 1',
-                type: 'quiz',
                 answerIs: false,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
+
             },
             {
-                text_de: 'b) Schweber 2',
-                text_en: 'b) Floater 2',
-                type: 'quiz',
+                text_de: 'b) voneinander weg.',
+                text_en: 'a) Floater 1',
                 answerIs: true,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
+
+            },
+            {
+                text_de: 'c) stehts parallel.',
+                text_en: 'a) Floater 1',
+                answerIs: false,
+
             },
         ],
     },
-
     {
-        id: 0,
-        text_de: 'Wo könnte sich ein Alien auf der Oberfläche des Neutronensterns vor Karl verstecken?',
-        text_en: 'Return to the course.',
-        geodesicsToHide: [],
-        marksToHide: [],
-        textsToHide: [],
-    },
+        id: 7,
+        text_de: 'Die Geometrie der Sattelfläche...',
+        text_en: '',
+        answerBoxesWithText: [
+            {
+                text_de: 'a) unterscheidet sich von der der Kugeloberfläche.',
+                text_en: 'a) Floater 1',
+                type: 'quiz',
+                answerIs: false,
 
+            },
+            {
+                text_de: 'b) gleicht der der Kugeloberfläche.',
+                text_en: 'a) Floater 1',
+                type: 'quiz',
+                answerIs: true,
+
+            },
+
+        ],
+    },
+    {
+        id: 7,
+        text_de: 'Ende',
+        text_en: '',
+
+    },
 ];
 
 

@@ -78,7 +78,7 @@ let slideContent = [
     {
         id: 4,
         text_de: 'Lisa erkundet mit einem Rover die Sternenoberfläche. Dabei sendet sie Karl kontinuierlich ein Signal.',
-        text_en: 'Lisa explores the surface of the stars with a rover. In the process, she continuously sends Karl a signal.',
+        text_en: 'Lisa explores the surface of the star with a rover. In the process, she continuously sends Karl a signal.',
         imageToAdd: ['media/ns_rover_0.png', 0.38, 85],
         marksToHide: [1],
         marksToShow: [2],

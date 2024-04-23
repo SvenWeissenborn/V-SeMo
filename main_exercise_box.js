@@ -308,6 +308,113 @@ function drawCheckBoxWithText() {
 
 let image = 0;
 
+let listOfAnswerBoxesWithText = [];
+
+function drawAnswerBoxWithText(textToSet){
+    console.log('gugugu')
+    let answerText;
+
+    answerText = new fabric.Textbox("Text", {
+        width: 250,
+        opacity: 1,
+        fontSize: 16 * screenFactor,
+        fontFamily: 'arial',
+        fontWeight: 'bold',
+        selectable: false,
+        originX: 'left',
+        originY: 'top',
+        left: 25,
+        top: -exerciseTextTop + 2.5,
+        text: textToSet,
+        fill: '#575656',
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        perPixelTargetFind: true,
+        hoverCursor: "pointer",
+        textAlign: "left",
+    });
+
+
+    console.log(answerText.height)
+
+
+    let answerBox;
+
+    answerBox = new fabric.Rect({
+
+        left: 0,
+        top: -exerciseTextTop,
+        fill: '',
+        width: 275,
+        height: answerText.height,
+        strokeWidth: 2,
+        stroke: '#575656',
+        rx: 5,
+        ry: 5,
+        originX: 'left',
+        originY: 'top',
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        selectable: false,
+        hoverCursor: "default",
+    });
+
+    let answerBoxHook
+
+        answerBoxHook = new fabric.Polygon(hookPoints, {
+        left: 12,
+        top: -2.5,
+        fill: 'green',
+        scaleX: 2.5,
+        scaleY: 2.5,
+        originX: 'center',
+        originY: 'center',
+        opacity: 0,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        selectable: false,
+        hoverCursor: "default",
+    });
+
+    let answerBoxCross;
+
+    answerBoxCross = new fabric.Polygon(crossPoints, {
+        left: 12,
+        top: -2.5,
+        fill: 'red',
+        scaleX: 2.3,
+        scaleY: 2.3,
+        originX: 'center',
+        originY: 'center',
+        opacity: 0,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        selectable: false,
+        hoverCursor: "default",
+    });
+
+    let answerBoxWithText = new fabric.Group([answerText, answerBox, answerBoxHook, answerBoxCross], {
+        left: 20,
+        top: exerciseTextTop + 10 + exerciseText.height,
+        objectCaching: false,
+        hasBorders: false,
+        hasControls: false,
+        //selectable: true,
+        originX: 'left',
+        originY: 'top',
+        hoverCursor: "default",
+        lockMovementX: true,
+        lockMovementY: true,
+    });
+
+    canvas_exercise_box.add(answerBoxWithText);
+
+    return answerBoxWithText
+}
 
 
 function addCheckBoxWithText() {
@@ -391,6 +498,110 @@ function addCheckBoxWithText() {
     }
 }
 
+function addAnswerBoxWithText(){
+    for (let ii = 0; ii < listOfAnswerBoxesWithText.length; ii++) {
+        let listOfAnswerBoxesWithTextToRemove = listOfAnswerBoxesWithText[ii];
+        canvas_exercise_box.remove(listOfAnswerBoxesWithTextToRemove)
+    }
+
+    if (currentSlide.answerBoxesWithText !== undefined) {
+
+        forward.set('opacity', 0);
+        forward.set('evented', false);
+
+        listOfAnswerBoxesWithText = [];
+
+        for (let ii = 0; ii < currentSlide.answerBoxesWithText.length; ii++) {
+
+            let textToSet
+
+            if (language !== 'english'){
+                textToSet = currentSlide.answerBoxesWithText[ii].text_de;
+                //checkBoxWithText.set('height', checkBoxWithText._objects[2].getScaledHeight() + 1)
+            } else{
+                textToSet = currentSlide.answerBoxesWithText[ii].text_en;
+            }
+
+            answerBoxWithText = drawAnswerBoxWithText(textToSet);
+
+            listOfAnswerBoxesWithText.push(answerBoxWithText);
+
+            listOfAnswerBoxesWithText[ii]._objects[1].set('height', answerBoxWithText._objects[0].height + 5);
+
+            listOfAnswerBoxesWithText[ii]._objects[1].setCoords()
+
+            listOfAnswerBoxesWithText[ii]._objects[0].bringToFront()
+
+            if (currentSlide.answerBoxesWithText[ii].answerIs !== undefined) {
+                listOfAnswerBoxesWithText[ii].conditionIsFullfilled = false;
+                listOfAnswerBoxesWithText[ii].set('hoverCursor', "pointer")
+                listOfAnswerBoxesWithText[ii].answerState = false
+
+
+                    listOfAnswerBoxesWithText[ii].on('mouseover', function () {
+                        if (listOfAnswerBoxesWithText[ii].answerState !== true) {
+                            listOfAnswerBoxesWithText[ii]._objects[0].set('fill', "yellow")
+                            canvas_exercise_box.renderAll()
+                        }
+                    })
+
+                    listOfAnswerBoxesWithText[ii].on('mouseout', function () {
+                        if (listOfAnswerBoxesWithText[ii].answerState !== true) {
+                            listOfAnswerBoxesWithText[ii]._objects[0].set('fill', "")
+                            canvas_exercise_box.renderAll()
+                        }
+                    })
+
+
+                listOfAnswerBoxesWithText[ii].on('mouseup', function () {
+
+
+                        for (let jj = 0; jj < listOfAnswerBoxesWithText.length; jj++) {
+                            if (listOfAnswerBoxesWithText[jj].answerState !== true) {
+                                listOfAnswerBoxesWithText[jj].answerState = true
+                                listOfAnswerBoxesWithText[jj].set('hoverCursor', "default")
+                                if (currentSlide.answerBoxesWithText[jj].answerIs == true) {
+                                    console.log("CHACKE")
+                                    listOfAnswerBoxesWithText[jj]._objects[0].set('fill', "")
+                                    listOfAnswerBoxesWithText[jj]._objects[1].set('opacity', 1)
+                                    listOfAnswerBoxesWithText[jj]._objects[3].set('fill', "green")
+                                    canvas_exercise_box.renderAll()
+                                } else {
+                                    console.log("NO!!!")
+                                    listOfAnswerBoxesWithText[jj]._objects[0].set('fill', "")
+                                    listOfAnswerBoxesWithText[jj]._objects[2].set('opacity', 1)
+                                    listOfAnswerBoxesWithText[jj]._objects[3].set('fill', "red")
+                                    canvas_exercise_box.renderAll()
+                                }
+                                forward.set('opacity', 1)
+                                forward.set('evented', true)
+
+
+                        }
+                    }
+
+                })
+
+            }
+
+            if (ii == 0){
+                if (exerciseText.text == ""){
+
+                    answerBoxWithText.set('top', exerciseTextTop)
+                }
+            }
+
+            if (ii > 0) {
+
+                answerBoxWithText.set('top', listOfAnswerBoxesWithText[ii - 1]._objects[0].getScaledHeight() + 1 + listOfAnswerBoxesWithText[ii - 1].top + 10)
+
+            }
+
+            answerBoxWithText.setCoords()
+        }
+    }
+}
+
 function addImage(){
 
     if (image !== 0){
@@ -466,6 +677,8 @@ function showNextSlide() {
     setText();
 
     addCheckBoxWithText();
+
+    addAnswerBoxWithText()
 
     addImage();
 
