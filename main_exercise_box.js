@@ -533,6 +533,7 @@ function addAnswerBoxWithText(){
             listOfAnswerBoxesWithText[ii]._objects[0].bringToFront()
 
             if (currentSlide.answerBoxesWithText[ii].answerIs !== undefined) {
+                listOfAnswerBoxesWithText[ii].answerIs = currentSlide.answerBoxesWithText[ii].answerIs
                 listOfAnswerBoxesWithText[ii].conditionIsFullfilled = false;
                 listOfAnswerBoxesWithText[ii].set('hoverCursor', "pointer")
                 listOfAnswerBoxesWithText[ii].answerState = false
@@ -555,31 +556,36 @@ function addAnswerBoxWithText(){
 
                 listOfAnswerBoxesWithText[ii].on('mouseup', function () {
 
-
                         for (let jj = 0; jj < listOfAnswerBoxesWithText.length; jj++) {
                             if (listOfAnswerBoxesWithText[jj].answerState !== true) {
                                 listOfAnswerBoxesWithText[jj].answerState = true
                                 listOfAnswerBoxesWithText[jj].set('hoverCursor', "default")
-                                if (currentSlide.answerBoxesWithText[jj].answerIs == true) {
-                                    console.log("CHACKE")
-                                    listOfAnswerBoxesWithText[jj]._objects[0].set('fill', "")
-                                    listOfAnswerBoxesWithText[jj]._objects[1].set('opacity', 1)
-                                    listOfAnswerBoxesWithText[jj]._objects[3].set('fill', "green")
-                                    canvas_exercise_box.renderAll()
-                                } else {
-                                    console.log("NO!!!")
-                                    listOfAnswerBoxesWithText[jj]._objects[0].set('fill', "")
-                                    listOfAnswerBoxesWithText[jj]._objects[2].set('opacity', 1)
-                                    listOfAnswerBoxesWithText[jj]._objects[3].set('fill', "red")
-                                    canvas_exercise_box.renderAll()
-                                }
-                                forward.set('opacity', 1)
-                                forward.set('evented', true)
+                            }
+                        }
+                    if (this.answerIs == true) {
+                        this._objects[0].set('fill', "")
+                        this._objects[1].set('opacity', 1)
+                        this._objects[3].set('fill', "green")
 
+                    } else {
+
+                        this._objects[0].set('fill', "")
+                        this._objects[2].set('opacity', 1)
+                        this._objects[3].set('fill', "red")
+                        for (let jj = 0; jj < listOfAnswerBoxesWithText.length; jj++) {
+                            if (listOfAnswerBoxesWithText[jj].answerIs == true) {
+                                listOfAnswerBoxesWithText[jj]._objects[0].set('fill', "")
+                                listOfAnswerBoxesWithText[jj]._objects[1].set('opacity', 1)
+                                listOfAnswerBoxesWithText[jj]._objects[3].set('fill', "green")
+                            }
 
                         }
-                    }
 
+                    }
+                    forward.set('opacity', 1)
+                    forward.set('evented', true)
+
+                    canvas_exercise_box.renderAll()
                 })
 
             }

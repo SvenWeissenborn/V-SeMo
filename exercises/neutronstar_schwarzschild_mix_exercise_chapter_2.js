@@ -46,30 +46,18 @@ let slideContent = [
 
     {
         id: 2,
-        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann. \nPrüfe dein Ergebnis durch Antippen der entsprechenden Box.',
+        text_de: 'Bestimme durch die Konstruktion geeigneter Geodäten, von welchem Schweber Lisa ein Signal empfangen kann.',
         text_en: 'Determine from which floater Lisa can receive a signal by constructing suitable geodesics. \nCheck your result by ticking the corresponding box.',
-        checkBoxesWithText: [
+        answerBoxesWithText: [
             {
                 text_de: 'a) Schweber 1',
                 text_en: 'a) Floater 1',
-                type: 'quiz',
                 answerIs: false,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
             },
             {
                 text_de: 'b) Schweber 2',
                 text_en: 'b) Floater 2',
-                type: 'quiz',
                 answerIs: true,
-                result: {
-                    type: 'showMarkAndText',
-                    mark: 4,
-                    text: 5
-                }
             },
         ],
     },

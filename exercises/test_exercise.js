@@ -62,15 +62,13 @@ let slideContent = [
             {
                 text_de: 'a) unterscheidet sich von der der Kugeloberfläche.',
                 text_en: 'a) Floater 1',
-                type: 'quiz',
-                answerIs: false,
+                answerIs: true,
 
             },
             {
                 text_de: 'b) gleicht der der Kugeloberfläche.',
                 text_en: 'a) Floater 1',
-                type: 'quiz',
-                answerIs: true,
+                answerIs: false,
 
             },
 
