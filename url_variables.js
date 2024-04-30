@@ -82,6 +82,8 @@ let showAutoComplete = getUrlVars()["showAutoComplete"];
 //showChangeStartPoint=1& um den Joystick fuer die Aenderung der Startposition anzuzeigen
 let showChangeStartPoint = getUrlVars()["showChangeStartPoint"];
 
+let showSaveOption = getUrlVars()["showSaveOption"];
+
 //turnOverlapControllOn=1& um die OverlapControll ein- und auszuschalten
 let turnOverlapControllOn = getUrlVars()["turnOverlapControllOn"];
 

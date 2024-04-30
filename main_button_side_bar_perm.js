@@ -2224,51 +2224,56 @@ fabric.Image.fromURL(exit_fullscreenLang, function(img) {
     canvas_side_tools_right.add(exitFullscreen);
 });
 
-let saveLang
-if(language !== "english"){
-    saveLang = 'button_icons/save_de.png'
-}else{
-    saveLang = 'button_icons/save_en.png'
+if (showSaveOption == "1"){
+
+
+    let saveLang
+    if(language !== "english"){
+        saveLang = 'button_icons/save_de.png'
+    }else{
+        saveLang = 'button_icons/save_en.png'
+    }
+
+    let save;
+    fabric.Image.fromURL(saveLang, function(img) {
+        save = img.set({
+            left: 360 * screenFactor - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
+            top: 80 * screenFactor - buttondist / 2,
+            opacity: 1,
+            originX: "right",
+            originY: "bottom",
+            perPixelTargetFind: true,
+            objectCaching: false,
+            hasBorders: false,
+            hasControls: false,
+            evented: true,
+            selectable: false,
+            scaleX: buttonfactor * screenFactor,
+            scaleY: buttonfactor * screenFactor,
+            hoverCursor: "pointer"
+        });
+
+        save.buttonType = "save"
+
+        save.on('mousedown', function (o) {
+            save.set('shadow', new fabric.Shadow(shadowOn));
+            canvas_side_tools_right.renderAll()
+        });
+        save.on('mouseout', function (o) {
+            save.set('shadow', new fabric.Shadow(shadowOff));
+            canvas_side_tools_right.renderAll()
+        });
+
+        save.on('mouseup', function (o) {
+            save.set('shadow', new fabric.Shadow(shadowOff));
+            saveCanvasAsJs(canvas, 'captureObjectProperties.js')
+        });
+
+
+        canvas_side_tools_right.add(save);
+
+    });
 }
-
-let save;
-fabric.Image.fromURL(saveLang, function(img) {
-    save = img.set({
-        left: 360 * screenFactor - buttondist - 2.4 * 136 * buttonfactor * screenFactor,
-        top: 80 * screenFactor - buttondist / 2,
-        opacity: 1,
-        originX: "right",
-        originY: "bottom",
-        perPixelTargetFind: true,
-        objectCaching: false,
-        hasBorders: false,
-        hasControls: false,
-        evented: true,
-        selectable: false,
-        scaleX: buttonfactor * screenFactor,
-        scaleY: buttonfactor * screenFactor,
-        hoverCursor: "pointer"
-    });
-
-    save.buttonType = "save"
-
-    save.on('mousedown', function (o) {
-        save.set('shadow', new fabric.Shadow(shadowOn));
-        canvas_side_tools_right.renderAll()
-    });
-    save.on('mouseout', function (o) {
-        save.set('shadow', new fabric.Shadow(shadowOff));
-        canvas_side_tools_right.renderAll()
-    });
-
-    save.on('mouseup', function (o) {
-        save.set('shadow', new fabric.Shadow(shadowOff));
-        saveCanvasAsJs(canvas, 'captureObjectProperties.js')
-    });
-
-    canvas_side_tools_right.add(save);
-
-});
 
 let zoomResetLang
 if(language !== "english"){
@@ -2277,10 +2282,16 @@ if(language !== "english"){
     zoomResetLang = 'button_icons/zoomReset_en.png'
 }
 
+let buttonDistHorizontal = 2.4
+
+if (showSaveOption == "1"){
+    buttonDistHorizontal += 1.2
+}
+
 let zoomReset;
 fabric.Image.fromURL(zoomResetLang, function(img) {
     zoomReset = img.set({
-        left: 360 * screenFactor - buttondist - 3.6 * 136 * buttonfactor * screenFactor,
+        left: 360 * screenFactor - buttondist - buttonDistHorizontal * 136 * buttonfactor * screenFactor,
         top: 80 * screenFactor - buttondist / 2,
         opacity: 1,
         originX: "right",
@@ -2328,7 +2339,7 @@ if(language !== "english"){
 let help;
 fabric.Image.fromURL(helpLang, function(img) {
     help = img.set({
-        left: 360 * screenFactor - buttondist - 4.8 * 136 * buttonfactor * screenFactor,
+        left: 360 * screenFactor - buttondist - (buttonDistHorizontal + 1.2) * 136 * buttonfactor * screenFactor,
         top: 80 * screenFactor - buttondist / 2,
         opacity: 1,
         originX: "right",
