@@ -6,8 +6,8 @@ import math
 # spacetime: turnLorentzTransformOn = 1
 lorentzTransform = 1
 
-nRowsInModel = 7
-nColumnsInModel = 1
+nRowsInModel = 8
+nColumnsInModel = 2
 
 radius = 120
 delta_r = 1.25
@@ -33,25 +33,25 @@ startViewportTransform_5 = -350
 #startGeodesicsOffset_x: Versatz entlang der Raumachse (wenn startGeodesicsOffset_y = 0)
 #startGeodesicsOffset_y: Versatz entlang der Zeitachse (wenn startGeodesicsOffset_x = 0)
 
-startGeodesicsSectors = [6]
+startGeodesicsSectors = [15, 15]
 
-startGeodesicsAngle = [150]
+startGeodesicsAngle = [180, 180]
 
-startGeodesicsOffset_x = [0.3]
+startGeodesicsOffset_x = [0.15, 0.85]
 
-startGeodesicsOffset_y = [0.1]
+startGeodesicsOffset_y = [0, 0]
 
-startGeodesicsOperational = ['true']
+startGeodesicsOperational = ['true', 'true']
 
 #Parameter fuer die Startmarkierungen
-startMarksSectors = [6, 5, 4, 0]
-startMarksRadius = [2.5, 2.5, 2.5, 2.5]
-startMarksOffset_x = [0.53, 0.705, 0.805, 0.285]
-startMarksOffset_y = [0.9, 0.92, 0.94, 0.83]
+startMarksSectors = [0, 0]
+startMarksRadius = [2.5, 2.5]
+startMarksOffset_x = [0, 0.68]
+startMarksOffset_y = [0.65, 0.925]
 
 def main():
 
-    file = io.open("schwarzschild_rz_vertical_free_fall.js", 'w')
+    file = io.open("schwarzschild_rz_tidal_forces.js", 'w')
 
     file.write( "/*" +"\n"
                 "------Parameter-------" + "\n"
@@ -94,7 +94,7 @@ def main():
     file.write("\n")
 
     file.write(
-        "let line_colors = ['blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', ];")
+        "let line_colors = ['blue', 'black', 'blue', 'blue', 'blue', 'blue', 'blue', ];")
     file.write("\n")
     file.write(
         "let lineStrokeWidthWhenNotSelected = " + str(lineStrokeWidthWhenNotSelected)
@@ -105,7 +105,7 @@ def main():
     )
     file.write("\n")
     file.write(
-        "let mark_colors = ['black', 'black','black','black','black','black','black','black','black', 'black', 'black', 'black'];")
+        "let mark_colors = [ 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black']")
     file.write("\n")
     variablenamesSectors = ["sec_name", "sec_ID",  "sec_fill", "sec_type", "sec_fontSize", "sec_width", "sec_height", "sec_timeEdgeLeft", "sec_timeEdgeRight", "spaceEdge", "sec_coords", "sec_neighbour_top", "sec_neighbour_right", "sec_neighbour_bottom", "sec_neighbour_left", "sec_posx", "sec_posy", "sec_angle"]
     sectorDict = dict(zip(variablenamesSectors,range(len(variablenamesSectors))))

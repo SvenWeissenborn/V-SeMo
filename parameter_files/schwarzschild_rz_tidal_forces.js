@@ -1,5 +1,6 @@
 /*
 ------Parameter-------
+turnLorentzTransformOn = 1
 radius: 120
 nRowsInModel: 8
 nColumnsInModel: 2
@@ -14,6 +15,10 @@ startGeodesicsAngle: [180, 180]
 startGeodesicsOffset_x: [0.15, 0.85]
 startGeodesicsOffset_y: [0, 0]
 startGeodesicsOperational: ['true', 'true']
+startMarksSectors: [0, 0]
+startMarksRadius: [2.5, 2.5]
+startMarksOffset_x: [0, 0.68]
+startMarksOffset_y: [0.65, 0.925]
 ----------------------
 */
 
@@ -23,9 +28,10 @@ startViewportTransform_5 =-350
 
 let turnLorentzTransformOn =1
 
-let line_colors = [ 'black', 'blue', 'grey', 'purple', 'orange', 'fuchsia', 'deepskyblue', 'gold', 'silver', 'lightskyblue', 'lightsteelblue', 'greenyellow', 'tomato', 'darkorchid', 'mistyrose', 'salmon'];
+let line_colors = ['blue', 'black', 'blue', 'blue', 'blue', 'blue', 'blue', ];
 let lineStrokeWidthWhenNotSelected = 2
 let lineStrokeWidthWhenSelected =5
+let mark_colors = [ 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black']
 sec_name= [ 'A8', 'A7', 'A6', 'A5', 'A4', 'A3', 'A2', 'A1', 'B8', 'B7', 'B6', 'B5', 'B4', 'B3', 'B2', 'B1', ];
 sec_ID= [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ];
 sec_fill= [ 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', ];
@@ -55,3 +61,11 @@ startStroke= [ line_colors[0], line_colors[1], ];
 startParentSector= [ [15,0], [15,1], ];
 startLineID= [ [0,1], [1,1], ];
 startGeodesicOperational= [ true, true, ];
+markStart_x= [ 150.0, 300.2433361387155, ];
+markStart_y= [ 74.47682474895537, 42.52471214274418, ];
+markStartStrokeWidth= [ 2, 2, ];
+markStartRadius= [ 2.5, 2.5, ];
+markStartFill= [ mark_colors[0], mark_colors[1], ];
+markStartStroke= [ mark_colors[0], mark_colors[1], ];
+markStartParentSector= [ [0,0], [0,1], ];
+markStartID= [ [0], [1], ];
